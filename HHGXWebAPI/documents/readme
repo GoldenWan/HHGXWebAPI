@@ -1,0 +1,12 @@
+返回json
+
+{"databack":"value","statuscode":"value"}
+
+
+添加json
+{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
+ "infoBag":{
+   "ManagerOrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
+	"endTime":"2017/08/06"
+ }
+}
