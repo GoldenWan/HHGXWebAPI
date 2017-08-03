@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href ="http://localhost:8888/HHGXWebAPI/xfCheckTimeRound/findAll">查询</a>
-<a href ="http://localhost:8888/HHGXWebAPI/xfCheckTimeRound/findById?id=1">查询</a>
+<a href ="http://localhost:8080/HHGXWebAPI/xfCheckTimeRound/findAll">查询</a>
+<a href ="http://localhost:8080/HHGXWebAPI/xfCheckTimeRound/findById?id=1">查询</a>
 </body>
 </html>
