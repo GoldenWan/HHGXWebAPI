@@ -1,7 +1,6 @@
 package com.hhgx.soft.utils;
 import com.fasterxml.jackson.core.type.TypeReference;  
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhgx.soft.entitys.XfCheckTimeRound;  
   
 /** 
  * The class JacksonUtil 

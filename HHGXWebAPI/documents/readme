@@ -10,3 +10,39 @@
 	"endTime":"2017/08/06"
  }
 }
+
+
+
+请求：
+
+{"tokenUUID":"",
+ "infoBag":{
+ "orgid":"201706151406",
+ "TrainingTime":"2017/02/09",
+ "TrainingAddress":"123",
+ 
+}
+}
+
+username	string	要求用户填写手机号
+password	string	必填
+orgname	string	必填
+AreaID	string	省市县选择，区域编号县信息
+verifycode	string	必填
+UserBelongTo	string	用于识别用户类别。1:防火单位用户； 2：维保部门用户
+
+
+第一个接口
+http://localhost:8888/HHGXWebAPI/UserManager/RegisterNew
+
+{ "tokenUUID":"",
+  "infoBag":{
+  "username":"201706151406",
+  "password":"2017/02/09",
+  "orgname":"123",
+  "AreaID":"201706151406",
+  "verifycode":"2017/02/09",
+  "UserBelongTo":"123",
+ 
+}
+}

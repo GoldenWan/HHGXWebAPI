@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,12 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.hhgx.soft.entitys.XfCheckTimeRound;
 import com.hhgx.soft.services.XfCheckTimeRoundService;
-import com.hhgx.soft.utils.JacksonUtil;
 
 
 
@@ -56,18 +50,18 @@ public class XfCheckTimeRoundController {
 	}
 	
 	@RequestMapping(value = "/add", method = { RequestMethod.POST, RequestMethod.GET },produces = "text/html;charset=UTF-8")
-	public  @ResponseBody String add(@RequestBody XfCheckTimeRound	xfCheckTimeRound, HttpServletRequest request) throws JsonProcessingException {
+	public  @ResponseBody String add( HttpServletRequest request) throws JsonProcessingException {
 		/*		Map<String, String[]> paramsMap = request.getParameterMap();
 		XfCheckTimeRound	xfCheckTimeRound =null;
 		for(String key : paramsMap.keySet()){
 				xfCheckTimeRound = JacksonUtil.readValue(paramsMap.get(key)[0],XfCheckTimeRound.class);
 		}
 		*/
-		/*XfCheckTimeRound xfCheckTimeRound = new XfCheckTimeRound();
+		XfCheckTimeRound xfCheckTimeRound = new XfCheckTimeRound();
 		xfCheckTimeRound.setRoundId(Integer.parseInt(request.getParameter("roundId")));
 		xfCheckTimeRound.setRoundDays(Integer.parseInt(request.getParameter("roundDays")));
 		xfCheckTimeRound.setRoundName(request.getParameter("roundName"));
-		*/
+		
 		System.err.println(xfCheckTimeRound.getRoundName()+"*************");
 		xfCheckTimeRoundService.addXfCheckTimeRound(xfCheckTimeRound);
 		Map<String, Object> params = new HashMap<String, Object>();
