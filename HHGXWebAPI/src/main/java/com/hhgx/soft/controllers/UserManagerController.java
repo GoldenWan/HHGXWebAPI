@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhgx.soft.services.UserManagerService;
+
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/UserManager")
@@ -69,15 +72,17 @@ public class UserManagerController {
 	/**
 	 * 3.根据用户帐号获取模块列表  * @return  * @throws JsonProcessingException:TODO  
 	 */
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
-			RequestMethod.POST }, produces = "text/html;charset=UTF-8")
-	public @ResponseBody String RetrieveZtreeNodes() throws JsonProcessingException {
-
-		// userManagerService.LoginBy(username, password);
-
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String RetrieveZtreeNodes(@RequestBody Object reqBody ) throws JsonProcessingException {
+		System.out.println(reqBody);
+		JSONObject jObject = JSONObject.fromObject(reqBody);
+		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
+		HashMap<String, Object> retrieveZtreeNodes = userManagerService.RetrieveZtreeNodes(username);
+	
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
-		params.put("DataBag", "登录成功");
+		params.put("DataBag", retrieveZtreeNodes);
 		params.put("StatusCode", 1000);
 		return mapper.writeValueAsString(params);
 	}
