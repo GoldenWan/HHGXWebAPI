@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.UserManagerMapper">
+	
+	<select id="retrieveZtreeNodes" parameterType="java.lang.String" resultType="java.util.HashMap">
+	SELECT
+	u.UserID userID,
+	ut.UserTypeName userbelong,
+	ut.UserBelongTo usertype,
+	ml.ModuleName fModuleName,
+	mlz.ModuleID zoduleID,
+	mlz.ModuleName zModuleName,
+	mlz.URL zURL
+FROM
+	users u
+INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+
+INNER JOIN modulelist ml ON mt.ModuleID = ml.ModuleID
+
+INNER JOIN modulelist mlz ON ml.ParentID = mlz.ModuleID
+WHERE
+	account = #{username};
+	</select>
+	
+</mapper>
