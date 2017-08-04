@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:context="http://www.springframework.org/schema/context"
@@ -27,4 +26,3 @@ http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<!-- 导入 spring mybatis 配置文件 -->
 	<import resource="classpath:spring/spring_mybatis.xml" />
 </beans>
-
