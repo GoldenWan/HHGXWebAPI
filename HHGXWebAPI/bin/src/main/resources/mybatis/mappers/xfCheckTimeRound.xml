@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.XfCheckTimeRoundMapper">
+	
+	<select id="findAllXfCheckTimeRound" resultMap="xfchecktimeroundResultMap">
+		SELECT
+			*
+		FROM
+			xfchecktimeround
+	</select>
+	<resultMap type="xfCheckTimeRound" id="xfchecktimeroundResultMap">
+		<id column="RoundId" property="roundId"/>
+		<result column="RoundName" property="roundName"/>
+		<result column="RoundDays" property="roundDays"/>
+	</resultMap>
+	
+	<select id="findByIdXfCheckTimeRound" parameterType="int" resultType="xfCheckTimeRound" >
+		SELECT
+			*
+		FROM
+			xfchecktimeround
+		WHERE
+			RoundId = #{roundId};
+	</select>
+	<insert id="addXfCheckTimeRound" parameterType="xfCheckTimeRound">
+		INSERT INTO xfchecktimeround (roundName, roundDays)
+		VALUES
+			(#{roundName}, #{roundDays});
+    </insert>
+	<update id="updateXfCheckTimeRound" parameterType="xfCheckTimeRound">
+		UPDATE xfchecktimeround
+		<set>
+			<if test="RoundName != null ">RoundName = #{roundName},</if>
+			<if test="RoundDays !=null ">RoundDays = #{roundDays},</if>
+		</set>
+		WHERE RoundId = #{roundId}
+	</update>
+	
+</mapper>
