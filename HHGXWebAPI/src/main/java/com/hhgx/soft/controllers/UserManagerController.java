@@ -42,7 +42,7 @@ public class UserManagerController {
 	 * @throws JsonProcessingException
 	 */
 	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
-	public @ResponseBody String RegisterNew() throws JsonProcessingException {
+	public @ResponseBody String RegisterNew(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
 
 		// userManagerService.registerNew();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -58,7 +58,7 @@ public class UserManagerController {
 
 	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String LoginBy(Object reqBody) throws JsonProcessingException {
+	public String LoginBy(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
 
 		// userManagerService.LoginBy(username, password);
 
@@ -74,7 +74,7 @@ public class UserManagerController {
 	 */
 	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String RetrieveZtreeNodes(@RequestBody Object reqBody ) throws JsonProcessingException {
+	public String RetrieveZtreeNodes(@RequestBody Map<String, Object> reqBody ) throws JsonProcessingException {
 		System.out.println(reqBody);
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
