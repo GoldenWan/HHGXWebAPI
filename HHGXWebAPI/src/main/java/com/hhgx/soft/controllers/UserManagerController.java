@@ -55,7 +55,7 @@ public class UserManagerController {
 
 	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String LoginBy() throws JsonProcessingException {
+	public String LoginBy(Object reqBody) throws JsonProcessingException {
 
 		// userManagerService.LoginBy(username, password);
 

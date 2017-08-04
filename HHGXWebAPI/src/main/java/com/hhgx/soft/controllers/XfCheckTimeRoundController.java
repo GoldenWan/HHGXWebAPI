@@ -51,19 +51,8 @@ public class XfCheckTimeRoundController {
 	
 	@RequestMapping(value = "/add", method = { RequestMethod.POST, RequestMethod.GET },produces = "text/html;charset=UTF-8")
 	public  @ResponseBody String add( HttpServletRequest request) throws JsonProcessingException {
-		/*		Map<String, String[]> paramsMap = request.getParameterMap();
-		XfCheckTimeRound	xfCheckTimeRound =null;
-		for(String key : paramsMap.keySet()){
-				xfCheckTimeRound = JacksonUtil.readValue(paramsMap.get(key)[0],XfCheckTimeRound.class);
-		}
-		*/
-		XfCheckTimeRound xfCheckTimeRound = new XfCheckTimeRound();
-		xfCheckTimeRound.setRoundId(Integer.parseInt(request.getParameter("roundId")));
-		xfCheckTimeRound.setRoundDays(Integer.parseInt(request.getParameter("roundDays")));
-		xfCheckTimeRound.setRoundName(request.getParameter("roundName"));
 		
-		System.err.println(xfCheckTimeRound.getRoundName()+"*************");
-		xfCheckTimeRoundService.addXfCheckTimeRound(xfCheckTimeRound);
+		//xfCheckTimeRoundService.addXfCheckTimeRound(xfCheckTimeRound);
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();  
 		params.put("DataBag", null);
