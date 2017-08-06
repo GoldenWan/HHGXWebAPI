@@ -8,6 +8,8 @@
 	<!-- 所有model和与数据表映射对应关系配置 -->
 	 <typeAliases>
 		<typeAlias alias="xfCheckTimeRound" type="com.hhgx.soft.entitys.XfCheckTimeRound"/> 
+		<typeAlias alias="retrieveZtreeNodes" type="com.hhgx.soft.entitys.RetrieveZtreeNodes"/> 
+	
 	</typeAliases> 
 
 </configuration>

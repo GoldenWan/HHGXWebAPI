@@ -1,6 +1,6 @@
 返回json
 
-{"databack":"value","statuscode":"value"}
+{"DataBag":"value","StatusCode":"value"}
 
 
 添加json
@@ -42,7 +42,7 @@ http://localhost:8888/HHGXWebAPI/UserManager/RegisterNew
   "orgname":"123",
   "AreaID":"201706151406",
   "verifycode":"2017/02/09",
-  "UserBelongTo":"123",
+  "UserBelongTo":"123"
  
 }
 }

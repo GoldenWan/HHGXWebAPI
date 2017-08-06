@@ -1,14 +1,16 @@
 package com.hhgx.soft.mappers;
 
-import java.util.HashMap;
 
+import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
+
+import com.hhgx.soft.entitys.RetrieveZtreeNodes;
 
 @MapperScan
 @Component("/userManagerMapper")
 public interface UserManagerMapper {
 
-	HashMap<String, Object> retrieveZtreeNodes(String username);
+	RetrieveZtreeNodes retrieveZtreeNodes(@Param("username") String username);
 
 }

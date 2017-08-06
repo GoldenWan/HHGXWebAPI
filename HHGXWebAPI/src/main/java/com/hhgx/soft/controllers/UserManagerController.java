@@ -7,15 +7,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhgx.soft.services.UserManagerService;
 
 import net.sf.json.JSONObject;
+import com.hhgx.soft.entitys.RetrieveZtreeNodes;
 
 @Controller
 @RequestMapping(value = "/UserManager")
@@ -41,7 +41,7 @@ public class UserManagerController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST }, consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	public @ResponseBody String RegisterNew(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
 
 		// userManagerService.registerNew();
@@ -56,7 +56,7 @@ public class UserManagerController {
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
 	 */
 
-	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST },  consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String LoginBy(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
 
@@ -72,14 +72,14 @@ public class UserManagerController {
 	/**
 	 * 3.根据用户帐号获取模块列表  * @return  * @throws JsonProcessingException:TODO  
 	 */
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String RetrieveZtreeNodes(@RequestBody Map<String, Object> reqBody ) throws JsonProcessingException {
-		System.out.println(reqBody);
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = { RequestMethod.POST},  consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	public String RetrieveZtreeNodes(@RequestBody  String reqBody ) throws JsonProcessingException {
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
-		HashMap<String, Object> retrieveZtreeNodes = userManagerService.RetrieveZtreeNodes(username);
-	
+		RetrieveZtreeNodes retrieveZtreeNodes = userManagerService.RetrieveZtreeNodes(username);
+		System.err.println(username);
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		params.put("DataBag", retrieveZtreeNodes);

@@ -28,7 +28,7 @@ public class XfCheckTimeRoundController {
 	@Autowired
 	XfCheckTimeRoundService xfCheckTimeRoundService;
 
-	@RequestMapping(value = "/findAll", method = { RequestMethod.POST, RequestMethod.GET }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/findAll", method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json;charset=UTF-8")
 	public @ResponseBody String findAllCategory(HttpServletRequest request,HttpServletResponse response, Model model) throws JsonProcessingException {
 		List<XfCheckTimeRound>  xfCheckTimeRounds = xfCheckTimeRoundService.findAllXfCheckTimeRound();
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -39,7 +39,7 @@ public class XfCheckTimeRoundController {
 	}
 	
 	
-	@RequestMapping(value = "/findById", method = { RequestMethod.POST, RequestMethod.GET },produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/findById", method = { RequestMethod.POST, RequestMethod.GET },produces = "application/json;charset=UTF-8")
 	public @ResponseBody String  findByIdCategory(HttpServletRequest request, Model model) throws JsonProcessingException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		List<XfCheckTimeRound> listXf =xfCheckTimeRoundService.findByIdXfCheckTimeRound(Integer.parseInt(request.getParameter("id")));
@@ -49,7 +49,7 @@ public class XfCheckTimeRoundController {
 		return mapper.writeValueAsString(params);
 	}
 	
-	@RequestMapping(value = "/add", method = { RequestMethod.POST, RequestMethod.GET },produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/add", method = { RequestMethod.POST, RequestMethod.GET },produces = "application/json;charset=UTF-8")
 	public  @ResponseBody String add( HttpServletRequest request) throws JsonProcessingException {
 		
 		//xfCheckTimeRoundService.addXfCheckTimeRound(xfCheckTimeRound);
