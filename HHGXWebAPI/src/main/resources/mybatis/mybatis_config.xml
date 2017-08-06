@@ -9,6 +9,7 @@
 	 <typeAliases>
 		<typeAlias alias="xfCheckTimeRound" type="com.hhgx.soft.entitys.XfCheckTimeRound"/> 
 		<typeAlias alias="retrieveZtreeNodes" type="com.hhgx.soft.entitys.RetrieveZtreeNodes"/> 
+		<typeAlias alias="childModule" type="com.hhgx.soft.entitys.ChildModule"/> 
 	
 	</typeAliases> 
 

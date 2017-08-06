@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhgx.soft.services.UserManagerService;
-
+import com.hhgx.soft.entitys.RegisterNew;
 import net.sf.json.JSONObject;
 import com.hhgx.soft.entitys.RetrieveZtreeNodes;
 
@@ -42,9 +41,20 @@ public class UserManagerController {
 	 * @throws JsonProcessingException
 	 */
 	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST }, consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public @ResponseBody String RegisterNew(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
-
-		// userManagerService.registerNew();
+	public @ResponseBody String RegisterNew(@RequestBody String reqBody) throws JsonProcessingException {
+		JSONObject jObject = JSONObject.fromObject(reqBody);
+		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
+		String password=JSONObject.fromObject(jObject.getString("infoBag")).getString("password");
+		String orgname=JSONObject.fromObject(jObject.getString("infoBag")).getString("orgname");
+		String areaID=JSONObject.fromObject(jObject.getString("infoBag")).getString("areaID");
+		String userBelongTo=JSONObject.fromObject(jObject.getString("infoBag")).getString("userBelongTo");
+		RegisterNew registerNew = new RegisterNew();
+		registerNew.setAreaID(areaID);
+		registerNew.setOrgname(orgname);
+		registerNew.setUserBelongTo(userBelongTo);
+		registerNew.setUsername(username);
+		registerNew.setUsername(username);
+		 userManagerService.registerNew(registerNew);
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		params.put("DataBag", "注册成功");
@@ -58,9 +68,12 @@ public class UserManagerController {
 
 	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST },  consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String LoginBy(@RequestBody Map<String, Object> reqBody) throws JsonProcessingException {
-
-		// userManagerService.LoginBy(username, password);
+	public String LoginBy(@RequestBody String reqBody) throws JsonProcessingException {
+		JSONObject jObject = JSONObject.fromObject(reqBody);
+		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
+		String password=JSONObject.fromObject(jObject.getString("infoBag")).getString("password");
+		String code=JSONObject.fromObject(jObject.getString("infoBag")).getString("code");
+		userManagerService.LoginBy(username, password);
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();

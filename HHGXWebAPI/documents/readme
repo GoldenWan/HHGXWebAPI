@@ -24,14 +24,13 @@
 }
 }
 
-username	string	要求用户填写手机号
-password	string	必填
-orgname	string	必填
-AreaID	string	省市县选择，区域编号县信息
-verifycode	string	必填
-UserBelongTo	string	用于识别用户类别。1:防火单位用户； 2：维保部门用户
 
-
+{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
+ "infoBag":{
+   "ManagerOrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
+	"endTime":"2017/08/06"
+ }
+}
 第一个接口
 http://localhost:8888/HHGXWebAPI/UserManager/RegisterNew
 
