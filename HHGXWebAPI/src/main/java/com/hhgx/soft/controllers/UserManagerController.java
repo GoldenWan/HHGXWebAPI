@@ -48,9 +48,7 @@ public class UserManagerController {
 	@RequestMapping(value = "/RegisterNew", method = {
 			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request) {
-		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID",
-				"UserBelongTo");
-		System.err.println(m.get("password"));
+		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID","UserBelongTo");
 		RegisterNew registerNew = new RegisterNew();
 		registerNew.setUserID(UUIDGenerator.getUUID());
 		registerNew.setOrgid(UUIDGenerator.getUUID());
