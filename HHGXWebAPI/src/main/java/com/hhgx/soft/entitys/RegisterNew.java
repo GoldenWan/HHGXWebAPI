@@ -4,19 +4,6 @@ public class RegisterNew {
 	private String userID;
 	private String maintenanceId;
 	private String orgid;
-	
-	public String getMaintenanceId() {
-		return maintenanceId;
-	}
-	public void setMaintenanceId(String maintenanceId) {
-		this.maintenanceId = maintenanceId;
-	}
-	public String getOrgid() {
-		return orgid;
-	}
-	public void setOrgid(String orgid) {
-		this.orgid = orgid;
-	}
 	private String username;//要求用户填写手机号
 	private String password;
 	private String orgname;//单位名称
@@ -58,6 +45,18 @@ public class RegisterNew {
 	}
 	public void setUserBelongTo(String userBelongTo) {
 		this.userBelongTo = userBelongTo;
+	}	
+	public String getMaintenanceId() {
+		return maintenanceId;
+	}
+	public void setMaintenanceId(String maintenanceId) {
+		this.maintenanceId = maintenanceId;
+	}
+	public String getOrgid() {
+		return orgid;
+	}
+	public void setOrgid(String orgid) {
+		this.orgid = orgid;
 	}
 	@Override
 	public String toString() {

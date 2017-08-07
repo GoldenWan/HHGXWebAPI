@@ -48,16 +48,15 @@
 	</select>
 
 	<insert id="registerNew" parameterType="registerNew">
-		<if test="UserBelongTo" =>
+		<if test='userBelongTo =="1"'>
 			INSERT INTO onlineorg (orgid, AreaID, orgname)
 			VALUES
-			(#{},#{}, #{});
+			(#{orgid},#{areaID}, #{orgname});
 		</if>
-		<if test="UserBelongTo" =>
-
+		<if test='userBelongTo=="2"'>
 			INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
 			VALUES
-			(#{},#{}, #{});
+			(#{maintenanceId},#{areaID}, #{orgname});
 		</if>
 		INSERT INTO users (
 		UserID,
@@ -67,7 +66,7 @@
 		UsertypeID
 		)
 		VALUES
-		(#{},#{}, #{}, #{}, #{});
+		(#{userID},#{account}, #{password}, #{userBelongTo},#{usertypeID});
 	</insert>
 
 
@@ -77,8 +76,7 @@
 		FROM
 		users u
 		WHERE
-		account =
-		#{username} and #{password};
+		account = #{username} and #{password};
 	</select>
 
 </mapper>
