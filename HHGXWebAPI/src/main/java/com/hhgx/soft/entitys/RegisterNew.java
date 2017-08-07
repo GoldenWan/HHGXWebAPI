@@ -1,12 +1,34 @@
 package com.hhgx.soft.entitys;
 
 public class RegisterNew {
+	private String userID;
+	private String maintenanceId;
+	private String orgid;
 	
+	public String getMaintenanceId() {
+		return maintenanceId;
+	}
+	public void setMaintenanceId(String maintenanceId) {
+		this.maintenanceId = maintenanceId;
+	}
+	public String getOrgid() {
+		return orgid;
+	}
+	public void setOrgid(String orgid) {
+		this.orgid = orgid;
+	}
 	private String username;//要求用户填写手机号
 	private String password;
 	private String orgname;//单位名称
 	private String areaID;//区域编号:省市县选择，区域编号县信息
 	private String userBelongTo;//用户类别:用于识别用户类别。1:防火单位用户； 2：维保部门用户
+	
+	public String getUserID() {
+		return userID;
+	}
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -39,8 +61,9 @@ public class RegisterNew {
 	}
 	@Override
 	public String toString() {
-		return "RegisterNew [username=" + username + ", password=" + password + ", orgname=" + orgname + ", areaID="
-				+ areaID + ", userBelongTo=" + userBelongTo + "]";
+		return "RegisterNew [userID=" + userID + ", maintenanceId=" + maintenanceId + ", orgid=" + orgid + ", username="
+				+ username + ", password=" + password + ", orgname=" + orgname + ", areaID=" + areaID
+				+ ", userBelongTo=" + userBelongTo + "]";
 	}
 
 

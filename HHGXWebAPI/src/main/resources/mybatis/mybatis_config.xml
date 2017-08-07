@@ -10,6 +10,8 @@
 		<typeAlias alias="xfCheckTimeRound" type="com.hhgx.soft.entitys.XfCheckTimeRound"/> 
 		<typeAlias alias="retrieveZtreeNodes" type="com.hhgx.soft.entitys.RetrieveZtreeNodes"/> 
 		<typeAlias alias="childModule" type="com.hhgx.soft.entitys.ChildModule"/> 
+		<typeAlias alias="user" type="com.hhgx.soft.entitys.User"/> 
+	    <typeAlias alias="registerNew" type="com.hhgx.soft.entitys.RegisterNew"/> 
 	
 	</typeAliases> 
 

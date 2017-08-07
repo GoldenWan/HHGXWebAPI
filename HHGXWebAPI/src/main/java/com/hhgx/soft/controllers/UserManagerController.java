@@ -23,9 +23,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhgx.soft.services.UserManagerService;
+import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.RequestJson;
+import com.hhgx.soft.utils.ResponseJson;
+import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.entitys.RegisterNew;
 import net.sf.json.JSONObject;
 import com.hhgx.soft.entitys.RetrieveZtreeNodes;
+import com.hhgx.soft.entitys.User;
 
 @Controller
 @RequestMapping(value = "/UserManager")
@@ -40,64 +45,123 @@ public class UserManagerController {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST }, consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public @ResponseBody String RegisterNew(@RequestBody String reqBody) throws JsonProcessingException {
-		JSONObject jObject = JSONObject.fromObject(reqBody);
-		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
-		String password=JSONObject.fromObject(jObject.getString("infoBag")).getString("password");
-		String orgname=JSONObject.fromObject(jObject.getString("infoBag")).getString("orgname");
-		String areaID=JSONObject.fromObject(jObject.getString("infoBag")).getString("areaID");
-		String userBelongTo=JSONObject.fromObject(jObject.getString("infoBag")).getString("userBelongTo");
+	@RequestMapping(value = "/RegisterNew", method = {
+			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request) {
+		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID",
+				"UserBelongTo");
+		System.err.println(m.get("password"));
 		RegisterNew registerNew = new RegisterNew();
-		registerNew.setAreaID(areaID);
-		registerNew.setOrgname(orgname);
-		registerNew.setUserBelongTo(userBelongTo);
-		registerNew.setUsername(username);
-		registerNew.setUsername(username);
-		 userManagerService.registerNew(registerNew);
-		Map<String, Object> params = new HashMap<String, Object>();
-		ObjectMapper mapper = new ObjectMapper();
-		params.put("DataBag", "注册成功");
-		params.put("StatusCode", 1000);
-		return mapper.writeValueAsString(params);
+		registerNew.setUserID(UUIDGenerator.getUUID());
+		registerNew.setOrgid(UUIDGenerator.getUUID());
+		registerNew.setMaintenanceId(UUIDGenerator.getUUID());
+
+		registerNew.setAreaID(m.get("areaID"));
+		registerNew.setOrgname(m.get("orgname"));
+		registerNew.setUserBelongTo(m.get("userBelongTo"));
+		registerNew.setUsername(m.get("username"));
+		registerNew.setPassword(m.get("password"));
+		String dataBag = null;
+		int statusCode = 0;
+		String result = null;
+		if (userManagerService.findAccount(m.get("username"))) {
+			dataBag = "账号已注册";
+			statusCode = ConstValues.ERROR;
+		}
+		else if (userManagerService.registerNew(registerNew)) {
+			dataBag = "注册成功";
+			statusCode = ConstValues.OK;
+
+		} else {
+			dataBag = "注册失败";
+			statusCode = ConstValues.FAILED;
+		}
+
+		try {
+			result = ResponseJson.responseAddJson(dataBag, statusCode);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "后台异常";
+			try {
+				result = ResponseJson.responseAddJson(dataBag, statusCode);
+			} catch (JsonProcessingException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return result;
+
 	}
 
 	/**
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
+	 * 
+	 * @throws JsonProcessingException
 	 */
 
-	@RequestMapping(value = "/LoginBy", method = { RequestMethod.POST },  consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/LoginBy", method = {
+			RequestMethod.GET }, consumes = "text/html;charset=UTF-8", produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String LoginBy(@RequestBody String reqBody) throws JsonProcessingException {
-		JSONObject jObject = JSONObject.fromObject(reqBody);
-		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
-		String password=JSONObject.fromObject(jObject.getString("infoBag")).getString("password");
-		String code=JSONObject.fromObject(jObject.getString("infoBag")).getString("code");
-		userManagerService.LoginBy(username, password);
+	public String loginBy(@RequestBody String reqBody, HttpServletRequest request) {
+		String sessionCode = (String) request.getSession().getAttribute("certCode");
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String code = request.getParameter("code");
 
-		Map<String, Object> params = new HashMap<String, Object>();
-		ObjectMapper mapper = new ObjectMapper();
-		params.put("DataBag", "登录成功");
-		params.put("StatusCode", 1000);
-		return mapper.writeValueAsString(params);
+		int statusCode = 0;
+		String dataBag = null;
+		String result = null;
+		// 判断验证码
+		if (code == "" || code == null || !code.equals(sessionCode)) {
+			statusCode = ConstValues.ERROR;
+			dataBag = "验证码错误";
+		} else {
+			User user = userManagerService.loginBy(username, password);
+			if (userManagerService.loginBy(username, password) != null) {
+				request.setAttribute("UserID", user.getUserID());
+				statusCode = ConstValues.OK;
+				dataBag = "登陆成功";
+			}
+		}
+		try {
+			result = ResponseJson.responseAddJson(dataBag, statusCode);
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "后台异常";
+			try {
+				result = ResponseJson.responseAddJson(dataBag, statusCode);
+			} catch (JsonProcessingException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		return result;
 	}
 
 	/**
 	 * 3.根据用户帐号获取模块列表  * @return  * @throws JsonProcessingException:TODO  
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = { RequestMethod.POST},  consumes="application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String RetrieveZtreeNodes(@RequestBody  String reqBody ) throws JsonProcessingException {
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
+			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	public String retrieveZtreeNodes(@RequestBody String reqBody) {
+
 		JSONObject jObject = JSONObject.fromObject(reqBody);
-		String username=JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
-		RetrieveZtreeNodes retrieveZtreeNodes = userManagerService.RetrieveZtreeNodes(username);
-		System.err.println(username);
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		ObjectMapper mapper = new ObjectMapper();
-		params.put("DataBag", retrieveZtreeNodes);
-		params.put("StatusCode", 1000);
-		return mapper.writeValueAsString(params);
+		String username = JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
+		RetrieveZtreeNodes retrieveZtreeNodes = userManagerService.retrieveZtreeNodes(username);
+		int statusCode = 0;
+		String result = null;
+		if (retrieveZtreeNodes != null) {
+			statusCode = 1000;
+			try {
+				result = ResponseJson.responseFindJson(retrieveZtreeNodes, statusCode);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -107,8 +171,8 @@ public class UserManagerController {
 	 */
 	@RequestMapping(value = "Code", method = RequestMethod.GET)
 	@ResponseBody
-	public void Code(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+	public void code(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		int width = 68, height = 22;
 		BufferedImage img = new BufferedImage(68, 22, BufferedImage.TYPE_INT_RGB);
 		// 得到该图片的对象
 		Graphics g = img.getGraphics();
@@ -123,7 +187,6 @@ public class UserManagerController {
 		Random r = new Random();
 		for (int i = 0; i < 4; i++) {// 产生四个字符
 			index = r.nextInt(len);// 从字符流中输出下一个字符----产生一个字符
-			System.out.println(index);
 			g.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
 			// 输出字体和大小
 			g.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 22));
@@ -131,6 +194,17 @@ public class UserManagerController {
 			g.drawString("" + ch[index], (i * 15) + 3, 18);// 迭代器，位置x,位置y
 			sb.append(ch[index]);
 		}
+		g.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
+		// 绘制干扰线
+		for (int i = 0; i < 2; i++) {
+
+			int x = r.nextInt(width);
+			int y = r.nextInt(height);
+			int x1 = r.nextInt(12);
+			int y1 = r.nextInt(12);
+			g.drawLine(x1, y1, x, y);
+		}
+
 		// 把图片内容存入Session中
 		request.getSession().setAttribute("certCode", sb.toString());
 		// 向页面输出

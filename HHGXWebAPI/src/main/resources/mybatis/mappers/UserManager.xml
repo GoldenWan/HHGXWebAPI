@@ -2,40 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.UserManagerMapper">
-	
+
 	<select id="retrieveZtreeNodes" resultMap="retrieveZtreeNodesMap">
-	SELECT
+		SELECT
 		u.UserID userID,
 		ut.UserTypeName userbelong,
 		ut.UserBelongTo usertype,
-		ml.ModuleName moduleName,
+		ml.ModuleName
+		moduleName,
 		mlz.ModuleID ModuleID,
-		mlz.ModuleName ModuleNamez,
+		mlz.ModuleName
+		ModuleNamez,
 		mlz.URL URL
-	FROM
+		FROM
 		users u
-	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
-	INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
-	INNER JOIN modulelist ml ON mt.ModuleID = ml.ModuleID
-	INNER JOIN modulelist mlz ON ml.ParentID = mlz.ModuleID
-	WHERE
+		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+		INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+		INNER
+		JOIN modulelist ml ON mt.ModuleID = ml.ModuleID
+		INNER JOIN modulelist
+		mlz ON ml.ParentID = mlz.ModuleID
+		WHERE
 		account = #{username};
 	</select>
-	
-	 <resultMap type="retrieveZtreeNodes" id="retrieveZtreeNodesMap">
-        <!-- 订单表属性 -->
-        <id column="userID" property="userID" />
-        <result column="orderno" property="userbelong" />
-        <result column="userbelong" property="usertype" />
-        <result column="moduleName" property="moduleName" />
-        <!-- 关联的用户信息 -->
-        <!-- association用于关联查询：
-        property指属性，javaType是要映射的对象的类型。 -->
-        <association property="childModule" javaType="childModule">
-            <result column="ModuleID" property="moduleID" />
-            <result column="ModuleNamez" property="moduleName" />
-            <result column="URL" property="uRL" />
-        </association>
-    </resultMap>
-	
+
+	<resultMap type="retrieveZtreeNodes" id="retrieveZtreeNodesMap">
+		<id column="userID" property="userID" />
+		<result column="userbelong" property="userbelong" />
+		<result column="usertype" property="usertype" />
+		<result column="moduleName" property="moduleName" />
+		<!-- association用于关联查询： property指属性，javaType是要映射的对象的类型。 -->
+		<association property="childModule" javaType="childModule">
+			<result column="ModuleID" property="moduleID" />
+			<result column="ModuleNamez" property="moduleName" />
+			<result column="URL" property="uRL" />
+		</association>
+	</resultMap>
+	<select id="findAccount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		users u
+		WHERE
+		account = #{username};
+	</select>
+
+	<insert id="registerNew" parameterType="registerNew">
+		<if test="UserBelongTo" =>
+			INSERT INTO onlineorg (orgid, AreaID, orgname)
+			VALUES
+			(#{},#{}, #{});
+		</if>
+		<if test="UserBelongTo" =>
+
+			INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
+			VALUES
+			(#{},#{}, #{});
+		</if>
+		INSERT INTO users (
+		UserID,
+		account,
+		PASSWORD,
+		UserBelongTo,
+		UsertypeID
+		)
+		VALUES
+		(#{},#{}, #{}, #{}, #{});
+	</insert>
+
+
+	<select id="loginBy" resultType="user">
+		SELECT
+		*
+		FROM
+		users u
+		WHERE
+		account =
+		#{username} and #{password};
+	</select>
+
 </mapper>

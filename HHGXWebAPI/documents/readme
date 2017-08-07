@@ -1,3 +1,13 @@
+按防火单位获取巡查记录
+{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
+ "infoBag":{
+   "OrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
+   "StartDate":"2017/08/05",
+	"endTime":"2017/08/06"
+ }
+}
+
+
 返回json
 
 {"DataBag":"value","StatusCode":"value"}

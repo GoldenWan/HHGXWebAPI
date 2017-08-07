@@ -94,11 +94,11 @@
 			<artifactId>spring-expression</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.18</version>
-		</dependency>
+		</dependency> -->
 
 		<!-- mybatis -->
 		<dependency>
@@ -189,17 +189,7 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
-	<!-- 阿里大于：短信验证 -->
-	<dependency>
-		<groupId>org.taobao.sdkjava</groupId>
-		<artifactId>taobao-core</artifactId>
-		<version>1.0</version>
-	</dependency>
-	<dependency>
-		<groupId>org.taobao.sdkjava</groupId>
-		<artifactId>taobao-source</artifactId>
-		<version>1.0</version>
-	</dependency>
+
 	<build>
 		<plugins>
 			<plugin>
