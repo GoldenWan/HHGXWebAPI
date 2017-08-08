@@ -38,7 +38,7 @@
 			<result column="URL" property="uRL" />
 		</association>
 	</resultMap>
-	
+
 	<select id="findAccount" resultType="int">
 		SELECT
 		count(*)
@@ -48,49 +48,41 @@
 		account = #{username};
 	</select>
 
-	<insert id="registerNew" parameterType="registerNew">
-		<if test="userBelongTo =='1'">
-			INSERT INTO onlineorg (orgid, AreaID, orgname)
-			VALUES
-			(#{orgid},#{areaID}, #{orgname});
-			INSERT INTO users (
-			UserID,
-			account,
-			PASSWORD,
-			UserBelongTo,
-			UsertypeID
-			)
-			VALUES
-			(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
-			
-		</if>
-		<if test="userBelongTo=='2'">
-			INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
-			VALUES
-			(#{maintenanceId},#{areaID}, #{orgname});
-			INSERT INTO users (
-			UserID,
-			account,
-			PASSWORD,
-			UserBelongTo,
-			UsertypeID
-			)
-			VALUES
-			(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
-		</if>
-		
+	<insert id="onlineorgRegister" parameterType="registerNew">
+		INSERT INTO onlineorg (orgid, AreaID, orgname)
+		VALUES
+		(#{orgid},#{areaID}, #{orgname});
+
+
+	</insert>
+	<insert id="usersRegister" parameterType="registerNew">
+		INSERT INTO users (
+		UserID,
+		account,
+		PASSWORD,
+		UserBelongTo,
+		UsertypeID
+		)
+		VALUES
+		(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
+	</insert>
+	<insert id="maintenanceRegister" parameterType="registerNew">
+
+		INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
+		VALUES
+		(#{maintenanceId},#{areaID}, #{orgname});
 	</insert>
 
 
 	<select id="loginBy" resultType="user">
 		SELECT
-			UserID,
-			account,
-			PASSWORD
+		UserID,
+		account,
+		PASSWORD
 		FROM
-			users u
+		users u
 		WHERE
-			account = #{username} and PASSWORD=#{password};
+		account = #{username} and PASSWORD=#{password};
 	</select>
 
 </mapper>
