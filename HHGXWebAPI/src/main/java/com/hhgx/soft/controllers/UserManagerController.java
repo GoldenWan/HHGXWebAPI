@@ -19,6 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.aliyuncs.profile.IClientProfile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.ConstValues;
@@ -215,4 +222,86 @@ public class UserManagerController {
 
 	}
 
+	
+	/**
+	 * 
+	 */
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/RegistMessage", method = {
+			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	public String registMessage(@RequestBody String reqBody) {
+
+		JSONObject jObject = JSONObject.fromObject(reqBody);
+		String userPoneNo = JSONObject.fromObject(jObject.getString("infoBag")).getString("UserPoneNo");
+		
+		/*入参列表
+
+		参数名称	参数类型	必填与否	样例取值	参数说明
+		PhoneNumbers	String	必须	15000000000	短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式
+		SignName	String	必须	云通信	短信签名
+		TemplateCode	String	必须	SMS_0000	短信模板ID
+		TemplateParam	String	可选	{“code”:”1234”,”product”:”ytx”}	短信模板变量替换JSON串,友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\r\n,否则会导致JSON在服务端解析失败
+		smsUpExtendCode	String	可选	90999	上行短信扩展码,无特殊需要此字段的用户请忽略此字段
+		OutId	String	可选	abcdefgh	外部流水扩展字段
+		出参列表
+
+		出参名称	出参类型	样例取值	参数说明
+		RequestId	String	8906582E-6722	请求ID
+		Code	String	OK	状态码-返回OK代表请求成功,其他错误码详见错误码列表
+		Message	String	请求成功	状态码的描述
+		BizId	String	134523^4351232	发送回执ID,可根据该ID查询具体的发送状态
+		技术对接步骤
+
+		1:下载SDK工具包
+
+		SDK工具包中一共包含了2个类库，一个aliyun-java-sdk-core包，另外一个是alicom-dysms-api包，将这两个包执行mvn package命令或者mvn deploy命令打包出相应的jar包，添加到工程类库中依赖使用。
+
+		SDK&DEMO[下载地址]
+
+		2: 编写样例程序*/
+
+		//设置超时时间-可自行调整
+		System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+		System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+		//初始化ascClient需要的几个参数
+		final String product = "Dysmsapi";//短信API产品名称（短信产品名固定，无需修改）
+		final String domain = "dysmsapi.aliyuncs.com";//短信API产品域名（接口地址固定，无需修改）
+		//替换成你的AK
+		final String accessKeyId = "LTAIyAHnKa8nRx8G";//你的accessKeyId,参考本文档步骤2
+		final String accessKeySecret = "4SIBqpDdYNOR0kCWOZSuHxBzkvYNAP";//你的accessKeySecret，参考本文档步骤2
+		//初始化ascClient,暂时不支持多region
+		IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,
+		accessKeySecret);
+		DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+		IAcsClient acsClient = new DefaultAcsClient(profile);
+		 //组装请求对象
+		 SendSmsRequest request = new SendSmsRequest();
+		 //使用post提交
+		 request.setMethod(MethodType.POST);
+		 
+		 //必填:待发送手机号。支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式
+		 request.setPhoneNumbers(userPoneNo);
+		 //必填:短信签名-可在短信控制台中找到
+		 request.setSignName("云通信");
+		 //必填:短信模板-可在短信控制台中找到
+		 request.setTemplateCode("SMS_83185001");
+		 //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
+		 //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
+		 request.setTemplateParam("{\"name\":\"Tom\", \"code\":\"123\"}");
+		 //可选-上行短信扩展码(无特殊需求用户请忽略此字段)
+		 //request.setSmsUpExtendCode("90997");
+		 //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
+		 request.setOutId("yourOutId");
+		//请求失败这里会抛ClientException异常
+		 
+		SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+		if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+		//请求成功
+		}
+		
+
+		return "";
+	}
 }
