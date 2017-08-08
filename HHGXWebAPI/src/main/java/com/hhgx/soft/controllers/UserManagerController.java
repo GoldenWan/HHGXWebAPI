@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.RequestJson;
@@ -50,23 +48,25 @@ public class UserManagerController {
 	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request) {
 		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID","UserBelongTo");
 		RegisterNew registerNew = new RegisterNew();
+		String userBelongTo =m.get("userBelongTo");
 		registerNew.setUserID(UUIDGenerator.getUUID());
 		registerNew.setOrgid(UUIDGenerator.getUUID());
 		registerNew.setMaintenanceId(UUIDGenerator.getUUID());
-
 		registerNew.setAreaID(m.get("areaID"));
 		registerNew.setOrgname(m.get("orgname"));
-		registerNew.setUserBelongTo(m.get("userBelongTo"));
+		registerNew.setUserBelongTo(userBelongTo);
 		registerNew.setUsername(m.get("username"));
 		registerNew.setPassword(m.get("password"));
 		String dataBag = null;
 		int statusCode = 0;
 		String result = null;
+		
 		if (userManagerService.findAccount(m.get("username"))) {
 			dataBag = "账号已注册";
 			statusCode = ConstValues.ERROR;
 		}
-		else if (userManagerService.registerNew(registerNew)) {
+		else if (userManagerService.registerNew(registerNew,userBelongTo )) {
+			
 			dataBag = "注册成功";
 			statusCode = ConstValues.OK;
 
@@ -74,6 +74,7 @@ public class UserManagerController {
 			dataBag = "注册失败";
 			statusCode = ConstValues.FAILED;
 		}
+		
 
 		try {
 			result = ResponseJson.responseAddJson(dataBag, statusCode);
@@ -98,9 +99,9 @@ public class UserManagerController {
 	 */
 
 	@RequestMapping(value = "/LoginBy", method = {
-			RequestMethod.GET }, consumes = "text/html;charset=UTF-8", produces = "application/json;charset=UTF-8")
+			RequestMethod.GET }, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String loginBy(@RequestBody String reqBody, HttpServletRequest request) {
+	public String loginBy(HttpServletRequest request) {
 		String sessionCode = (String) request.getSession().getAttribute("certCode");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -110,17 +111,21 @@ public class UserManagerController {
 		String dataBag = null;
 		String result = null;
 		// 判断验证码
-		if (code == "" || code == null || !code.equals(sessionCode)) {
+	/*	if (code == "" || code == null || !code.equals(sessionCode)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "验证码错误";
-		} else {
-			User user = userManagerService.loginBy(username, password);
-			if (userManagerService.loginBy(username, password) != null) {
+		} else {*/
+			User user = userManagerService.loginBy(username, password);	
+			System.err.println(user.toString()+"--"+username+"--"+password);
+			if (user.getAccount()!=null) {
 				request.setAttribute("UserID", user.getUserID());
 				statusCode = ConstValues.OK;
 				dataBag = "登陆成功";
+			}else{
+				statusCode = ConstValues.FAILED;
+				dataBag = "账号或密码错误";
 			}
-		}
+		//}
 		try {
 			result = ResponseJson.responseAddJson(dataBag, statusCode);
 		} catch (Exception e) {

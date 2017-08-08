@@ -19,15 +19,23 @@ public class UserManagerService {
 	}
 
 	public User loginBy(String username, String password) {
-
 		return userManagerMapper.loginBy(username, password);
 	}
 
-	public boolean registerNew(RegisterNew registerNew) {
+	public boolean registerNew(RegisterNew registerNew, String userBelongTo) {
 		int temp = 1;
+		if (userBelongTo.equals("1")) {
+			registerNew.setUsertypeID("Orgmanager");
+		} else if (userBelongTo.equals("2")) {
+			registerNew.setUsertypeID("maintenancemanager");
+		} else {
+			temp = -1;
+		}
+
 		try {
 			userManagerMapper.registerNew(registerNew);
 		} catch (Exception e) {
+			e.printStackTrace();
 			temp = -1;
 		}
 

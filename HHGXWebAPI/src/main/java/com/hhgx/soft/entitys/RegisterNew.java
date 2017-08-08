@@ -9,6 +9,7 @@ public class RegisterNew {
 	private String orgname;//单位名称
 	private String areaID;//区域编号:省市县选择，区域编号县信息
 	private String userBelongTo;//用户类别:用于识别用户类别。1:防火单位用户； 2：维保部门用户
+	private String usertypeID;
 	
 	public String getUserID() {
 		return userID;
@@ -58,11 +59,12 @@ public class RegisterNew {
 	public void setOrgid(String orgid) {
 		this.orgid = orgid;
 	}
-	@Override
-	public String toString() {
-		return "RegisterNew [userID=" + userID + ", maintenanceId=" + maintenanceId + ", orgid=" + orgid + ", username="
-				+ username + ", password=" + password + ", orgname=" + orgname + ", areaID=" + areaID
-				+ ", userBelongTo=" + userBelongTo + "]";
+	
+	public String getUsertypeID() {
+		return usertypeID;
+	}
+	public void setUsertypeID(String usertypeID) {
+		this.usertypeID = usertypeID;
 	}
 
 

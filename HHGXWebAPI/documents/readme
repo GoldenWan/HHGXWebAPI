@@ -9,8 +9,23 @@
 
 
 返回json
+{
+    "StatusCode": "value",
+    "DataBag": {
+        "pageCount": "200",
+        "PageDatas": {
+            "OrgID": "2672714c-77c9-47f4-9735-1c5fccead5c1",
+            "StartDate": "2017/08/05",
+            "endTime": "2017/08/06"
+        }
+    }
+}
 
-{"DataBag":"value","StatusCode":"value"}
+
+
+
+
+}}
 
 
 添加json

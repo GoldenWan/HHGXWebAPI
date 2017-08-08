@@ -38,6 +38,7 @@
 			<result column="URL" property="uRL" />
 		</association>
 	</resultMap>
+	
 	<select id="findAccount" resultType="int">
 		SELECT
 		count(*)
@@ -48,35 +49,48 @@
 	</select>
 
 	<insert id="registerNew" parameterType="registerNew">
-		<if test='userBelongTo =="1"'>
+		<if test="userBelongTo =='1'">
 			INSERT INTO onlineorg (orgid, AreaID, orgname)
 			VALUES
 			(#{orgid},#{areaID}, #{orgname});
+			INSERT INTO users (
+			UserID,
+			account,
+			PASSWORD,
+			UserBelongTo,
+			UsertypeID
+			)
+			VALUES
+			(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
+			
 		</if>
-		<if test='userBelongTo=="2"'>
+		<if test="userBelongTo=='2'">
 			INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
 			VALUES
 			(#{maintenanceId},#{areaID}, #{orgname});
+			INSERT INTO users (
+			UserID,
+			account,
+			PASSWORD,
+			UserBelongTo,
+			UsertypeID
+			)
+			VALUES
+			(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
 		</if>
-		INSERT INTO users (
-		UserID,
-		account,
-		PASSWORD,
-		UserBelongTo,
-		UsertypeID
-		)
-		VALUES
-		(#{userID},#{account}, #{password}, #{userBelongTo},#{usertypeID});
+		
 	</insert>
 
 
 	<select id="loginBy" resultType="user">
 		SELECT
-		*
+			UserID,
+			account,
+			PASSWORD
 		FROM
-		users u
+			users u
 		WHERE
-		account = #{username} and #{password};
+			account = #{username} and #{password};
 	</select>
 
 </mapper>
