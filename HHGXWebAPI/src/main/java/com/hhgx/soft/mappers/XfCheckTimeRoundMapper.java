@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.hhgx.soft.entitys.XfCheckTimeRound;
 
 @MapperScan
-@Component("xfCheckTimeRoundMapper")
+@Component("/xfCheckTimeRoundMapper")
 public interface XfCheckTimeRoundMapper {
 
 	List<XfCheckTimeRound> findAllXfCheckTimeRound();

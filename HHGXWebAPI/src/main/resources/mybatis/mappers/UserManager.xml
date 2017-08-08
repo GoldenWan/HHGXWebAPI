@@ -90,7 +90,7 @@
 		FROM
 			users u
 		WHERE
-			account = #{username} and #{password};
+			account = #{username} and PASSWORD=#{password};
 	</select>
 
 </mapper>

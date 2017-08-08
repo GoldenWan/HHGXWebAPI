@@ -12,6 +12,7 @@
 		<typeAlias alias="childModule" type="com.hhgx.soft.entitys.ChildModule"/> 
 		<typeAlias alias="user" type="com.hhgx.soft.entitys.User"/> 
 	    <typeAlias alias="registerNew" type="com.hhgx.soft.entitys.RegisterNew"/> 
+	    <typeAlias alias="patrolRecord" type="com.hhgx.soft.entitys.PatrolRecord"/> 
 	
 	</typeAliases> 
 

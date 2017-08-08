@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.PatrolMapper">
+
+<!-- 
+	<select id="gePatrolRecordByOrgCount" resultType="int">
+	select  count(*) from (
+	ul.UserCheckId,
+	ul.UserCheckTime,
+	ul.OrgUserId,
+	ul.OrgManagerId,
+	ul.SubmitTime,
+	ul.Remarks,
+	ul.SubmitStatet,
+	ui.UserCheckResult
+FROM
+	onlineorg o
+INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
+INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+WHERE
+	ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and  #{endTime}) n 
+
+	</select>
+	<select id="getPatrolRecordByOrg" resultType="PatrolRecord">
+    SELECT
+		ul.UserCheckId,
+		ul.UserCheckTime,
+		ul.OrgUserId,
+		ul.OrgManagerId,
+		ul.SubmitTime,
+		ul.Remarks,
+		ul.SubmitStatet,
+		ui.UserCheckResult
+	FROM
+		onlineorg o
+	INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
+	INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+	WHERE
+		ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and  #{endTime}
+		limit #{startPos},#{pageSize}  
+	</select>
+	 -->
+	
+
+</mapper>
