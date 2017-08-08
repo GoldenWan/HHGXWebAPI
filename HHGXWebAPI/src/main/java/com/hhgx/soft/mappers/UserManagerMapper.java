@@ -18,6 +18,11 @@ public interface UserManagerMapper {
 
 	int findAccount(@Param("username") String username);
 
-	void registerNew(RegisterNew registerNew);
+
+	void onlineorgRegister(RegisterNew registerNew);
+
+	void usersRegister(RegisterNew registerNew);
+
+	void maintenanceRegister(RegisterNew registerNew);
 
 }

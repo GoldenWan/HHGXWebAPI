@@ -19,13 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
-import com.aliyuncs.http.MethodType;
-import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.profile.IClientProfile;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.ConstValues;
@@ -52,21 +46,21 @@ public class UserManagerController {
 	 */
 	@RequestMapping(value = "/RegisterNew", method = {
 			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request) {
+	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request) throws JsonProcessingException {
 		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID","UserBelongTo");
 		RegisterNew registerNew = new RegisterNew();
 		String userBelongTo =m.get("userBelongTo");
 		registerNew.setUserID(UUIDGenerator.getUUID());
-		registerNew.setOrgid(UUIDGenerator.getUUID());
-		registerNew.setMaintenanceId(UUIDGenerator.getUUID());
+		registerNew.setOrgid(UUIDGenerator.getUUID().substring(0, 11));
+		registerNew.setMaintenanceId(UUIDGenerator.getUUID().substring(0, 11));
 		registerNew.setAreaID(m.get("areaID"));
 		registerNew.setOrgname(m.get("orgname"));
 		registerNew.setUserBelongTo(userBelongTo);
 		registerNew.setUsername(m.get("username"));
 		registerNew.setPassword(m.get("password"));
+		System.err.println(registerNew.toString());
 		String dataBag = null;
-		int statusCode = 0;
-		String result = null;
+		int statusCode = -1;
 		
 		if (userManagerService.findAccount(m.get("username"))) {
 			dataBag = "账号已注册";
@@ -77,25 +71,12 @@ public class UserManagerController {
 			dataBag = "注册成功";
 			statusCode = ConstValues.OK;
 
-		} else {
+		}else {
 			dataBag = "注册失败";
 			statusCode = ConstValues.FAILED;
 		}
 		
-
-		try {
-			result = ResponseJson.responseAddJson(dataBag, statusCode);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			statusCode = ConstValues.FAILED;
-			dataBag = "后台异常";
-			try {
-				result = ResponseJson.responseAddJson(dataBag, statusCode);
-			} catch (JsonProcessingException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return result;
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -156,9 +137,8 @@ public class UserManagerController {
 	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
 			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	public String retrieveZtreeNodes(@RequestBody String reqBody) {
-
-		JSONObject jObject = JSONObject.fromObject(reqBody);
-		String username = JSONObject.fromObject(jObject.getString("infoBag")).getString("username");
+		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
+		String username  = map.get("username");
 		RetrieveZtreeNodes retrieveZtreeNodes = userManagerService.retrieveZtreeNodes(username);
 		int statusCode = 0;
 		String result = null;
@@ -261,7 +241,7 @@ public class UserManagerController {
 		SDK&DEMO[下载地址]
 
 		2: 编写样例程序*/
-
+/*
 		//设置超时时间-可自行调整
 		System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
 		System.setProperty("sun.net.client.defaultReadTimeout", "10000");
@@ -299,7 +279,7 @@ public class UserManagerController {
 		SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 		if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
 		//请求成功
-		}
+		}*/
 		
 
 		return "";

@@ -26,18 +26,20 @@ public class UserManagerService {
 		int temp = 1;
 		if (userBelongTo.equals("1")) {
 			registerNew.setUsertypeID("Orgmanager");
+			userManagerMapper.onlineorgRegister(registerNew);
+			System.err.println(registerNew.toString());
+			
 		} else if (userBelongTo.equals("2")) {
 			registerNew.setUsertypeID("maintenancemanager");
+			userManagerMapper.maintenanceRegister(registerNew);
+			userManagerMapper.usersRegister(registerNew);
+			System.err.println(registerNew.toString());
+			
 		} else {
 			temp = -1;
 		}
 
-		try {
-			userManagerMapper.registerNew(registerNew);
-		} catch (Exception e) {
-			e.printStackTrace();
-			temp = -1;
-		}
+		userManagerMapper.usersRegister(registerNew);
 
 		return temp > 0 ? true : false;
 	}

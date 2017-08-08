@@ -66,6 +66,12 @@ public class RegisterNew {
 	public void setUsertypeID(String usertypeID) {
 		this.usertypeID = usertypeID;
 	}
+	@Override
+	public String toString() {
+		return "RegisterNew [userID=" + userID + ", maintenanceId=" + maintenanceId + ", orgid=" + orgid + ", username="
+				+ username + ", password=" + password + ", orgname=" + orgname + ", areaID=" + areaID
+				+ ", userBelongTo=" + userBelongTo + ", usertypeID=" + usertypeID + "]";
+	}
 
 
 }

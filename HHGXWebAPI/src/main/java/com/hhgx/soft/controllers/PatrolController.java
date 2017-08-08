@@ -38,10 +38,10 @@ public class PatrolController {
 	public String  getPatrolRecordByOrg(@RequestBody String reqBody){
 		  
 		Map<String, String> map = RequestJson.reqJson(reqBody, "OrgID", "StartDate", "EndDate", "PageIndex");
-		String orgID = map.get("OrgID");
-		String startDate =map.get("StartDate");
-		String endDate = map.get("EndDate");
-		String pageIndex =map.get("PageIndex");
+		String orgID = map.get("orgID");
+		String startDate =map.get("startDate");
+		String endDate = map.get("endDate");
+		String pageIndex =map.get("pageIndex");
 		
 		Page page = null;  
 		List<PatrolRecord> patrolRecordList =null;
