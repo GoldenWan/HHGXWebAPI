@@ -1,13 +1,11 @@
 package com.hhgx.soft.utils;
 
 import java.util.UUID;
-/**
- * 生成UUID 的主键
- * @author Mr.GoldenWan
- *
- */
-
-
+		/**
+		 * 生成UUID 的主键
+		 * @author Mr.GoldenWan
+		 *
+		 */
 
 public class UUIDGenerator {
 	//下面就是实现为数据库获取一个唯一的主键id的代码 

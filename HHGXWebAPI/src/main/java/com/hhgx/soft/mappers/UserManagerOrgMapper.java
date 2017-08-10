@@ -10,7 +10,7 @@ import com.hhgx.soft.entitys.User;
 
 @MapperScan
 @Component("/userManagerMapper")
-public interface UserManagerMapper {
+public interface UserManagerOrgMapper {
 
 	RetrieveZtreeNodes retrieveZtreeNodes(@Param("username") String username);
 
@@ -24,5 +24,9 @@ public interface UserManagerMapper {
 	void usersRegister(RegisterNew registerNew);
 
 	void maintenanceRegister(RegisterNew registerNew);
+
+	String getUserTypeName(@Param("userTypeID") String userTypeID);
+
+	String findMaxBack6(@Param("areaID") String areaID);
 
 }

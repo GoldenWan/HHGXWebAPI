@@ -13,6 +13,7 @@
 		<typeAlias alias="user" type="com.hhgx.soft.entitys.User"/> 
 	    <typeAlias alias="registerNew" type="com.hhgx.soft.entitys.RegisterNew"/> 
 	    <typeAlias alias="patrolRecord" type="com.hhgx.soft.entitys.PatrolRecord"/> 
+	    <typeAlias alias="managerOrg" type="com.hhgx.soft.entitys.ManagerOrg"/> 
 	
 	</typeAliases> 
 

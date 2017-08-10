@@ -49,11 +49,17 @@
 	</select>
 
 	<insert id="onlineorgRegister" parameterType="registerNew">
-		INSERT INTO onlineorg (orgid, AreaID, orgname)
+		INSERT INTO
+		onlineorg (orgid, AreaID, orgname)
 		VALUES
-		(#{orgid},#{areaID}, #{orgname});
+		(#{orgid},#{areaID},#{orgname});
+	</insert>
+	<insert id="maintenanceRegister" parameterType="registerNew">
 
-
+		INSERT INTO
+		maintenance (MaintenanceId,AreaID, UnitName)
+		VALUES
+		(#{maintenanceId},#{areaID}, #{orgname});
 	</insert>
 	<insert id="usersRegister" parameterType="registerNew">
 		INSERT INTO users (
@@ -66,23 +72,32 @@
 		VALUES
 		(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
 	</insert>
-	<insert id="maintenanceRegister" parameterType="registerNew">
-
-		INSERT INTO maintenance (MaintenanceId,AreaID, UnitName)
-		VALUES
-		(#{maintenanceId},#{areaID}, #{orgname});
-	</insert>
 
 
 	<select id="loginBy" resultType="user">
 		SELECT
-		UserID,
-		account,
-		PASSWORD
+		*
 		FROM
 		users u
 		WHERE
-		account = #{username} and PASSWORD=#{password};
+		account = #{username} and password=#{password};
+	</select>
+	<select id="getUserTypeName" resultType="string">
+		SELECT
+		ut.UserTypeName
+		FROM
+		users u
+		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+		WHERE
+		u.UserTypeID = #{userTypeID};
+	</select>
+	<select id="findMaxBack6" resultType="string">
+		SELECT
+			max(CONVERT (RIGHT(o.orgid, 6), SIGNED)) maxorgid
+		FROM
+			onlineorg o
+		WHERE
+			LEFT (o.orgid, 6) = #{areaID};
 	</select>
 
 </mapper>
