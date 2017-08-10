@@ -14,6 +14,9 @@
 	    <typeAlias alias="registerNew" type="com.hhgx.soft.entitys.RegisterNew"/> 
 	    <typeAlias alias="patrolRecord" type="com.hhgx.soft.entitys.PatrolRecord"/> 
 	    <typeAlias alias="managerOrg" type="com.hhgx.soft.entitys.ManagerOrg"/> 
+	    <typeAlias alias="managerSubs" type="com.hhgx.soft.entitys.ManagerSubs"/> 
+	    <typeAlias alias="userInfo" type="com.hhgx.soft.entitys.UserInfo"/> 
+	    <typeAlias alias="ztree" type="com.hhgx.soft.entitys.Ztree"/> 
 	
 	</typeAliases> 
 

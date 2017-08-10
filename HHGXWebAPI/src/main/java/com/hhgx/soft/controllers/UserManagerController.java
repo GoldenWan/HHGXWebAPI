@@ -3,6 +3,7 @@ package com.hhgx.soft.controllers;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,20 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hhgx.soft.entitys.RegisterNew;
+import com.hhgx.soft.entitys.User;
+import com.hhgx.soft.entitys.UserInfo;
+import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.services.UserManagerService;
+import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.RegistMessage;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
-import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
-import com.hhgx.soft.entitys.RegisterNew;
+
 import net.sf.json.JSONObject;
-import com.hhgx.soft.entitys.RetrieveZtreeNodes;
-import com.hhgx.soft.entitys.User;
 
 @Controller
 @RequestMapping(value = "/UserManager")
@@ -70,18 +73,30 @@ public class UserManagerController {
 		registerNew.setUserBelongTo(userBelongTo);
 		registerNew.setUsername(username);
 		registerNew.setPassword(password);
-		String neworgid = userManagerService.findMaxBack6(areaID);
+		registerNew.setIsFirstEnroll("是");
+		String neworgid = null;
+		if (!StringUtils.isEmpty(areaID)) {
+			try {
+				neworgid = userManagerService.findMaxBack6(areaID);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseJson.responseAddJson("注册失败", ConstValues.FAILED);
+			}
+		}
+
 		int neworgid_ = 0;
 		String orgid = null;
 		if (StringUtils.isEmpty(neworgid)) {
 			orgid = areaID + "000001";
+			registerNew.setApproveState("待审批");
+
 		} else {
 			neworgid_ = Integer.parseInt(neworgid) + 1;
 			orgid = areaID + String.valueOf(neworgid_);
 		}
 		registerNew.setOrgid(orgid);
-       System.err.println(orgid);
-		String number = 2017+"";
+		System.err.println(orgid);
+		String number = (String) request.getSession().getAttribute("number");
 
 		String dataBag = null;
 		int statusCode = -1;
@@ -100,7 +115,7 @@ public class UserManagerController {
 			dataBag = "请输入手机验证码";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
-		} else if (!number.equalsIgnoreCase(verifycode)) {
+		} else if (!verifycode.equals(number)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "手机验证码错误";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -129,6 +144,54 @@ public class UserManagerController {
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 
+	}
+
+	/**
+	 * 158. 短信发送
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/RegistMessage", method = {
+			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
+	public String registMessage(@RequestBody String reqBody, HttpServletRequest request) {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "UserPoneNo");
+		// 设置短信内容参数
+		String userPoneNo = map.get("userPoneNo");
+		String smsFreeSignName = "恒华光迅H";
+		String smsTemplateCode = "SMS_83185001";
+		int number = CommonMethod.getRandNum(100000, 999999);
+		String smsParamJson = "{\"number\":\"" + number + "\"}";
+		int ret = -1;
+		String dataTag=null;
+		// 发短信
+		try {
+			SendSmsResponse response = RegistMessage.sendSms(smsFreeSignName, smsTemplateCode, smsParamJson,
+					userPoneNo);
+			System.out.println(response.getCode());
+			System.out.println(response.getCode() == "OK");
+			if (response.getCode() == "OK" && response.getMessage() == "OK") {
+				ret = 1;
+			}
+
+		} catch (ClientException e) {
+			e.printStackTrace();
+			ret = -1;
+		}
+		
+		  Map<String,String> result =new HashMap<String,String>();		
+			if(ret==1){
+				dataTag="发送成功";
+				// 把图片内容存入Session中
+				request.getSession().setAttribute("number", number);
+			
+			}
+			else 
+				dataTag="发送失败";
+			result.put("DataTag", dataTag);
+			result.put("ret", String.valueOf(ret));
+			return JSONObject.fromBean(result).toString();
+		
 	}
 
 	/**
@@ -187,30 +250,6 @@ public class UserManagerController {
 	}
 
 	/**
-	 * 3.根据用户帐号获取模块列表  * @return  * @throws JsonProcessingException:TODO  
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String retrieveZtreeNodes(@RequestBody String reqBody) {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
-		String username = map.get("username");
-		RetrieveZtreeNodes retrieveZtreeNodes = userManagerService.retrieveZtreeNodes(username);
-		int statusCode = 0;
-		String result = null;
-		if (retrieveZtreeNodes != null) {
-			statusCode = 1000;
-			try {
-				result = ResponseJson.responseFindJson(retrieveZtreeNodes, statusCode);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return result;
-	}
-
-	/**
 	 * 生成一张随即数字验证码
 	 * 
 	 * @throws IOException
@@ -259,19 +298,31 @@ public class UserManagerController {
 	}
 
 	/**
+	 * 3.根据用户帐号获取模块列表  
 	 * 
+	 * @return  
+	 * @throws JsonProcessingException:TODO
+	 *              
 	 */
-
 	@ResponseBody
-	@RequestMapping(value = "/RegistMessage", method = {
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
 			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String registMessage(@RequestBody String reqBody) {
+	public String retrieveZtreeNodes(@RequestBody String reqBody) {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
+		String username = map.get("username");
+/*
+		UserInfo userInfo = userManagerService.getUserInfoByName(username);
+		List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
+*/
+		int statusCode = 0;
+		String result = null;
+		/*
+		 * if (retrieveZtreeNodes != null) { statusCode = 1000; try { result =
+		 * ResponseJson.responseFindJson(retrieveZtreeNodes, statusCode); }
+		 * catch (JsonProcessingException e) { e.printStackTrace(); } }
+		 */
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserPoneNo");
-		String userPoneNo =map.get("userPoneNo");
-		userManagerService.sendTelMessage(userPoneNo);
 		return "";
 	}
-	
-	
+
 }

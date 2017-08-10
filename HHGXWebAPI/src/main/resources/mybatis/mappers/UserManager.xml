@@ -1,44 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hhgx.soft.mappers.UserManagerMapper">
-
-	<select id="retrieveZtreeNodes" resultMap="retrieveZtreeNodesMap">
-		SELECT
-		u.UserID userID,
-		ut.UserTypeName userbelong,
-		ut.UserBelongTo usertype,
-		ml.ModuleName
-		moduleName,
-		mlz.ModuleID ModuleID,
-		mlz.ModuleName
-		ModuleNamez,
-		mlz.URL URL
-		FROM
-		users u
-		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
-		INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
-		INNER
-		JOIN modulelist ml ON mt.ModuleID = ml.ModuleID
-		INNER JOIN modulelist
-		mlz ON ml.ParentID = mlz.ModuleID
-		WHERE
-		account = #{username};
-	</select>
-
-	<resultMap type="retrieveZtreeNodes" id="retrieveZtreeNodesMap">
-		<id column="userID" property="userID" />
-		<result column="userbelong" property="userbelong" />
-		<result column="usertype" property="usertype" />
-		<result column="moduleName" property="moduleName" />
-		<!-- association用于关联查询： property指属性，javaType是要映射的对象的类型。 -->
-		<association property="childModule" javaType="childModule">
-			<result column="ModuleID" property="moduleID" />
-			<result column="ModuleNamez" property="moduleName" />
-			<result column="URL" property="uRL" />
-		</association>
-	</resultMap>
-
+<mapper namespace="com.hhgx.soft.mappers.UserManagerOrgMapper">
 	<select id="findAccount" resultType="int">
 		SELECT
 		count(*)
@@ -47,12 +10,11 @@
 		WHERE
 		account = #{username};
 	</select>
-
 	<insert id="onlineorgRegister" parameterType="registerNew">
 		INSERT INTO
-		onlineorg (orgid, AreaID, orgname)
+		onlineorg (orgid, AreaID, orgname,ApproveState)
 		VALUES
-		(#{orgid},#{areaID},#{orgname});
+		(#{orgid},#{areaID},#{orgname},#{approveState});
 	</insert>
 	<insert id="maintenanceRegister" parameterType="registerNew">
 
@@ -67,10 +29,11 @@
 		account,
 		PASSWORD,
 		UserBelongTo,
-		UsertypeID
+		UsertypeID,
+		isFirstEnroll
 		)
 		VALUES
-		(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID});
+		(#{userID},#{username}, #{password}, #{userBelongTo},#{usertypeID},#{isFirstEnroll});
 	</insert>
 
 
@@ -82,6 +45,7 @@
 		WHERE
 		account = #{username} and password=#{password};
 	</select>
+	
 	<select id="getUserTypeName" resultType="string">
 		SELECT
 		ut.UserTypeName
@@ -99,5 +63,86 @@
 		WHERE
 			LEFT (o.orgid, 6) = #{areaID};
 	</select>
+	<select id="getUserInfoByName" resultType="userInfo">
+	SELECT
+		ut.UserBelongTo userBelongTo,
+		ut.UserTypeName userTypeName,
+		ut.UserTypeName usertype,
+		u.account account,
+		u.RealName realName,
+		o.orgid  orgid,
+		o.orgname companyName
+		FROM
+		users u
+	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+    INNER JOIN onlineorg o on u.orgid=o.orgid;
+	WHERE
+		account = #{username};
+	</select>
+	
+	<!--
+	<select id="retrieveZtreeNodes" resultMap="ztreeMapResult">
+	
+SELECT
+	m1.ModuleID,
+	m1.ModuleName,
+	m1.URL,
+	m1.OrderNum,
+	m1.ParentID,
+	m1.levelnum,
+	m1.pic,
+    m2.ModuleID,
+	m2.ModuleName,
+	m2.URL,
+	m2.OrderNum,
+	m2.ParentID,
+	m2.levelnum,
+	m2.pic
 
+FROM
+	users u
+INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
+INNER JOIN modulelist m2 on m1.ModuleID =m2.ParentID
+WHERE
+	account =  #{username};
+		
+	</select>
+	 <resultMap type="ztree" id="ztreeMapResult">
+	
+		<id column="userID" property="userID" />
+		<result column="userbelong" property="userbelong" />
+		<result column="usertype" property="usertype" />
+		<result column="moduleName" property="moduleName" />
+		association用于关联查询： property指属性，javaType是要映射的对象的类型。
+		<association property="childModule" javaType="childModule">
+			<result column="ModuleID" property="moduleID" />
+			<result column="ModuleNamez" property="moduleName" />
+			<result column="URL" property="uRL" />
+		</association>
+		
+	</resultMap>
+		
+		 定义数据库字段与实体对象的映射关系  
+	<resultMap type="ztree" id="ztreeMapResult">
+        <id column="customerId" property="customerId"/>  
+        
+		<id column="userID" property="userID" />
+		<result column="userbelong" property="userbelong" />
+		<result column="usertype" property="usertype" />
+		<result column="moduleName" property="moduleName" />      
+        一对多的关系  
+        property: 指的是集合属性的值, ofType：指的是集合中元素的类型  
+        <collection property="childModules" ofType="childModule">  
+            <id column="ModuleID" property="moduleID"/>  
+			<result column="ModuleNamez" property="moduleName" />
+			<result column="URL" property="uRL" /> 
+        </collection>  
+    </resultMap>    
+      
+	 -->
+	
+	
+	
 </mapper>

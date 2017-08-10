@@ -10,7 +10,21 @@ public class RegisterNew {
 	private String areaID;//区域编号:省市县选择，区域编号县信息
 	private String userBelongTo;//用户类别:用于识别用户类别。1:防火单位用户； 2：维保部门用户
 	private String usertypeID;
+	private String approveState; //审批状态
+	private String isFirstEnroll;
 	
+	public String getIsFirstEnroll() {
+		return isFirstEnroll;
+	}
+	public void setIsFirstEnroll(String isFirstEnroll) {
+		this.isFirstEnroll = isFirstEnroll;
+	}
+	public String getApproveState() {
+		return approveState;
+	}
+	public void setApproveState(String approveState) {
+		this.approveState = approveState;
+	}
 	public String getUserID() {
 		return userID;
 	}

@@ -1,3 +1,86 @@
+
+SELECT
+	m1.ModuleID,
+	m1.ModuleName,
+	m1.URL,
+	m1.OrderNum,
+	m1.ParentID,
+	m1.levelnum,
+	m1.pic
+
+FROM
+	users u
+INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
+WHERE
+	account = '1';
+	
+	
+	SELECT
+	m2.ModuleID,
+	m2.ModuleName,
+	m2.URL,
+	m2.OrderNum,
+	m2.ParentID,
+	m2.levelnum,
+	m2.pic
+
+FROM
+	users u
+INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
+INNER JOIN modulelist m2 on m1.ModuleID =m2.ParentID
+WHERE
+	account = '1';
+
+4.
+	SELECT
+		ut.UserBelongTo userBelongTo,
+		ut.UserTypeName userTypeName,
+		ut.UserTypeName usertype,
+		u.account account,
+		u.RealName realName,
+		o.orgid  orgid,
+		o.orgname companyName
+		FROM
+		users u
+		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+    INNER JOIN onlineorg o on u.orgid=o.orgid;
+	
+		WHERE
+		account = '1';
+
+
+
+5.	
+SELECT
+	m.ManagerOrgID,
+	m.ManagerOrgName,
+	m.YnSetMonitor,
+	m.tel,
+	m.`STATUS`,
+	a.AreaName,
+	m.address,
+	m.ManageOrgGrade,
+	m.PName,
+	m.ManagerJob,
+	m.ContactName,
+	m.ContactTel
+FROM
+	managerorg m
+INNER JOIN area a ON m.AreaId = a.AreaId
+
+INNER JOIN managerorg on m.ParentID = m.ManagerOrgID
+
+WHERE 
+ m.ParentID = m.ManagerOrgID and
+	 m.ParentID = '1'
+AND m.ManagerOrgName = '1'
+
+
+
 按防火单位获取巡查记录
 {"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
  "infoBag":{

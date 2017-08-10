@@ -7,40 +7,5 @@ public class RetrieveZtreeNodes {
 	private String usertype;  //用户类型	
 	private String moduleName;//模块名称
 	private ChildModule childModule;//子模块
-	public String getUserID() {
-		return userID;
-	}
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-	public String getUserbelong() {
-		return userbelong;
-	}
-	public void setUserbelong(String userbelong) {
-		this.userbelong = userbelong;
-	}
-	public String getUsertype() {
-		return usertype;
-	}
-	public void setUsertype(String usertype) {
-		this.usertype = usertype;
-	}
-	public String getModuleName() {
-		return moduleName;
-	}
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}
-	public ChildModule getChildModule() {
-		return childModule;
-	}
-	public void setChildModule(ChildModule childModule) {
-		this.childModule = childModule;
-	}
-	@Override
-	public String toString() {
-		return "RetrieveZtreeNodes [userID=" + userID + ", userbelong=" + userbelong + ", usertype=" + usertype
-				+ ", moduleName=" + moduleName + ", childModule=" + childModule + "]";
-	}
-	
+
 }

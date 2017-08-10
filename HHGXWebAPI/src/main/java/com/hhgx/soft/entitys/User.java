@@ -1,203 +1,134 @@
 package com.hhgx.soft.entitys;
 
-public class User {     
-	   private String  UserID          ; 
-	   private String account          ; 
-	   private String  password        ; 
-	   private String RealName         ; 
-	   private String mobilephone      ; 
-	   private String Tel              ; 
-	   private String Email            ; 
-	   private String Status           ; 
-	   private String isFirstEnroll    ; 
-	   private String Remark           ; 
-	   private String UserBelongTo     ; 
-	   private String TokenID          ; 
-	   private String TokenExpireDate  ; 
-	   private String ManagerOrgID     ; 
-	   private String UserTypeID       ; 
-	   private String orgid            ; 
-	   private String MaintenanceId    ;
-	   
-	   
+public class User {
+	
+	private String userID;
+	private String account;
+	private String password;
+	private String realName;
+	private String mobilephone;
+	private String tel;
+	private String email;
+	private String status;
+	private String isFirstEnroll;
+	private String remark;
+	private String userBelongTo;
+	private String tokenID;
+	private String tokenExpireDate;
+	private String managerOrgID;
+	private String userTypeID;
+	private String orgid;
+	private String maintenanceId;
 	public String getUserID() {
-		return UserID;
+		return userID;
 	}
-
-
 	public void setUserID(String userID) {
-		UserID = userID;
+		this.userID = userID;
 	}
-
-
 	public String getAccount() {
 		return account;
 	}
-
-
 	public void setAccount(String account) {
 		this.account = account;
 	}
-
-
 	public String getPassword() {
 		return password;
 	}
-
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 	public String getRealName() {
-		return RealName;
+		return realName;
 	}
-
-
 	public void setRealName(String realName) {
-		RealName = realName;
+		this.realName = realName;
 	}
-
-
 	public String getMobilephone() {
 		return mobilephone;
 	}
-
-
 	public void setMobilephone(String mobilephone) {
 		this.mobilephone = mobilephone;
 	}
-
-
 	public String getTel() {
-		return Tel;
+		return tel;
 	}
-
-
 	public void setTel(String tel) {
-		Tel = tel;
+		this.tel = tel;
 	}
-
-
 	public String getEmail() {
-		return Email;
+		return email;
 	}
-
-
 	public void setEmail(String email) {
-		Email = email;
+		this.email = email;
 	}
-
-
 	public String getStatus() {
-		return Status;
+		return status;
 	}
-
-
 	public void setStatus(String status) {
-		Status = status;
+		this.status = status;
 	}
-
-
 	public String getIsFirstEnroll() {
 		return isFirstEnroll;
 	}
-
-
 	public void setIsFirstEnroll(String isFirstEnroll) {
 		this.isFirstEnroll = isFirstEnroll;
 	}
-
-
 	public String getRemark() {
-		return Remark;
+		return remark;
 	}
-
-
 	public void setRemark(String remark) {
-		Remark = remark;
+		this.remark = remark;
 	}
-
-
 	public String getUserBelongTo() {
-		return UserBelongTo;
+		return userBelongTo;
 	}
-
-
 	public void setUserBelongTo(String userBelongTo) {
-		UserBelongTo = userBelongTo;
+		this.userBelongTo = userBelongTo;
 	}
-
-
 	public String getTokenID() {
-		return TokenID;
+		return tokenID;
 	}
-
-
 	public void setTokenID(String tokenID) {
-		TokenID = tokenID;
+		this.tokenID = tokenID;
 	}
-
-
 	public String getTokenExpireDate() {
-		return TokenExpireDate;
+		return tokenExpireDate;
 	}
-
-
 	public void setTokenExpireDate(String tokenExpireDate) {
-		TokenExpireDate = tokenExpireDate;
+		this.tokenExpireDate = tokenExpireDate;
 	}
-
-
 	public String getManagerOrgID() {
-		return ManagerOrgID;
+		return managerOrgID;
 	}
-
-
 	public void setManagerOrgID(String managerOrgID) {
-		ManagerOrgID = managerOrgID;
+		this.managerOrgID = managerOrgID;
 	}
-
-
 	public String getUserTypeID() {
-		return UserTypeID;
+		return userTypeID;
 	}
-
-
 	public void setUserTypeID(String userTypeID) {
-		UserTypeID = userTypeID;
+		this.userTypeID = userTypeID;
 	}
-
-
 	public String getOrgid() {
 		return orgid;
 	}
-
-
 	public void setOrgid(String orgid) {
 		this.orgid = orgid;
 	}
-
-
 	public String getMaintenanceId() {
-		return MaintenanceId;
+		return maintenanceId;
 	}
-
-
 	public void setMaintenanceId(String maintenanceId) {
-		MaintenanceId = maintenanceId;
+		this.maintenanceId = maintenanceId;
 	}
-
-
 	@Override
 	public String toString() {
-		return "User [UserID=" + UserID + ", account=" + account + ", password=" + password + ", RealName=" + RealName
-				+ ", mobilephone=" + mobilephone + ", Tel=" + Tel + ", Email=" + Email + ", Status=" + Status
-				+ ", isFirstEnroll=" + isFirstEnroll + ", Remark=" + Remark + ", UserBelongTo=" + UserBelongTo
-				+ ", TokenID=" + TokenID + ", TokenExpireDate=" + TokenExpireDate + ", ManagerOrgID=" + ManagerOrgID
-				+ ", UserTypeID=" + UserTypeID + ", orgid=" + orgid + ", MaintenanceId=" + MaintenanceId + "]";
-	} 
-	                                   
-	                                   
+		return "User [userID=" + userID + ", account=" + account + ", password=" + password + ", realName=" + realName
+				+ ", mobilephone=" + mobilephone + ", tel=" + tel + ", email=" + email + ", status=" + status
+				+ ", isFirstEnroll=" + isFirstEnroll + ", remark=" + remark + ", userBelongTo=" + userBelongTo
+				+ ", tokenID=" + tokenID + ", tokenExpireDate=" + tokenExpireDate + ", managerOrgID=" + managerOrgID
+				+ ", userTypeID=" + userTypeID + ", orgid=" + orgid + ", maintenanceId=" + maintenanceId + "]";
+	}
+
+
 }
