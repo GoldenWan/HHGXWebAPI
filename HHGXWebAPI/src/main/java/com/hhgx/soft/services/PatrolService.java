@@ -22,5 +22,23 @@ public class PatrolService {
 		return patrolMapper.getPatrolRecordByOrg(orgID, startDate, endDate, startPos, pageSize);
 	}
 
+	public void deleteCheckRecord(String userCheckId) {
+		 patrolMapper.deleteCheckRecord(userCheckId);
+	}
+
+	public void addUserCheckList(String userCheckId, String orgID, String userCheckTime, String orgUser, String orgManagerId) {
+		patrolMapper.addUserCheckList(userCheckId, orgID, userCheckTime, orgUser, orgManagerId);
+	}
+
+	public void addUserCheckInfoByOrgid(String userCheckId, String orgID) {
+patrolMapper.addUserCheckInfoByOrgid(userCheckId, orgID);	
+	}
+
+	public void updateUserCheckList(String userCheckId, String userCheckTime) {
+patrolMapper.updateUserCheckList(userCheckId, userCheckTime);
+		
+	}
+
+
 	
 }

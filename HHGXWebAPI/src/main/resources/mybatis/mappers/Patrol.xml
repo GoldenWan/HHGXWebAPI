@@ -5,50 +5,50 @@
 
 
 	<select id="gePatrolRecordByOrgCount" resultType="int">
-	SELECT
+		SELECT
 		count(*)
-	FROM
+		FROM
 		(
-			SELECT
-				ul.UserCheckId,
-				ul.UserCheckTime,
-				ul.OrgUserId,
-				ul.OrgManagerId,
-				ul.SubmitTime,
-				ul.Remarks,
-				ul.SubmitStatet,
-				ui.UserCheckResult
-			FROM
-				onlineorg o
-			INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
-			INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
-			WHERE
-				ul.orgid = #{orgID}
+		SELECT
+		ul.UserCheckId,
+		ul.UserCheckTime,
+		ul.OrgUserId,
+		ul.OrgManagerId,
+		ul.SubmitTime,
+		ul.Remarks,
+		ul.SubmitStatet,
+		ui.UserCheckResult
+		FROM
+		uerchecklist ul
+		INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+		WHERE
+		ul.orgid = #{orgID}
 		) n
 
 	</select>
 
 	<select id="getPatrolRecordByOrg" resultMap="patrolRecordMap">
-    SELECT
+		SELECT
 		ul.UserCheckId,
 		ul.UserCheckTime,
 		ul.OrgUserId OrgUser,
-		ul.OrgManagerId OrgManager,
+		ul.OrgManagerId
+		OrgManager,
 		ul.SubmitTime,
 		ul.Remarks,
 		ul.SubmitStatet,
 		ui.UserCheckResult
-	FROM
-		onlineorg o
-	INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
-	INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
-	WHERE
-		ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and  #{endTime}
-		limit #{startPos},#{pageSize}  
+		FROM
+		uerchecklist ul
+		INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+		WHERE
+		ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and
+		#{endTime}
+		limit #{startPos},#{pageSize}
 	</select>
-	
+
 	<resultMap type="patrolRecord" id="patrolRecordMap">
-		 <id column="UserCheckId" property="userCheckId" />
+		<id column="UserCheckId" property="userCheckId" />
 		<result column="UserCheckTime" property="userCheckTime" />
 		<result column="OrgUser" property="orgUser" />
 		<result column="OrgManager" property="orgManager" />
@@ -57,7 +57,40 @@
 		<result column="SubmitStatet" property="submitStatet" />
 		<result column="UserCheckResult" property="userCheckResult" />
 	</resultMap>
-	
-	
+	<delete id="deleteCheckRecord">
+		DELETE
+		FROM
+		uerchecklist
+		WHERE
+		UserCheckId = #{userCheckId};
+		<!-- 使用了级联删除，但需要代码删除与之相关的巡查照片 -->
+	</delete>
+	<insert id="addUserCheckList">
+		insert into uerchecklist(orgid, UserCheckTime,OrgUserId,OrgManager)
+		values (#{orgid},#{userCheckTime},#{orgUserId},#{orgManager});
 
+	</insert>
+	<insert id="addUserCheckInfoByOrgid">
+	INSERT INTO usercheckinfo (UserCheckId, ProjectId)
+	VALUES
+		(
+			#{userCheckId},
+			(
+				SELECT
+					u.ProjectId
+				FROM
+					usercheckcontent u
+				WHERE
+					orgid = #{orgid}
+			)
+		)
+		
+	</insert>
+	<update id="updateUserCheckList">
+	UPDATE uerchecklist
+	SET UserCheckTime = #{userCheckTime}
+	WHERE
+	UserCheckId = #{userCheckId}
+	</update>
+	
 </mapper>
