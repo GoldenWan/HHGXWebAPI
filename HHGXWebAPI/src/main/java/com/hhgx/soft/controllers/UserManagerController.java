@@ -3,10 +3,10 @@ package com.hhgx.soft.controllers;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -300,6 +300,18 @@ public class UserManagerController {
 	/**
 	 * 3.根据用户帐号获取模块列表  
 	 * 
+	 * 
+【所用表:用户Users,用户类型UserType,模块ModuleList,模块用户类型Module_UserType,防火单位Onlineorg,维保单位Maintenance,消防管理部门ManagerOrg】
+【说明：此API主要是获取登录系统后，展现在左侧的模块列表。根据ModuleList及Module_UserType及Users表可以得到一级模块。然后根据一级模块的ModuleID=ModuleList中ParentID获取二级模块。
+
+
+其次需要返回该用户的其他信息，假如在Users表中查找的该记录为ValidUser,则根据ValidUser.UserBelongTo
+case1:OrgIDValue = validUser.orgid;         UserBelongName=”防火单位”;CompanyName为防火单位名字
+case2:OrgIDValue = validUser.MaintenanceId; UserBelongName=”维保单位”,CompanyName......
+case3:OrgIDValue = validUser.ManagerOrgID;  UserBelongName=”管理机构”,CompanyName.....
+case4:UserBelongName=”系统管理员”
+具体返回结构如上面截图
+
 	 * @return  
 	 * @throws JsonProcessingException:TODO
 	 *              
@@ -313,7 +325,10 @@ public class UserManagerController {
 		
 		if(!username.equals(null)){
 			UserInfo userInfo = userManagerService.getUserInfoByName(username);
-			//List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
+			userInfo.getUserBelongTo();
+			
+		//	List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
+			
 			
 		}
 

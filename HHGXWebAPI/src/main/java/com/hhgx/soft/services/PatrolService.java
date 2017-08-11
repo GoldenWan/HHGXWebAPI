@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.mappers.PatrolMapper;
 
 @Service
@@ -37,6 +39,34 @@ patrolMapper.addUserCheckInfoByOrgid(userCheckId, orgID);
 	public void updateUserCheckList(String userCheckId, String userCheckTime) {
 patrolMapper.updateUserCheckList(userCheckId, userCheckTime);
 		
+	}
+
+	public void updateSubmitState(String userCheckId, String submitState) {
+		patrolMapper.updateSubmitState(userCheckId, submitState);
+		
+	}
+
+	public boolean findNullUserCheckInfo(String userCheckId) {
+		int sum =0;
+		List<UserCheckInfo> patrolList = patrolMapper.findNullUserCheckInfo(userCheckId);
+		
+		for(UserCheckInfo userCheckInfo : patrolList){
+			if(StringUtils.isEmpty(userCheckInfo.getFaultShow())){
+				sum=sum+1;
+			}
+			if(StringUtils.isEmpty(userCheckInfo.getHandingimmediately())){
+				sum=sum+1;
+			}
+			if(StringUtils.isEmpty(userCheckInfo.getUserCheckResult())){
+				sum=sum+1;
+			}
+			if(StringUtils.isEmpty(userCheckInfo.getYnHanding())){
+				sum=sum+1;
+			}
+			
+		}
+		
+		return sum>0 ? true:false;
 	}
 
 

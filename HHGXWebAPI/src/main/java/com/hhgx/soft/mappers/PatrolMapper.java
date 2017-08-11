@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.UserCheckInfo;
 
 
 @MapperScan
@@ -25,5 +26,9 @@ public interface PatrolMapper {
 	void addUserCheckInfoByOrgid(@Param("userCheckId") String userCheckId, @Param("orgID") String orgID);
 
 	void updateUserCheckList(@Param("userCheckId")String userCheckId, @Param("userCheckTime")String userCheckTime);
+
+	List<UserCheckInfo> findNullUserCheckInfo(@Param("userCheckId")String userCheckId);
+	void updateSubmitState(@Param("userCheckId")String userCheckId, @Param("submitState") String submitState);
+
 
 }

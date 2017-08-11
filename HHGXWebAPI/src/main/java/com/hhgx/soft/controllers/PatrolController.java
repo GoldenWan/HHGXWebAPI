@@ -22,6 +22,8 @@ import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 
+import net.sf.json.JSONObject;
+
 /**
  * 消防工作记录
  * 
@@ -115,8 +117,6 @@ public class PatrolController {
 		String userCheckId = map.get("userCheckId");
 		
 		patrolService.deleteCheckRecord(userCheckId);
-		
-
 		return null;
 	}
 
@@ -188,15 +188,39 @@ public class PatrolController {
 	/**
 	 *157.检查并修改巡查记录状态【**】
 	 *【所用表：巡查情况UserCheckInfo，巡查记录UerCheckList】
+	 * @throws JsonProcessingException 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSubmitState", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireSafetyCheckList(@RequestBody String reqBody) {
+	public String updateSubmitState(@RequestBody String reqBody) throws JsonProcessingException {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("UserCheckId");
-		
+		String submitState = "已提交";
+		boolean flag =false;
+	   Map<String,String> result =new HashMap<String,String>();		
 
-		return null;
+		try {
+			
+			if(!patrolService.findNullUserCheckInfo(userCheckId)){
+				patrolService.updateSubmitState(userCheckId,submitState);
+				flag =true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			flag=false;
+		}
+		if (flag) {
+			result.put("DataTag", "提交成功");
+			result.put("flag", String.valueOf(flag));
+			return JSONObject.fromBean(result).toString();
+			
+		} else {
+			result.put("DataTag", "提交失败");
+			result.put("flag", String.valueOf(flag));
+			return JSONObject.fromBean(result).toString();
+			
+		}
+		
 	}
 
 	

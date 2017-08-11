@@ -92,5 +92,25 @@
 	WHERE
 	UserCheckId = #{userCheckId}
 	</update>
+	<select id="findNullUserCheckInfo" resultType="userCheckInfo">
+	SELECT
+		ui.UserCheckId,
+		ui.ProjectId,
+		ui.UserCheckResult,
+		ui.FaultShow,
+		ui.YnHanding,
+		ui.Handingimmediately
+	FROM
+		uerchecklist ul
+	INNER JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
+	WHERE
+		ul.UserCheckId = #{userCheckId}
+	</select>
+	<update id="updateSubmitState">
+	UPDATE uerchecklist q
+	SET q.SubmitStatet = #{submitStatet}
+	WHERE
+		q.UserCheckId = #{userCheckId}
+	</update>
 	
 </mapper>

@@ -16,6 +16,7 @@
 	    <typeAlias alias="managerOrg" type="com.hhgx.soft.entitys.ManagerOrg"/> 
 	    <typeAlias alias="managerSubs" type="com.hhgx.soft.entitys.ManagerSubs"/> 
 	    <typeAlias alias="userInfo" type="com.hhgx.soft.entitys.UserInfo"/> 
+	    <typeAlias alias="userCheckInfo" type="com.hhgx.soft.entitys.UserCheckInfo"/> 
 	    <typeAlias alias="ztree" type="com.hhgx.soft.entitys.Ztree"/> 
 	
 	</typeAliases> 
