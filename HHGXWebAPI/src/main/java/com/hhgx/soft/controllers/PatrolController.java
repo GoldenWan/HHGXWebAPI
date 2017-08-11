@@ -53,7 +53,7 @@ public class PatrolController {
 
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
-		List<Map<String, String>> lmList = new ArrayList<>();
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID);
 		int statusCode = -1;
 
