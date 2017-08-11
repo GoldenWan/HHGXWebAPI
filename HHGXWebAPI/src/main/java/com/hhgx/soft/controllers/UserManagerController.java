@@ -169,8 +169,8 @@ public class UserManagerController {
 			SendSmsResponse response = RegistMessage.sendSms(smsFreeSignName, smsTemplateCode, smsParamJson,
 					userPoneNo);
 			System.out.println(response.getCode());
-			System.out.println(response.getCode() == "OK");
-			if (response.getCode() == "OK" && response.getMessage() == "OK") {
+			System.out.println(response.getCode().equals("OK"));
+			if (response.getCode().equals("OK") && response.getMessage().equals("OK")) {
 				ret = 1;
 			}
 
@@ -183,7 +183,7 @@ public class UserManagerController {
 			if(ret==1){
 				dataTag="发送成功";
 				// 把图片内容存入Session中
-				request.getSession().setAttribute("number", number);
+				request.getSession().setAttribute("number", String.valueOf(number));
 			
 			}
 			else 
@@ -310,10 +310,14 @@ public class UserManagerController {
 	public String retrieveZtreeNodes(@RequestBody String reqBody) {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
 		String username = map.get("username");
-/*
-		UserInfo userInfo = userManagerService.getUserInfoByName(username);
-		List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
-*/
+		
+		if(!username.equals(null)){
+			UserInfo userInfo = userManagerService.getUserInfoByName(username);
+			//List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
+			
+		}
+
+
 		int statusCode = 0;
 		String result = null;
 		/*

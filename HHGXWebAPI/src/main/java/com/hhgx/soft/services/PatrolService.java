@@ -14,8 +14,8 @@ public class PatrolService {
 	@Autowired
 	private PatrolMapper patrolMapper;
 
-	public int gePatrolRecordByOrgCount(String orgID, String startDate, String endDate) {
-		return patrolMapper.gePatrolRecordByOrgCount(orgID, startDate, endDate);
+	public int gePatrolRecordByOrgCount(String orgID) {
+		return patrolMapper.gePatrolRecordByOrgCount(orgID);
 	}
 
 	public List<PatrolRecord> getPatrolRecordByOrg(String orgID, String startDate, String endDate, int startPos, int pageSize) {

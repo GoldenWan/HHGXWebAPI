@@ -14,6 +14,8 @@ public class PatrolRecord {
 	private String submitStatet;
 	
 	
+	
+	
 	public String getUserCheckId() {
 		return userCheckId;
 	}

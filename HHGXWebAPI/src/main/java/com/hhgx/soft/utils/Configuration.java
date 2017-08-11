@@ -10,14 +10,13 @@ public class Configuration {
 	
 	// 读取配置文件，并初始化配置
 	static {
-		InputStream in = Configuration.class.getClassLoader().getResourceAsStream("configuration.properties");
+		InputStream in = Configuration.class.getClassLoader().getResourceAsStream("configparams.properties");
 		Properties props = new Properties();
 		try {
 			// 1，读取配置文件
 			props.load(in);
 			// 2，初始化配置
 			pageSize = Integer.parseInt(props.getProperty("pageSize"));
-			System.out.println("------- 配置文件加载完毕 ------");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {

@@ -13,10 +13,9 @@ import com.hhgx.soft.entitys.PatrolRecord;
 @Component("/patrolMapper")
 public interface PatrolMapper {
 
-	int gePatrolRecordByOrgCount(@Param("orgID") String orgID, @Param("startDate") String startDate,
-			@Param("EndDate") String EndDate);
+	int gePatrolRecordByOrgCount(@Param("orgID") String orgID);
 
 	List<PatrolRecord> getPatrolRecordByOrg(@Param("orgID") String orgID, @Param("startDate") String startDate,
-			@Param("EndDate") String EndDate, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
+			@Param("endTime") String EndDate, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
 
 }

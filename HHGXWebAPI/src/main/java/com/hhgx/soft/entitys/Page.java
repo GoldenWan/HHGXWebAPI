@@ -1,20 +1,19 @@
 package com.hhgx.soft.entitys;
 
-import java.io.Serializable;
 
 /**
  * 分页
  */
-public class Page implements Serializable {
+public class Page  {
 
 	/**
 	 *  * Function: 分页  * serialVersionUID:TODO    
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private int pageIndex =1 ; // 当前页数
+	private int pageIndex = 1; // 当前页数
 
-	private int pageSize = 20; // 每页显示记录的条数
+	private static int pageSize = 20; // 每页显示记录的条数
 
 	private int totalCount; // 总的记录条数
 
@@ -70,10 +69,6 @@ public class Page implements Serializable {
 
 	public int getPageSize() {
 		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
 	}
 
 	public int getTotalCount() {
@@ -151,4 +146,27 @@ public class Page implements Serializable {
 	public void setHasLast(boolean hasLast) {
 		this.hasLast = hasLast;
 	}
+
+	/*
+	 // 读取配置文件，并初始化配置
+	static {
+		InputStream in = Configuration.class.getClassLoader().getResourceAsStream("configparams.properties");
+		Properties props = new Properties();
+		try {
+			// 1，读取配置文件
+			props.load(in);
+			// 2，初始化配置
+			pageSize = Integer.parseInt(props.getProperty("pageSize"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	} 
+	 */
+
 }

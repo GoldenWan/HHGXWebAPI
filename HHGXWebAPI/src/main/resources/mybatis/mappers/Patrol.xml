@@ -3,31 +3,37 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.PatrolMapper">
 
-<!-- 
+
 	<select id="gePatrolRecordByOrgCount" resultType="int">
-	select  count(*) from (
-	ul.UserCheckId,
-	ul.UserCheckTime,
-	ul.OrgUserId,
-	ul.OrgManagerId,
-	ul.SubmitTime,
-	ul.Remarks,
-	ul.SubmitStatet,
-	ui.UserCheckResult
-FROM
-	onlineorg o
-INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
-INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
-WHERE
-	ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and  #{endTime}) n 
+	SELECT
+		count(*)
+	FROM
+		(
+			SELECT
+				ul.UserCheckId,
+				ul.UserCheckTime,
+				ul.OrgUserId,
+				ul.OrgManagerId,
+				ul.SubmitTime,
+				ul.Remarks,
+				ul.SubmitStatet,
+				ui.UserCheckResult
+			FROM
+				onlineorg o
+			INNER JOIN uerchecklist ul ON o.orgid = ul.orgid
+			INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+			WHERE
+				ul.orgid = #{orgID}
+		) n
 
 	</select>
-	<select id="getPatrolRecordByOrg" resultType="PatrolRecord">
+
+	<select id="getPatrolRecordByOrg" resultMap="patrolRecordMap">
     SELECT
 		ul.UserCheckId,
 		ul.UserCheckTime,
-		ul.OrgUserId,
-		ul.OrgManagerId,
+		ul.OrgUserId OrgUser,
+		ul.OrgManagerId OrgManager,
 		ul.SubmitTime,
 		ul.Remarks,
 		ul.SubmitStatet,
@@ -40,7 +46,18 @@ WHERE
 		ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and  #{endTime}
 		limit #{startPos},#{pageSize}  
 	</select>
-	 -->
+	
+	<resultMap type="patrolRecord" id="patrolRecordMap">
+		 <id column="UserCheckId" property="userCheckId" />
+		<result column="UserCheckTime" property="userCheckTime" />
+		<result column="OrgUser" property="orgUser" />
+		<result column="OrgManager" property="orgManager" />
+		<result column="SubmitTime" property="submitTime" />
+		<result column="Remarks" property="remarks" />
+		<result column="SubmitStatet" property="submitStatet" />
+		<result column="UserCheckResult" property="userCheckResult" />
+	</resultMap>
+	
 	
 
 </mapper>

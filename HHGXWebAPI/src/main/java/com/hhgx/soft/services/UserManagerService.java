@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.hhgx.soft.entitys.RegisterNew;
 import com.hhgx.soft.entitys.RetrieveZtreeNodes;
 import com.hhgx.soft.entitys.User;
+import com.hhgx.soft.entitys.UserInfo;
 import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.mappers.UserManagerOrgMapper;
 
@@ -61,6 +62,10 @@ public class UserManagerService {
 
 	public String findMaxBack6(String areaID) {
 		return userManagerMapper.findMaxBack6(areaID);
+	}
+
+	public UserInfo getUserInfoByName(String username) {
+		return userManagerMapper.getUserInfoByName(username);
 	}
 
 	
