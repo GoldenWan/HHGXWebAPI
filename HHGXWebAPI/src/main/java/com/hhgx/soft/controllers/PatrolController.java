@@ -237,7 +237,6 @@ public class PatrolController {
 			result.put("DataTag", "提交失败");
 			result.put("flag", String.valueOf(flag));
 			return JSONObject.fromBean(result).toString();
-			
 		}
 	}
 
