@@ -17,8 +17,10 @@ import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.services.PatrolService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
+import com.hhgx.soft.utils.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
@@ -38,7 +40,7 @@ public class PatrolController {
 
 	/**
 	 * 12.按防火单位获取巡查记录【**】 【说明：SubmitFlag根据SubmitStatet设定， 若SubmitStatet为“已提交”
-	 * 则SubmitFlag为true,否则为false】  * @param reqBody  * @return:TODO  
+	 * 则SubmitFlag为true,否则为false】 ?* @param reqBody ?* @return:TODO ?
 	 * 
 	 * @throws JsonProcessingException
 	 */
@@ -101,67 +103,42 @@ public class PatrolController {
 
 	}
 
-	/**
-	 * 17.添加巡查记录
-	 */
 
-	@ResponseBody
-	@RequestMapping(value = "/AddPatrolRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String addPatrolRecord(@RequestBody String reqBody) {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "OrgID", "UserCheckTime", "OrgUser");
-		String orgID = map.get("OrgID");
-		String userCheckTime = map.get("UserCheckTime");
-		String orgUser = map.get("OrgUser");
-
-		return null;
-	}
-
-	/**
-	 * 16.按防火单位获取应该巡查的项目
-	 */
-
-	@ResponseBody
-	@RequestMapping(value = "/GetPatrolProject", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolProject(@RequestBody String reqBody) {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid");
-		String orgID = map.get("orgid");
-
-		return null;
-	}
-
-	/**
-	 * 114.每日巡查记录表查询
-	 */
-
-	@ResponseBody
-	@RequestMapping(value = "/GetCheckRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String GetCheckRecord(@RequestBody String reqBody) {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
-		String userCheckId = map.get("UserCheckId");
-
-		return null;
-	}
-
+	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
+	 * @throws JsonProcessingException 
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteCheckRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteCheckRecord(@RequestBody String reqBody) {
+	public String deleteCheckRecord(@RequestBody String reqBody) throws JsonProcessingException {
 
 		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
-		String userCheckId = map.get("UserCheckId");
-
-		return null;
+		String userCheckId = map.get("userCheckId");
+		String dataBag =null; 
+		int statusCode =-1;
+		try {
+			patrolService.deleteCheckRecord(userCheckId);
+			statusCode =ConstValues.OK;
+		} catch (Exception e) {
+			statusCode =ConstValues.FAILED;
+		}
+		if (statusCode==ConstValues.OK) {
+			dataBag = "刪除成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag ="刪除失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+		
+		
 	}
 
 	/**
 	 * 126.新增巡查记录【**】
 	 * 【说明：新增巡查记录，并按防火单位查找UserCheckContent表获得巡查内容编号，再相应插入UserCheckInfo表】
+	 * @throws JsonProcessingException 
 	 * 
 	 */
 	@ResponseBody
@@ -169,56 +146,63 @@ public class PatrolController {
 	public String addUserCheckList(@RequestBody String reqBody) throws JsonProcessingException {
 
 		Map<String, String> map = RequestJson.reqJson(reqBody, "OrgID", "UserCheckTime", "OrgUser", "OrgManagerId");
-		String orgID = map.get("OrgID");
-		String userCheckTime = map.get("UserCheckTime");
-		String orgUser = map.get("OrgUser");
-		String orgManagerId = map.get("OrgManagerId");
+		String orgID = map.get("orgID");
+		String userCheckTime = map.get("userCheckTime");
+		String orgUser = map.get("orgUser");
+		String orgManagerId = map.get("orgManagerId");
+		String userCheckId = UUIDGenerator.getUUID();
+		String dataBag =null; 
+		int statusCode =-1;
+		String submitTime=DateUtils.timesstampToString();
+	try {
 
-		return null;
+		patrolService.addUserCheckList(userCheckId,orgID,userCheckTime,orgUser,orgManagerId,submitTime);
+		patrolService.addUserCheckInfoByOrgid(userCheckId,orgID);
+		statusCode =ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode =ConstValues.FAILED;
+		}
+		if (statusCode==ConstValues.OK) {
+			dataBag = "插入成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag ="插入失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+		
 	}
+	
+	
 
 	/**
 	 * 127.修改巡查记录【**】
+	 * @throws JsonProcessingException 
 	 * 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateUserCheckList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String updateUserCheckList(@RequestBody String reqBody) {
+	public String updateUserCheckList(@RequestBody String reqBody) throws JsonProcessingException {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId", "UserCheckTime");
-		String userCheckId = map.get("UserCheckId");
-		String userCheckTime = map.get("UserCheckTime");
-
-		return null;
+		String userCheckId = map.get("userCheckId");
+		String userCheckTime= map.get("userCheckTime");
+		String dataBag =null; 
+		int statusCode =-1;
+		try {
+		patrolService.updateUserCheckList(userCheckId,userCheckTime);
+		statusCode =ConstValues.OK;
+	} catch (Exception e) {
+		statusCode =ConstValues.FAILED;
+	}
+	if (statusCode==ConstValues.OK) {
+		dataBag = "修改成功";
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	} else {
+		dataBag ="修改失败";
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
 	}
 
-	/**
-	 * 
-	 * 157.检查并修改巡查记录状态【**】
-	 */
-
-	@ResponseBody
-	@RequestMapping(value = "/UpdateSubmitState ", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String UpdateSubmitState(@RequestBody String reqBody) {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
-		String userCheckId = map.get("UserCheckId");
-
-		return null;
-	}
-
-	/**
-	 * 116.防火检查记录列表信息【**】【分页】
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/FireSafetyCheckList ", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireSafetyCheckList(@RequestBody String reqBody) {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "StartTime", "EndTime", "PageIndex");
-		String userCheckId = map.get("orgid");
-		String startTime = map.get("StartTime");
-		String endTime = map.get("EndTime");
-		String pageIndex = map.get("PageIndex");
-
-		return null;
-	}
 
 	/**
 	 *157.检查并修改巡查记录状态【**】
@@ -255,20 +239,10 @@ public class PatrolController {
 			return JSONObject.fromBean(result).toString();
 			
 		}
-		
 	}
 
-	/**
-	 * 117.编辑防火检查记录【**】
-	 */
-
-	@ResponseBody
-	@RequestMapping(value = "/EditFireSafetyCheck ", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String editFireSafetyCheck(@RequestBody String reqBody) {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "FireSafetyCheckID", "CheckTime", "checkposite",
-				"Department", "Problem", "handing", "attendperson", "CheckedDepartment", "RecordMan", "SafetyMan");
-		String orgid = map.get("orgid");
-		return null;
-	}
+	
+	
+	
 
 }
