@@ -16,8 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.services.PatrolService;
-import com.hhgx.soft.utils.Configuration;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -107,17 +107,32 @@ public class PatrolController {
 	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
+	 * @throws JsonProcessingException 
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteCheckRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteCheckRecord(@RequestBody String reqBody) {
+	public String deleteCheckRecord(@RequestBody String reqBody) throws JsonProcessingException {
 
 		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("userCheckId");
+		String dataBag =null; 
+		int statusCode =-1;
+		try {
+			patrolService.deleteCheckRecord(userCheckId);
+			statusCode =ConstValues.OK;
+		} catch (Exception e) {
+			statusCode =ConstValues.FAILED;
+		}
+		if (statusCode==ConstValues.OK) {
+			dataBag = "刪除成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag ="刪除失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
 		
-		patrolService.deleteCheckRecord(userCheckId);
-		return null;
+		
 	}
 
 	/**
@@ -138,12 +153,14 @@ public class PatrolController {
 		String userCheckId = UUIDGenerator.getUUID();
 		String dataBag =null; 
 		int statusCode =-1;
-		try {
-			
-		patrolService.addUserCheckList(userCheckId,orgID,userCheckTime,orgUser,orgManagerId);
+		String submitTime=DateUtils.timesstampToString();
+	try {
+
+		patrolService.addUserCheckList(userCheckId,orgID,userCheckTime,orgUser,orgManagerId,submitTime);
 		patrolService.addUserCheckInfoByOrgid(userCheckId,orgID);
 		statusCode =ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode =ConstValues.FAILED;
 		}
 		if (statusCode==ConstValues.OK) {
@@ -155,6 +172,8 @@ public class PatrolController {
 		}
 		
 	}
+	
+	
 
 	/**
 	 * 127.修改巡查记录【**】

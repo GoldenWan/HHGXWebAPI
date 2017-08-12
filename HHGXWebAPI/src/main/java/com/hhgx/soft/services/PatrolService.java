@@ -28,8 +28,8 @@ public class PatrolService {
 		 patrolMapper.deleteCheckRecord(userCheckId);
 	}
 
-	public void addUserCheckList(String userCheckId, String orgID, String userCheckTime, String orgUser, String orgManagerId) {
-		patrolMapper.addUserCheckList(userCheckId, orgID, userCheckTime, orgUser, orgManagerId);
+	public void addUserCheckList(String userCheckId, String orgID, String userCheckTime, String orgUser, String orgManagerId, String submitTime) {
+		patrolMapper.addUserCheckList(userCheckId, orgID, userCheckTime, orgUser, orgManagerId, submitTime);
 	}
 
 	public void addUserCheckInfoByOrgid(String userCheckId, String orgID) {

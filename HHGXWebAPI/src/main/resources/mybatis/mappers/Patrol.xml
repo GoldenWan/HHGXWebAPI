@@ -20,7 +20,8 @@
 		ui.UserCheckResult
 		FROM
 		uerchecklist ul
-		INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+		INNER JOIN usercheckinfo ui ON
+		ul.userCheckId = ui.userCheckId
 		WHERE
 		ul.orgid = #{orgID}
 		) n
@@ -40,11 +41,14 @@
 		ui.UserCheckResult
 		FROM
 		uerchecklist ul
-		INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId
+		INNER JOIN usercheckinfo ui ON
+		ul.userCheckId = ui.userCheckId
 		WHERE
-		ul.orgid = #{orgID} and ul.SubmitTime BETWEEN #{startDate} and
+		ul.orgid = #{orgID} and
+		ul.SubmitTime BETWEEN #{startDate} and
 		#{endTime}
-		limit #{startPos},#{pageSize}
+		limit
+		#{startPos},#{pageSize}
 	</select>
 
 	<resultMap type="patrolRecord" id="patrolRecordMap">
@@ -66,51 +70,54 @@
 		<!-- 使用了级联删除，但需要代码删除与之相关的巡查照片 -->
 	</delete>
 	<insert id="addUserCheckList">
-		insert into uerchecklist(orgid, UserCheckTime,OrgUserId,OrgManager)
-		values (#{orgid},#{userCheckTime},#{orgUserId},#{orgManager});
+		insert into uerchecklist(UserCheckId,orgid,
+		UserCheckTime,OrgUserId,OrgManagerId,SubmitTime)
+		values
+		(#{userCheckId},#{orgID},#{userCheckTime},#{orgUser},#{orgManagerId},#{submitTime});
+	</insert>
+
+
+	<insert id="addUserCheckInfoByOrgid">
+		INSERT INTO usercheckinfo (UserCheckId, ProjectId)
+		VALUES
+		(
+		#{userCheckId},
+		(
+		SELECT
+		u.ProjectId
+		FROM
+		usercheckcontent u
+		WHERE
+		orgid = #{orgID}
+		)
+		)
 
 	</insert>
-	<insert id="addUserCheckInfoByOrgid">
-	INSERT INTO usercheckinfo (UserCheckId, ProjectId)
-	VALUES
-		(
-			#{userCheckId},
-			(
-				SELECT
-					u.ProjectId
-				FROM
-					usercheckcontent u
-				WHERE
-					orgid = #{orgid}
-			)
-		)
-		
-	</insert>
 	<update id="updateUserCheckList">
-	UPDATE uerchecklist
-	SET UserCheckTime = #{userCheckTime}
-	WHERE
-	UserCheckId = #{userCheckId}
+		UPDATE uerchecklist
+		SET UserCheckTime = #{userCheckTime}
+		WHERE
+		UserCheckId = #{userCheckId}
 	</update>
 	<select id="findNullUserCheckInfo" resultType="userCheckInfo">
-	SELECT
+		SELECT
 		ui.UserCheckId,
 		ui.ProjectId,
 		ui.UserCheckResult,
 		ui.FaultShow,
 		ui.YnHanding,
 		ui.Handingimmediately
-	FROM
+		FROM
 		uerchecklist ul
-	INNER JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
-	WHERE
+		INNER JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
+		WHERE
 		ul.UserCheckId = #{userCheckId}
 	</select>
 	<update id="updateSubmitState">
-	UPDATE uerchecklist q
-	SET q.SubmitStatet = #{submitStatet}
-	WHERE
+		UPDATE uerchecklist q
+		SET q.SubmitStatet = #{submitStatet}
+		WHERE
 		q.UserCheckId = #{userCheckId}
 	</update>
-	
+
 </mapper>
