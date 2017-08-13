@@ -3,6 +3,7 @@
 <configuration>
 	<settings>
 		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
 	</settings>
 	
 	<!-- 所有model和与数据表映射对应关系配置 -->
@@ -18,7 +19,8 @@
 	    <typeAlias alias="userInfo" type="com.hhgx.soft.entitys.UserInfo"/> 
 	    <typeAlias alias="userCheckInfo" type="com.hhgx.soft.entitys.UserCheckInfo"/> 
 	    <typeAlias alias="ztree" type="com.hhgx.soft.entitys.Ztree"/> 
-	
+	    <typeAlias alias="fireSafetyCheck" type="com.hhgx.soft.entitys.FireSafetyCheck"/> 
+		<package name="com.hhgx.soft.entitys"/>
 	</typeAliases> 
 
 </configuration>

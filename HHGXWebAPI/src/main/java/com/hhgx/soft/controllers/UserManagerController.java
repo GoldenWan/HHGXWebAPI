@@ -46,6 +46,8 @@ public class UserManagerController {
 	@Autowired
 	UserManagerService userManagerService;
 
+	/******************注册****************************/
+	
 	/**
 	 * 1. 用户注册
 	 * 
@@ -193,6 +195,7 @@ public class UserManagerController {
 			return JSONObject.fromBean(result).toString();
 		
 	}
+	/******************登录****************************/
 
 	/**
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
@@ -331,8 +334,6 @@ case4:UserBelongName=”系统管理员”
 			
 			
 		}
-
-
 		int statusCode = 0;
 		String result = null;
 		/*

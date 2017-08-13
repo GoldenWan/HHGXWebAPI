@@ -69,6 +69,15 @@ patrolMapper.updateUserCheckList(userCheckId, userCheckTime);
 		return sum>0 ? true:false;
 	}
 
+	public int fireSafetyCheckCount(String orgid) {
+		return patrolMapper.fireSafetyCheckCount(orgid);
+	}
+
+	public List<PatrolRecord> getfireSafetyCheckByOrgid(String orgid, String startTime, String endTime, int startPos,
+			int pageSize) {
+		return patrolMapper.getfireSafetyCheckByOrgid(orgid, startTime, endTime, startPos,pageSize);
+	}
+
 
 	
 }

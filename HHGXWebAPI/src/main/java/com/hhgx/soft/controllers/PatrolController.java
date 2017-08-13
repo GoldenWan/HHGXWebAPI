@@ -1,8 +1,5 @@
 
-
-
 package com.hhgx.soft.controllers;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,9 +38,14 @@ public class PatrolController {
 	@Autowired
 	private PatrolService patrolService;
 
+	/***************每日防火巡查***********************/
+	
 	/**
-	 * 12.按防火单位获取巡查记录【**】 【说明：SubmitFlag根据SubmitStatet设定， 若SubmitStatet为“已提交”
-	 * 则SubmitFlag为true,否则为false】 ?* @param reqBody ?* @return:TODO ?
+	 * 12.按防火单位获取巡查记录【**】
+	 *  【说明：SubmitFlag根据SubmitStatet设定， 若SubmitStatet为“已提交”
+	 * 则SubmitFlag为true,否则为false】 ?*
+	 *  @param reqBody ?* 
+	 *  @return:TODO ?
 	 * 
 	 * @throws JsonProcessingException
 	 */
@@ -123,6 +125,9 @@ public class PatrolController {
 		int statusCode =-1;
 		try {
 			patrolService.deleteCheckRecord(userCheckId);
+			
+			String alert;
+			///【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
 			statusCode =ConstValues.OK;
 		} catch (Exception e) {
 			statusCode =ConstValues.FAILED;
@@ -134,6 +139,8 @@ public class PatrolController {
 			dataBag ="刪除失败";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		
+		
 		
 		
 	}
@@ -242,7 +249,75 @@ public class PatrolController {
 			return JSONObject.fromBean(result).toString();
 		}
 	}
+/***************防火检查***********************/
+	/**
+	 * 116.防火检查记录列表信息【**】【分页】
+	 * @param reqBody
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@RequestMapping(value = "/FireSafetyCheckList", method = { RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String fireSafetyCheckList(@RequestBody String reqBody) throws JsonProcessingException {
 
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "StartTime", "EndTime", "PageIndex");
+		String orgid = map.get("orgid");
+		String startTime= map.get("startTime");
+		String endTime= map.get("endTime");
+		String pageIndex = map.get("pageIndex");
+		
+		Page page = null;
+		List<PatrolRecord> patrolRecordList = null;
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		int totalCount = patrolService.fireSafetyCheckCount(orgid);
+		int statusCode = -1;
+
+		try {
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				patrolRecordList = patrolService.getfireSafetyCheckByOrgid(orgid, startTime, endTime, page.getStartPos(),
+						page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				patrolRecordList = patrolService.getfireSafetyCheckByOrgid(orgid, startTime, endTime, page.getStartPos(),
+						page.getPageSize());
+			}
+			statusCode = ConstValues.OK;
+			
+			System.out.println(patrolRecordList.size());
+			for(PatrolRecord patrolRecord:patrolRecordList){
+			String submitStatet=patrolRecord.getSubmitStatet();
+			String submitFlag=null;
+			if(submitStatet.equals("已提交"))
+				submitFlag ="true";
+			else {
+				submitFlag="false";
+			}
+			
+			Map<String, String> map2 = new HashMap<String, String>();
+			map2.put("UserCheckId", patrolRecord.getUserCheckId());
+			map2.put("UserCheckTime",patrolRecord.getUserCheckTime().toString());
+			map2.put("OrgUser", patrolRecord.getOrgUser());
+			map2.put("OrgManager", patrolRecord.getOrgManager());
+			map2.put("SubmitTime", patrolRecord.getSubmitTime().toString());
+			map2.put("Remarks", patrolRecord.getRemarks());
+			map2.put("UserCheckResult", patrolRecord.getUserCheckResult());
+			map2.put("SubmitStatet", patrolRecord.getSubmitStatet());
+			map2.put("SubmitFlag", submitFlag);
+			lmList.add(map2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+
+	}
+
+	
+	
+	
 	
 	
 	

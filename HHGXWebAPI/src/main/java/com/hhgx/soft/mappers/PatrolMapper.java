@@ -32,4 +32,9 @@ public interface PatrolMapper {
 
 	void updateSubmitState(@Param("userCheckId") String userCheckId, @Param("submitState") String submitState);
 
+	int fireSafetyCheckCount(@Param("orgid") String orgid);
+
+	List<PatrolRecord> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")String startTime, @Param("endTime") String endTime, @Param("startPos") int startPos,
+			@Param("pageSize") int pageSize);
+
 }

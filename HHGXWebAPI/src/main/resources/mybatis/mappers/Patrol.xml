@@ -2,7 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.PatrolMapper">
-
+	<!-- <resultMap id=" " type=" "> <id column=" " property=" "/> <result column=" 
+		" property=" "/> <result column=" " property=" "/> <result column=" " property=" 
+		"/> <result column=" " property=" "/> <result column=" " property=" "/> <result 
+		column=" " property=" "/> <result column=" " property=" "/> </resultMap> -->
 
 	<select id="gePatrolRecordByOrgCount" resultType="int">
 		SELECT
@@ -95,7 +98,8 @@
 	</insert>
 	<update id="updateUserCheckList">
 		UPDATE uerchecklist
-		SET UserCheckTime = #{userCheckTime}
+		SET UserCheckTime =
+		#{userCheckTime}
 		WHERE
 		UserCheckId = #{userCheckId}
 	</update>
@@ -109,15 +113,61 @@
 		ui.Handingimmediately
 		FROM
 		uerchecklist ul
-		INNER JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
+		INNER JOIN
+		usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
 		WHERE
 		ul.UserCheckId = #{userCheckId}
 	</select>
 	<update id="updateSubmitState">
 		UPDATE uerchecklist q
-		SET q.SubmitStatet = #{submitStatet}
+		SET q.SubmitStatet =
+		#{submitStatet}
 		WHERE
 		q.UserCheckId = #{userCheckId}
 	</update>
+
+	<select id="fireSafetyCheckCount">
+		SELECT
+		count(*)
+		FROM
+		firesafetycheck
+		WHERE
+		orgid =
+		#{orgid};
+	</select>
+	<select id="getfireSafetyCheckByOrgid" resultMap="fireSafetyCheckMap">
+	SELECT
+		FireSafetyCheckID,
+		CheckTime,
+		checkposite,
+		Department,
+		Problem,
+		handing,
+		attendperson,
+		CheckedDepartment,
+		RecordMan,
+		SafetyMan
+	FROM
+		firesafetycheck
+	WHERE
+		orgid = #{orgid} and
+		CheckTime BETWEEN #{startTime} and #{endTime}
+	LIMIT #{startPos},#{pageSize}
+	</select>
+
+
+	<resultMap id="fireSafetyCheckMap" type="fireSafetyCheck">
+		<id column="FireSafetyCheckID" property="fireSafetyCheckID" />
+		<result column="CheckTime" property="checkTime" />
+		<result column="checkposite" property="checkposite" />
+		<result column="Department" property="department" />
+		<result column="Problem" property="problem" />
+		<result column="handing" property="handing" />
+		<result column="attendperson" property="attendperson" />
+		<result column="CheckedDepartment" property="checkedDepartment" />
+		<result column="RecordMan" property="recordMan" />
+		<result column="SafetyMan" property="safetyMan" />
+
+	</resultMap>
 
 </mapper>
