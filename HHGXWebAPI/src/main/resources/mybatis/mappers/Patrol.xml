@@ -126,7 +126,7 @@
 		q.UserCheckId = #{userCheckId}
 	</update>
 
-	<select id="fireSafetyCheckCount">
+	<select id="fireSafetyCheckCount" resultType="int">
 		SELECT
 		count(*)
 		FROM

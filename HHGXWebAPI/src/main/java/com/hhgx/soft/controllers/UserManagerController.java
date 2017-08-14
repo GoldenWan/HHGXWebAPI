@@ -330,7 +330,7 @@ case4:UserBelongName=”系统管理员”
 			UserInfo userInfo = userManagerService.getUserInfoByName(username);
 			userInfo.getUserBelongTo();
 			
-		//	List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
+			//List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
 			
 			
 		}

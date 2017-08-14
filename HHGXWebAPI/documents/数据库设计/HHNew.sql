@@ -995,21 +995,24 @@ CREATE TABLE Training (
 	PRIMARY KEY (TrainingID)
 ) ENGINE = INNODB;
 
--- 
--- TABLE: UerCheckList 
---
-CREATE TABLE UerCheckList (
-	UserCheckId CHAR (36) NOT NULL,
-	UserCheckTime DATETIME,
-	OrgUserId VARCHAR (20),
-	OrgManagerId VARCHAR (20),
-	SubmitStatet VARCHAR (20),
-	SubmitTime DATETIME,
-	Remarks VARCHAR (200),
-	orgid CHAR (12) NOT NULL,
-	siteid CHAR (20),
-	PRIMARY KEY (UserCheckId)
-) ENGINE = INNODB;
+CREATE TABLE UerCheckList(
+    UserCheckId      CHAR(36)        NOT NULL,
+    UserCheckTime    DATETIME,
+    OrgUserId        VARCHAR(20),
+    OrgManagerId     VARCHAR(20),
+    SubmitStatet     VARCHAR(20),
+    SubmitTime       DATETIME,
+    Remarks          VARCHAR(200),
+    orgid            CHAR(12)        NOT NULL,
+    siteid           CHAR(20),
+    PRIMARY KEY (UserCheckId), 
+    CONSTRAINT Refsite150 FOREIGN KEY (siteid)
+    REFERENCES site(siteid),
+    CONSTRAINT Refonlineorg56 FOREIGN KEY (orgid)
+    REFERENCES onlineorg(orgid)
+)ENGINE=INNODB
+;
+
 
 -- 
 -- TABLE: UserCheckContent 
@@ -1483,12 +1486,6 @@ ALTER TABLE Ticket ADD CONSTRAINT RefManagerOrg159 FOREIGN KEY (ManagerOrgID) RE
 --
 ALTER TABLE Training ADD CONSTRAINT Refonlineorg145 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
 
--- 
--- TABLE: UerCheckList 
---
-ALTER TABLE UerCheckList ADD CONSTRAINT Refsite150 FOREIGN KEY (siteid) REFERENCES site (siteid);
-
-ALTER TABLE UerCheckList ADD CONSTRAINT Refonlineorg56 FOREIGN KEY (orgid) REFERENCES  (orgid);
 
 -- 
 -- TABLE: UserCheckContent 
