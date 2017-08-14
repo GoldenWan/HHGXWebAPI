@@ -39,7 +39,6 @@ import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -318,7 +317,7 @@ public class UserManagerController {
 	 * validUser.MaintenanceId; UserBelongName=”维保单位”,CompanyName......
 	 * case3:OrgIDValue = validUser.ManagerOrgID;
 	 * UserBelongName=”管理机构”,CompanyName..... case4:UserBelongName=”系统管理员”
-	 
+	 * 
 	 * 
 	 * @return  
 	 * @throws JsonProcessingException:TODO
@@ -332,7 +331,8 @@ public class UserManagerController {
 		String username = map.get("username");
 		Map<String, Object> dataBag = new HashMap<String, Object>();
 		int statusCode = 0;
-			
+try {
+	
 		if (!username.equals(null)) {
 			UserInfo validUser = userManagerService.getUserInfoByName(username);
 			String userBelongTo = validUser.getUserBelongTo();
@@ -357,7 +357,7 @@ public class UserManagerController {
 			default:
 				break;
 			}
-			
+
 			Map<String, Object> validUserMap = new HashMap<String, Object>();
 			validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
 			validUserMap.put("userBelongName", validUser.getUserBelongName());
@@ -366,50 +366,44 @@ public class UserManagerController {
 			validUserMap.put("RealName", validUser.getRealName());
 			validUserMap.put("OrgID", validUser.getOrgID());
 			validUserMap.put("CompanyName", validUser.getCompanyName());
-			
-			JSONArray lmList = new JSONArray();
-			try{
-			Map<String, Object> ztreeMap = new HashMap<String, Object>();
+			System.out.println(JSONObject.fromBean(validUserMap).toString());
 			List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(username);
-			for (int i=0;i<ztrees.size();i++) {
-				ztreeMap.put("ModuleID", ztrees.get(i).getModuleID());
-				ztreeMap.put("ModuleName", ztrees.get(i).getModuleName());
-				ztreeMap.put("URL", ztrees.get(i).getuRL());
-				ztreeMap.put("OrderNum", ztrees.get(i).getOrderNum());
-				ztreeMap.put("ParentID", ztrees.get(i).getParentID());
-				ztreeMap.put("levelnum", ztrees.get(i).getLevelnum());
-				ztreeMap.put("pic", ztrees.get(i).getPic());
-				
-				
-				List<Map<String, Object>> childModuleMapList = new ArrayList<Map<String, Object>>();
-				Map<String, Object> childModuleMap = new HashMap<String, Object>();
-			
-				List<ChildModule> childModules = ztrees.get(i).getDKZTree();
-				
-				for (int j =0;j<childModules.size();j++) {
-					System.err.println(childModules.get(j).getModuleID()+"子节点");
-					childModuleMap.put("ModuleID", childModules.get(j).getModuleID());
-					childModuleMap.put("ModuleName", childModules.get(j).getModuleName());
-					childModuleMap.put("URL", childModules.get(j).getuRL());
-					childModuleMap.put("OrderNum", childModules.get(j).getOrderNum());
-					childModuleMap.put("ParentID", childModules.get(j).getModuleID());
-					childModuleMap.put("levelnum", childModules.get(j).getLevelnum());
-					childModuleMap.put("pic", childModules.get(j).getPic());
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+			for (Ztree ztree : ztrees) {
+				Map<String, Object> ztreeMap = new HashMap<String, Object>();
+				ztreeMap.put("ModuleID", ztree.getModuleID());
+				ztreeMap.put("ModuleName", ztree.getModuleName());
+				ztreeMap.put("URL", ztree.getuRL());
+				ztreeMap.put("OrderNum", ztree.getOrderNum());
+				ztreeMap.put("ParentID", ztree.getParentID());
+				ztreeMap.put("levelnum", ztree.getLevelnum());
+				ztreeMap.put("pic", ztree.getPic());
+				List<Map<String, String>> childModuleMapList = new ArrayList<Map<String, String>>();
+
+				for (ChildModule childModule : ztree.getDKZTree()) {
+					Map<String, String> childModuleMap = new HashMap<String, String>();
+					childModuleMap.put("ModuleID", childModule.getModuleID());
+					childModuleMap.put("ModuleName", childModule.getModuleName());
+					childModuleMap.put("URL", childModule.getuRL());
+					childModuleMap.put("OrderNum", childModule.getOrderNum());
+					childModuleMap.put("ParentID", childModule.getModuleID());
+					childModuleMap.put("levelnum", childModule.getLevelnum());
+					childModuleMap.put("pic", childModule.getPic());
 					childModuleMapList.add(childModuleMap);
-					ztreeMap.put("DKZTree", childModuleMapList);
 				}
-				lmList.put(ztreeMap);
-				
+				ztreeMap.put("DKZTree", childModuleMapList);
+
+				list.add(ztreeMap);
 			}
 			dataBag.put("userInfo", validUserMap);
-			dataBag.put("ztree", lmList);
-			statusCode=ConstValues.OK;
-			}catch (Exception e) {
-				e.printStackTrace();
-				statusCode=ConstValues.FAILED;
-			}finally {
-				lmList=null;
+			dataBag.put("ztree", list);
+			statusCode = ConstValues.OK;
+			list=null;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
 
 		}
 
