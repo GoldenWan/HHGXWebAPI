@@ -52,6 +52,11 @@ public class ChildModule {
 	public void setPic(String pic) {
 		this.pic = pic;
 	}
+	@Override
+	public String toString() {
+		return "ChildModule [moduleID=" + moduleID + ", moduleName=" + moduleName + ", uRL=" + uRL + ", orderNum="
+				+ orderNum + ", parentID=" + parentID + ", levelnum=" + levelnum + ", pic=" + pic + "]";
+	}
 
 	
 	

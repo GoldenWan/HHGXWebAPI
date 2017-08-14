@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.FireSafetyCheck;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.UserCheckInfo;
 
@@ -34,7 +35,19 @@ public interface PatrolMapper {
 
 	int fireSafetyCheckCount(@Param("orgid") String orgid);
 
-	List<PatrolRecord> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")String startTime, @Param("endTime") String endTime, @Param("startPos") int startPos,
+	List<FireSafetyCheck> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")String startTime, @Param("endTime") String endTime, @Param("startPos") int startPos,
 			@Param("pageSize") int pageSize);
+
+	FireSafetyCheck fireSafetyCheckDetail(@Param("fireSafetyCheckID")String fireSafetyCheckID);
+
+	void editFireSafetyCheck(FireSafetyCheck fireSafetyCheck);
+
+	void addFireSafetyCheck(FireSafetyCheck fireSafetyCheck);
+
+	int findFireSafetyCheckID(@Param("fireSafetyCheckID")String fireSafetyCheckID);
+
+	void deleteFireSafetyCheck(@Param("fireSafetyCheckID")String fireSafetyCheckID);
+
+	void deleteFireSafetyCheckByOrgid(@Param("orgid")String orgid);
 
 }

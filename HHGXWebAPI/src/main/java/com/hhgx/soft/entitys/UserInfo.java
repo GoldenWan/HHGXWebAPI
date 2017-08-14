@@ -2,13 +2,18 @@ package com.hhgx.soft.entitys;
 
 public class UserInfo {
 
-	private String userBelongTo;
-	private String userBelongName;
-	private String usertype;
-	private String account;
-	private String realName;
-	private String orgID;
-	private String companyName;
+	private String userBelongTo;          //用户类别
+	private String userBelongName;        //用户所属机构名字
+	private String usertype;              //用户类型
+	private String account;               //用户账号
+	private String realName;              //用户真实名字
+	private String orgID;                 //防火单位编号
+	private String companyName;           //公司名字
+	
+	private String maintenanceId; 
+	
+	private String managerOrgID; 
+	
 	public String getUserBelongTo() {
 		return userBelongTo;
 	}
@@ -50,6 +55,18 @@ public class UserInfo {
 	}
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+	public String getMaintenanceId() {
+		return maintenanceId;
+	}
+	public void setMaintenanceId(String maintenanceId) {
+		this.maintenanceId = maintenanceId;
+	}
+	public String getManagerOrgID() {
+		return managerOrgID;
+	}
+	public void setManagerOrgID(String managerOrgID) {
+		this.managerOrgID = managerOrgID;
 	}
 
 }

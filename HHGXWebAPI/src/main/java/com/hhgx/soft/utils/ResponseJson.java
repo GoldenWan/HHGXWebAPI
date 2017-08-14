@@ -39,15 +39,15 @@ public class ResponseJson {
 		String result=null;
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("pageCount", pageCount);
-		jsonObject.put("PageDatas", dataBag);
+		params.put("pageCount", pageCount);
+		params.put("PageDatas", dataBag);
 		params.put(ConstValues.RESPDATA, dataBag);
 		params.put(ConstValues.RESPCODE, statusCode);
 		result=mapper.writeValueAsString(params);
 		return result;
 		
 	}
+
 
 	
     //首字母转大写

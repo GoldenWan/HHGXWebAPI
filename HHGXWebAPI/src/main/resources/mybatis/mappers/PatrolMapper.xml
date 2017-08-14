@@ -132,11 +132,10 @@
 		FROM
 		firesafetycheck
 		WHERE
-		orgid =
-		#{orgid};
+		orgid =#{orgid};
 	</select>
 	<select id="getfireSafetyCheckByOrgid" resultMap="fireSafetyCheckMap">
-	SELECT
+		SELECT
 		FireSafetyCheckID,
 		CheckTime,
 		checkposite,
@@ -147,12 +146,12 @@
 		CheckedDepartment,
 		RecordMan,
 		SafetyMan
-	FROM
+		FROM
 		firesafetycheck
-	WHERE
+		WHERE
 		orgid = #{orgid} and
 		CheckTime BETWEEN #{startTime} and #{endTime}
-	LIMIT #{startPos},#{pageSize}
+		LIMIT #{startPos},#{pageSize}
 	</select>
 
 
@@ -167,7 +166,93 @@
 		<result column="CheckedDepartment" property="checkedDepartment" />
 		<result column="RecordMan" property="recordMan" />
 		<result column="SafetyMan" property="safetyMan" />
-
 	</resultMap>
 
+	<select id="fireSafetyCheckDetail" resultType="fireSafetyCheck">
+		SELECT
+		FireSafetyCheckID,
+		CheckTime,
+		checkposite,
+		Department,
+		Problem,
+		handing,
+		attendperson,
+		CheckedDepartment,
+		RecordMan,
+		SafetyMan,
+		orgid
+		FROM
+		firesafetycheck
+		WHERE
+		fireSafetyCheckID = #{fireSafetyCheckID}
+	</select>
+	<update id="editFireSafetyCheck" parameterType="fireSafetyCheck">
+		update firesafetycheck
+		<trim prefix="set" suffixOverrides=",">
+			<if test="fireSafetyCheckID!=null">FireSafetyCheckID=#{fireSafetyCheckID},</if>
+			<if test="checkTime!=null">CheckTime=#{checkTime},</if>
+			<if test="checkposite!=null">checkposite=#{checkposite},</if>
+			<if test="department!=null">Department=#{department},</if>
+			<if test="problem!=null">Problem=#{problem},</if>
+			<if test="handing!=null">handing=#{handing},</if>
+			<if test="attendperson!=null">attendperson=#{attendperson},</if>
+			<if test="checkedDepartment!=null">CheckedDepartment=#{checkedDepartment},</if>
+			<if test="recordMan!=null">RecordMan=#{recordMan},</if>
+			<if test="safetyMan!=null">SafetyMan=#{safetyMan},</if>
+		</trim>
+		WHERE
+		orgid = #{orgid}
+	</update>
+	<insert id="addFireSafetyCheck" parameterType="fireSafetyCheck">
+		INSERT INTO firesafetycheck (
+		FireSafetyCheckID,
+		CheckTime,
+		checkposite,
+		Department,
+		Problem,
+		handing,
+		attendperson,
+		CheckedDepartment,
+		RecordMan,
+		SafetyMan,
+		orgid
+		)
+		VALUES
+		(
+		#{fireSafetyCheckID},
+		#{checkTime},
+		#{checkposite},
+		#{department},
+		#{problem},
+		#{handing},
+		#{attendperson},
+		#{checkedDepartment},
+		#{recordMan},
+		#{safetyMan},
+		#{orgid}
+		)
+
+	</insert>
+	<select id="findFireSafetyCheckID" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		firesafetycheck
+		WHERE
+		fireSafetyCheckID =#{fireSafetyCheckID};
+	</select>
+	<delete id="deleteFireSafetyCheck">
+		DELETE
+		FROM
+			firesafetycheck
+		WHERE
+		fireSafetyCheckID =#{fireSafetyCheckID};
+	</delete>
+	<delete id="deleteFireSafetyCheckByOrgid">
+		DELETE
+		FROM
+			firesafetycheck
+		WHERE
+		orgid =#{orgid}
+	</delete>
 </mapper>

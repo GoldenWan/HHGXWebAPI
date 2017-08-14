@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hhgx.soft.entitys.ChildModule;
 import com.hhgx.soft.entitys.RegisterNew;
 import com.hhgx.soft.entitys.User;
 import com.hhgx.soft.entitys.UserInfo;
@@ -37,6 +39,7 @@ import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -46,8 +49,8 @@ public class UserManagerController {
 	@Autowired
 	UserManagerService userManagerService;
 
-	/******************注册****************************/
-	
+	/****************** 注册 ****************************/
+
 	/**
 	 * 1. 用户注册
 	 * 
@@ -165,7 +168,7 @@ public class UserManagerController {
 		int number = CommonMethod.getRandNum(100000, 999999);
 		String smsParamJson = "{\"number\":\"" + number + "\"}";
 		int ret = -1;
-		String dataTag=null;
+		String dataTag = null;
 		// 发短信
 		try {
 			SendSmsResponse response = RegistMessage.sendSms(smsFreeSignName, smsTemplateCode, smsParamJson,
@@ -180,22 +183,21 @@ public class UserManagerController {
 			e.printStackTrace();
 			ret = -1;
 		}
-		
-		  Map<String,String> result =new HashMap<String,String>();		
-			if(ret==1){
-				dataTag="发送成功";
-				// 把图片内容存入Session中
-				request.getSession().setAttribute("number", String.valueOf(number));
-			
-			}
-			else 
-				dataTag="发送失败";
-			result.put("DataTag", dataTag);
-			result.put("ret", String.valueOf(ret));
-			return JSONObject.fromBean(result).toString();
-		
+
+		Map<String, String> result = new HashMap<String, String>();
+		if (ret == 1) {
+			dataTag = "发送成功";
+			// 把图片内容存入Session中
+			request.getSession().setAttribute("number", String.valueOf(number));
+
+		} else
+			dataTag = "发送失败";
+		result.put("DataTag", dataTag);
+		result.put("ret", String.valueOf(ret));
+		return JSONObject.fromBean(result).toString();
+
 	}
-	/******************登录****************************/
+	/****************** 登录 ****************************/
 
 	/**
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
@@ -304,17 +306,20 @@ public class UserManagerController {
 	 * 3.根据用户帐号获取模块列表  
 	 * 
 	 * 
-【所用表:用户Users,用户类型UserType,模块ModuleList,模块用户类型Module_UserType,防火单位Onlineorg,维保单位Maintenance,消防管理部门ManagerOrg】
-【说明：此API主要是获取登录系统后，展现在左侧的模块列表。根据ModuleList及Module_UserType及Users表可以得到一级模块。然后根据一级模块的ModuleID=ModuleList中ParentID获取二级模块。
-
-
-其次需要返回该用户的其他信息，假如在Users表中查找的该记录为ValidUser,则根据ValidUser.UserBelongTo
-case1:OrgIDValue = validUser.orgid;         UserBelongName=”防火单位”;CompanyName为防火单位名字
-case2:OrgIDValue = validUser.MaintenanceId; UserBelongName=”维保单位”,CompanyName......
-case3:OrgIDValue = validUser.ManagerOrgID;  UserBelongName=”管理机构”,CompanyName.....
-case4:UserBelongName=”系统管理员”
-具体返回结构如上面截图
-
+	 * 【所用表:用户Users,用户类型UserType,模块ModuleList,模块用户类型Module_UserType,
+	 * 防火单位Onlineorg,维保单位Maintenance,消防管理部门ManagerOrg】
+	 * 【说明：此API主要是获取登录系统后，展现在左侧的模块列表。根据ModuleList及Module_UserType及Users表可以得到一级模块
+	 * 。然后根据一级模块的ModuleID=ModuleList中ParentID获取二级模块。
+	 * 
+	 * 
+	 * 其次需要返回该用户的其他信息，假如在Users表中查找的该记录为ValidUser,则根据ValidUser.UserBelongTo
+	 * case1:OrgIDValue = validUser.orgid;
+	 * UserBelongName=”防火单位”;CompanyName为防火单位名字 case2:OrgIDValue =
+	 * validUser.MaintenanceId; UserBelongName=”维保单位”,CompanyName......
+	 * case3:OrgIDValue = validUser.ManagerOrgID;
+	 * UserBelongName=”管理机构”,CompanyName..... case4:UserBelongName=”系统管理员”
+	 
+	 * 
 	 * @return  
 	 * @throws JsonProcessingException:TODO
 	 *              
@@ -322,27 +327,93 @@ case4:UserBelongName=”系统管理员”
 	@ResponseBody
 	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
 			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String retrieveZtreeNodes(@RequestBody String reqBody) {
+	public String retrieveZtreeNodes(@RequestBody String reqBody) throws JsonProcessingException {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
 		String username = map.get("username");
-		
-		if(!username.equals(null)){
-			UserInfo userInfo = userManagerService.getUserInfoByName(username);
-			userInfo.getUserBelongTo();
-			
-			//List<Ztree> ztree = userManagerService.retrieveZtreeNodes(username);
-			
-			
-		}
+		Map<String, Object> dataBag = new HashMap<String, Object>();
 		int statusCode = 0;
-		String result = null;
-		/*
-		 * if (retrieveZtreeNodes != null) { statusCode = 1000; try { result =
-		 * ResponseJson.responseFindJson(retrieveZtreeNodes, statusCode); }
-		 * catch (JsonProcessingException e) { e.printStackTrace(); } }
-		 */
+			
+		if (!username.equals(null)) {
+			UserInfo validUser = userManagerService.getUserInfoByName(username);
+			String userBelongTo = validUser.getUserBelongTo();
 
-		return "";
+			switch (Integer.parseInt(userBelongTo)) {
+			// orgid
+			case 1:
+				validUser.setUserBelongName("防火单位");
+				validUser.setCompanyName(userManagerService.getOnlineorgById(validUser.getOrgID()));
+				break;
+			case 2:
+				validUser.setUserBelongName("维保单位");
+				validUser.setCompanyName(userManagerService.getMaintenanceById(validUser.getMaintenanceId()));
+				break;
+			case 3:
+				validUser.setUserBelongName("管理机构");
+				validUser.setCompanyName(userManagerService.getManagerOrgById(validUser.getManagerOrgID()));
+				break;
+			case 4:
+				validUser.setUserBelongName("系统管理员");
+				break;
+			default:
+				break;
+			}
+			
+			Map<String, Object> validUserMap = new HashMap<String, Object>();
+			validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
+			validUserMap.put("userBelongName", validUser.getUserBelongName());
+			validUserMap.put("usertype", validUser.getUsertype());
+			validUserMap.put("account", validUser.getAccount());
+			validUserMap.put("RealName", validUser.getRealName());
+			validUserMap.put("OrgID", validUser.getOrgID());
+			validUserMap.put("CompanyName", validUser.getCompanyName());
+			
+			JSONArray lmList = new JSONArray();
+			try{
+			Map<String, Object> ztreeMap = new HashMap<String, Object>();
+			List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(username);
+			for (int i=0;i<ztrees.size();i++) {
+				ztreeMap.put("ModuleID", ztrees.get(i).getModuleID());
+				ztreeMap.put("ModuleName", ztrees.get(i).getModuleName());
+				ztreeMap.put("URL", ztrees.get(i).getuRL());
+				ztreeMap.put("OrderNum", ztrees.get(i).getOrderNum());
+				ztreeMap.put("ParentID", ztrees.get(i).getParentID());
+				ztreeMap.put("levelnum", ztrees.get(i).getLevelnum());
+				ztreeMap.put("pic", ztrees.get(i).getPic());
+				
+				
+				List<Map<String, Object>> childModuleMapList = new ArrayList<Map<String, Object>>();
+				Map<String, Object> childModuleMap = new HashMap<String, Object>();
+			
+				List<ChildModule> childModules = ztrees.get(i).getDKZTree();
+				
+				for (int j =0;j<childModules.size();j++) {
+					System.err.println(childModules.get(j).getModuleID()+"子节点");
+					childModuleMap.put("ModuleID", childModules.get(j).getModuleID());
+					childModuleMap.put("ModuleName", childModules.get(j).getModuleName());
+					childModuleMap.put("URL", childModules.get(j).getuRL());
+					childModuleMap.put("OrderNum", childModules.get(j).getOrderNum());
+					childModuleMap.put("ParentID", childModules.get(j).getModuleID());
+					childModuleMap.put("levelnum", childModules.get(j).getLevelnum());
+					childModuleMap.put("pic", childModules.get(j).getPic());
+					childModuleMapList.add(childModuleMap);
+					ztreeMap.put("DKZTree", childModuleMapList);
+				}
+				lmList.put(ztreeMap);
+				
+			}
+			dataBag.put("userInfo", validUserMap);
+			dataBag.put("ztree", lmList);
+			statusCode=ConstValues.OK;
+			}catch (Exception e) {
+				e.printStackTrace();
+				statusCode=ConstValues.FAILED;
+			}finally {
+				lmList=null;
+			}
+
+		}
+
+		return ResponseJson.responseFindJson(dataBag, statusCode);
 	}
 
 }

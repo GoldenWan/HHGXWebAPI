@@ -1,0 +1,22 @@
+package com.hhgx.soft.mappers;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.stereotype.Component;
+
+import com.hhgx.soft.entitys.Training;
+
+@Component
+@MapperScan("facilityMapper")
+public interface FacilityMapper {
+
+	int getTrainingListCount(@Param("orgid") String orgid);
+
+	List<Training> getTrainingList(@Param("orgid") String orgid, @Param("startTime") String startTime,
+			@Param("endTime") String endTime, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
+
+	void deleteTraining(@Param("trainingID") String trainingID);
+
+}

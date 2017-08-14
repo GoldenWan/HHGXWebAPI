@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.FacilityMapper">
+
+	<select id="getTrainingListCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		training
+		WHERE
+		orgid = #{orgid}
+	</select>
+
+	<select id="getTrainingList" resultType="training">
+	SELECT
+		TrainingTime,
+		TrainingAddress,
+		TrainingContent,
+		TrainingObject,
+		TrainingType,
+		Lecturer,
+		HowmanyPeople
+	FROM
+		training
+	WHERE
+		orgid = #{orgid} and
+		TrainingTime BETWEEN #{startTime} and #{endTime}
+		LIMIT #{startPos},#{pageSize}
+	</select>
+
+	<delete id="deleteTraining">
+		DELETE
+		FROM
+		training
+		WHERE
+		TrainingID = #{trainingID};
+	</delete>
+</mapper>

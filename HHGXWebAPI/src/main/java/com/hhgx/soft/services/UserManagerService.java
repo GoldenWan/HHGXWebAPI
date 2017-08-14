@@ -18,11 +18,6 @@ public class UserManagerService {
 	@Autowired
 	private UserManagerOrgMapper userManagerMapper;
 
-	/*public List<Ztree> retrieveZtreeNodes(String username) {
-
-		return userManagerMapper.retrieveZtreeNodes(username);
-	}*/
-
 	public User loginBy(String username, String password) {
 		return userManagerMapper.loginBy(username, password);
 	}
@@ -69,5 +64,21 @@ public class UserManagerService {
 	}
 
 	
+	public List<Ztree> retrieveZtreeNodes(String username) {
+		
+		return userManagerMapper.retrieveZtreeNodes(username);
+	}
+
+	public String getOnlineorgById(String orgID) {
+		return userManagerMapper.getOnlineorgById(orgID);
+	}
+
+	public String getMaintenanceById(String maintenanceId) {
+		return userManagerMapper.getMaintenanceById(maintenanceId);
+	}
+
+	public String getManagerOrgById(String managerOrgID) {
+		return userManagerMapper.getManagerOrgById(managerOrgID);
+	}
 
 }

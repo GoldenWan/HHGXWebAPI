@@ -14,6 +14,10 @@ public class FireSafetyCheck {
 	private String recordMan;
 	private String safetyMan;
 
+	private String  orgid;//
+	
+	
+
 	public String getFireSafetyCheckID() {
 		return fireSafetyCheckID;
 	}
@@ -92,6 +96,14 @@ public class FireSafetyCheck {
 
 	public void setSafetyMan(String safetyMan) {
 		this.safetyMan = safetyMan;
+	}
+
+	public String getOrgid() {
+		return orgid;
+	}
+
+	public void setOrgid(String orgid) {
+		this.orgid = orgid;
 	}
 
 }

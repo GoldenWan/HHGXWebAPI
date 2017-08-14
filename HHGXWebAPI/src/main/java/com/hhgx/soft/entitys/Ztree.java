@@ -3,6 +3,118 @@ package com.hhgx.soft.entitys;
 import java.util.List;
 
 public class Ztree {
+	/*
+{
+    "StatusMessage": 1000,
+    "DataBag": {
+        "ztree": [
+            {
+                "OrderNum": "4",
+                "levelnum": "4",
+                "pic": "4",
+                "ModuleID": "4",
+                "URL": "4",
+                "DKZTree": [
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    }
+                ],
+                "ParentID": "",
+                "ModuleName": "4"
+            },
+            {
+                "OrderNum": "4",
+                "levelnum": "4",
+                "pic": "4",
+                "ModuleID": "4",
+                "URL": "4",
+                "DKZTree": [
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    },
+                    {
+                        "OrderNum": "6",
+                        "levelnum": "111",
+                        "pic": "11",
+                        "ModuleID": "6",
+                        "URL": "6",
+                        "ParentID": "6",
+                        "ModuleName": "6"
+                    }
+                ],
+                "ParentID": "",
+                "ModuleName": "4"
+            }
+        ],
+        "userInfo": {
+            "OrgID": "1",
+            "account": "1",
+            "usertype": "1",
+            "userBelongName": "防火单位",
+            "CompanyName": "1",
+            "RealName": "1",
+            "UserBelongTo": "1"
+        }
+    }
+}
+	*/
 	
 	private List<ChildModule> dKZTree ;
 	private String moduleID;//模块编号
@@ -62,6 +174,13 @@ public class Ztree {
 	public void setPic(String pic) {
 		this.pic = pic;
 	}
+	@Override
+	public String toString() {
+		return "Ztree [dKZTree=" + dKZTree + ", moduleID=" + moduleID + ", moduleName=" + moduleName + ", uRL=" + uRL
+				+ ", orderNum=" + orderNum + ", parentID=" + parentID + ", levelnum=" + levelnum + ", pic=" + pic + "]";
+	}
+	
+	
 	
 	/*
 	"DKZTree": [

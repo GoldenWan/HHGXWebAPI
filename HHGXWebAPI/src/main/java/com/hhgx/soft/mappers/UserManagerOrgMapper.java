@@ -15,7 +15,6 @@ import com.hhgx.soft.entitys.Ztree;
 @Component("/userManagerMapper")
 public interface UserManagerOrgMapper {
 
-	//List<Ztree> retrieveZtreeNodes(@Param("username") String username);
 
 	User loginBy(@Param("username") String username, @Param("password") String password);
 
@@ -32,6 +31,14 @@ public interface UserManagerOrgMapper {
 
 	String findMaxBack6(@Param("areaID") String areaID);
 
-	UserInfo getUserInfoByName(@Param("useranme") String username);
+	UserInfo getUserInfoByName(@Param("username") String username);
+	List<Ztree> selectDKZTreeById(@Param("moduleID") String moduleID);
+	List<Ztree> retrieveZtreeNodes(@Param("username") String username);
+
+	String getOnlineorgById(@Param("orgID")String orgID);
+
+	String getMaintenanceById(@Param("maintenanceId") String maintenanceId);
+
+	String getManagerOrgById(@Param("managerOrgID") String managerOrgID);
 
 }

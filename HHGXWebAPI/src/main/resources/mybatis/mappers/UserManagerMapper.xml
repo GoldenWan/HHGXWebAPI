@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.UserManagerOrgMapper">
+	<select id="findAccount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		users u
+		WHERE
+		account = #{username};
+	</select>
+	<insert id="onlineorgRegister" parameterType="registerNew">
+		INSERT INTO
+		onlineorg (orgid, AreaID, orgname,ApproveState)
+		VALUES
+		(#{orgid},#{areaID},#{orgname},#{approveState});
+	</insert>
+	<insert id="maintenanceRegister" parameterType="registerNew">
+
+		INSERT INTO
+		maintenance (MaintenanceId,AreaID, UnitName)
+		VALUES
+		(#{maintenanceId},#{areaID}, #{orgname});
+	</insert>
+	<insert id="usersRegister" parameterType="registerNew">
+		INSERT INTO users (
+		UserID,
+		account,
+		PASSWORD,
+		UserBelongTo,
+		UsertypeID,
+		isFirstEnroll
+		)
+		VALUES
+		(#{userID},#{username}, #{password},
+		#{userBelongTo},#{usertypeID},#{isFirstEnroll});
+	</insert>
+
+
+	<select id="loginBy" resultType="user">
+		SELECT
+		*
+		FROM
+		users u
+		WHERE
+		account =
+		#{username} and password=#{password};
+	</select>
+
+	<select id="getUserTypeName" resultType="string">
+		SELECT
+		ut.UserTypeName
+		FROM
+		users u
+		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+		WHERE
+		u.UserTypeID = #{userTypeID};
+	</select>
+	<select id="findMaxBack6" resultType="string">
+		SELECT
+		max(CONVERT (RIGHT(o.orgid, 6), SIGNED)) maxorgid
+		FROM
+		onlineorg o
+		WHERE
+		LEFT (o.orgid, 6) = #{areaID};
+	</select>
+	<select id="getUserInfoByName" resultType="userInfo">
+	SELECT
+		ut.UserBelongTo userBelongTo,
+		ut.UserTypeName userTypeName,
+		u.UserTypeID usertype,
+		u.account account,
+		u.RealName realName,
+		u.orgid orgid,
+		u.MaintenanceId maintenanceId,
+		u.ManagerOrgID managerOrgID
+	FROM
+		users u
+	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+	WHERE
+		account = #{username}
+	</select>
+
+
+
+	<select id="selectDKZTreeById" resultType="childModule">
+		SELECT
+		m2.ModuleID,
+		m2.ModuleName,
+		m2.URL,
+		m2.OrderNum,
+		m2.ParentID,
+		m2.levelnum,
+		m2.pic
+		FROM
+		modulelist m1
+		INNER JOIN modulelist m2 ON m1.ModuleID = m2.ParentID
+		WHERE
+		m1.ModuleID = #{moduleID}
+
+	</select>
+
+	<select id="retrieveZtreeNodes" resultMap="ztreeMapResult">
+	SELECT
+		m1.ModuleID ModuleID,
+		m1.ModuleName ModuleName,
+		m1.URL URL,
+		m1.OrderNum OrderNum,
+		m1.ParentID ParentID,
+		m1.levelnum levelnum,
+		m1.pic pic
+	FROM
+		users u
+	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+	INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
+	INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
+	WHERE
+		account = #{username}
+	</select>
+
+
+	<resultMap type="ztree" id="ztreeMapResult">
+		<id column="ModuleID" property="moduleID" />
+		<result column="ModuleName" property="moduleName" />
+		<result column="URL" property="uRL" />
+		<result column="OrderNum" property="orderNum" />
+		<result column="ParentID" property="parentID" />
+		<result column="levelnum" property="levelnum" />
+		<result column="pic" property="pic" />
+		<collection property="dKZTree" column="ModuleID" select="selectDKZTreeById" />
+	</resultMap>
+	<select id="getOnlineorgById" resultType="string">
+		SELECT
+			orgname
+		FROM
+			onlineorg
+		WHERE
+			orgid = #{orgID}
+	</select>
+	<select id="getMaintenanceById" resultType="string">
+	   SELECT
+			UnitName
+		FROM
+			maintenance
+		WHERE
+			MaintenanceId =  #{maintenanceId}
+	</select>
+	<select id="getManagerOrgById" resultType="string">
+		SELECT
+			ManagerOrgName
+		FROM
+			managerorg
+		WHERE
+			ManagerOrgID =#{managerOrgID}
+	</select>
+
+</mapper>

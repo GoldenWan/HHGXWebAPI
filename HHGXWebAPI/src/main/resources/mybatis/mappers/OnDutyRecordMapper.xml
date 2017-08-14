@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.OnDutyRecordMapper">
+
+<insert id="addOnDutyRecord">
+INSERT INTO ondutyrecord (
+	orgid,
+	RecordID,
+	RecordTime,
+	FireControlor,
+	gangcontrolor,
+	ProcessResult,
+	ControlorModel,
+	selfcheck,
+	eliminateVoice,
+	RESET,
+	MainPower,
+	SecondPower,
+	Faulthandling,
+	CheckPeople,
+	DutySign
+)
+VALUES
+	(
+		#{orgid},
+		#{recordID},
+		#{recordTime},
+		#{fireControlor},
+		#{gangcontrolor},
+		#{processResult},
+		#{controlorModel},
+		#{selfcheck},
+		#{eliminateVoice},
+		#{reset},
+		#{mainPower},
+		#{secondPower},
+		#{faulthandling},
+		#{checkPeople},
+		#{dutySign})
+</insert>
+
+
+</mapper>
