@@ -1,25 +1,50 @@
-CREATE TABLE alarmdata (
-	Firealarmid CHAR (36) NOT NULL,
-	cAlarmtype VARCHAR (10),
-	Gatewayaddress VARCHAR (30),
-	sysaddress INT,
-	systypeID INT,
-	deviceaddress VARCHAR (30),
-	idevicetype INT,
-	dFirstAlarmtime DATETIME,
-	faultdesc VARCHAR (300),
-	StateValue INT,
-	dRecentAlarmtime DATETIME,
-	dReceivetime DATETIME,
-	AlarmNum INT,
-	vAlarmsource VARCHAR (20),
-	checkresult VARCHAR (50),
-	checkdesc VARCHAR (1000),
-	chulidate DATETIME,
-	chuliren VARCHAR (100),
-	YnRequest VARCHAR (10),
-	PRIMARY KEY (Firealarmid)
-) ENGINE = INNODB;
+sqlserver  ==> mysql  区别
+专有名词要 `status`
+char(255)
+realtymoney DECIMAL (65, 0),
+
+
+
+
+--
+-- ER/Studio 8.0 SQL Code Generation
+-- Company :      Microsoft
+-- Project :      消防管理平台.DM1
+-- Author :       Microsoft
+--
+-- Date Created : Monday, August 14, 2017 00:32:31
+-- Target DBMS : MySQL 5.x
+--
+
+-- 
+-- TABLE: alarmdata 
+--
+
+CREATE TABLE alarmdata(
+    Firealarmid         CHAR(36)         NOT NULL,
+    cAlarmtype          VARCHAR(10),
+    Gatewayaddress      VARCHAR(30),
+    sysaddress          INT,
+    systypeID           INT,
+    deviceaddress       VARCHAR(30),
+    idevicetype         INT,
+    dFirstAlarmtime     DATETIME,
+    faultdesc           VARCHAR(300),
+    StateValue          INT,
+    dRecentAlarmtime    DATETIME,
+    dReceivetime        DATETIME,
+    AlarmNum            INT,
+    vAlarmsource        VARCHAR(20),
+    checkresult         VARCHAR(50),
+    checkdesc           VARCHAR(1000),
+    chulidate           DATETIME,
+    chuliren            VARCHAR(100),
+    YnRequest           VARCHAR(10),
+    PRIMARY KEY (Firealarmid)
+)ENGINE=INNODB
+;
+
+
 
 -- 
 -- TABLE: analogType 
@@ -29,10 +54,13 @@ CREATE TABLE analogType (
 	vanalogDesc VARCHAR (50),
 	vUnit VARCHAR (10),
 	minvalue INT,
-	`maxvalue` INT,
+	`MAXVALUE` INT,
 	minUnit VARCHAR (50),
 	PRIMARY KEY (anlogTypeID)
 ) ENGINE = INNODB;
+
+
+
 
 -- 
 -- TABLE: AnalogValue 
@@ -72,7 +100,7 @@ CREATE TABLE Appearancepic (
 	iphotoID CHAR (15) NOT NULL,
 	vPhotoname VARCHAR (100) NOT NULL,
 	dRecordDate DATETIME,
-	Picpath VARCHAR (1000),
+	Picpath VARCHAR (255),
 	ExteriorInfo TEXT,
 	siteid CHAR (20) NOT NULL,
 	PRIMARY KEY (iphotoID)
@@ -83,12 +111,12 @@ CREATE TABLE Appearancepic (
 --
 CREATE TABLE Area (
 	AreaId CHAR (6) NOT NULL,
-	AreaName VARCHAR (20),
-	`Level` CHAR (1),
+	AreaName NATIONAL VARCHAR (20),
+	`LEVEL` CHAR (1),
 	ParentId CHAR (6),
-	ZipCode CHAR (6) DEFAULT '0',
+	ZipCode CHAR (6) DEFAULT 0,
 	Abbreviation VARCHAR (20),
-	Remarks VARCHAR (300),
+	Remarks NATIONAL VARCHAR (300),
 	PRIMARY KEY (AreaId)
 ) ENGINE = INNODB;
 
@@ -107,9 +135,53 @@ CREATE TABLE BusinessLicence (
 	BusinessScope VARCHAR (100),
 	AuditingDepartment VARCHAR (100),
 	RegistTime DATE,
-	PictureUrl VARCHAR (1000),
+	PictureUrl VARCHAR (255),
 	orgid CHAR (12) NOT NULL,
 	PRIMARY KEY (LicenceCode)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: cTestPeriod 
+--
+CREATE TABLE cTestPeriod (
+	cTestPeriod VARCHAR (10) NOT NULL,
+	vTestPeriod VARCHAR (100),
+	days INT,
+	PRIMARY KEY (cTestPeriod)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: dangerousGoods 
+--
+CREATE TABLE dangerousGoods (
+	cGoodsID CHAR (36) NOT NULL,
+	vGoodsName VARCHAR (100),
+	deAmount DECIMAL (10, 2),
+	vUnit VARCHAR (50),
+	vPutSite VARCHAR (500),
+	vGoodsStatus VARCHAR (50),
+	vLevel VARCHAR (50),
+	vGoodsUse VARCHAR (500),
+	vTechdirector VARCHAR (50),
+	vTechdirectorTel CHAR (50),
+	vSafeManager VARCHAR (50),
+	vSafeManagerTel VARCHAR (50),
+	vMeasure VARCHAR (500),
+	vYnSetsign VARCHAR (10),
+	vOperateDesc VARCHAR (500),
+	orgid CHAR (12) NOT NULL,
+	vTypeName VARCHAR (50) NOT NULL,
+	PRIMARY KEY (cGoodsID)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: dangerousGoodsType 
+--
+CREATE TABLE dangerousGoodsType (
+	vTypeName VARCHAR (50) NOT NULL,
+	vBelongto VARCHAR (50),
+	iOrderNo INT,
+	PRIMARY KEY (vTypeName)
 ) ENGINE = INNODB;
 
 -- 
@@ -119,7 +191,7 @@ CREATE TABLE DetectPic (
 	DetectPicID CHAR (36) NOT NULL,
 	UploadTime DATETIME,
 	PicType VARCHAR (10),
-	picpath VARCHAR (1000),
+	picpath VARCHAR (255),
 	wbRepairListId CHAR (36) NOT NULL,
 	ProjectId CHAR (4) NOT NULL,
 	PRIMARY KEY (DetectPicID)
@@ -141,7 +213,7 @@ CREATE TABLE devices (
 	Model VARCHAR (50),
 	ProductDate DATETIME,
 	expdate DATETIME,
-	memo VARCHAR (1000),
+	memo VARCHAR (255),
 	AddTime DATETIME,
 	StateValue INT,
 	StateTime DATETIME,
@@ -267,7 +339,7 @@ CREATE TABLE firecompany (
 	CreateDate DATE,
 	contactor VARCHAR (30),
 	Tel VARCHAR (50),
-	baseinfo VARCHAR (1000),
+	baseinfo VARCHAR (255),
 	memo TEXT,
 	orgid CHAR (12) NOT NULL,
 	PRIMARY KEY (firecompayid)
@@ -284,7 +356,7 @@ CREATE TABLE FireDevice (
 	productDate DATE,
 	validate DATE,
 	SetupDate DATE,
-	SetLocation VARCHAR (1000),
+	SetLocation VARCHAR (255),
 	memo TEXT,
 	siteid CHAR (20),
 	iDeviceType INT NOT NULL,
@@ -301,8 +373,8 @@ CREATE TABLE FireDeviceChangeRecord (
 	ProductModel VARCHAR (50),
 	ProductDate DATETIME,
 	Validate DATETIME,
-	Others VARCHAR (1000),
-	PicPath VARCHAR (1000),
+	Others VARCHAR (255),
+	PicPath VARCHAR (255),
 	deviceNo CHAR (30) NOT NULL,
 	PRIMARY KEY (ChangeNo)
 ) ENGINE = INNODB;
@@ -315,8 +387,8 @@ CREATE TABLE FireSafetyCheck (
 	CheckTime DATETIME,
 	checkposite VARCHAR (100),
 	Department VARCHAR (100),
-	Problem VARCHAR (1000),
-	handing VARCHAR (1000),
+	Problem VARCHAR (255),
+	handing VARCHAR (255),
 	attendperson VARCHAR (200),
 	CheckedDepartment VARCHAR (500),
 	RecordMan VARCHAR (100),
@@ -372,7 +444,7 @@ CREATE TABLE flatpic (
 	cFlatPic CHAR (14) NOT NULL,
 	vPlatpicdesc VARCHAR (100),
 	dRecordSet DATETIME,
-	imFlatPic VARCHAR (1000),
+	imFlatPic VARCHAR (255),
 	floornum VARCHAR (50),
 	PicName VARCHAR (30),
 	siteid CHAR (20) NOT NULL,
@@ -384,7 +456,7 @@ CREATE TABLE flatpic (
 --
 CREATE TABLE gateway (
 	Gatewayaddress VARCHAR (30) NOT NULL,
-	ynonline VARCHAR (4),
+	ynonline NATIONAL VARCHAR (4),
 	onlinetime DATETIME,
 	Manufacturer VARCHAR (100),
 	Model VARCHAR (50),
@@ -392,11 +464,11 @@ CREATE TABLE gateway (
 	setupdate DATETIME,
 	ControlorManufacture VARCHAR (100),
 	ControlorMode VARCHAR (100),
-	ConnectControlerState VARCHAR (50),
+	ConnectControlerState NATIONAL VARCHAR (50),
 	MainPower VARCHAR (10),
 	BackupPower VARCHAR (10),
 	CableState VARCHAR (10),
-	memo VARCHAR (1000),
+	memo VARCHAR (255),
 	gatewayversion VARCHAR (100),
 	versionupdatedate DATETIME,
 	gatewaytype VARCHAR (100),
@@ -452,10 +524,20 @@ CREATE TABLE gatewaystate (
 CREATE TABLE GatewaySystemInfo (
 	Sysaddress INT NOT NULL,
 	Gatewayaddress VARCHAR (30) NOT NULL,
-	memo VARCHAR (1000),
+	memo VARCHAR (255),
 	tiSysType INT NOT NULL,
 	siteid CHAR (20) NOT NULL,
 	PRIMARY KEY (Sysaddress, Gatewayaddress)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: Introduce 
+--
+CREATE TABLE Introduce (
+	orgid CHAR (12) NOT NULL,
+	vIntroduceText VARCHAR (5000),
+	vPicturePath VARCHAR (255),
+	PRIMARY KEY (orgid)
 ) ENGINE = INNODB;
 
 -- 
@@ -486,20 +568,21 @@ CREATE TABLE Maintenance (
 	EnrollNo CHAR (30) NOT NULL,
 	UnitName VARCHAR (200),
 	UnitType VARCHAR (100),
-	Address VARCHAR (1000),
+	Address VARCHAR (255),
 	LegalRepresentative VARCHAR (100),
 	Assets DECIMAL (10, 0),
 	SetupDate DATE,
 	LimitDate VARCHAR (200),
-	EngageRange VARCHAR (1000),
+	EngageRange VARCHAR (255),
 	EnrollDepartMent VARCHAR (100),
 	EnrollDate DATE,
 	CheckState VARCHAR (20),
 	CheckDate DATETIME,
 	ContactName VARCHAR (100),
 	ContactMobilePhone VARCHAR (100),
-	memo VARCHAR (1000),
+	memo VARCHAR (255),
 	AreaId CHAR (6),
+	cTestPeriod VARCHAR (10),
 	PRIMARY KEY (MaintenanceId)
 ) ENGINE = INNODB;
 
@@ -534,9 +617,9 @@ CREATE TABLE ManagerOrg (
 	ManagerJob VARCHAR (100),
 	ContactName VARCHAR (100),
 	ContactTel VARCHAR (100),
-	address VARCHAR (1000),
+	address VARCHAR (255),
 	YnSetMonitor VARCHAR (2),
-	STATUS VARCHAR (10),
+	`STATUS` VARCHAR (10),
 	ParentID INT,
 	tel VARCHAR (100),
 	Remark TEXT,
@@ -553,10 +636,10 @@ CREATE TABLE manoeuvre (
 	address VARCHAR (500),
 	Department VARCHAR (100),
 	manager VARCHAR (50),
-	content VARCHAR (1000),
-	scheme VARCHAR (1000),
+	content VARCHAR (255),
+	scheme VARCHAR (255),
 	attendperson VARCHAR (100),
-	implementation VARCHAR (1000),
+	implementation VARCHAR (255),
 	summary VARCHAR (500),
 	suggestion VARCHAR (500),
 	orgid CHAR (12),
@@ -608,14 +691,14 @@ CREATE TABLE OnDutyRecord (
 	FireControlor VARCHAR (50),
 	Alarmattribution VARCHAR (50),
 	gangcontrolor VARCHAR (10),
-	ProcessResult VARCHAR(1000),
+	ProcessResult text,
 	ControlorModel VARCHAR (100),
 	selfcheck VARCHAR (20),
 	eliminateVoice VARCHAR (20),
-	RESET VARCHAR (20),
+	`RESET` VARCHAR (20),
 	MainPower VARCHAR (20),
 	SecondPower VARCHAR (20),
-	Faulthandling VARCHAR (1000),
+	Faulthandling VARCHAR (255),
 	CheckPeople VARCHAR (20),
 	DutySign VARCHAR (20),
 	ManagerSign VARCHAR (20),
@@ -686,6 +769,7 @@ CREATE TABLE onlineorg (
 	ApproveState VARCHAR (10),
 	ApproveTime DATETIME,
 	ApproveMan VARCHAR (50),
+	ApproveIdea VARCHAR (500),
 	AreaId CHAR (6) NOT NULL,
 	ManagerOrgID CHAR (36),
 	PRIMARY KEY (orgid)
@@ -715,11 +799,11 @@ CREATE TABLE People (
 	issueorg VARCHAR (100),
 	issuedate DATETIME,
 	GetDate DATETIME,
-	YnEscapeLeader CHAR (1),
-	OnDutyArea VARCHAR (1000),
+	YnEscapeLeader NATIONAL CHAR (1),
+	OnDutyArea VARCHAR (255),
 	OrderNum INT,
-	PeoplePicPath VARCHAR (1000),
-	CertificatePicPath VARCHAR (1000),
+	PeoplePicPath VARCHAR (255),
+	CertificatePicPath VARCHAR (255),
 	orgid CHAR (12) NOT NULL,
 	PeopleTypeName VARCHAR (100) NOT NULL,
 	JobTypeName VARCHAR (100),
@@ -741,7 +825,7 @@ CREATE TABLE PeopleType (
 CREATE TABLE Phone_Module_UserType (
 	ModuleID CHAR (10) NOT NULL,
 	UserTypeID VARCHAR (20) NOT NULL,
-	Remark VARCHAR (1000),
+	Remark VARCHAR (255),
 	PRIMARY KEY (ModuleID, UserTypeID)
 ) ENGINE = INNODB;
 
@@ -763,7 +847,7 @@ CREATE TABLE Phone_ModuleList (
 CREATE TABLE Phone_Users (
 	UserID CHAR (36) NOT NULL,
 	account VARCHAR (100) NOT NULL,
-	PASSWORD VARCHAR (1000),
+	PASSWORD VARCHAR (255),
 	RealName VARCHAR (50),
 	mobilephone VARCHAR (50),
 	Tel VARCHAR (100),
@@ -797,8 +881,8 @@ CREATE TABLE SafeDuty (
 	SafeDutyID CHAR (36) NOT NULL,
 	dutyname VARCHAR (500),
 	uploadtime DATETIME,
-	safedutytype VARCHAR (1000),
-	filepath VARCHAR (1000),
+	safedutytype VARCHAR (255),
+	filepath VARCHAR (255),
 	orgid CHAR (12) NOT NULL,
 	PRIMARY KEY (SafeDutyID)
 ) ENGINE = INNODB;
@@ -810,8 +894,8 @@ CREATE TABLE SafeManageRules (
 	SafeManageRulesID CHAR (36) NOT NULL,
 	SafeManageRulesName CHAR (10),
 	UploadTime DATETIME,
-	SafeManageRulesType VARCHAR (1000),
-	filepath VARCHAR (1000),
+	SafeManageRulesType VARCHAR (255),
+	filepath VARCHAR (255),
 	orgid CHAR (12) NOT NULL,
 	PRIMARY KEY (SafeManageRulesID)
 ) ENGINE = INNODB;
@@ -852,23 +936,61 @@ CREATE TABLE site (
 ) ENGINE = INNODB;
 
 -- 
+-- TABLE: Taskassign 
+--
+CREATE TABLE Taskassign (
+	orgid CHAR (12) NOT NULL,
+	UserID CHAR (36) NOT NULL,
+	TaskassignTime DATETIME,
+	PRIMARY KEY (orgid, UserID)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: TestPeriod 
+--
+CREATE TABLE TestPeriod (
+	cTestPeriod VARCHAR (10) NOT NULL,
+	vTestPeriod VARCHAR (100),
+	days INT,
+	PRIMARY KEY (cTestPeriod)
+) ENGINE = INNODB;
+
+-- 
+-- TABLE: Ticket 
+--
+CREATE TABLE Ticket (
+	TicketID CHAR (16) NOT NULL,
+	vReason VARCHAR (255),
+	penalty DECIMAL (10, 0),
+	TicketTime DATETIME,
+	`STATUS` CHAR (1),
+	payment DECIMAL (10, 0),
+	dPaymentTime DATETIME,
+	vPaymentType VARCHAR (100),
+	vPayID VARCHAR (50),
+	orgid CHAR (12) NOT NULL,
+	ManagerOrgID CHAR (36) NOT NULL,
+	PRIMARY KEY (TicketID)
+) ENGINE = INNODB;
+
+-- 
 -- TABLE: Training 
 --
 CREATE TABLE Training (
 	TrainingID CHAR (36) NOT NULL,
 	TrainingTime DATETIME,
-	TrainingAddress VARCHAR (1000),
+	TrainingAddress VARCHAR (255),
 	TrainingType VARCHAR (100),
 	TrainingObject VARCHAR (100),
 	HowmanyPeople INT,
 	Lecturer VARCHAR (50),
-	TrainingContent VARCHAR (1000),
+	TrainingContent VARCHAR (255),
 	AttendPeople VARCHAR (500),
 	Examination VARCHAR (100),
 	TrainingManager VARCHAR (40),
 	ContentFile VARCHAR (500),
 	signtable VARCHAR (500),
-	examfile varCHAR (500),
+	examfile text,
 	orgid CHAR (12) NOT NULL,
 	PRIMARY KEY (TrainingID)
 ) ENGINE = INNODB;
@@ -885,6 +1007,7 @@ CREATE TABLE UerCheckList (
 	SubmitTime DATETIME,
 	Remarks VARCHAR (200),
 	orgid CHAR (12) NOT NULL,
+	siteid CHAR (20),
 	PRIMARY KEY (UserCheckId)
 ) ENGINE = INNODB;
 
@@ -907,7 +1030,7 @@ CREATE TABLE UserCheckInfo (
 	UserCheckResult VARCHAR (200),
 	FaultShow VARCHAR (500),
 	YnHanding VARCHAR (2),
-	Handingimmediately VARCHAR (20),
+	Handingimmediately NATIONAL VARCHAR (20),
 	PRIMARY KEY (UserCheckId, ProjectId)
 ) ENGINE = INNODB;
 
@@ -917,7 +1040,7 @@ CREATE TABLE UserCheckInfo (
 CREATE TABLE UserCheckPic (
 	PicID CHAR (36) NOT NULL,
 	PicType VARCHAR (10),
-	PicPath VARCHAR (1000),
+	PicPath VARCHAR (255),
 	UploadTime DATETIME,
 	UserCheckId CHAR (36) NOT NULL,
 	ProjectId CHAR (4) NOT NULL,
@@ -932,7 +1055,7 @@ CREATE TABLE UserCheckProjeckList (
 	ProjectName VARCHAR (50),
 	ProjectContent VARCHAR (100),
 	OrderNumber INT,
-	IsCheck CHAR (1),
+	IsCheck NATIONAL CHAR (1),
 	tiSysType INT NOT NULL,
 	PRIMARY KEY (ProjectId)
 ) ENGINE = INNODB;
@@ -955,7 +1078,7 @@ CREATE TABLE UserCheckProjectContent (
 	ProjectId CHAR (4) NOT NULL,
 	ProjectContent VARCHAR (500),
 	OrderNumber INT,
-	IsMust CHAR (1),
+	IsMust NATIONAL CHAR (1),
 	tiSysType INT NOT NULL,
 	PRIMARY KEY (ProjectId)
 ) ENGINE = INNODB;
@@ -966,7 +1089,7 @@ CREATE TABLE UserCheckProjectContent (
 CREATE TABLE Users (
 	UserID CHAR (36) NOT NULL,
 	account VARCHAR (100) NOT NULL,
-	`PASSWORD` VARCHAR (1000),
+	`PASSWORD` VARCHAR (255),
 	RealName VARCHAR (50),
 	mobilephone VARCHAR (50),
 	Tel VARCHAR (100),
@@ -1031,7 +1154,7 @@ CREATE TABLE wbDeviceRepairInfo_Auto (
 	wbRepairInfoId CHAR (22) NOT NULL,
 	wbRepairTime DATETIME,
 	wbUserID VARCHAR (50),
-	wbProblemInfo VARCHAR (1000),
+	wbProblemInfo VARCHAR (255),
 	UserManagerRemaks VARCHAR (500),
 	UserAdminNameMark VARCHAR (50),
 	HandingState VARCHAR (20),
@@ -1051,7 +1174,7 @@ CREATE TABLE wbDeviceRepairInfo_comovement (
 	wbRepairInfoId CHAR (22) NOT NULL,
 	wbRepairTime DATETIME,
 	wbUserID VARCHAR (50),
-	wbProblemInfo VARCHAR (1000),
+	wbProblemInfo VARCHAR (255),
 	UserManagerRemaks VARCHAR (500),
 	UserAdminNameMark VARCHAR (50),
 	HandingState VARCHAR (20),
@@ -1071,7 +1194,7 @@ CREATE TABLE wbDeviceRepairInfo_Patrol (
 	wbRepairInfoId CHAR (22) NOT NULL,
 	wbRepairTime DATETIME,
 	wbUserID VARCHAR (50),
-	wbProblemInfo VARCHAR (1000),
+	wbProblemInfo VARCHAR (255),
 	UserManagerRemaks VARCHAR (500),
 	UserAdminNameMark VARCHAR (50),
 	HandingState VARCHAR (20),
@@ -1089,7 +1212,7 @@ CREATE TABLE wbDeviceRepairInfo_Test (
 	wbRepairInfoId CHAR (22) NOT NULL,
 	wbRepairTime DATETIME,
 	wbUserID VARCHAR (50),
-	wbProblemInfo VARCHAR (1000),
+	wbProblemInfo VARCHAR (255),
 	UserManagerRemaks VARCHAR (500),
 	UserAdminNameMark VARCHAR (50),
 	HandingState VARCHAR (20),
@@ -1108,7 +1231,7 @@ CREATE TABLE wbRepairInfo (
 	wbRepairListId CHAR (36) NOT NULL,
 	ProjectId CHAR (4) NOT NULL,
 	wbRepairedNumber INT,
-	wbRepairedRemarks VARCHAR (1000),
+	wbRepairedRemarks VARCHAR (255),
 	IsGood VARCHAR (10),
 	YnHanding VARCHAR (2),
 	Handingimmediately VARCHAR (100),
@@ -1120,6 +1243,7 @@ CREATE TABLE wbRepairInfo (
 --
 CREATE TABLE wbRepairList (
 	wbRepairListId CHAR (36) NOT NULL,
+	TaskTime DATETIME,
 	wbRepairTime DATETIME,
 	wbRepairPerson VARCHAR (50),
 	OrgManagerMarl VARCHAR (50),
@@ -1127,6 +1251,7 @@ CREATE TABLE wbRepairList (
 	ReportTime DATETIME,
 	orgid CHAR (12) NOT NULL,
 	MaintenanceId CHAR (36),
+	siteid CHAR (20),
 	PRIMARY KEY (wbRepairListId)
 ) ENGINE = INNODB;
 
@@ -1164,6 +1289,13 @@ ALTER TABLE Appearancepic ADD CONSTRAINT Refsite18 FOREIGN KEY (siteid) REFERENC
 ALTER TABLE BusinessLicence ADD CONSTRAINT Refonlineorg42 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
 
 -- 
+-- TABLE: dangerousGoods 
+--
+ALTER TABLE dangerousGoods ADD CONSTRAINT RefdangerousGoodsType152 FOREIGN KEY (vTypeName) REFERENCES dangerousGoodsType (vTypeName);
+
+ALTER TABLE dangerousGoods ADD CONSTRAINT Refonlineorg151 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
+
+-- 
 -- TABLE: DetectPic 
 --
 ALTER TABLE DetectPic ADD CONSTRAINT RefwbRepairInfo83 FOREIGN KEY (wbRepairListId, ProjectId) REFERENCES wbRepairInfo (wbRepairListId, ProjectId);
@@ -1171,11 +1303,11 @@ ALTER TABLE DetectPic ADD CONSTRAINT RefwbRepairInfo83 FOREIGN KEY (wbRepairList
 -- 
 -- TABLE: devices 
 --
-ALTER TABLE devices ADD CONSTRAINT Refflatpic21 FOREIGN KEY (cFlatPic) REFERENCES flatpic (cFlatPic);
-
 ALTER TABLE devices ADD CONSTRAINT Refdevicetype126 FOREIGN KEY (iDeviceType) REFERENCES devicetype (iDeviceType);
 
 ALTER TABLE devices ADD CONSTRAINT RefGatewaySystemInfo141 FOREIGN KEY (Sysaddress, Gatewayaddress) REFERENCES GatewaySystemInfo (Sysaddress, Gatewayaddress);
+
+ALTER TABLE devices ADD CONSTRAINT Refflatpic21 FOREIGN KEY (cFlatPic) REFERENCES flatpic (cFlatPic);
 
 -- 
 -- TABLE: devicetype 
@@ -1224,9 +1356,21 @@ ALTER TABLE GatewaySystemInfo ADD CONSTRAINT Refgateway140 FOREIGN KEY (Gatewaya
 ALTER TABLE GatewaySystemInfo ADD CONSTRAINT RefonlineFiresystem142 FOREIGN KEY (tiSysType, siteid) REFERENCES onlineFiresystem (tiSysType, siteid);
 
 -- 
+-- TABLE: Introduce 
+--
+ALTER TABLE Introduce ADD CONSTRAINT Refonlineorg153 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
+
+-- 
 -- TABLE: LoginRecord 
 --
 ALTER TABLE LoginRecord ADD CONSTRAINT RefUsers86 FOREIGN KEY (UserID) REFERENCES Users (UserID);
+
+-- 
+-- TABLE: Maintenance 
+--
+ALTER TABLE Maintenance ADD CONSTRAINT RefcTestPeriod156 FOREIGN KEY (cTestPeriod) REFERENCES cTestPeriod (cTestPeriod);
+
+ALTER TABLE Maintenance ADD CONSTRAINT RefTestPeriod157 FOREIGN KEY (cTestPeriod) REFERENCES TestPeriod (cTestPeriod);
 
 -- 
 -- TABLE: MaintenanceOrgInfo 
@@ -1321,6 +1465,20 @@ ALTER TABLE SafeManageRules ADD CONSTRAINT Refonlineorg89 FOREIGN KEY (orgid) RE
 ALTER TABLE site ADD CONSTRAINT Refonlineorg14 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
 
 -- 
+-- TABLE: Taskassign 
+--
+ALTER TABLE Taskassign ADD CONSTRAINT Refonlineorg154 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
+
+ALTER TABLE Taskassign ADD CONSTRAINT RefUsers155 FOREIGN KEY (UserID) REFERENCES Users (UserID);
+
+-- 
+-- TABLE: Ticket 
+--
+ALTER TABLE Ticket ADD CONSTRAINT Refonlineorg158 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
+
+ALTER TABLE Ticket ADD CONSTRAINT RefManagerOrg159 FOREIGN KEY (ManagerOrgID) REFERENCES ManagerOrg (ManagerOrgID);
+
+-- 
 -- TABLE: Training 
 --
 ALTER TABLE Training ADD CONSTRAINT Refonlineorg145 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
@@ -1328,7 +1486,9 @@ ALTER TABLE Training ADD CONSTRAINT Refonlineorg145 FOREIGN KEY (orgid) REFERENC
 -- 
 -- TABLE: UerCheckList 
 --
-ALTER TABLE UerCheckList ADD CONSTRAINT Refonlineorg56 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
+ALTER TABLE UerCheckList ADD CONSTRAINT Refsite150 FOREIGN KEY (siteid) REFERENCES site (siteid);
+
+ALTER TABLE UerCheckList ADD CONSTRAINT Refonlineorg56 FOREIGN KEY (orgid) REFERENCES  (orgid);
 
 -- 
 -- TABLE: UserCheckContent 
@@ -1369,9 +1529,9 @@ ALTER TABLE UserCheckProjectContent ADD CONSTRAINT Reffiresystype62 FOREIGN KEY 
 -- 
 -- TABLE: Users 
 --
-ALTER TABLE Users ADD CONSTRAINT RefUserType3 FOREIGN KEY (UserTypeID) REFERENCES UserType (UserTypeID);
-
 ALTER TABLE Users ADD CONSTRAINT RefManagerOrg6 FOREIGN KEY (ManagerOrgID) REFERENCES ManagerOrg (ManagerOrgID);
+
+ALTER TABLE Users ADD CONSTRAINT RefUserType3 FOREIGN KEY (UserTypeID) REFERENCES UserType (UserTypeID);
 
 ALTER TABLE Users ADD CONSTRAINT Refonlineorg84 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
 
@@ -1419,6 +1579,8 @@ ALTER TABLE wbRepairInfo ADD CONSTRAINT RefUserCheckProjeckList67 FOREIGN KEY (P
 -- 
 -- TABLE: wbRepairList 
 --
+ALTER TABLE wbRepairList ADD CONSTRAINT Refsite149 FOREIGN KEY (siteid) REFERENCES site (siteid);
+
 ALTER TABLE wbRepairList ADD CONSTRAINT Refonlineorg69 FOREIGN KEY (orgid) REFERENCES onlineorg (orgid);
 
 ALTER TABLE wbRepairList ADD CONSTRAINT RefMaintenance71 FOREIGN KEY (MaintenanceId) REFERENCES Maintenance (MaintenanceId);
