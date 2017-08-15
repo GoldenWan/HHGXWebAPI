@@ -1,9 +1,12 @@
 package com.hhgx.soft.controllers;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
+import com.hhgx.soft.utils.UploadUtil;
 
 import net.sf.json.JSONObject;
 
@@ -118,17 +122,29 @@ public class PatrolController {
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteCheckRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteCheckRecord(@RequestBody String reqBody) throws JsonProcessingException {
+	public String deleteCheckRecord(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
 
 		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("userCheckId");
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			patrolService.deleteCheckRecord(userCheckId);
-
-			String alert;
-			/// 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
+			List<String> picPath= patrolService.findUserCheckpic(userCheckId);
+			for(String picPathName : picPath){
+				
+				picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
+				String str[] = picPathName.split("/");
+				//String fName=picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
+				String paperFileName="CheckRecord"+File.separatorChar+str[3]+File.separatorChar;
+				UploadUtil.deleteFileOrDirectory(request, str[4], paperFileName);
+			}
+			
+			patrolService.deleteUserCheckpic(userCheckId);
+			patrolService.deleteWBdevicerepairinfo_patrol(userCheckId);
+			patrolService.deleteUserCheckinfo(userCheckId);
+			patrolService.deleteUserCheckList(userCheckId);
+			
+			
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;

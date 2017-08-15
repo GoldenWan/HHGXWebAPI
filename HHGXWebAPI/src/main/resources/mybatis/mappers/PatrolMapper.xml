@@ -64,14 +64,45 @@
 		<result column="SubmitStatet" property="submitStatet" />
 		<result column="UserCheckResult" property="userCheckResult" />
 	</resultMap>
-	<delete id="deleteCheckRecord">
+	<delete id="deleteUserCheckpic">
+		DELETE
+		FROM
+		usercheckpic
+		WHERE
+		UserCheckId = #{userCheckId};
+	</delete>
+	
+	<select id="findUserCheckpic" resultType="userCheckInfo">
+		SELECT
+			PicPath
+		FROM
+			usercheckpic
+		WHERE
+			UserCheckId = #{userCheckId}
+	</select>
+	
+	<delete id="deleteWBdevicerepairinfo_patrol">
+		DELETE
+		FROM
+		wbdevicerepairinfo_patrol
+		WHERE
+		UserCheckId = #{userCheckId};
+	</delete>
+	<delete id="deleteUserCheckinfo">
+		DELETE
+		FROM
+		usercheckinfo
+		WHERE
+		UserCheckId = #{userCheckId};
+	</delete>
+	<delete id="deleteUserCheckList">
 		DELETE
 		FROM
 		uerchecklist
 		WHERE
 		UserCheckId = #{userCheckId};
-		<!-- 使用了级联删除，但需要代码删除与之相关的巡查照片 -->
 	</delete>
+	
 	<insert id="addUserCheckList">
 		insert into uerchecklist(UserCheckId,orgid,
 		UserCheckTime,OrgUserId,OrgManagerId,SubmitTime)

@@ -37,4 +37,55 @@
 		WHERE
 		TrainingID = #{trainingID};
 	</delete>
+	
+	<select id="getManoeuvreCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		manoeuvre
+	WHERE
+		orgid =#{orgid}
+	</select>
+	<select id="getManoeuvreByOrgid" resultType="manoeuvre">
+	SELECT
+		manoeuvreID,
+		manoeuvretime,
+		address,
+		Department,
+		manager,
+		content
+	FROM
+		manoeuvre
+	WHERE
+		orgid = #{orgid} 
+	LIMIT #{startPos},#{pageSize}
+	</select>
+	<select id="getManoeuvreDetail" resultType="manoeuvre">
+	SELECT
+		manoeuvreID,
+		manoeuvretime,
+		address,
+		Department,
+		manager,
+		content,
+		scheme,
+		attendperson,
+		implementation,
+		summary,
+		suggestion,
+		schemafile,
+		attendpersonfile,
+		implementationfile
+	FROM
+		manoeuvre
+	WHERE
+		manoeuvreID = #{manoeuvreID} 
+	</select>
+	<delete id="deleteManoeuvre">
+		DELETE
+		FROM
+		manoeuvre
+		WHERE
+		manoeuvreID = #{manoeuvreID};
+	</delete>
 </mapper>

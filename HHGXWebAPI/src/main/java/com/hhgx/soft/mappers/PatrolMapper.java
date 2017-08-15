@@ -19,7 +19,6 @@ public interface PatrolMapper {
 	List<PatrolRecord> getPatrolRecordByOrg(@Param("orgID") String orgID, @Param("startDate") String startDate,
 			@Param("endTime") String EndDate, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
 
-	void deleteCheckRecord(@Param("userCheckId") String userCheckId);
 
 	void addUserCheckList(@Param("userCheckId") String userCheckId, @Param("orgID") String orgID,
 			@Param("userCheckTime") String userCheckTime, @Param("orgUser") String orgUser,
@@ -49,5 +48,13 @@ public interface PatrolMapper {
 	void deleteFireSafetyCheck(@Param("fireSafetyCheckID")String fireSafetyCheckID);
 
 	void deleteFireSafetyCheckByOrgid(@Param("orgid")String orgid);
+
+	void deleteUserCheckpic(@Param("userCheckId") String userCheckId);
+	void deleteUserCheckinfo(@Param("userCheckId") String userCheckId);
+	void deleteUserCheckList(@Param("userCheckId") String userCheckId);
+
+	void deleteWBdevicerepairinfo_patrol(@Param("userCheckId") String userCheckId);
+
+	List<String> findUserCheckpic(@Param("userCheckId")String userCheckId);
 
 }

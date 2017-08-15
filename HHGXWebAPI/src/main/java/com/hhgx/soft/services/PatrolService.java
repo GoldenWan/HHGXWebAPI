@@ -26,8 +26,8 @@ public class PatrolService {
 		return patrolMapper.getPatrolRecordByOrg(orgID, startDate, endDate, startPos, pageSize);
 	}
 
-	public void deleteCheckRecord(String userCheckId) {
-		patrolMapper.deleteCheckRecord(userCheckId);
+	public void deleteUserCheckList(String userCheckId) {
+		patrolMapper.deleteUserCheckList(userCheckId);
 	}
 
 	public void addUserCheckList(String userCheckId, String orgID, String userCheckTime, String orgUser,
@@ -106,6 +106,23 @@ public class PatrolService {
 
 	public void deleteFireSafetyCheckByOrgid(String orgid) {
 		patrolMapper.deleteFireSafetyCheckByOrgid(orgid);
+	}
+
+	public void deleteUserCheckpic(String userCheckId) {
+		patrolMapper.deleteUserCheckpic(userCheckId);
+		
+	}
+
+	public void deleteUserCheckinfo(String userCheckId) {
+		patrolMapper.deleteUserCheckinfo(userCheckId);		
+	}
+
+	public void deleteWBdevicerepairinfo_patrol(String userCheckId) {
+		patrolMapper.deleteWBdevicerepairinfo_patrol(userCheckId);
+	}
+
+	public List<String> findUserCheckpic(String userCheckId) {
+		return patrolMapper.findUserCheckpic(userCheckId);		
 	}
 
 }

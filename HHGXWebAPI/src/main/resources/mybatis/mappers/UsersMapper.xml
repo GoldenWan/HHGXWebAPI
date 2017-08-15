@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.UsersMapper">
+
+	<select id="getUserListCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			users
+		WHERE
+		orgid = #{orgid} and UserBelongTo = #{userBelongTo}
+	</select>
+
+	<select id="getUserList" resultType="users">
+		SELECT
+			u.account,
+			u.RealName,
+			u.mobilephone,
+			u.tel,
+			u.`Status`,
+			ut.UserTypeName
+		FROM
+			users u
+		INNER JOIN usertype ut ON ut.UserTypeID = u.UserTypeID
+		WHERE
+			u.orgid = #{orgid}
+		AND u.UserBelongTo = #{userBelongTo}
+		LIMIT #{startPos},#{pageSize}
+	</select>
+	
+	<update id="updateUser">
+		UPDATE users
+		SET 
+	    RealName=#{realName},
+	    mobilephone=#{mobilephone},
+	    tel=#{tel},
+	    Email=#{email},
+	    `Status`= #{status},
+	    Remark= #{remark},
+	    UserTypeID=#{userTypeID}
+		WHERE
+		Userid= #{userid}
+	</update>
+</mapper>
