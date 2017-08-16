@@ -47,31 +47,31 @@
 	</insert>
 	<insert id="addTraining">
 		INSERT INTO training (
-			TrainingID,
-			TrainingTime,
-			TrainingAddress,
-			TrainingType,
-			HowmanyPeople,
-			Lecturer,
-			TrainingObject,
-			TrainingContent,
-			AttendPeople,
-			Examination,
-			TrainingManager,
-			ContentFile,
-			examfile,
-			signtable,
-			orgid
+		TrainingID,
+		TrainingTime,
+		TrainingAddress,
+		TrainingType,
+		HowmanyPeople,
+		Lecturer,
+		TrainingObject,
+		TrainingContent,
+		AttendPeople,
+		Examination,
+		TrainingManager,
+		ContentFile,
+		examfile,
+		signtable,
+		orgid
 		)
 		VALUES
-			(
-				#{trainingID},#{trainingTime},#{trainingAddress},
-				#{trainingType},#{howmanyPeople},#{lecturer},
-				#{trainingObject},#{trainingContent},#{attendPeople},
-				#{examination},#{trainingManager},#{contentFile},
-				#{examfile},#{signtable},#{orgid},
-				
-				)
+		(
+		#{trainingID},#{trainingTime},#{trainingAddress},
+		#{trainingType},#{howmanyPeople},#{lecturer},
+		#{trainingObject},#{trainingContent},#{attendPeople},
+		#{examination},#{trainingManager},#{contentFile},
+		#{examfile},#{signtable},#{orgid}
+
+		)
 	</insert>
 	<update id="updateTraining ">
 		UPDATE training
@@ -88,12 +88,63 @@
 		TrainingManager = #{trainingManager},
 		ContentFile = #{contentFile},
 		examfile = #{examfile},
-		signtable = #{signtable},
+		signtable =
+		#{signtable},
 		orgid = #{orgid}
 		)
 		WHERE
-			TrainingID = #{trainingID}
+		TrainingID = #{trainingID}
 	</update>
 	
-	
+
+	<insert id="addManoeuvre">
+		INSERT INTO manoeuvre (
+		manoeuvreID,
+		Orgid,
+		manoeuvretime,
+		Address,
+		Department,
+		Manager,
+		Content,
+		Scheme,
+		attendperson,
+		implementation,
+		Summary,
+		suggestion,
+		schemafile,
+		attendpersonfile,
+		implementationfile
+		)
+		VALUES
+		(#{manoeuvreID},
+		#{orgid},#{manoeuvretime},#{address},
+		#{department},#{manager},#{content},
+		#{scheme},#{attendperson},#{implementation},
+		#{summary},#{suggestion},#{schemafile},
+		#{attendpersonfile},#{implementationfile}
+		)
+	</insert>
+
+<update id="updateManoeuvre ">
+	UPDATE manoeuvre
+	SET 
+	Orgid = #{orgid}
+	manoeuvretime = #{manoeuvretime}
+	Address = #{address}
+	Department = #{department}
+	Manager = #{manager}
+	Content = #{content}
+	Scheme = #{scheme}
+	attendperson = #{attendperson}
+	implementation = #{implementation}
+	Summary = #{summary}
+	suggestion = #{suggestion}
+	schemafile = #{schemafile}
+	attendpersonfile = #{attendpersonfile}
+	implementationfile = #{implementationfile}
+	)
+	WHERE
+		manoeuvreID = #{manoeuvreID}
+	</update>
+
 </mapper>

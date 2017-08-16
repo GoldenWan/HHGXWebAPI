@@ -1,6 +1,5 @@
 package com.hhgx.soft.controllers;
 
-import java.io.File;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -154,7 +154,6 @@ public class FormController {
 			String fName1 = examfile.getOriginalFilename();
 			String fName2 = signtable.getOriginalFilename();
 
-			
 			String contentFile1 = UploadUtil.uploadFile(request, contentFile, fName, trainingID);
 			String examfile1 = UploadUtil.uploadFile(request, examfile, fName1, trainingID);
 			String signtable1 = UploadUtil.uploadFile(request, signtable, fName2, trainingID);
@@ -175,8 +174,9 @@ public class FormController {
 		}
 
 	}
+
 	/**
-	 *164.修改消防安全培训情况【**】
+	 * 164.修改消防安全培训情况【**】
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateTraining", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -211,11 +211,11 @@ public class FormController {
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
-			
+
 			String fName = contentFile.getOriginalFilename();
 			String fName1 = examfile.getOriginalFilename();
 			String fName2 = signtable.getOriginalFilename();
-			
+
 			String contentFile1 = UploadUtil.uploadFile(request, contentFile, fName, trainingID);
 			String examfile1 = UploadUtil.uploadFile(request, examfile, fName1, trainingID);
 			String signtable1 = UploadUtil.uploadFile(request, signtable, fName2, trainingID);
@@ -223,6 +223,131 @@ public class FormController {
 			training.setContentFile(contentFile1);
 			training.setSigntable(signtable1);
 			formService.updateTraining(training);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		if (statusCode == ConstValues.OK) {
+			dataBag = "修改成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag = "修改失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+
+	}
+
+	/**
+	 * 170.新增灭火应急演练【**】
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/AddManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
+			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
+			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
+		String orgid = request.getParameter("Orgid");
+		String manoeuvretime = request.getParameter("manoeuvretime");
+		String address = request.getParameter("Address");
+		String department = request.getParameter("Department");
+		String manager = request.getParameter("Manager");
+		String content = request.getParameter("Content");
+		String scheme = request.getParameter("Scheme");
+		String attendperson = request.getParameter("attendperson");
+		String implementation = request.getParameter("implementation");
+		String summary = request.getParameter("Summary");
+		String suggestion = request.getParameter("suggestion");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Manoeuvre manoeuvre = new Manoeuvre();
+			String manoeuvreID = UUIDGenerator.getUUID();
+			manoeuvre.setManoeuvreID(manoeuvreID);
+			manoeuvre.setAddress(address);
+			manoeuvre.setAttendperson(attendperson);
+			manoeuvre.setContent(content);
+			manoeuvre.setDepartment(department);
+			manoeuvre.setImplementation(implementation);
+			manoeuvre.setManoeuvretime(manoeuvretime);
+			manoeuvre.setManager(manager);
+			manoeuvre.setScheme(scheme);
+			manoeuvre.setOrgid(orgid);
+			manoeuvre.setSummary(summary);
+			manoeuvre.setSuggestion(suggestion);
+
+			String schemafile1 = UploadUtil.uploadFile(request, schemafile, schemafile.getOriginalFilename(),
+					manoeuvreID);
+			String attendpersonfile1 = UploadUtil.uploadFile(request, attendpersonfile,
+					attendpersonfile.getOriginalFilename(), manoeuvreID);
+			String implementationfile1 = UploadUtil.uploadFile(request, implementationfile,
+					implementationfile.getOriginalFilename(), manoeuvreID);
+
+			manoeuvre.setSchemafile(schemafile1);
+			manoeuvre.setAttendpersonfile(attendpersonfile1);
+			manoeuvre.setImplementationfile(implementationfile1);
+			formService.addManoeuvre(manoeuvre);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		if (statusCode == ConstValues.OK) {
+			dataBag = "添加成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag = "添加失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+
+	}
+	/**
+	171.修改灭火应急演练预案【**】
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/UpdateManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String updateManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
+			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
+			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
+		String manoeuvreID = request.getParameter("manoeuvreID");
+		String orgid = request.getParameter("Orgid");
+		String manoeuvretime = request.getParameter("manoeuvretime");
+		String address = request.getParameter("Address");
+		String department = request.getParameter("Department");
+		String manager = request.getParameter("Manager");
+		String content = request.getParameter("Content");
+		String scheme = request.getParameter("Scheme");
+		String attendperson = request.getParameter("attendperson");
+		String implementation = request.getParameter("implementation");
+		String summary = request.getParameter("Summary");
+		String suggestion = request.getParameter("suggestion");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Manoeuvre manoeuvre = new Manoeuvre();
+			manoeuvre.setManoeuvreID(manoeuvreID);
+			manoeuvre.setAddress(address);
+			manoeuvre.setAttendperson(attendperson);
+			manoeuvre.setContent(content);
+			manoeuvre.setDepartment(department);
+			manoeuvre.setImplementation(implementation);
+			manoeuvre.setManoeuvretime(manoeuvretime);
+			manoeuvre.setManager(manager);
+			manoeuvre.setScheme(scheme);
+			manoeuvre.setOrgid(orgid);
+			manoeuvre.setSummary(summary);
+			manoeuvre.setSuggestion(suggestion);
+			
+			String schemafile1 = UploadUtil.uploadFile(request, schemafile, schemafile.getOriginalFilename(),
+					manoeuvreID);
+			String attendpersonfile1 = UploadUtil.uploadFile(request, attendpersonfile,
+					attendpersonfile.getOriginalFilename(), manoeuvreID);
+			String implementationfile1 = UploadUtil.uploadFile(request, implementationfile,
+					implementationfile.getOriginalFilename(), manoeuvreID);
+			
+			manoeuvre.setSchemafile(schemafile1);
+			manoeuvre.setAttendpersonfile(attendpersonfile1);
+			manoeuvre.setImplementationfile(implementationfile1);
+			formService.updateManoeuvre(manoeuvre);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -237,4 +362,5 @@ public class FormController {
 		}
 		
 	}
+	
 }

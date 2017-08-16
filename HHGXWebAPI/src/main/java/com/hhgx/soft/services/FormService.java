@@ -2,6 +2,7 @@ package com.hhgx.soft.services;
 
 import org.springframework.stereotype.Service;
 
+import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -35,6 +36,14 @@ public class FormService {
 
 	public void updateTraining(Training training) {
 		formMapper.updateTraining(training);		
+	}
+
+	public void addManoeuvre(Manoeuvre manoeuvre) {
+		formMapper.addManoeuvre(manoeuvre);
+	}
+
+	public void updateManoeuvre(Manoeuvre manoeuvre) {
+		formMapper.updateManoeuvre(manoeuvre);
 	}
 	
 }

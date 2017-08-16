@@ -34,6 +34,7 @@ import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.Md5Util;
 import com.hhgx.soft.utils.RegistMessage;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
@@ -76,7 +77,7 @@ public class UserManagerController {
 		registerNew.setOrgname(orgname);
 		registerNew.setUserBelongTo(userBelongTo);
 		registerNew.setUsername(username);
-		registerNew.setPassword(password);
+		registerNew.setPassword(Md5Util.getMD5(password));
 		registerNew.setIsFirstEnroll("是");
 		String neworgid = null;
 		if (!StringUtils.isEmpty(areaID)) {
@@ -235,7 +236,7 @@ public class UserManagerController {
 			dataBag = "没有用户 请先注册";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
-			User user = userManagerService.loginBy(username, password);
+			User user = userManagerService.loginBy(username, Md5Util.getMD5(password));
 			if (user != null) {
 				request.setAttribute("UserID", user.getUserID());
 				statusCode = ConstValues.OK;

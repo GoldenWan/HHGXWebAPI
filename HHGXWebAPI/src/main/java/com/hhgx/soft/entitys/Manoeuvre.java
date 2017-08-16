@@ -15,6 +15,7 @@ public class Manoeuvre {
 	private String schemafile; // 演练方案附件
 	private String attendpersonfile; // 参与人员附件
 	private String implementationfile; // 演练实施情况附件
+	private String orgid;
 
 	public String getManoeuvreID() {
 		return manoeuvreID;
@@ -126,6 +127,14 @@ public class Manoeuvre {
 
 	public void setImplementationfile(String implementationfile) {
 		this.implementationfile = implementationfile;
+	}
+
+	public String getOrgid() {
+		return orgid;
+	}
+
+	public void setOrgid(String orgid) {
+		this.orgid = orgid;
 	}
 
 }
