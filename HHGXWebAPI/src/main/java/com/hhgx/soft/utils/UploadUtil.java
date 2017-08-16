@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,34 +54,35 @@ public class UploadUtil {
 	 * @param f
 	 *            文件
 	 * @param fName
-	 *            图片名称
-	 * @param paperFileName
-	 *            文件夹名称
+	 *            图片名称  巡查照片主键.extension
+	 * @param paperFileName 
+	 *            文件夹名称   巡查记录编号（主键）
 	 * @return
 	 */
 	public final static String uploadImg(HttpServletRequest request, MultipartFile f, String fName,
 			String paperFileName) {
 		if (null != f && null != fName) {
-			String imageFileName = new Date().getTime() + getExtention(fName);// 生成处理后在图片名称
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "uploads/" + "/"
+
+			//巡查记录编号（主键）/巡查照片主键.extension
+			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/"
 					+ paperFileName;
 			File dir = new File(filedir);
 			if (!dir.exists()) // 如果目录不存在就创建目录
 				dir.mkdirs();
-			File imageFile = new File(filedir + "/" + imageFileName);
+			File imageFile = new File(filedir + "/" + fName);
 			try {
 				copyFile(f, imageFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "uploads/" + paperFileName + "/" + imageFileName; // 新生成的图片路径名称
+			return "Uploading/CheckRecord/" + paperFileName + "/" + fName; // 新生成的图片路径名称
 		}
 
 		return null;
 	}
 
 	// 截取图片名字
-	private static String getExtention(String fileName) {
+	public static String getExtention(String fileName) {
 		int pos = fileName.lastIndexOf(".");
 		return fileName.substring(pos);
 	}
@@ -106,7 +106,7 @@ public class UploadUtil {
 	public final static String uploadFile(HttpServletRequest request, MultipartFile f, String fName,
 			String paperFileName) {
 		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "uploads/" + paperFileName;
+			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/Training/" + paperFileName;
 			File dir = new File(filedir);
 			if (!dir.exists()) // 如果目录不存在就创建目录
 				dir.mkdirs();
@@ -116,7 +116,7 @@ public class UploadUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "uploads/" + paperFileName + "/" + fName; // 新生成的图片路径名称
+			return "Uploading/Training/" + paperFileName + "/" + fName; // 新生成的图片路径名称
 		}
 		return null;
 	}
@@ -164,12 +164,12 @@ public class UploadUtil {
 	 */
 	public final static boolean deleteFileOrDirectory(HttpServletRequest request, String fName, String paperFileName) {
 		// 文件路径
-		String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName + "/"
+		String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/" + paperFileName + "/"
 				+ fName;
 		// 文件夹
-		String directorydir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName;
+		String directorydir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/" + paperFileName;
 		// 保存文件 文件夹路径
-		String rootPath = request.getSession().getServletContext().getRealPath("/") + "Uploading";
+		String rootPath = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord";
 		File file = new File(filedir);
 		if (!file.exists()) {
 			// "删除文件失败："+fName+"文件不存在";

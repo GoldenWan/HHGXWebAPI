@@ -3,14 +3,14 @@ package com.hhgx.soft.entitys;
 public class UserCheckInfo {
 	
 
- private String userCheckId;
- private String projectId;
- private String userCheckResult;
- private String faultShow;
- private String ynHanding;
- private String handingimmediately;
-public String getUserCheckId() {
-	return userCheckId;
+ private String userCheckId;              //巡查记录编号
+ private String projectId;                //巡查内容编号
+ private String userCheckResult;          //巡查结果  
+ private String faultShow;                //故障现象  
+ private String ynHanding;                //是否当场处理
+ private String handingimmediately;       //现场处理情况
+public String getUserCheckId() {         
+	return userCheckId;                  
 }
 public void setUserCheckId(String userCheckId) {
 	this.userCheckId = userCheckId;

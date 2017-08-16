@@ -130,12 +130,12 @@ public class PatrolController {
 		int statusCode = -1;
 		try {
 			List<String> picPath= patrolService.findUserCheckpic(userCheckId);
+			
 			for(String picPathName : picPath){
-				
 				picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
 				String str[] = picPathName.split("/");
 				//String fName=picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
-				String paperFileName="CheckRecord"+File.separatorChar+str[3]+File.separatorChar;
+				String paperFileName=str[3]+File.separatorChar;
 				UploadUtil.deleteFileOrDirectory(request, str[4], paperFileName);
 			}
 			
@@ -147,6 +147,7 @@ public class PatrolController {
 			
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		if (statusCode == ConstValues.OK) {

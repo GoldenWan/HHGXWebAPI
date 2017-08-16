@@ -72,7 +72,7 @@
 		UserCheckId = #{userCheckId};
 	</delete>
 	
-	<select id="findUserCheckpic" resultType="userCheckInfo">
+	<select id="findUserCheckpic" resultType="string">
 		SELECT
 			PicPath
 		FROM
@@ -107,7 +107,7 @@
 		insert into uerchecklist(UserCheckId,orgid,
 		UserCheckTime,OrgUserId,OrgManagerId,SubmitTime)
 		values
-		(#{userCheckId},#{orgID},#{userCheckTime},#{orgUser},#{orgManagerId},#{submitTime});
+		(#{userCheckId},#{orgID},#{userCheckTime},#{orgUser},#{orgManagerId},#{submitTime})
 	</insert>
 
 

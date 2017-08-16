@@ -1,22 +1,22 @@
 package com.hhgx.soft.entitys;
 
 public class Training {
-	;
-	private String trainingID;
-	private String trainingTime;
-	private String trainingAddress;
-	private String trainingType;
-	private String trainingObject;
-	private int howmanyPeople;
-	private String lecturer;
-	private String trainingContent;
-	private String attendPeople;
-	private String examination;
-	private String trainingManager;
-	private String contentFile;
-	private String signtable;
-	private String examfile;
-	private String orgid;
+
+	private String trainingID;          
+	private String trainingTime;         //培训时间
+	private String trainingAddress;      //培训地点
+	private String trainingType;         //培训性质
+	private String trainingObject;       //参与人数
+	private int howmanyPeople;           //授课人
+	private String lecturer;             //培训对象
+	private String trainingContent;      //培训内容
+	private String attendPeople;         //参加人员
+	private String examination;          //培训考试情况
+	private String trainingManager;      //单位培训负责人
+	private String contentFile;          //培训内容附件
+	private String signtable;            //考试情况附件
+	private String examfile;             //人员签到表附件
+	private String orgid;                //防火单位编号
 
 	public String getTrainingID() {
 		return trainingID;

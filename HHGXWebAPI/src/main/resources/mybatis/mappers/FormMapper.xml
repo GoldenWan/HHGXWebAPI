@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.FormMapper">
+
+	<select id="findPicType" resultType="string">
+		SELECT
+		PicPath
+		FROM
+		usercheckpic
+		WHERE
+		PicID = #{picID}
+	</select>
+
+
+	<delete id="deletePicByID">
+		DELETE
+		FROM
+		usercheckpic
+		WHERE
+		PicID = #{picID}
+	</delete>
+	<insert id="addUserCheckPic">
+		INSERT INTO usercheckpic (
+		PicID,
+		PicPath,
+		ProjectId,
+		UploadTime,
+		UserCheckId,
+		PicType
+		)
+		VALUES
+		(#{picID},#{picPath},#{projectId},#{uploadTime},#{userCheckId},#{picType})
+	</insert>
+	<insert id="addOrUpdateCheckRecord">
+		INSERT INTO usercheckinfo (
+		UserCheckId,
+		ProjectId,
+		UserCheckResult,
+		FaultShow,
+		YnHanding,
+		Handingimmediately
+		)
+		VALUES
+		(#{userCheckId},#{projectId},#{userCheckResult},#{faultShow},#{ynHanding},#{handingimmediately})
+	</insert>
+	<insert id="addTraining">
+		INSERT INTO training (
+			TrainingID,
+			TrainingTime,
+			TrainingAddress,
+			TrainingType,
+			HowmanyPeople,
+			Lecturer,
+			TrainingObject,
+			TrainingContent,
+			AttendPeople,
+			Examination,
+			TrainingManager,
+			ContentFile,
+			examfile,
+			signtable,
+			orgid
+		)
+		VALUES
+			(
+				#{trainingID},#{trainingTime},#{trainingAddress},
+				#{trainingType},#{howmanyPeople},#{lecturer},
+				#{trainingObject},#{trainingContent},#{attendPeople},
+				#{examination},#{trainingManager},#{contentFile},
+				#{examfile},#{signtable},#{orgid},
+				
+				)
+	</insert>
+	<update id="updateTraining ">
+		UPDATE training
+		SET TrainingID = #{trainingID},
+		TrainingTime = #{trainingTime},
+		TrainingAddress = #{trainingAddress},
+		TrainingType = #{trainingType},
+		HowmanyPeople = #{howmanyPeople},
+		Lecturer = #{lecturer},
+		TrainingObject = #{trainingObject},
+		TrainingContent = #{trainingContent},
+		AttendPeople = #{attendPeople},
+		Examination = #{examination},
+		TrainingManager = #{trainingManager},
+		ContentFile = #{contentFile},
+		examfile = #{examfile},
+		signtable = #{signtable},
+		orgid = #{orgid}
+		)
+		WHERE
+			TrainingID = #{trainingID}
+	</update>
+	
+	
+</mapper>

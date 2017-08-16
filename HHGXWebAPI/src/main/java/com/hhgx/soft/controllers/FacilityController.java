@@ -134,7 +134,6 @@ public class FacilityController {
 		List<Manoeuvre> manoeuvreList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		int totalCount = facilityService.getManoeuvreCount(orgid);
-		System.err.println(totalCount);
 		int statusCode = -1;
 
 		try {
@@ -181,6 +180,9 @@ public class FacilityController {
 		int statusCode = -1;
 		try {
 			Manoeuvre manoeuvreDetail = facilityService.getManoeuvreDetail(manoeuvreID);
+			System.out.println(manoeuvreDetail);
+			if(!StringUtils.isEmpty(manoeuvreDetail)){
+		
 			map2.put("manoeuvreID", manoeuvreDetail.getManoeuvreID());
 			map2.put("manoeuvretime", manoeuvreDetail.getManoeuvretime());
 			map2.put("address", manoeuvreDetail.getAddress());
@@ -196,7 +198,12 @@ public class FacilityController {
 			map2.put("attendpersonfile",manoeuvreDetail.getAttendpersonfile());
 			map2.put("implementationfile",manoeuvreDetail.getImplementationfile());
 			statusCode = ConstValues.OK;
+			}else {
+				
+				statusCode = ConstValues.FAILED;
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindJson(map2, statusCode);
@@ -217,6 +224,7 @@ public class FacilityController {
 			facilityService.deleteManoeuvre(manoeuvreID);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		if (statusCode == ConstValues.OK) {

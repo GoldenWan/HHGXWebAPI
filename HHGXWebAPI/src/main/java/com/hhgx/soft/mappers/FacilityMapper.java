@@ -20,12 +20,13 @@ public interface FacilityMapper {
 
 	void deleteTraining(@Param("trainingID") String trainingID);
 
-	int getManoeuvreCount(@Param("orgid")String orgid);
+	int getManoeuvreCount(@Param("orgid") String orgid);
 
-	List<Manoeuvre> getManoeuvreByOrgid(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param(" pageSize")int pageSize);
+	List<Manoeuvre> getManoeuvreByOrgid(@Param("orgid") String orgid, @Param("startPos") int startPos,
+			@Param("pageSize") int pageSize);
 
-	Manoeuvre getManoeuvreDetail(@Param("manoeuvreID")String manoeuvreID);
+	Manoeuvre getManoeuvreDetail(@Param("manoeuvreID") String manoeuvreID);
 
-	void deleteManoeuvre(@Param("manoeuvreID")String manoeuvreID);
+	void deleteManoeuvre(@Param("manoeuvreID") String manoeuvreID);
 
 }
