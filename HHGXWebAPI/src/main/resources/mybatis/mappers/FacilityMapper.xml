@@ -88,4 +88,26 @@
 		WHERE
 		manoeuvreID = #{manoeuvreID};
 	</delete>
+	<select id="getTraingingDetail" resultType="training">
+	SELECT
+		TrainingID,
+		TrainingTime,
+		TrainingAddress,
+		TrainingType,
+		HowmanyPeople,
+		Lecturer,
+		TrainingObject,
+		TrainingContent,
+		AttendPeople,
+		Examination,
+		TrainingManager,
+		ContentFile,
+		examfile,
+		signtable,
+		orgid
+	FROM
+		Training
+	WHERE
+		TrainingID = #{trainingID} 
+	</select>
 </mapper>

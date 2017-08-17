@@ -40,6 +40,10 @@ public Manoeuvre getManoeuvreDetail(String manoeuvreID) {
 
 public void deleteManoeuvre(String manoeuvreID) {
 	 facilityMapper.deleteManoeuvre(manoeuvreID);	
+}
+
+public Training getTraingingDetail(String trainingID) {
+	return facilityMapper.getTraingingDetail(trainingID);
 } 
 	
 }

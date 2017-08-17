@@ -29,4 +29,6 @@ public interface FacilityMapper {
 
 	void deleteManoeuvre(@Param("manoeuvreID") String manoeuvreID);
 
+	Training getTraingingDetail(@Param("trainingID") String trainingID);
+
 }
