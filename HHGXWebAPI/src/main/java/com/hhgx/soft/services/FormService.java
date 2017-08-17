@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -46,6 +47,18 @@ public class FormService {
 
 	public void updateManoeuvre(Manoeuvre manoeuvre) {
 		formMapper.updateManoeuvre(manoeuvre);
+	}
+
+	public void addSafeManageRules(SafeManageRules safeManageRules) {
+		formMapper.addSafeManageRules(safeManageRules);
+	}
+
+	public String findFilePath(String safeManageRulesID) {
+		return formMapper.findFilePath(safeManageRulesID);
+	}
+
+	public void updateSafeManageRules(SafeManageRules safeManageRules) {
+		formMapper.updateSafeManageRules(safeManageRules);	
 	}
 	
 }

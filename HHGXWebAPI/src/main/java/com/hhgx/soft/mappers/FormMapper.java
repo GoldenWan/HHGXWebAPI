@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -28,6 +29,12 @@ public interface FormMapper {
 	void addManoeuvre(Manoeuvre manoeuvre);
 
 	void updateManoeuvre(Manoeuvre manoeuvre);
+
+	void addSafeManageRules(SafeManageRules safeManageRules);
+
+	String findFilePath(@Param("safeManageRulesID") String safeManageRulesID);
+
+	void updateSafeManageRules(SafeManageRules safeManageRules);
 
 	
 	

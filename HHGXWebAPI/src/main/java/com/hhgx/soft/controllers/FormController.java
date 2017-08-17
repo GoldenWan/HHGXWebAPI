@@ -17,6 +17,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -65,7 +66,7 @@ public class FormController {
 			formService.addOrUpdateCheckRecord(userCheckInfo);
 			// 先删除图片
 			String[] picIDList = delList.split(",");
-			for (int i=0;i<picIDList.length;i++) {
+			for (int i = 0; i < picIDList.length; i++) {
 				String picType = formService.findPicType(picIDList[i]);
 				UploadUtil.deleteFileOrDirectory(request, picIDList[i] + "." + picType, userCheckId);
 				formService.deletePicByID(picIDList[i]);
@@ -243,8 +244,8 @@ public class FormController {
 	@ResponseBody
 	@RequestMapping(value = "/AddManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
-		@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
-		@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
+			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
+			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
 		String orgid = request.getParameter("Orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
 		String address = request.getParameter("Address");
@@ -299,8 +300,9 @@ public class FormController {
 		}
 
 	}
+
 	/**
-	171.修改灭火应急演练预案【**】
+	 * 171.修改灭火应急演练预案【**】
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -335,19 +337,19 @@ public class FormController {
 			manoeuvre.setOrgid(orgid);
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
-			
+
 			String schemafile1 = UploadUtil.uploadFile(request, schemafile, schemafile.getOriginalFilename(),
 					manoeuvreID);
 			String attendpersonfile1 = UploadUtil.uploadFile(request, attendpersonfile,
 					attendpersonfile.getOriginalFilename(), manoeuvreID);
 			String implementationfile1 = UploadUtil.uploadFile(request, implementationfile,
 					implementationfile.getOriginalFilename(), manoeuvreID);
-			
+
 			manoeuvre.setSchemafile(schemafile1);
 			manoeuvre.setAttendpersonfile(attendpersonfile1);
 			manoeuvre.setImplementationfile(implementationfile1);
 			formService.updateManoeuvre(manoeuvre);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -359,8 +361,101 @@ public class FormController {
 			dataBag = "修改失败";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
-		
+
 	}
-	
-	
+
+	/**
+	 *
+	 * 46.添加消防安全管理制度【**】
+	 * 
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String addSafeManageRules(HttpServletRequest request,
+			@RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
+		String orgid = request.getParameter("orgid");
+		String safeManageRulesName = request.getParameter("SafeManageRulesName");
+		String safeManageRulesType = request.getParameter("SafeManageRulesType");
+
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			SafeManageRules safeManageRules = new SafeManageRules();
+			String safeManageRulesID = UUIDGenerator.getUUID();
+			safeManageRules.setSafeManageRulesID(safeManageRulesID);
+			safeManageRules.setSafeManageRulesName(safeManageRulesName);
+			safeManageRules.setUploadTime(DateUtils.timesstampToString());
+			safeManageRules.setSafeManageRulesType(safeManageRulesType);
+			safeManageRules.setOrgid(orgid);
+
+			String filepath = UploadUtil.uploadFileManageRule(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
+					safeManageRulesID);
+
+			safeManageRules.setFilepath(filepath);
+			formService.addSafeManageRules(safeManageRules);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		if (statusCode == ConstValues.OK) {
+			dataBag = "添加成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag = "添加失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+	}
+
+	/**
+	 * 47.修改消防安全管理制度【**】
+	 * 
+	 * @param request
+	 * @param safeRuleFile
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String updateSafeManageRules(HttpServletRequest request,
+			@RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
+		String safeManageRulesID = request.getParameter("safeManageRulesID");
+		String orgid = request.getParameter("orgid");
+		String safeManageRulesName = request.getParameter("SafeManageRulesName");
+		String safeManageRulesType = request.getParameter("SafeManageRulesType");
+
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			SafeManageRules safeManageRules = new SafeManageRules();
+			safeManageRules.setSafeManageRulesID(safeManageRulesID);
+			safeManageRules.setSafeManageRulesName(safeManageRulesName);
+			safeManageRules.setUploadTime(DateUtils.timesstampToString());
+			safeManageRules.setSafeManageRulesType(safeManageRulesType);
+			safeManageRules.setOrgid(orgid);
+
+			String filepathBefore = formService.findFilePath(safeManageRulesID);
+			String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+			// 先删除文件
+			UploadUtil.deleteFile(filedir);
+			String filepath = UploadUtil.uploadFileManageRule(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
+					safeManageRulesID);
+
+			safeManageRules.setFilepath(filepath);
+			formService.updateSafeManageRules(safeManageRules);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		if (statusCode == ConstValues.OK) {
+			dataBag = "修改成功";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		} else {
+			dataBag = "修改失败";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+	}
+
 }

@@ -93,7 +93,7 @@ public class UploadUtil {
 	}
 
 	/**
-	 * 保存文件
+	 * 保存文件/Training/
 	 * 
 	 * @param f
 	 *            文件
@@ -117,6 +117,34 @@ public class UploadUtil {
 				e.printStackTrace();
 			}
 			return "Uploading/Training/" + paperFileName + "/" + fName; // 新生成的图片路径名称
+		}
+		return null;
+	}
+	/**
+	 * 保存文件/Training/
+	 * 
+	 * @param f
+	 *            文件
+	 * @param fName
+	 *            文件名称
+	 * @param paperFileName
+	 *            文件夹名称
+	 * @return
+	 */
+	public final static String uploadFileManageRule(HttpServletRequest request, MultipartFile f, String fName,
+			String paperFileName) {
+		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
+			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/ManageRule/" + paperFileName;
+			File dir = new File(filedir);
+			if (!dir.exists()) // 如果目录不存在就创建目录
+				dir.mkdirs();
+			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
+			try {
+				copyFile(f, accessoryFile); // 拷贝上传的文件对象
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "Uploading/ManageRule/" + paperFileName + "/" + fName; // 新生成的图片路径名称
 		}
 		return null;
 	}
@@ -154,7 +182,7 @@ public class UploadUtil {
 
 	/******************************************************************************************************************/
 	/**
-	 * 删除文件
+	 * 删除文件CheckRecord
 	 * 
 	 * @param fName
 	 *            文件名称
