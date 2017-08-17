@@ -46,7 +46,6 @@ public class FormController {
 			throws JsonProcessingException {
 		String userCheckId = request.getParameter("UserCheckId");
 		String projectId = request.getParameter("ProjectId");
-
 		int listNum = Integer.parseInt(request.getParameter("listNum"));
 		String delList = request.getParameter("delList");
 		String userCheckResult = request.getParameter("UserCheckResult");
@@ -66,10 +65,10 @@ public class FormController {
 			formService.addOrUpdateCheckRecord(userCheckInfo);
 			// 先删除图片
 			String[] picIDList = delList.split(",");
-			for (String ID : picIDList) {
-				String picType = formService.findPicType(ID);
-				UploadUtil.deleteFileOrDirectory(request, ID + "." + picType, userCheckId);
-				formService.deletePicByID(ID);
+			for (int i=0;i<picIDList.length;i++) {
+				String picType = formService.findPicType(picIDList[i]);
+				UploadUtil.deleteFileOrDirectory(request, picIDList[i] + "." + picType, userCheckId);
+				formService.deletePicByID(picIDList[i]);
 			}
 			// 上传图片
 			if (listNum > 0) {

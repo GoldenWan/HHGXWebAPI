@@ -9,6 +9,14 @@ public class UserCheckInfo {
  private String faultShow;                //故障现象  
  private String ynHanding;                //是否当场处理
  private String handingimmediately;       //现场处理情况
+ 
+ 
+@Override
+public String toString() {
+	return "UserCheckInfo [userCheckId=" + userCheckId + ", projectId=" + projectId + ", userCheckResult="
+			+ userCheckResult + ", faultShow=" + faultShow + ", ynHanding=" + ynHanding + ", handingimmediately="
+			+ handingimmediately + "]";
+}
 public String getUserCheckId() {         
 	return userCheckId;                  
 }

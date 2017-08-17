@@ -1,5 +1,6 @@
 package com.hhgx.soft.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hhgx.soft.entitys.Manoeuvre;
@@ -11,6 +12,7 @@ import com.hhgx.soft.mappers.FormMapper;
 @Service
 public class FormService {
 
+	@Autowired
 	private FormMapper formMapper;
 
 	public String findPicType(String ID) {

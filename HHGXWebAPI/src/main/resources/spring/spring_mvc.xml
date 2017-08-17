@@ -20,7 +20,7 @@
     <mvc:interceptors>  
             <!-- 多个拦截器，顺序执行 -->  
             <mvc:interceptor> 
-                <mvc:mapping path="/**"/>  
+                <mvc:mapping path="/a/**"/>  
                 <mvc:exclude-mapping path="/static/**"/>  
                 <mvc:exclude-mapping path="/UserManager/Code/**"/>  
                 <mvc:exclude-mapping path="/UserManager/RegisterNew/**"/>  
