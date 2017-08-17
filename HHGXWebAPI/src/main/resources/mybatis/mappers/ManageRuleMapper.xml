@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.FormMapper">
+
+	<delete id="deleteSafeManageRules">
+		DELETE
+		FROM
+			SafeManageRules
+		WHERE
+			SafeManageRulesID = #{safeManageRulesID}
+	</delete>
+	<select id="safeManageRulesListCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			SafeManageRules
+		WHERE
+			orgid =#{orgid}
+	</select>
+	<select id="safeManageRulesList" resultType="safeManageRules">
+		SELECT
+			SafeManageRulesID,
+			SafeManageRulesName,
+			UploadTime,
+			SafeManageRulesType,
+			filePath,
+			orgid
+		FROM
+			SafeManageRules
+		WHERE
+			orgid =#{orgid}
+		limit
+			#{startPos},#{pageSize}
+			
+	</select>
+	<select id="getSafeManageRules" resultType="safeManageRules">
+		SELECT
+			orgid,
+			SafeManageRulesName,
+			SafeManageRulesType,
+			filepath
+		FROM
+			SafeManageRules
+		WHERE
+			SafeManageRulesID = #{safeManageRulesID}
+	</select>
+	
+</mapper>

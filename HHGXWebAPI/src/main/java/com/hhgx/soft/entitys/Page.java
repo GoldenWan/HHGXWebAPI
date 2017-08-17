@@ -1,15 +1,16 @@
 package com.hhgx.soft.entitys;
 
+import java.io.Serializable;
 
 /**
  * 分页
  */
-public class Page  {
+public class Page implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 *  * Function: 分页  * serialVersionUID:TODO    
+	 *  * Function: 分页  *    
 	 */
-	private static final long serialVersionUID = 1L;
 
 	private int pageIndex = 1; // 当前页数
 
