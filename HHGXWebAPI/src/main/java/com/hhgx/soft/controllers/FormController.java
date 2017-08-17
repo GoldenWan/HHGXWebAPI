@@ -3,7 +3,6 @@ package com.hhgx.soft.controllers;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,12 +41,16 @@ public class FormController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public String addOrUpdateCheckRecord(HttpServletRequest request, HttpServletResponse response)
-			throws JsonProcessingException {
+	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = {
+			RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	public String addOrUpdateCheckRecord(HttpServletRequest request) throws JsonProcessingException {
+
 		String userCheckId = request.getParameter("UserCheckId");
+		System.out.println(userCheckId);
 		String projectId = request.getParameter("ProjectId");
+		System.out.println(projectId);
 		int listNum = Integer.parseInt(request.getParameter("listNum"));
+		System.out.println(listNum);
 		String delList = request.getParameter("delList");
 		String userCheckResult = request.getParameter("UserCheckResult");
 		String faultShow = request.getParameter("FaultShow");
@@ -99,17 +102,15 @@ public class FormController {
 
 				}
 			}
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "插入成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "插入失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -145,7 +146,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(trainingTime);
+			training.setTrainingTime(DateUtils.stringToTimestamp(trainingTime));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -161,17 +162,14 @@ public class FormController {
 			training.setContentFile(contentFile1);
 			training.setSigntable(signtable1);
 			formService.addTraining(training);
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "插入成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "插入失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -207,7 +205,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(trainingTime);
+			training.setTrainingTime(DateUtils.stringToTimestamp(trainingTime));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -224,17 +222,14 @@ public class FormController {
 			training.setSigntable(signtable1);
 			formService.updateTraining(training);
 
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "修改成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "修改失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -287,17 +282,14 @@ public class FormController {
 			manoeuvre.setImplementationfile(implementationfile1);
 			formService.addManoeuvre(manoeuvre);
 
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
+			dataBag = "插入失败";
 		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "添加成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
-			dataBag = "添加失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -350,17 +342,14 @@ public class FormController {
 			manoeuvre.setImplementationfile(implementationfile1);
 			formService.updateManoeuvre(manoeuvre);
 
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "修改成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "修改失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -372,8 +361,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public String addSafeManageRules(HttpServletRequest request,
-			@RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
+	public String updateManoeuvre(HttpServletRequest request, @RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
 		String safeManageRulesType = request.getParameter("SafeManageRulesType");
@@ -394,18 +382,15 @@ public class FormController {
 
 			safeManageRules.setFilepath(filepath);
 			formService.addSafeManageRules(safeManageRules);
-
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
+			dataBag = "插入失败";
 		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "添加成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
-			dataBag = "添加失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
 	}
 
 	/**
@@ -445,17 +430,14 @@ public class FormController {
 			safeManageRules.setFilepath(filepath);
 			formService.updateSafeManageRules(safeManageRules);
 
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "修改成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "修改失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
 
 }

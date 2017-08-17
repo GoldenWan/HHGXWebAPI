@@ -1,9 +1,11 @@
 package com.hhgx.soft.entitys;
 
+import java.util.Date;
+
 public class Training {
 
 	private String trainingID;          
-	private String trainingTime;         //培训时间
+	private Date trainingTime;         //培训时间
 	private String trainingAddress;      //培训地点
 	private String trainingType;         //培训性质
 	private String trainingObject;       //参与人数
@@ -18,20 +20,20 @@ public class Training {
 	private String examfile;             //人员签到表附件
 	private String orgid;                //防火单位编号
 
+	public Date getTrainingTime() {
+		return trainingTime;
+	}
+
+	public void setTrainingTime(Date trainingTime) {
+		this.trainingTime = trainingTime;
+	}
+
 	public String getTrainingID() {
 		return trainingID;
 	}
 
 	public void setTrainingID(String trainingID) {
 		this.trainingID = trainingID;
-	}
-
-	public String getTrainingTime() {
-		return trainingTime;
-	}
-
-	public void setTrainingTime(String trainingTime) {
-		this.trainingTime = trainingTime;
 	}
 
 	public String getTrainingAddress() {

@@ -73,7 +73,7 @@
 
 		)
 	</insert>
-	<update id="updateTraining ">
+	<update id="updateTraining" parameterType="training">
 		UPDATE training
 		SET
 		TrainingTime = #{trainingTime},
@@ -82,20 +82,14 @@
 		HowmanyPeople = #{howmanyPeople},
 		Lecturer = #{lecturer},
 		TrainingObject = #{trainingObject},
-		TrainingContent =
-		#{trainingContent},
+		TrainingContent =#{trainingContent},
 		AttendPeople = #{attendPeople},
-		Examination =
-		#{examination},
+		Examination =#{examination},
 		TrainingManager = #{trainingManager},
-		ContentFile =
-		#{contentFile},
+		ContentFile =#{contentFile},
 		examfile = #{examfile},
-		signtable =
-		#{signtable},
-		orgid =
-		#{orgid}
-		)
+		signtable =#{signtable},
+		orgid = #{orgid}
 		WHERE
 		TrainingID = #{trainingID}
 	</update>
@@ -129,30 +123,29 @@
 		)
 	</insert>
 
-	<update id="updateManoeuvre ">
+	<update id="updateManoeuvre">
 		UPDATE manoeuvre
 		SET
-		Orgid = #{orgid}
-		manoeuvretime = #{manoeuvretime}
-		Address = #{address}
-		Department = #{department}
-		Manager = #{manager}
-		Content = #{content}
-		Scheme = #{scheme}
-		attendperson = #{attendperson}
-		implementation = #{implementation}
-		Summary = #{summary}
-		suggestion = #{suggestion}
-		schemafile = #{schemafile}
-		attendpersonfile = #{attendpersonfile}
+		Orgid = #{orgid},
+		manoeuvretime = #{manoeuvretime},
+		Address = #{address},
+		Department = #{department},
+		Manager = #{manager},
+		Content = #{content},
+		Scheme = #{scheme},
+		attendperson = #{attendperson},
+		implementation = #{implementation},
+		Summary = #{summary},
+		suggestion = #{suggestion},
+		schemafile = #{schemafile},
+		attendpersonfile = #{attendpersonfile},
 		implementationfile = #{implementationfile}
-		)
 		WHERE
 		manoeuvreID = #{manoeuvreID}
 	</update>
 
 	<insert id="addSafeManageRules">
-		INSERT INTO SafeManageRules (
+		INSERT INTO safemanagerules (
 		SafeManageRulesID,
 		SafeManageRulesName,
 		UploadTime,
@@ -167,15 +160,14 @@
 		)
 	</insert>
 
-	<update id="updateSafeManageRules ">
-		UPDATE SafeManageRules
+	<update id="updateSafeManageRules">
+		UPDATE safemanagerules
 		SET
 		SafeManageRulesName = #{safeManageRulesName},
 		UploadTime = #{uploadTime},
 		SafeManageRulesType = #{safeManageRulesType},
 		filepath = #{filepath},
 		orgid = #{orgid}
-		)
 		WHERE
 		SafeManageRulesID = #{safeManageRulesID}
 	</update>
@@ -183,7 +175,7 @@
 		SELECT
 		filepath
 		FROM
-		SafeManageRules
+		safemanagerules
 		WHERE
 		SafeManageRulesID = #{safeManageRulesID}
 	</select>

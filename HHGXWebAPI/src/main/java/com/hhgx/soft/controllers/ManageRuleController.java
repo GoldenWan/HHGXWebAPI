@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,18 +61,14 @@ public class ManageRuleController {
 			UploadUtil.deleteFile(filedir);
 			manageRuleService.deleteSafeManageRules(safeManageRulesID);
 
+			dataBag = "刪除成功";
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "刪除成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "刪除失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -104,20 +101,24 @@ public class ManageRuleController {
 				safeManageRulesList = manageRuleService.safeManageRulesList(orgid, page.getStartPos(),
 						page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
+			if (safeManageRulesList.size() > 0) {
+				for (SafeManageRules safeManageRules : safeManageRulesList) {
 
-			for (SafeManageRules safeManageRules : safeManageRulesList) {
+					Map<String, String> map2 = new HashMap<String, String>();
+					map2.put("SafeManageRulesID", safeManageRules.getSafeManageRulesID());
+					map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
+					map2.put("UploadTime", safeManageRules.getUploadTime());
+					map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesID());
+					map2.put("filePath", safeManageRules.getFilepath());
+					map2.put("orgid", safeManageRules.getOrgid());
+					lmList.add(map2);
+				}
+				statusCode = ConstValues.OK;
 
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("SafeManageRulesID", safeManageRules.getSafeManageRulesID());
-				map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
-				map2.put("UploadTime", safeManageRules.getUploadTime());
-				map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesID());
-				map2.put("filePath", safeManageRules.getFilepath());
-				map2.put("orgid", safeManageRules.getOrgid());
-
-				lmList.add(map2);
+			} else {
+				statusCode = ConstValues.OK;
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -130,21 +131,26 @@ public class ManageRuleController {
 	 * 121.获取消防管理制度详情【**】
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getSafeManageRules", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/GetSafeManageRules", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
 	public String getSafeManageRules(@RequestBody String reqBody) throws JsonProcessingException {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "SafeManageRulesID");
-		String safeManageRulesID = map.get("SafeManageRulesID");
+		String safeManageRulesID = map.get("safeManageRulesID");
 
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
 			SafeManageRules safeManageRules = manageRuleService.getSafeManageRules(safeManageRulesID);
-			map2.put("orgid", safeManageRules.getOrgid());
-			map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
-			map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesType());
-			map2.put("fileName", safeManageRules.getFilepath());
-			statusCode = ConstValues.OK;
+			if (!StringUtils.isEmpty(safeManageRules)) {
+				map2.put("orgid", safeManageRules.getOrgid());
+				map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
+				map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesType());
+				map2.put("fileName", safeManageRules.getFilepath());
+				statusCode = ConstValues.OK;
+			} else {
+				statusCode = ConstValues.OK;
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindJson(map2, statusCode);

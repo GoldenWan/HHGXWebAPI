@@ -41,7 +41,6 @@ public class ResponseJson {
 		ObjectMapper mapper = new ObjectMapper();
 		params.put("pageCount", pageCount);
 		params.put("PageDatas", dataBag);
-		params.put(ConstValues.RESPDATA, dataBag);
 		params.put(ConstValues.RESPCODE, statusCode);
 		result=mapper.writeValueAsString(params);
 		return result;

@@ -152,7 +152,7 @@
 	<update id="updateSubmitState">
 		UPDATE uerchecklist q
 		SET q.SubmitStatet =
-		#{submitStatet}
+		#{submitState}
 		WHERE
 		q.UserCheckId = #{userCheckId}
 	</update>

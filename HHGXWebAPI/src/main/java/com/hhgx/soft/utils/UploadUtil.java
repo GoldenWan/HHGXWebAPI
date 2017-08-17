@@ -81,10 +81,10 @@ public class UploadUtil {
 		return null;
 	}
 
-	// 截取图片名字
+	// 获取文件后缀
 	public static String getExtention(String fileName) {
 		int pos = fileName.lastIndexOf(".");
-		return fileName.substring(pos);
+		return fileName.substring(pos+1);
 	}
 
 	// 存入图片
