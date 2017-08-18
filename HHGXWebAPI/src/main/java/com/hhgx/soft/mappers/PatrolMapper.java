@@ -14,7 +14,8 @@ import com.hhgx.soft.entitys.UserCheckInfo;
 @Component("/patrolMapper")
 public interface PatrolMapper {
 
-	int gePatrolRecordByOrgCount(@Param("orgID") String orgID);
+	int gePatrolRecordByOrgCount(@Param("orgID") String orgID, @Param("startDate") String startDate,
+			@Param("endTime") String EndDate);
 
 	List<PatrolRecord> getPatrolRecordByOrg(@Param("orgID") String orgID, @Param("startDate") String startDate,
 			@Param("endTime") String EndDate, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
@@ -32,7 +33,7 @@ public interface PatrolMapper {
 
 	void updateSubmitState(@Param("userCheckId") String userCheckId, @Param("submitState") String submitState);
 
-	int fireSafetyCheckCount(@Param("orgid") String orgid);
+	int fireSafetyCheckCount(@Param("orgid") String orgid,@Param("startTime")String startTime, @Param("endTime") String endTime);
 
 	List<FireSafetyCheck> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")String startTime, @Param("endTime") String endTime, @Param("startPos") int startPos,
 			@Param("pageSize") int pageSize);

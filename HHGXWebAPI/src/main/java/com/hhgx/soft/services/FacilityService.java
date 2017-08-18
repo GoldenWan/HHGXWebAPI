@@ -22,8 +22,8 @@ public List<Training> getTrainingList(String orgid, String startTime, String end
 	return facilityMapper.getTrainingList(orgid, startTime,endTime, startPos,pageSize);
 }
 
-public int getTrainingListCount(String orgid) {
-	return facilityMapper.getTrainingListCount(orgid);
+public int getTrainingListCount(String orgid, String startTime, String endTime) {
+	return facilityMapper.getTrainingListCount(orgid, startTime, endTime);
 }
 
 public int getManoeuvreCount(String orgid) {

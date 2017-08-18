@@ -56,7 +56,7 @@ public class FacilityController {
 		Page page = null;
 		List<Training> trainingList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = facilityService.getTrainingListCount(orgid);
+		int totalCount = facilityService.getTrainingListCount(orgid, startTime, endTime);
 		int statusCode = -1;
 
 		try {

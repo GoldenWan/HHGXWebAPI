@@ -17,8 +17,8 @@ public class PatrolService {
 	@Autowired
 	private PatrolMapper patrolMapper;
 
-	public int gePatrolRecordByOrgCount(String orgID) {
-		return patrolMapper.gePatrolRecordByOrgCount(orgID);
+	public int gePatrolRecordByOrgCount(String orgID, String startDate, String endDate) {
+		return patrolMapper.gePatrolRecordByOrgCount(orgID, startDate, endDate);
 	}
 
 	public List<PatrolRecord> getPatrolRecordByOrg(String orgID, String startDate, String endDate, int startPos,
@@ -72,8 +72,8 @@ public class PatrolService {
 		return sum > 0 ? true : false;
 	}
 
-	public int fireSafetyCheckCount(String orgid) {
-		return patrolMapper.fireSafetyCheckCount(orgid);
+	public int fireSafetyCheckCount(String orgid, String startTime, String endTime) {
+		return patrolMapper.fireSafetyCheckCount(orgid, startTime, endTime);
 	}
 
 	public List<FireSafetyCheck> getfireSafetyCheckByOrgid(String orgid, String startTime, String endTime, int startPos,

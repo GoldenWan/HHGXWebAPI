@@ -12,7 +12,7 @@ import com.hhgx.soft.entitys.Manoeuvre;
 @MapperScan
 public interface AlarmDataMapper {
 
-	//int getfireAlarmCount(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype);
+	//int getfireAlarmCount(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype, );
 
 	//List<Manoeuvre> fireAlarm(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype);
 

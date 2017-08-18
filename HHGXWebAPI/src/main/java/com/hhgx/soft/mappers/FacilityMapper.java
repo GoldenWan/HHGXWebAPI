@@ -13,7 +13,8 @@ import com.hhgx.soft.entitys.Training;
 @MapperScan("facilityMapper")
 public interface FacilityMapper {
 
-	int getTrainingListCount(@Param("orgid") String orgid);
+	int getTrainingListCount(@Param("orgid") String orgid, @Param("startTime") String startTime,
+			@Param("endTime") String endTime);
 
 	List<Training> getTrainingList(@Param("orgid") String orgid, @Param("startTime") String startTime,
 			@Param("endTime") String endTime, @Param("startPos") int startPos, @Param("pageSize") int pageSize);

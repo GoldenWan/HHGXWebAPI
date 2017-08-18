@@ -9,7 +9,8 @@
 		FROM
 		training
 		WHERE
-		orgid = #{orgid}
+		orgid = #{orgid} and
+		TrainingTime BETWEEN #{startTime} and #{endTime}
 	</select>
 
 	<select id="getTrainingList" resultType="training">

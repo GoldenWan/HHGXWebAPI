@@ -25,6 +25,8 @@
 		uerchecklist ul
 		INNER JOIN usercheckinfo ui ON
 		ul.userCheckId = ui.userCheckId
+		and
+		ul.SubmitTime BETWEEN #{startDate} and #{endTime}
 		WHERE
 		ul.orgid = #{orgID}
 		) n
@@ -163,8 +165,10 @@
 		FROM
 		firesafetycheck
 		WHERE
-		orgid =#{orgid};
+		orgid =#{orgid} and
+		CheckTime BETWEEN #{startTime} and #{endTime};
 	</select>
+	
 	<select id="getfireSafetyCheckByOrgid" resultMap="fireSafetyCheckMap">
 		SELECT
 		FireSafetyCheckID,

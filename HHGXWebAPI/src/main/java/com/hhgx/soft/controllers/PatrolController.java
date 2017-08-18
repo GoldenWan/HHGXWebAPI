@@ -68,7 +68,7 @@ public class PatrolController {
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID);
+		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,startDate,endDate);
 		int statusCode = -1;
 
 		try {
@@ -275,7 +275,7 @@ public class PatrolController {
 		Page page = null;
 		List<FireSafetyCheck> FireSafetyCheckList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = patrolService.fireSafetyCheckCount(orgid);
+		int totalCount = patrolService.fireSafetyCheckCount(orgid, startTime, endTime);
 		System.err.println(totalCount);
 		int statusCode = -1;
 

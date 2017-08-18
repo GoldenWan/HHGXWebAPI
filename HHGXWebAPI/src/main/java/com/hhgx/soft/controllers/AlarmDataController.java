@@ -41,12 +41,12 @@ public class AlarmDataController {
 		Page page = null;
 		List<Manoeuvre> manoeuvreList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		//int totalCount = alarmDataService.getfireAlarmCount(orgid, cAlarmtype);
+		///	page = new Page(totalCount, Integer.parseInt(pageIndex));
+		//int totalCount = alarmDataService.getfireAlarmCount(orgid, cAlarmtype, page.getStartPos(), page.getPageSize());
 		int statusCode = -1;
 
 		try {
 			if (pageIndex != null) {
-			///	page = new Page(totalCount, Integer.parseInt(pageIndex));
 			//	manoeuvreList = alarmDataService.fireAlarm(orgid, cAlarmtype, page.getStartPos(), page.getPageSize());
 
 			} else {

@@ -53,7 +53,7 @@ public class PlayWithRoleController {
 	 * @throws JsonProcessingException
 	 */
 
-	@RequestMapping(value = "GetManagersSubs", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/GetManagersSubs", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getManagersSubs(@RequestBody String reqBody) throws JsonProcessingException {
 		Map<String, String> map = RequestJson.reqJson(reqBody, "InfoBag.MID", "managerorgname", "PageIndex");
