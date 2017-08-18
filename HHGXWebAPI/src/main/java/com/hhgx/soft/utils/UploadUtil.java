@@ -148,6 +148,34 @@ public class UploadUtil {
 		}
 		return null;
 	}
+	/**
+	 * 保存文件/Training/
+	 * 
+	 * @param f
+	 *            文件
+	 * @param fName
+	 *            文件名称
+	 * @param paperFileName
+	 *            文件夹名称
+	 * @return
+	 */
+	public final static String uploadSafeDutyFile(HttpServletRequest request, MultipartFile f, String fName,
+			String paperFileName) {
+		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
+			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/SafeDuty/" + paperFileName;
+			File dir = new File(filedir);
+			if (!dir.exists()) // 如果目录不存在就创建目录
+				dir.mkdirs();
+			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
+			try {
+				copyFile(f, accessoryFile); // 拷贝上传的文件对象
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "Uploading/SafeDuty/" + paperFileName + "/" + fName; // 新生成的图片路径名称
+		}
+		return null;
+	}
 
 	/********************************** 解析上传文件后缀 **********/
 

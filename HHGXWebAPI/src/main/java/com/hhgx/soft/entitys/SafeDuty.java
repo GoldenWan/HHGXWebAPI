@@ -3,13 +3,13 @@ package com.hhgx.soft.entitys;
 public class SafeDuty {
 /**
  * 
- */
-	private String safeDutyID;
-	private String dutyname;
-	private String uploadtime;
-	private String safedutytype;
-	private String filepath;
-	private String orgid;
+ */                                              
+	private String safeDutyID;                     
+	private String dutyname;                     // 职责名称  
+	private String uploadtime;                   //  上传时间
+	private String safedutytype;                 //   职责类别
+	private String filepath;                     // 职责文件
+	private String orgid;                        // 防火单位编号
 
 	public String getSafeDutyID() {
 		return safeDutyID;

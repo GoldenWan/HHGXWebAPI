@@ -456,16 +456,20 @@ public class FormController {
 			
 			SafeDuty safeDuty = new SafeDuty();
 			String safeDutyID = UUIDGenerator.getUUID();
+			safeDuty.setSafeDutyID(safeDutyID);
 			safeDuty.setDutyname(dutyname);
+			safeDuty.setUploadtime(DateUtils.timesstampToString());
 			safeDuty.setOrgid(orgid);
 			safeDuty.setSafedutytype(safedutytype);
 			
-			String filepath = UploadUtil.uploadFileManageRule(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
+			String filepath = UploadUtil.uploadSafeDutyFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
 					safeDutyID);
 			
 			safeDuty.setFilepath(filepath);
 			
 		//	formService.addSafeDuty(safeDuty);
+			
+			formService.addSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
 		} catch (Exception e) {
@@ -476,5 +480,51 @@ public class FormController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 		
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String updateSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
+		String dutyname = request.getParameter("dutyname");
+		String safedutytype = request.getParameter("safedutytype");
+		String orgid = request.getParameter("orgid");
+		String safeDutyID = request.getParameter("SafeDutyID");
+		
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			
+			SafeDuty safeDuty = new SafeDuty();
+			safeDuty.setSafeDutyID(safeDutyID);
+			safeDuty.setDutyname(dutyname);
+			safeDuty.setOrgid(orgid);
+			safeDuty.setSafedutytype(safedutytype);
+			safeDuty.setUploadtime(DateUtils.timesstampToString());
+			//先删除文件
+			String filepathBefore = formService.findSafeDutyFilePath(safeDutyID);
+			String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+			// 先删除文件
+			UploadUtil.deleteFile(filedir);
+			
+			String filepath = UploadUtil.uploadSafeDutyFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
+					safeDutyID);
+			
+			safeDuty.setFilepath(filepath);
+			
+			//	formService.addSafeDuty(safeDuty);
+			
+			formService.updateSafeDuty(safeDuty);
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
+	}
+	
+	
+	
 
 }

@@ -179,5 +179,41 @@
 		WHERE
 		SafeManageRulesID = #{safeManageRulesID}
 	</select>
+	<insert id="addSafeDuty">
+		INSERT INTO safeduty (
+		SafeDutyID,
+		dutyname,
+		uploadtime,
+		safedutytype,
+		filepath,
+		orgid
+		)
+		VALUES
+		(
+		#{safeDutyID},#{dutyname},#{uploadtime},
+		#{safedutytype},#{filepath},#{orgid}
+		)
+	</insert>
+
+	<update id="updateSafeDuty">
+		UPDATE safeduty
+		SET
+		dutyname = #{dutyname},
+		uploadtime = #{uploadtime},
+		safedutytype = #{safedutytype},
+		filepath = #{filepath},
+		orgid = #{orgid}
+		WHERE
+		SafeDutyID = #{safeDutyID}
+	</update>
+	
+	<select id="findSafeDutyFilePath" resultType="string">
+		SELECT
+		filepath
+		FROM
+		safeduty
+		WHERE
+		SafeDutyID = #{safeDutyID}
+	</select>
 
 </mapper>
