@@ -16,6 +16,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
@@ -438,6 +439,42 @@ public class FormController {
 			dataBag = "修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public String addSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
+		String dutyname = request.getParameter("dutyname");
+		String safedutytype = request.getParameter("safedutytype");
+		String orgid = request.getParameter("orgid");
+		
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			
+			SafeDuty safeDuty = new SafeDuty();
+			String safeDutyID = UUIDGenerator.getUUID();
+			safeDuty.setDutyname(dutyname);
+			safeDuty.setOrgid(orgid);
+			safeDuty.setSafedutytype(safedutytype);
+			
+			String filepath = UploadUtil.uploadFileManageRule(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
+					safeDutyID);
+			
+			safeDuty.setFilepath(filepath);
+			
+		//	formService.addSafeDuty(safeDuty);
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "插入失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
 	}
 
 }
