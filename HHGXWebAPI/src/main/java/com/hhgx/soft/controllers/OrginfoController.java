@@ -222,39 +222,40 @@ public class OrginfoController {
 
 		Map<String, String> ret = (Map<String, String>) map.get("infoBag");
 		String orgid = ret.get("orgid");
-		
+
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
-		BusinessLicence businessLicence	= orginfoService.getBusinessLicence(orgid);
-		if(!StringUtils.isEmpty(businessLicence)){
-			
-			map2.put("LicenceCode",businessLicence.getLicenceCode());
-			map2.put("ConpanyName",businessLicence.getConpanyName());
-			map2.put("CompanyType",businessLicence.getCompanyType());
-			map2.put("CompanyAddress",businessLicence.getCompanyAddress());
-			map2.put("CompanyRegister",businessLicence.getCompanyRegister());
-			map2.put("RegistMoney",businessLicence.getRegistMoney());
-			map2.put("BuildTime",DateUtils.formatDateTime(businessLicence.getBuildTime()));
-			map2.put("BusinessEndTime",DateUtils.formatDateTime(businessLicence.getBusinessEndTime()));
-			map2.put("BusinessScope",businessLicence.getBusinessScope());
-			map2.put("AuditingDepartment",businessLicence.getAuditingDepartment());
-			map2.put("RegistTime",DateUtils.formatDateTime(businessLicence.getRegistTime()));
-			map2.put("PictureUrl",businessLicence.getPictureUrl());
-			map2.put("orgid",businessLicence.getOrgid());
-			statusCode = ConstValues.OK;
-		}
-		else{
-			statusCode = ConstValues.OK;
-			
-		}
+			BusinessLicence businessLicence = orginfoService.getBusinessLicence(orgid);
+			if (!StringUtils.isEmpty(businessLicence)) {
+
+				map2.put("LicenceCode", businessLicence.getLicenceCode());
+				map2.put("ConpanyName", businessLicence.getConpanyName());
+				map2.put("CompanyType", businessLicence.getCompanyType());
+				map2.put("CompanyAddress", businessLicence.getCompanyAddress());
+				map2.put("CompanyRegister", businessLicence.getCompanyRegister());
+				map2.put("RegistMoney", businessLicence.getRegistMoney());
+				map2.put("BuildTime", DateUtils.formatDateTime(businessLicence.getBuildTime()));
+				map2.put("BusinessEndTime", DateUtils.formatDateTime(businessLicence.getBusinessEndTime()));
+				map2.put("BusinessScope", businessLicence.getBusinessScope());
+				map2.put("AuditingDepartment", businessLicence.getAuditingDepartment());
+				map2.put("RegistTime", DateUtils.formatDateTime(businessLicence.getRegistTime()));
+				map2.put("PictureUrl", businessLicence.getPictureUrl());
+				map2.put("orgid", businessLicence.getOrgid());
+				statusCode = ConstValues.OK;
+			} else {
+				statusCode = ConstValues.OK;
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindJson(map2, statusCode);
+	}
 	
-}
-	
-	
+	/**
+	 * 59.根据防火单位获取建筑物列表信息【**】[分页]
+	 */
+
 }

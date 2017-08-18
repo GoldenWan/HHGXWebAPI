@@ -46,9 +46,8 @@ public class PatrolController {
 	/*************** 每日防火巡查 ***********************/
 
 	/**
-	 * 12.按防火单位获取巡查记录【**】 【说明：SubmitFlag根据SubmitStatet设定， 若SubmitStatet为“已提交”
-	 * 则SubmitFlag为true,否则为false】 ?*
-	 * 
+	 * 12.按防火单位获取巡查记录【**】 
+	 
 	 * @param reqBody
 	 *            ?*
 	 * @return:TODO ?
