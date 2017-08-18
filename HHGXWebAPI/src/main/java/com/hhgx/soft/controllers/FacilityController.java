@@ -19,6 +19,7 @@ import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.services.FacilityService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 
@@ -74,7 +75,7 @@ public class FacilityController {
 			for (Training training : trainingList) {
 
 				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("TrainingTime ", training.getTrainingTime().toString());
+				map2.put("TrainingTime ", DateUtils.formatDateTime(training.getTrainingTime()));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
@@ -107,7 +108,7 @@ public class FacilityController {
 			Training training = facilityService.getTraingingDetail(trainingID);
 			if (!StringUtils.isEmpty(training)) {
 				map2.put("TrainingID", training.getTrainingID());
-				map2.put("TrainingTime", training.getTrainingTime().toString());
+				map2.put("TrainingTime", DateUtils.formatDateTime(training.getTrainingTime()));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingType", training.getTrainingType());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));

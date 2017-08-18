@@ -3,6 +3,7 @@ package com.hhgx.soft.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
@@ -72,6 +73,10 @@ public class FormService {
 
 	public void updateSafeDuty(SafeDuty safeDuty) {
 		formMapper.updateSafeDuty(safeDuty);
+	}
+
+	public void addBusinessLicence(BusinessLicence businessLicence) {
+		formMapper.addBusinessLicence(businessLicence);
 	}
 	
 }

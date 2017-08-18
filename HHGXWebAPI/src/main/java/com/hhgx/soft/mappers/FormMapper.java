@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
@@ -42,6 +43,8 @@ public interface FormMapper {
 	String findSafeDutyFilePath(@Param("safeDutyID")String safeDutyID);
 
 	void updateSafeDuty(SafeDuty safeDuty);
+
+	void addBusinessLicence(BusinessLicence businessLicence);
 
 	
 	

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Page;
+import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.services.ManageRuleService;
@@ -68,7 +69,7 @@ public class ManageRuleController {
 			statusCode = ConstValues.FAILED;
 			dataBag = "刪除失败";
 		}
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -145,6 +146,123 @@ public class ManageRuleController {
 				map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
 				map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesType());
 				map2.put("fileName", safeManageRules.getFilepath());
+				statusCode = ConstValues.OK;
+			} else {
+				statusCode = ConstValues.OK;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(map2, statusCode);
+	}
+
+	/**
+	 * 52.删除消防安全职责【**】
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeleteSafeDuty", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String deleteSafeDuty(@RequestBody String reqBody, HttpServletRequest request)
+			throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "SafeDutyID");
+		String safeDutyID = map.get("safeDutyID");
+
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+
+			String filepathBefore = formService.findSafeDutyFilePath(safeDutyID);
+			String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+			// 先删除文件
+			UploadUtil.deleteFile(filedir);
+			manageRuleService.deleteSafeDuty(safeDutyID);
+
+			dataBag = "刪除成功";
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+
+	/**
+	 * 92.查询消防安全职责【**】【分页】  * @param reqBody  * @return  * @throws
+	 * JsonProcessingException:TODO  
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SearchSafeDuty", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String searchSafeDuty(@RequestBody String reqBody) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "PageIndex");
+		String orgid = map.get("orgid");
+		String pageIndex = map.get("pageIndex");
+
+		Page page = null;
+		List<SafeDuty> safeDutyList = null;
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+
+		int totalCount = manageRuleService.searchSafeDutyCount(orgid);
+		int statusCode = -1;
+
+		try {
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				safeDutyList = manageRuleService.searchSafeDuty(orgid, page.getStartPos(), page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				safeDutyList = manageRuleService.searchSafeDuty(orgid, page.getStartPos(), page.getPageSize());
+			}
+			if (safeDutyList.size() > 0) {
+				for (SafeDuty safeDuty : safeDutyList) {
+
+					Map<String, String> map2 = new HashMap<String, String>();
+					map2.put("dutyname", safeDuty.getDutyname());
+					map2.put("SafeDutyID", safeDuty.getSafeDutyID());
+					map2.put("safedutytype", safeDuty.getSafedutytype());
+					map2.put("filepath", safeDuty.getFilepath());
+					map2.put("uploadtime", safeDuty.getUploadtime());
+					map2.put("orgid", safeDuty.getOrgid());
+					lmList.add(map2);
+				}
+				statusCode = ConstValues.OK;
+
+			} else {
+				statusCode = ConstValues.OK;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+
+	}
+
+	/**
+	 * 93.消防安全职责详情【**】
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SafeDutyInfo", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String safeDutyInfo(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "SafeDutyID");
+		String safeDutyID = map.get("safeDutyID");
+
+		Map<String, String> map2 = new HashMap<String, String>();
+		int statusCode = -1;
+		try {
+			SafeDuty safeDuty = manageRuleService.safeDutyInfo(safeDutyID);
+			if (!StringUtils.isEmpty(safeDuty)) {
+				map2.put("dutyname", safeDuty.getDutyname());
+				map2.put("SafeDutyID", safeDuty.getSafeDutyID());
+				map2.put("safedutytype", safeDuty.getSafedutytype());
+				map2.put("filepath", safeDuty.getFilepath());
+				map2.put("uploadtime", safeDuty.getUploadtime());
+				map2.put("orgid", safeDuty.getOrgid());
 				statusCode = ConstValues.OK;
 			} else {
 				statusCode = ConstValues.OK;

@@ -17,6 +17,97 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UploadUtil {
 
+	/**
+	 * 上传单个文件
+	 * 
+	 * @param f
+	 *          MultipartFile  文件
+	 * @param fName
+	 *            保存文件名称
+	 * @param paperFileName
+	 *          Uploading下的文件目录
+	 * @return
+	 */
+	public final static String uploadOneFile(HttpServletRequest request, MultipartFile f, String fName,
+			String paperFileName) {
+		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
+			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName;
+			File dir = new File(filedir);
+			if (!dir.exists()) // 如果目录不存在就创建目录
+				dir.mkdirs();
+			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
+			try {
+				copyFile(f, accessoryFile); // 拷贝上传的文件对象
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return "Uploading/" + paperFileName + "/" + fName; // 新生成的图片路径名称
+		}
+		return null;
+	}
+
+	// 获取文件后缀
+	public static String getExtention(String fileName) {
+		int pos = fileName.lastIndexOf(".");
+		return fileName.substring(pos+1);
+	}
+
+
+	/**
+	 * 根据真实文件名 生成uuidname
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public static String generateUUIDFilename(String filename) {
+		String uuid = UUID.randomUUID().toString();
+		// 不想保留源文件名 --- 保留源文件扩展名
+		String ext = filename.substring(filename.lastIndexOf("."));
+
+		return uuid + ext;
+	}
+	
+	//复制文件
+	private static void copyFile(MultipartFile imgFile, File dst) throws IOException {
+		imgFile.transferTo(dst); // 保存上传的文件
+	}
+
+		
+		/**
+		 * 删除单个文件
+		 * 
+		 * @param fileName
+		 *            被删除文件的文件名
+		 * @return 单个文件删除成功返回true,否则返回false
+		 */
+	public static boolean deleteFile(String fileName) {
+		File file = new File(fileName);
+		if (file.isFile() && file.exists()) {
+			file.delete();// "删除单个文件"+name+"成功！"
+			return true;
+		} // "删除单个文件"+name+"失败！"
+		return false;
+	}
+	/********************************** 解析上传文件后缀 **********/
+
+	public static boolean setmsgext(String list, String ext) {
+		boolean flag = false;
+		if (list != null && list.length() > 0) {
+			String[] arr = list.split(",");
+			for (int i = 0; i < arr.length; i++) {
+				if (ext.equals(arr[i])) {
+					flag = true;
+					break;
+				}
+			}
+
+		}
+		return flag;
+	}
+
+	
+	
+	
 	public void upload(File f, String fileName) {
 		try {
 			// 创建读取流
@@ -48,165 +139,9 @@ public class UploadUtil {
 
 	}
 
-	/**
-	 * 图片上传方法
-	 * 
-	 * @param f
-	 *            文件
-	 * @param fName
-	 *            图片名称  巡查照片主键.extension
-	 * @param paperFileName 
-	 *            文件夹名称   巡查记录编号（主键）
-	 * @return
-	 */
-	public final static String uploadImg(HttpServletRequest request, MultipartFile f, String fName,
-			String paperFileName) {
-		if (null != f && null != fName) {
 
-			//巡查记录编号（主键）/巡查照片主键.extension
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/"
-					+ paperFileName;
-			File dir = new File(filedir);
-			if (!dir.exists()) // 如果目录不存在就创建目录
-				dir.mkdirs();
-			File imageFile = new File(filedir + "/" + fName);
-			try {
-				copyFile(f, imageFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "Uploading/CheckRecord/" + paperFileName + "/" + fName; // 新生成的图片路径名称
-		}
 
-		return null;
-	}
 
-	// 获取文件后缀
-	public static String getExtention(String fileName) {
-		int pos = fileName.lastIndexOf(".");
-		return fileName.substring(pos+1);
-	}
-
-	// 存入图片
-	private static void copyFile(MultipartFile imgFile, File dst) throws IOException {
-		imgFile.transferTo(dst); // 保存上传的文件
-	}
-
-	/**
-	 * 保存文件/Training/
-	 * 
-	 * @param f
-	 *            文件
-	 * @param fName
-	 *            文件名称
-	 * @param paperFileName
-	 *            文件夹名称
-	 * @return
-	 */
-	public final static String uploadFile(HttpServletRequest request, MultipartFile f, String fName,
-			String paperFileName) {
-		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/Training/" + paperFileName;
-			File dir = new File(filedir);
-			if (!dir.exists()) // 如果目录不存在就创建目录
-				dir.mkdirs();
-			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
-			try {
-				copyFile(f, accessoryFile); // 拷贝上传的文件对象
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "Uploading/Training/" + paperFileName + "/" + fName; // 新生成的图片路径名称
-		}
-		return null;
-	}
-	/**
-	 * 保存文件/Training/
-	 * 
-	 * @param f
-	 *            文件
-	 * @param fName
-	 *            文件名称
-	 * @param paperFileName
-	 *            文件夹名称
-	 * @return
-	 */
-	public final static String uploadFileManageRule(HttpServletRequest request, MultipartFile f, String fName,
-			String paperFileName) {
-		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/ManageRule/" + paperFileName;
-			File dir = new File(filedir);
-			if (!dir.exists()) // 如果目录不存在就创建目录
-				dir.mkdirs();
-			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
-			try {
-				copyFile(f, accessoryFile); // 拷贝上传的文件对象
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "Uploading/ManageRule/" + paperFileName + "/" + fName; // 新生成的图片路径名称
-		}
-		return null;
-	}
-	/**
-	 * 保存文件/Training/
-	 * 
-	 * @param f
-	 *            文件
-	 * @param fName
-	 *            文件名称
-	 * @param paperFileName
-	 *            文件夹名称
-	 * @return
-	 */
-	public final static String uploadSafeDutyFile(HttpServletRequest request, MultipartFile f, String fName,
-			String paperFileName) {
-		if (f.getSize() != 0 && !("").equals(fName) && null != f && null != fName) {
-			String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/SafeDuty/" + paperFileName;
-			File dir = new File(filedir);
-			if (!dir.exists()) // 如果目录不存在就创建目录
-				dir.mkdirs();
-			File accessoryFile = new File(filedir + "/" + fName); // NEW一个文件对象
-			try {
-				copyFile(f, accessoryFile); // 拷贝上传的文件对象
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return "Uploading/SafeDuty/" + paperFileName + "/" + fName; // 新生成的图片路径名称
-		}
-		return null;
-	}
-
-	/********************************** 解析上传文件后缀 **********/
-
-	public static boolean setmsgext(String list, String ext) {
-		boolean flag = false;
-		if (list != null && list.length() > 0) {
-			String[] arr = list.split(",");
-			for (int i = 0; i < arr.length; i++) {
-				if (ext.equals(arr[i])) {
-					flag = true;
-					break;
-				}
-			}
-
-		}
-		return flag;
-	}
-
-	/**
-	 * 根据真实文件名 生成uuidname
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	public static String generateUUIDFilename(String filename) {
-		String uuid = UUID.randomUUID().toString();
-		// 不想保留源文件名 --- 保留源文件扩展名
-		String ext = filename.substring(filename.lastIndexOf("."));
-
-		return uuid + ext;
-	}
 
 	/******************************************************************************************************************/
 	/**
@@ -218,14 +153,14 @@ public class UploadUtil {
 	 *            文件夹名称
 	 * @return
 	 */
-	public final static boolean deleteFileOrDirectory(HttpServletRequest request, String fName, String paperFileName) {
+	public final static boolean deleteOneFileOrDirectory(HttpServletRequest request, String fName, String paperFileName) {
 		// 文件路径
-		String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/" + paperFileName + "/"
+		String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName + "/"
 				+ fName;
 		// 文件夹
-		String directorydir = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord/" + paperFileName;
+		String directorydir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName;
 		// 保存文件 文件夹路径
-		String rootPath = request.getSession().getServletContext().getRealPath("/") + "Uploading/CheckRecord";
+		String rootPath = request.getSession().getServletContext().getRealPath("/") + "Uploading/";
 		File file = new File(filedir);
 		if (!file.exists()) {
 			// "删除文件失败："+fName+"文件不存在";
@@ -242,21 +177,6 @@ public class UploadUtil {
 		}
 	}
 
-	/**
-	 * 删除单个文件
-	 * 
-	 * @param fileName
-	 *            被删除文件的文件名
-	 * @return 单个文件删除成功返回true,否则返回false
-	 */
-	public static boolean deleteFile(String fileName) {
-		File file = new File(fileName);
-		if (file.isFile() && file.exists()) {
-			file.delete();// "删除单个文件"+name+"成功！"
-			return true;
-		} // "删除单个文件"+name+"失败！"
-		return false;
-	}
 
 	/**
 	 * 删除目录（文件夹）以及目录下的文件

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.OrginfoMapper">
+
+	<select id="getOnlineOrg" resultType="onlineOrg">
+		SELECT
+		orgcode,
+		orgname,
+		vAddress,
+		OrganType,
+		vNamelegalperson,
+		otherthings,
+		YnImportant,
+		SuperiorOrg,
+		cZip,
+		vTel,
+		fax,
+		`E-Mail` eMail,
+		howmanypeople,
+		souyouzhi,
+		SetupDate,
+		realtymoney,
+		ipersonnum,
+		fAreanum,
+		fBuildingarea,
+		GasType,
+		howmanyfireman,
+		howmanyexit,
+		howmanystair,
+		howmanylane,
+		howmanyelevator,
+		lanelocation,
+		vfireroomtel,
+		escapefloor,
+		escapebuildingarea,
+		escapelocation,
+		neareast,
+		nearsouth,
+		nearwest,
+		nearnorth,
+		AutoFireFacility,
+		bFlatpic,
+		dRecordDate,
+		managegrade,
+		NetworkStatus,
+		NetworkTime,
+		ApproveState,
+		ApproveTime,
+		ApproveMan,
+		AreaId,
+		ManagerOrgID
+		FROM
+		onlineorg
+		WHERE
+		OrgID = #{orgID}
+	</select>
+
+	<update id="updateOnlineOrg">
+		UPDATE onlineorg
+		SET orgcode = #{orgcode} ,
+		orgname = #{orgname} ,
+		vAddress = #{vAddress} ,
+		OrganType = #{organType} ,
+		vNamelegalperson = #{vNamelegalperson} ,
+		otherthings = #{otherthings} ,
+		YnImportant = #{ynImportant} ,
+		SuperiorOrg = #{superiorOrg} ,
+		cZip = #{cZip} ,
+		vTel = #{vTel} ,
+		fax = #{fax} ,
+		`E-Mail` = #{eMail} ,
+		howmanypeople = #{howmanypeople} ,
+		souyouzhi = #{souyouzhi} ,
+		SetupDate = #{setupDate} ,
+		realtymoney = #{realtymoney} ,
+		ipersonnum = #{ipersonnum} ,
+		fAreanum = #{fAreanum} ,
+		fBuildingarea = #{fBuildingarea} ,
+		GasType = #{gasType} ,
+		howmanyfireman = #{howmanyfireman} ,
+		howmanyexit = #{howmanyexit} ,
+		howmanystair = #{howmanystair} ,
+		howmanylane = #{howmanylane} ,
+		howmanyelevator = #{howmanyelevator} ,
+		lanelocation = #{lanelocation} ,
+		vfireroomtel = #{vfireroomtel} ,
+		escapefloor = #{escapefloor} ,
+		escapebuildingarea = #{escapebuildingarea} ,
+		escapelocation = #{escapelocation} ,
+		neareast = #{neareast} ,
+		nearsouth = #{nearsouth} ,
+		nearwest = #{nearwest} ,
+		nearnorth = #{nearnorth} ,
+		AutoFireFacility = #{autoFireFacility} ,
+		bFlatpic = #{bFlatpic} ,
+		dRecordDate = #{dRecordDate} ,
+		managegrade = #{managegrade} ,
+		NetworkStatus = #{networkStatus},
+		NetworkTime = #{networkTime},
+		ApproveState = #{approveState},
+		ApproveTime = #{approveTime},
+		ApproveMan = #{approveMan},
+		AreaId = #{areaId},
+		ManagerOrgID = #{managerOrgID}
+		WHERE
+		OrgID = #{orgID}
+	</update>
+	<select id="getBusinessLicence" resultType="businessLicence">
+	SELECT
+		LicenceCode,
+		ConpanyName,
+		CompanyType,
+		CompanyAddress,
+		CompanyRegister,
+		RegistMoney,
+		BuildTime,
+		BusinessEndTime,
+		BusinessScope,
+		AuditingDepartment,
+		RegistTime,
+		PictureUrl,
+		orgid
+	FROM
+		businesslicence
+	WHERE
+		orgid = #{orgid}
+	</select>
+</mapper>

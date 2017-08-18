@@ -195,6 +195,7 @@
 		)
 	</insert>
 
+
 	<update id="updateSafeDuty">
 		UPDATE safeduty
 		SET
@@ -215,5 +216,28 @@
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</select>
-
+	<insert id="addBusinessLicence">
+		INSERT INTO businesslicence (
+		LicenceCode,
+		ConpanyName,
+		CompanyType,
+		CompanyAddress,
+		CompanyRegister,
+		RegistMoney,
+		BuildTime,
+		BusinessEndTime,
+		BusinessScope,
+		AuditingDepartment,
+		RegistTime,
+		PictureUrl,
+		orgid
+		)
+		VALUES
+		(
+		#{licenceCode},#{conpanyName},#{companyType},
+		#{companyAddress},#{companyRegister},#{registMoney},
+		#{buildTime},#{businessEndTime},#{businessScope},
+		#{auditingDepartment},#{registTime},#{pictureUrl},#{orgid}
+		)
+	</insert>
 </mapper>

@@ -96,7 +96,7 @@ public class PatrolController {
 
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("UserCheckId", patrolRecord.getUserCheckId());
-				map2.put("UserCheckTime", patrolRecord.getUserCheckTime().toString());
+				map2.put("UserCheckTime", DateUtils.formatDateTime(patrolRecord.getUserCheckTime()));
 				map2.put("OrgUser", patrolRecord.getOrgUser());
 				map2.put("OrgManager", patrolRecord.getOrgManager());
 				map2.put("SubmitTime", patrolRecord.getSubmitTime().toString());
@@ -136,7 +136,7 @@ public class PatrolController {
 				String str[] = picPathName.split("/");
 				//String fName=picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
 				String paperFileName=str[3]+File.separatorChar;
-				UploadUtil.deleteFileOrDirectory(request, str[4], paperFileName);
+				UploadUtil.deleteOneFileOrDirectory(request, str[4], "CheckRecord/"+paperFileName);
 			}
 			
 			patrolService.deleteUserCheckpic(userCheckId);
@@ -146,17 +146,14 @@ public class PatrolController {
 			
 			
 			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "刪除成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "刪除失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -185,17 +182,13 @@ public class PatrolController {
 			patrolService.addUserCheckList(userCheckId, orgID, userCheckTime, orgUser, orgManagerId, submitTime);
 			patrolService.addUserCheckInfoByOrgid(userCheckId, orgID);
 			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "插入成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "插入失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
@@ -216,16 +209,12 @@ public class PatrolController {
 		try {
 			patrolService.updateUserCheckList(userCheckId, userCheckTime);
 			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "修改成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
 			dataBag = "修改失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
 
 	/**
@@ -331,6 +320,11 @@ public class PatrolController {
 	 * 115.防火检查记录详情【**】
 	 */
 
+	/**
+	 * @param reqBody
+	 * @return
+	 * @throws JsonProcessingException:TODO
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/FireSafetyCheckDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
 	public String fireSafetyCheckDetail(@RequestBody String reqBody) throws JsonProcessingException {

@@ -47,4 +47,52 @@
 			SafeManageRulesID = #{safeManageRulesID}
 	</select>
 	
+	<delete id="deleteSafeDutyID">
+		DELETE
+		FROM
+			safeduty
+		WHERE
+			SafeDutyID = #{safeDutyID}
+	</delete>
+	<select id="searchSafeDutyCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			safeduty
+		WHERE
+			orgid =#{orgid}
+	</select>
+	
+	
+	
+	<select id="searchSafeDuty" resultType="safeDuty">
+		SELECT
+			SafeDutyID,
+			dutyname,
+			uploadtime,
+			safedutytype,
+			filepath,
+			orgid
+		FROM
+			safeduty
+		WHERE
+			orgid =#{orgid}
+		limit
+			#{startPos},#{pageSize}
+			
+	</select>
+	<select id="safeDutyInfo" resultType="safeDuty">
+		SELECT
+			SafeDutyID,
+			dutyname,
+			uploadtime,
+			safedutytype,
+			filepath,
+			orgid
+		FROM
+			safeduty
+		WHERE
+			SafeDutyID = #{safeDutyID}
+	</select>
+	
 </mapper>
