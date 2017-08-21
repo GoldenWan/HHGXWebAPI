@@ -290,4 +290,37 @@
 		WHERE
 		orgid =#{orgid}
 	</delete>
+<!-- getPatrolTotalCount
+	 getPatrolTotal
+ -->
+	
+	<select id="getPatrolDetail" resultType="patrolDetail">
+	SELECT
+		i.UserCheckId userCheckId,
+		i.projectid projectid,
+		i.UserCheckResult userCheckResult,
+		i.FaultShow faultShow,
+		i.YnHanding ynHanding,
+		i.Handingimmediately handingimmediately,
+		c.ProjectContent projectContent,
+		f.vSysdesc vSysdesc
+	FROM
+		usercheckinfo i
+	INNER JOIN usercheckprojectcontent c ON i.ProjectId = c.ProjectId
+	INNER JOIN firesystype f ON c.tiSysType = f.tiSysType
+	where i.UserCheckId =#{userCheckId}
+	</select>
+	<select id="getPatrolPic" resultType="userCheckPic">
+	SELECT
+		PicID,
+		PicType,
+		PicPath,
+		UploadTime
+	FROM
+		usercheckpic
+	WHERE
+		UserCheckId = #{userCheckId}
+	</select>
+	
+	
 </mapper>

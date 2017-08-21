@@ -12,7 +12,19 @@
 		WHERE
 		PicID = #{picID}
 	</select>
-
+	<update id="updateFireSystemList">
+	UPDATE onlinefiresystem
+	SET 
+	tisystype = #{newTisystype},
+	states = #{states},
+	Remarks = #{Remarks},
+	YnOnline = #{YnOnline},
+	SysFlatpic = #{SysFlatpic}
+	WHERE
+		tisystype = #{tisystype}
+	AND siteid = #{siteid}
+	
+	</update>
 
 	<delete id="deletePicByID">
 		DELETE

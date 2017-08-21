@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.FireSafetyCheck;
 import com.hhgx.soft.entitys.Page;
+import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.PatrolTotal;
+import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.services.PatrolService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
@@ -44,6 +47,60 @@ public class PatrolController {
 	private PatrolService patrolService;
 
 	/*************** 每日防火巡查 ***********************/
+	/**
+	 * 11.获取防火单位的巡查总体情况
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetPatrolTotal", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getPatrolTotal(@RequestBody String reqBody) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "ManagerOrgID", "StartDate", "EndDate", "PageIndex");
+		String managerOrgID = map.get("managerOrgID");
+		String startDate = map.get("startDate");
+		String endDate = map.get("endDate");
+		String pageIndex = map.get("pageIndex");
+
+		Page page = null;
+		List<PatrolTotal> patrolTotalList = null;
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		int totalCount = patrolService.getPatrolTotalCount(managerOrgID);
+		int statusCode = -1;
+
+		try {
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				patrolTotalList = patrolService.getPatrolTotal(managerOrgID, startDate, endDate, page.getStartPos(),
+						page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				patrolTotalList = patrolService.getPatrolTotal(managerOrgID, startDate, endDate, page.getStartPos(),
+						page.getPageSize());
+			}
+			for (PatrolTotal patrolTotal : patrolTotalList) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("orgid",patrolTotal.getOrgid());
+				map2.put("orgname",patrolTotal.getOrgname());
+				map2.put("PlanPatrolNum",patrolTotal.getPlanPatrolNum());
+				map2.put("RealPatrolNum",patrolTotal.getRealPatrolNum());
+				map2.put("PatrolRatio",patrolTotal.getPatrolRatio());
+				map2.put("PlanProjectNum",patrolTotal.getPlanProjectNum());
+				map2.put("RealProjectNum",patrolTotal.getRealProjectNum());
+				map2.put("ProjectRatio",patrolTotal.getProjectRatio());
+				map2.put("NormalNum",patrolTotal.getNormalNum());
+				map2.put("NormalRatio", patrolTotal.getNormalRatio());
+				lmList.add(map2);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+
+	}
+	
+	
 
 	/**
 	 * 12.按防火单位获取巡查记录【**】 
@@ -69,7 +126,6 @@ public class PatrolController {
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,startDate,endDate);
 		int statusCode = -1;
-
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
@@ -82,8 +138,6 @@ public class PatrolController {
 						page.getPageSize());
 			}
 			statusCode = ConstValues.OK;
-
-			System.out.println(patrolRecordList.size());
 			for (PatrolRecord patrolRecord : patrolRecordList) {
 				String submitStatet = patrolRecord.getSubmitStatet();
 				String submitFlag = null;
@@ -112,7 +166,69 @@ public class PatrolController {
 		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
 
 	}
+/**
+ * 13.按巡查记录编号查询巡查记录详情
+ */
+	@ResponseBody
+	@RequestMapping(value = "/GetPatrolDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getPatrolDetail(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+		String userCheckId = map.get("userCheckId");
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 
+		int statusCode = -1;
+		try {
+			List<PatrolDetail> patrolDetails = patrolService.getPatrolDetail(userCheckId);
+			for(PatrolDetail patrolDetail: patrolDetails){
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("UserCheckId",patrolDetail.getUserCheckId());
+				map2.put("projectid",patrolDetail.getProjectid());
+				map2.put("vSysdesc",patrolDetail.getvSysdesc());
+				map2.put("ProjectContent",patrolDetail.getProjectContent());
+				map2.put("UserCheckResult",patrolDetail.getUserCheckResult());
+				map2.put("FaultShow",patrolDetail.getFaultShow());
+				map2.put("YnHanding",patrolDetail.getYnHanding());
+				map2.put("Handingimmediately",patrolDetail.getHandingimmediately());
+				lmList.add(map2);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(lmList, statusCode);
+	}
+	/**
+	 * 14.按巡查记录编号查询巡查图片
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetPatrolPic", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getPatrolPic(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+		String userCheckId = map.get("userCheckId");
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		
+		int statusCode = -1;
+		try {
+			List<UserCheckPic> userCheckPics = patrolService.getPatrolPic(userCheckId);
+			for(UserCheckPic userCheckPic: userCheckPics){
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("PicID", userCheckPic.getPicID());
+				map2.put("PicType", userCheckPic.getPicType());
+				map2.put("PicPath", userCheckPic.getPicPath());
+				map2.put("UploadTime", userCheckPic.getUploadTime());
+				lmList.add(map2);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(lmList, statusCode);
+	}
+	
+	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
 	 * 

@@ -3,8 +3,66 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.PlayWithRoleMapper">
 
-	<insert id="addManagerSubs" parameterType="managerSubs">
+	<resultMap type="managerOrg" id="managerOrgMap">
+	    <id column="managerOrgID" property="managerOrgID" />
+		<result column="parentID" property="parentID" />
+		<result column="areaName" property="areaName" />
+	</resultMap> 
+	
+	<select id="getAllManagerOrg" resultMap="managerOrgMap">
+	SELECT
+		m.ManagerOrgID managerOrgID,
+		m.ParentID parentID,
+		a.AreaName areaName
+	FROM
+		managerorg m,
+		area a
+	WHERE
+		m.AreaId = a.AreaId
+	
+	</select>
+	
+	<select id="getManagersSubsCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		managerorg f
+		INNER JOIN managerorg z ON f.ManagerOrgID = z.ParentID
+		INNER JOIN area a on a.AreaId = z.AreaId
+		and
+		z.ParentID = #{infoBagMID}
+		and 
+		z.managerorgname LIKE CONCAT('%','${managerorgname}', '%')
+	</select>
+	<select id="getManagersSubs" resultType="managerOrg">
+		SELECT
+		z.managerorgid,
+		z.managerorgname,
+		z.YnSetMonitor,
+		z.tel,
+		z.`Status`,
+		a.areaname,
+		z.Address,
+		z.ManageOrgGrade,
+		z.PName,
+		z.ManagerJob,
+		z.ContactName,
+		z.ContactTel
+		FROM
+		managerorg f
+		INNER JOIN managerorg z ON f.ManagerOrgID
+		= z.ParentID
+		INNER JOIN area a on a.AreaId = z.AreaId
+		and
+		z.ParentID =#{infoBagMID} 
+		and 
+		z.managerorgname 
+		LIKE CONCAT('%','${managerorgname}', '%')
+		limit
+		#{startPos},#{pageSize}
+	</select>
 
+	<insert id="addManagerSubs" parameterType="managerOrg">
 		INSERT INTO managerorg
 		(
 		ManagerOrgID,
@@ -34,9 +92,7 @@
 		#{pName}, #{managerJob},
 		#{contactName},
 		#{contactTel}
-		);
-
-
+		)
 	</insert>
 
 	<insert id="addManagerSubsUser" parameterType="user">
@@ -50,9 +106,8 @@
 		ManagerOrgID
 		)
 		VALUES
-		(#{userID},#{account}, #{password},
-		#{userBelongTo},#{userTypeID},#{managerOrgID});
-
+		(#{userID},#{account},
+		#{password},#{userBelongTo},#{userTypeID},#{managerOrgID})
 	</insert>
 
 	<delete id="removeManagerSubs">
@@ -60,6 +115,7 @@
 		FROM
 		managerorg
 		WHERE
-		ManagerOrgID = #{managerOrg};
+		ManagerOrgID =
+		#{managerOrgID}
 	</delete>
 </mapper>

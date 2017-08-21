@@ -7,8 +7,11 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.FireSafetyCheck;
+import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckInfo;
+import com.hhgx.soft.entitys.UserCheckPic;
 
 @MapperScan
 @Component("/patrolMapper")
@@ -57,5 +60,14 @@ public interface PatrolMapper {
 	void deleteWBdevicerepairinfo_patrol(@Param("userCheckId") String userCheckId);
 
 	List<String> findUserCheckpic(@Param("userCheckId")String userCheckId);
+
+	int getPatrolTotalCount(@Param("managerOrgID")String managerOrgID);
+
+	List<PatrolTotal> getPatrolTotal(@Param("managerOrgID")String managerOrgID, @Param("startDate")String startDate, 
+			@Param("endDate")String endDate, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
+
+	List<PatrolDetail> getPatrolDetail(@Param("userCheckId")String userCheckId);
+
+	List<UserCheckPic> getPatrolPic(@Param("userCheckId")String userCheckId);
 
 }

@@ -22,6 +22,7 @@ import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
+import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
@@ -34,6 +35,52 @@ import com.hhgx.soft.utils.UploadUtil;
 public class FormController {
 	@Autowired
 	private FormService formService;
+	
+	
+	/**
+	 * 9.修改防火单位的系统
+	 * 
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/UpdateFireSystemList", method = {
+			RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	public String updateFireSystemList(HttpServletRequest request,@RequestParam("SysFlatpic") MultipartFile sysFlatpic) throws JsonProcessingException {
+		
+		String siteid = request.getParameter("siteid");
+		String tisystype = request.getParameter("tisystype");
+		String newTisystype = request.getParameter("newTisystype");
+		String states = request.getParameter("states");
+		String remarks = request.getParameter("Remarks");
+		String ynOnline = request.getParameter("YnOnline");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+		UpdateFireSystem  updateFireSystem = new UpdateFireSystem();
+		updateFireSystem.setNewTisystype(newTisystype);
+		updateFireSystem.setRemarks(remarks);
+		updateFireSystem.setSiteid(siteid);
+		updateFireSystem.setStates(states);
+		updateFireSystem.setTisystype(tisystype);
+		updateFireSystem.setYnOnline(ynOnline);
+		String fName = sysFlatpic.getOriginalFilename();
+		String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, fName, "SysFlatpic/"+UUIDGenerator.getUUID());
+		updateFireSystem.setSysFlatpic(sysFlatpic1);
+		formService.updateFireSystemList(updateFireSystem);
+		//遗留小问题，如果数据插入失败，上传的照片没有删掉
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+		
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
+	}
+	
+	
 
 	/**
 	 * 129.巡查记录填写【**】
@@ -48,11 +95,8 @@ public class FormController {
 	public String addOrUpdateCheckRecord(HttpServletRequest request) throws JsonProcessingException {
 
 		String userCheckId = request.getParameter("UserCheckId");
-		System.out.println(userCheckId);
 		String projectId = request.getParameter("ProjectId");
-		System.out.println(projectId);
 		int listNum = Integer.parseInt(request.getParameter("listNum"));
-		System.out.println(listNum);
 		String delList = request.getParameter("delList");
 		String userCheckResult = request.getParameter("UserCheckResult");
 		String faultShow = request.getParameter("FaultShow");

@@ -28,19 +28,25 @@ public class ResponseJson {
 		return mapper.writeValueAsString(params);
 		
 	}
-	public static String respManagerOrgAll(Object dataBag) throws JsonProcessingException{
-		Map<String, Object> params = new HashMap<String, Object>();
-		ObjectMapper mapper = new ObjectMapper();
-		params.put(ConstValues.RESPDATA, dataBag);
-		return mapper.writeValueAsString(params);
-		
-	}
+
 	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
 		String result=null;
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		params.put("pageCount", pageCount);
 		params.put("PageDatas", dataBag);
+		params.put(ConstValues.RESPCODE, statusCode);
+		result=mapper.writeValueAsString(params);
+		return result;
+		
+	}
+	public static String responsePalyWithRoleFindPageJson(Object dataBag, String mangerorgname, int statusCode, int pageCount) throws JsonProcessingException{
+		String result=null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		ObjectMapper mapper = new ObjectMapper();
+		params.put("pageCount", pageCount);
+		params.put("PageDatas", dataBag);
+		params.put("mangerorgname", mangerorgname);
 		params.put(ConstValues.RESPCODE, statusCode);
 		result=mapper.writeValueAsString(params);
 		return result;

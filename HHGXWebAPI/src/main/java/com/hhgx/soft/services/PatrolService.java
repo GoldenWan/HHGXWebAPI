@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.hhgx.soft.entitys.FireSafetyCheck;
+import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckInfo;
+import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.mappers.PatrolMapper;
 
 @Service
@@ -123,6 +126,23 @@ public class PatrolService {
 
 	public List<String> findUserCheckpic(String userCheckId) {
 		return patrolMapper.findUserCheckpic(userCheckId);		
+	}
+
+	public int getPatrolTotalCount(String managerOrgID) {
+		return patrolMapper.getPatrolTotalCount(managerOrgID);
+	}
+
+	public List<PatrolTotal> getPatrolTotal(String managerOrgID, String startDate, String endDate, int startPos,
+			int pageSize) {
+		return patrolMapper.getPatrolTotal(managerOrgID, startDate, endDate, startPos, pageSize);
+	}
+
+	public List<PatrolDetail> getPatrolDetail(String userCheckId) {
+		return patrolMapper.getPatrolDetail(userCheckId);
+	}
+
+	public List<UserCheckPic> getPatrolPic(String userCheckId) {
+		return patrolMapper.getPatrolPic(userCheckId);
 	}
 
 }

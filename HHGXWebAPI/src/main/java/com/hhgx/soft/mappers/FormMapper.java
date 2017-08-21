@@ -9,6 +9,7 @@ import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
+import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
 
@@ -45,6 +46,8 @@ public interface FormMapper {
 	void updateSafeDuty(SafeDuty safeDuty);
 
 	void addBusinessLicence(BusinessLicence businessLicence);
+
+	void updateFireSystemList(UpdateFireSystem updateFireSystem);
 
 	
 	

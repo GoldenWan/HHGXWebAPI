@@ -7,21 +7,25 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.ManagerOrg;
-import com.hhgx.soft.entitys.ManagerSubs;
 import com.hhgx.soft.entitys.User;
 
-@MapperScan
-@Component("/PlayWithRoleMapper")
+@Component
+@MapperScan("/playWithRoleMapper")
 public interface PlayWithRoleMapper {
 
-	List<ManagerOrg> getManagerOrgAll();
-	
-	void addManagerSubs(ManagerSubs managerSubs);
 
+
+	int getManagersSubsCount(@Param("infoBagMID")String infoBagMID, @Param("managerorgname")String managerorgname);
+
+	List<ManagerOrg> getManagersSubs(@Param("infoBagMID")String infoBagMID, @Param("managerorgname")String managerorgname, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
+	
+	void addManagerSubs(ManagerOrg managerOrg);
+	
 	void addManagerSubsUser(User user);
-
-	void removeManagerSubs(@Param("managerOrg") String managerOrg);
 	
+	void removeManagerSubs(@Param("managerOrgID") String managerOrgID);
+
+	List<ManagerOrg> getAllManagerOrg();
 	
 
 }

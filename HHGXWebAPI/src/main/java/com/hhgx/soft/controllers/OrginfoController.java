@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.OnlineOrg;
+import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 
 @Controller
@@ -25,6 +29,56 @@ import com.hhgx.soft.utils.ResponseJson;
 public class OrginfoController {
 	@Autowired
 	private OrginfoService orginfoService;
+
+	/**
+	 * 8.防火单位消防系统查询【分页】
+	 *
+	 * orgid isDivid
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/GetFireSystemList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getFireSystemList(@RequestBody String reqBody) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "isDivid", "PageIndex");
+		String orgid = map.get("orgid");
+		String isDivid = map.get("isDivid");
+		String pageIndex = map.get("pageIndex");
+		int statusCode = -1;
+		Page page = null;
+		List<FireSystem> list = null;
+
+		if (isDivid.equals("No")) {
+			try {
+				list = orginfoService.getFireSystemList(orgid);
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			return ResponseJson.responseFindJson(list, statusCode);
+
+		} else {
+			int totalCount = orginfoService.getFireSystemListCount(orgid);
+			try {
+				if (pageIndex != null) {
+					page = new Page(totalCount, Integer.parseInt(pageIndex));
+					list = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
+
+				} else {
+					page = new Page(totalCount, 1);
+					list = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
+				}
+				statusCode = ConstValues.OK;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			return ResponseJson.responseFindPageJson(list, statusCode, totalCount);
+		}
+
+	}
 
 	/**
 	 * 58.修改防火单位信息【**】  * @param map  * @return  * @throws
@@ -253,7 +307,7 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJson(map2, statusCode);
 	}
-	
+
 	/**
 	 * 59.根据防火单位获取建筑物列表信息【**】[分页]
 	 */

@@ -126,4 +126,49 @@
 	WHERE
 		orgid = #{orgid}
 	</select>
+	
+	<select id="getFireSystemList" resultType="fireSystem">
+	SELECT
+		s.siteid,
+		s.sitename,
+		o.tiSysType,
+		f.vSysdesc
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+	WHERE
+		s.orgid = #{orgid}
+	</select>
+	
+	<select id="getFireSystemListCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+	WHERE
+		s.orgid = #{orgid}
+	
+	</select>
+	
+	<select id="getFireSystemListByPage" resultType="fireSystem">
+	SELECT
+		s.siteid,
+		s.sitename,
+		o.tiSysType,
+		f.vSysdesc
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+	WHERE
+		s.orgid = #{orgid}
+	limit
+		#{startPos},#{pageSize}
+	</select>
+	
+	
+	
 </mapper>

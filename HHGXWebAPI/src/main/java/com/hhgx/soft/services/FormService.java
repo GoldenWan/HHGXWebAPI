@@ -8,6 +8,7 @@ import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
+import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.mappers.FormMapper;
@@ -77,6 +78,10 @@ public class FormService {
 
 	public void addBusinessLicence(BusinessLicence businessLicence) {
 		formMapper.addBusinessLicence(businessLicence);
+	}
+
+	public void updateFireSystemList(UpdateFireSystem updateFireSystem) {
+		formMapper.updateFireSystemList(updateFireSystem);
 	}
 	
 }
