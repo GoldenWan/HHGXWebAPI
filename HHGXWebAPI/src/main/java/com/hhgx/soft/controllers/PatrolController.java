@@ -249,7 +249,6 @@ public class PatrolController {
 			for(String picPathName : picPath){
 				picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
 				String str[] = picPathName.split("/");
-				//String fName=picPathName.substring( picPathName.lastIndexOf(File.separatorChar) + 1);
 				String paperFileName=str[3]+File.separatorChar;
 				UploadUtil.deleteOneFileOrDirectory(request, str[4], "CheckRecord/"+paperFileName);
 			}
