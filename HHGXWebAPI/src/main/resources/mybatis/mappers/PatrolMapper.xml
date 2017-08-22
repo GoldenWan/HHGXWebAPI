@@ -26,7 +26,8 @@
 		INNER JOIN usercheckinfo ui ON
 		ul.userCheckId = ui.userCheckId
 		and
-		ul.SubmitTime BETWEEN #{startDate} and #{endTime}
+		ul.SubmitTime BETWEEN #{startDate}
+		and #{endTime}
 		WHERE
 		ul.orgid = #{orgID}
 		) n
@@ -71,40 +72,44 @@
 		FROM
 		usercheckpic
 		WHERE
-		UserCheckId = #{userCheckId};
+		UserCheckId =
+		#{userCheckId};
 	</delete>
-	
+
 	<select id="findUserCheckpic" resultType="string">
 		SELECT
-			PicPath
+		PicPath
 		FROM
-			usercheckpic
+		usercheckpic
 		WHERE
-			UserCheckId = #{userCheckId}
+		UserCheckId = #{userCheckId}
 	</select>
-	
+
 	<delete id="deleteWBdevicerepairinfo_patrol">
 		DELETE
 		FROM
 		wbdevicerepairinfo_patrol
 		WHERE
-		UserCheckId = #{userCheckId};
+		UserCheckId =
+		#{userCheckId};
 	</delete>
 	<delete id="deleteUserCheckinfo">
 		DELETE
 		FROM
 		usercheckinfo
 		WHERE
-		UserCheckId = #{userCheckId};
+		UserCheckId =
+		#{userCheckId};
 	</delete>
 	<delete id="deleteUserCheckList">
 		DELETE
 		FROM
 		uerchecklist
 		WHERE
-		UserCheckId = #{userCheckId};
+		UserCheckId =
+		#{userCheckId};
 	</delete>
-	
+
 	<insert id="addUserCheckList">
 		insert into uerchecklist(UserCheckId,orgid,
 		UserCheckTime,OrgUserId,OrgManagerId,SubmitTime)
@@ -166,9 +171,10 @@
 		firesafetycheck
 		WHERE
 		orgid =#{orgid} and
-		CheckTime BETWEEN #{startTime} and #{endTime};
+		CheckTime BETWEEN #{startTime}
+		and #{endTime};
 	</select>
-	
+
 	<select id="getfireSafetyCheckByOrgid" resultMap="fireSafetyCheckMap">
 		SELECT
 		FireSafetyCheckID,
@@ -239,7 +245,8 @@
 		orgid = #{orgid}
 	</update>
 	<insert id="addFireSafetyCheck" parameterType="fireSafetyCheck">
-		INSERT INTO firesafetycheck (
+		INSERT INTO
+		firesafetycheck (
 		FireSafetyCheckID,
 		CheckTime,
 		checkposite,
@@ -279,48 +286,78 @@
 	<delete id="deleteFireSafetyCheck">
 		DELETE
 		FROM
-			firesafetycheck
+		firesafetycheck
 		WHERE
 		fireSafetyCheckID =#{fireSafetyCheckID};
 	</delete>
 	<delete id="deleteFireSafetyCheckByOrgid">
 		DELETE
 		FROM
-			firesafetycheck
+		firesafetycheck
 		WHERE
 		orgid =#{orgid}
 	</delete>
-<!-- getPatrolTotalCount
-	 getPatrolTotal
- -->
-	
+	<!-- getPatrolTotalCount getPatrolTotal -->
+
 	<select id="getPatrolDetail" resultType="patrolDetail">
-	SELECT
+		SELECT
 		i.UserCheckId userCheckId,
 		i.projectid projectid,
-		i.UserCheckResult userCheckResult,
+		i.UserCheckResult
+		userCheckResult,
 		i.FaultShow faultShow,
 		i.YnHanding ynHanding,
 		i.Handingimmediately handingimmediately,
-		c.ProjectContent projectContent,
+		c.ProjectContent
+		projectContent,
 		f.vSysdesc vSysdesc
-	FROM
+		FROM
 		usercheckinfo i
-	INNER JOIN usercheckprojectcontent c ON i.ProjectId = c.ProjectId
-	INNER JOIN firesystype f ON c.tiSysType = f.tiSysType
-	where i.UserCheckId =#{userCheckId}
+		INNER JOIN usercheckprojectcontent c ON i.ProjectId = c.ProjectId
+		INNER JOIN firesystype f ON c.tiSysType = f.tiSysType
+		where i.UserCheckId =#{userCheckId}
 	</select>
 	<select id="getPatrolPic" resultType="userCheckPic">
-	SELECT
+		SELECT
 		PicID,
 		PicType,
 		PicPath,
 		UploadTime
-	FROM
+		FROM
 		usercheckpic
-	WHERE
+		WHERE
 		UserCheckId = #{userCheckId}
 	</select>
-	
-	
+	<select id="getPatrolProject" resultMap="patrolProjectMap">
+		SELECT
+		f.tiSysType,
+		f.vSysdesc
+		FROM
+		usercheckcontent u
+		INNER JOIN usercheckprojectcontent c ON u.ProjectId = c.ProjectId
+		INNER JOIN firesystype f ON c.tiSysType = f.tiSysType
+		<if test="orgid != null and orgid != ''">
+		WHERE
+		orgid = #{orgid}
+		</if>
+		
+		
+	</select>
+	<resultMap type="patrolProject" id="patrolProjectMap">
+		<id column="tiSysType" property="tiSysType" />
+		<result column="vSysdesc" property="vSysdesc" />
+		<collection property="userCheckProjectContentList" column="tiSysType"
+			select="selectUserCheckProjectContentById" />
+	</resultMap>
+
+	<select id="selectUserCheckProjectContentById" resultType="userCheckProjectContent">
+		SELECT
+		*
+		FROM
+		usercheckprojectcontent
+		WHERE
+		tiSysType = #{tiSysType}
+
+	</select>
+
 </mapper>

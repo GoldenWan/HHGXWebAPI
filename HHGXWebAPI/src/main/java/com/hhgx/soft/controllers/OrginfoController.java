@@ -1,11 +1,16 @@
 package com.hhgx.soft.controllers;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,13 +20,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.FireSystem;
+import com.hhgx.soft.entitys.Gateway;
+import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Page;
+import com.hhgx.soft.entitys.PatrolProject;
+import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.Site;
+import com.hhgx.soft.entitys.UserCheckProjectContent;
 import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
+import com.hhgx.soft.utils.UUIDGenerator;
+import com.hhgx.soft.utils.UploadUtil;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/Orginfo")
@@ -79,7 +95,208 @@ public class OrginfoController {
 		}
 
 	}
+	
+	/**
+	 * 18.根据防火单位获取建物简要列表
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/BriefsiteList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String briefsiteList(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<Site> siteList = null;
+		int statusCode = -1;
+		JSONArray jsonList = new JSONArray();
+		try {
+			siteList =orginfoService.briefsiteList(orgid);
+			for (Site site : siteList) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("Siteid", site.getSiteid());
+				map2.put("sitename", site.getSitename());
+				jsonList.put(map2);	
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(jsonList.toString().replace("\"",""), statusCode);
+	}
+	/**
+	 * 20.删除防火单位的系统
+	 */
 
+	
+	@ResponseBody
+	@RequestMapping(value = "/DeleteorgSys", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String deleteorgSys(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "siteid","tiSysType");
+		String siteid = map.get("siteid");
+		String tiSysType = map.get("tiSysType");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			 orginfoService.deleteorgSys(siteid,tiSysType);
+			
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+		
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	/**
+	 * 21.添加传输设备
+	 */
+	
+
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value = "/AddGateway", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String addGateway(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+	
+		String gatewayaddress = map.get("Gatewayaddress");
+		String manufacturer = map.get("Manufacturer");
+		String model = map.get("Model");
+		String productdate = map.get("productdate");
+		String setupdate = map.get("setupdate");
+		String controlorManufacture = map.get("ControlorManufacture");
+		String controlorMode = map.get("ControlorMode");
+		String memo = map.get("memo");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+		Gateway gateway = new Gateway();
+		gateway.setGatewayaddress(gatewayaddress);
+		gateway.setManufacturer(manufacturer);
+		gateway.setModel(model);
+		gateway.setProductdate(productdate);
+		gateway.setSetupdate(setupdate);
+		gateway.setControlorManufacture(controlorManufacture);
+		gateway.setControlorMode(controlorMode);
+		gateway.setMemo(memo);
+
+		orginfoService.addGateway(gateway);
+		
+		JSONArray json = JSONArray.fromObject(map.get("FireSysList")); 
+		if(json.length()>0){
+		  for(int i=0;i<json.length();i++){
+		    JSONObject jobj = json.getJSONObject(i);
+		    GatewaySystemInfo gatewaySystemInfo = new GatewaySystemInfo();
+		    gatewaySystemInfo.setSiteid(jobj.getString("siteid"));
+		    gatewaySystemInfo.setTiSysType(jobj.getString("tisystype"));
+		    gatewaySystemInfo.setSysaddress(jobj.getString("Sysaddress"));
+		    gatewaySystemInfo.setGatewayaddress(gatewayaddress);
+		    orginfoService.addGatewaySysInfo(gatewaySystemInfo);
+		  }
+		}
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "插入失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	
+	/**
+	 * 23.查询传输设备
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/SelectGateway", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String selectGateway(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid","PageIndex");
+		String orgid = map.get("orgid");
+		String pageIndex = map.get("pageIndex");
+		Page page = null;
+		List<Gateway> gatewayList = null;
+		List<Map<String, Object>> lmList = new ArrayList<Map<String, Object>>();
+		int statusCode = -1;
+
+			
+
+			int totalCount = orginfoService.gePatrolRecordByOrgCount(orgid);
+			try {
+				if (pageIndex != null) {
+					page = new Page(totalCount, Integer.parseInt(pageIndex));
+			        gatewayList =orginfoService.selectGateway(orgid, page.getStartPos(),page.getPageSize());	
+
+			} else {
+				page = new Page(totalCount, 1);
+		        gatewayList =orginfoService.selectGateway(orgid, page.getStartPos(),page.getPageSize());	
+
+			}
+				
+			for(Gateway gateway : gatewayList){
+	    	Map<String, Object> map3 = new HashMap<String, Object>();
+
+			map3.put("Gatewayaddress", gateway.getGatewayaddress());
+			map3.put("Manufacturer", gateway.getManufacturer());
+			map3.put("Model", gateway.getModel());
+			map3.put("productdate", gateway.getProductdate());
+			map3.put("setupdate", gateway.getSetupdate());
+			map3.put("ControlorManufacture",  gateway.getControlorManufacture());
+			map3.put("ControlorMode",  gateway.getControlorMode());
+			map3.put("memo",  gateway.getMemo());
+			map3.put("ynonline",  gateway.getYnonline());
+			map3.put("onlinetime",  gateway.getOnlinetime());
+			
+			for (GatewaySystemInfo gatewaysyinfo : gateway.getGatewaySystemInfoList()) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("siteid", gatewaysyinfo.getSiteid());
+				map2.put("sitename", gatewaysyinfo.getSitename());
+				map2.put("tiSysType", gatewaysyinfo.getTiSysType());
+				map2.put("vSysdesc", gatewaysyinfo.getvSysdesc());
+				map2.put("Sysaddress", gatewaysyinfo.getSysaddress());
+				map3.put("FireSysList",map2);	
+				}
+			lmList.add(map3);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJson(lmList,statusCode, totalCount);
+	}
+	
+	
+	/**
+	 * 24.删除传输设备
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/DeleteGateway", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String deleteGateway(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "Gatewayaddress");
+		String gatewayaddress = map.get("gatewayaddress");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+			 orginfoService.deleteGateway(gatewayaddress);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
+	
 	/**
 	 * 58.修改防火单位信息【**】  * @param map  * @return  * @throws
 	 * JsonProcessingException:TODO  
@@ -213,6 +430,7 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			OnlineOrg onlineOrg = orginfoService.getOnlineOrg(orgID);
+			if(!StringUtils.isEmpty(onlineOrg)){
 			map2.put("orgcode", onlineOrg.getOrgcode());
 			map2.put("orgname", onlineOrg.getOrgname());
 			map2.put("vAddress", onlineOrg.getvAddress());
@@ -258,7 +476,7 @@ public class OrginfoController {
 			map2.put("ApproveMan", onlineOrg.getApproveMan());
 			map2.put("AreaId", onlineOrg.getAreaId());
 			map2.put("ManagerOrgID", onlineOrg.getManagerOrgID());
-
+			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;

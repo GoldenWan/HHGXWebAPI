@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hhgx.soft.mappers.OrginfoMapper">
+<mapper namespace="com.hhgx.soft.mappers.FacilityMapper">
+	<select id="getAllSys" resultType="firesystype">
+	SELECT
+		tiSysType,
+		vSysdesc,
+		OrderNo
+	FROM
+		firesystype
+	</select>
+
 
 	<select id="getTrainingListCount" resultType="int">
 		SELECT
@@ -106,7 +115,7 @@
 		signtable,
 		orgid
 	FROM
-		Training
+		training
 	WHERE
 		TrainingID = #{trainingID} 
 	</select>

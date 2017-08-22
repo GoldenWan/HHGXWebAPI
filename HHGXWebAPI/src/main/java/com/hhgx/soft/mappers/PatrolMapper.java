@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.FireSafetyCheck;
 import com.hhgx.soft.entitys.PatrolDetail;
+import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
+import com.hhgx.soft.entitys.UserCheckProjectContent;
 
 @MapperScan
 @Component("/patrolMapper")
@@ -69,5 +71,8 @@ public interface PatrolMapper {
 	List<PatrolDetail> getPatrolDetail(@Param("userCheckId")String userCheckId);
 
 	List<UserCheckPic> getPatrolPic(@Param("userCheckId")String userCheckId);
+
+	List<PatrolProject> getPatrolProject(@Param("orgid")String orgid);
+	List<UserCheckProjectContent> selectUserCheckProjectContentById(@Param("tiSysType")String tiSysType);
 
 }

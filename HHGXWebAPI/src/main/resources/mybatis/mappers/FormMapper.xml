@@ -13,17 +13,17 @@
 		PicID = #{picID}
 	</select>
 	<update id="updateFireSystemList">
-	UPDATE onlinefiresystem
-	SET 
-	tisystype = #{newTisystype},
-	states = #{states},
-	Remarks = #{Remarks},
-	YnOnline = #{YnOnline},
-	SysFlatpic = #{SysFlatpic}
-	WHERE
+		UPDATE onlinefiresystem
+		SET
+		tisystype = #{newTisystype},
+		states = #{states},
+		Remarks = #{Remarks},
+		YnOnline = #{YnOnline},
+		SysFlatpic = #{SysFlatpic}
+		WHERE
 		tisystype = #{tisystype}
-	AND siteid = #{siteid}
-	
+		AND siteid = #{siteid}
+
 	</update>
 
 	<delete id="deletePicByID">
@@ -100,7 +100,8 @@
 		TrainingManager = #{trainingManager},
 		ContentFile =#{contentFile},
 		examfile = #{examfile},
-		signtable =#{signtable},
+		signtable
+		=#{signtable},
 		orgid = #{orgid}
 		WHERE
 		TrainingID = #{trainingID}
@@ -139,7 +140,8 @@
 		UPDATE manoeuvre
 		SET
 		Orgid = #{orgid},
-		manoeuvretime = #{manoeuvretime},
+		manoeuvretime =
+		#{manoeuvretime},
 		Address = #{address},
 		Department = #{department},
 		Manager = #{manager},
@@ -149,11 +151,13 @@
 		implementation = #{implementation},
 		Summary = #{summary},
 		suggestion = #{suggestion},
-		schemafile = #{schemafile},
+		schemafile =
+		#{schemafile},
 		attendpersonfile = #{attendpersonfile},
 		implementationfile = #{implementationfile}
 		WHERE
-		manoeuvreID = #{manoeuvreID}
+		manoeuvreID =
+		#{manoeuvreID}
 	</update>
 
 	<insert id="addSafeManageRules">
@@ -175,9 +179,11 @@
 	<update id="updateSafeManageRules">
 		UPDATE safemanagerules
 		SET
-		SafeManageRulesName = #{safeManageRulesName},
+		SafeManageRulesName =
+		#{safeManageRulesName},
 		UploadTime = #{uploadTime},
-		SafeManageRulesType = #{safeManageRulesType},
+		SafeManageRulesType
+		= #{safeManageRulesType},
 		filepath = #{filepath},
 		orgid = #{orgid}
 		WHERE
@@ -212,14 +218,15 @@
 		UPDATE safeduty
 		SET
 		dutyname = #{dutyname},
-		uploadtime = #{uploadtime},
+		uploadtime =
+		#{uploadtime},
 		safedutytype = #{safedutytype},
 		filepath = #{filepath},
 		orgid = #{orgid}
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</update>
-	
+
 	<select id="findSafeDutyFilePath" resultType="string">
 		SELECT
 		filepath

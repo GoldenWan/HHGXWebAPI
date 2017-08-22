@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.FireSystem;
+import com.hhgx.soft.entitys.Gateway;
+import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.OnlineOrg;
+import com.hhgx.soft.entitys.Site;
 import com.hhgx.soft.mappers.OrginfoMapper;
 
 @Service
@@ -38,6 +41,40 @@ public class OrginfoService {
 
 	public List<FireSystem> getFireSystemListByPage(String orgid, int startPos, int pageSize) {
 		return orginfoMapper.getFireSystemListByPage(orgid, startPos,pageSize);
+	}
+
+	public List<Site> briefsiteList(String orgid) {
+		return orginfoMapper.briefsiteList(orgid);
+	}
+
+	public void deleteorgSys(String siteid, String tiSysType) {
+		orginfoMapper.deleteorgSys(siteid, tiSysType);		
+	}
+
+	public void addGateway(Gateway gateway) {
+		orginfoMapper.addGateway(gateway);
+	}
+
+	public void deleteGateway(String gatewayaddress) {
+		orginfoMapper.deleteGateway(gatewayaddress);
+	}
+
+
+
+	public int gePatrolRecordByOrgCount(String orgid) {
+		return orginfoMapper.gePatrolRecordByOrgCount(orgid);
+	}
+
+	public List<Gateway> selectGateway(String orgid, int startPos, int pageSize) {
+		return orginfoMapper.selectGateway(orgid, startPos, pageSize);
+	}
+
+	public void deleteGatewaySysInfo(String gatewayaddress) {
+		orginfoMapper.deleteGatewaySysInfo(gatewayaddress);		
+	}
+
+	public void addGatewaySysInfo(GatewaySystemInfo gatewaySystemInfo) {
+		orginfoMapper.addGatewaySysInfo(gatewaySystemInfo);
 	}
 	
 }

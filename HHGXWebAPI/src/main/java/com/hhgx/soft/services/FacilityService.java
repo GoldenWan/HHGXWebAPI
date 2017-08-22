@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.mappers.FacilityMapper;
@@ -44,6 +45,10 @@ public void deleteManoeuvre(String manoeuvreID) {
 
 public Training getTraingingDetail(String trainingID) {
 	return facilityMapper.getTraingingDetail(trainingID);
+}
+
+public List<Firesystype> getAllSys() {
+	return facilityMapper.getAllSys();
 } 
 	
 }

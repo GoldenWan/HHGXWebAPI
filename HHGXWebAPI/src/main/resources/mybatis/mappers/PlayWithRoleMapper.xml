@@ -32,7 +32,7 @@
 		and
 		z.ParentID = #{infoBagMID}
 		and 
-		z.managerorgname LIKE CONCAT('%','${managerorgname}', '%')
+		z.managerorgname LIKE CONCAT('%','#{managerorgname}', '%')
 	</select>
 	<select id="getManagersSubs" resultType="managerOrg">
 		SELECT

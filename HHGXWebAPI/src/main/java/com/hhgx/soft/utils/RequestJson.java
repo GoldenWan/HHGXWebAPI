@@ -3,6 +3,7 @@ package com.hhgx.soft.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 
 public class RequestJson {
@@ -12,8 +13,14 @@ public class RequestJson {
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		Map<String, String> map = new HashMap<String, String>();
 		 for (int i = 0; i < args.length; i++) {
-			 map.put(toLowerCaseFirstOne(args[i]), JSONObject.fromObject(jObject.getString("infoBag")).getString(args[i]));
-	        }
+			 Object o = JSONObject.fromObject(jObject.getString("infoBag")).getString(args[i]);
+			 if(o instanceof JSONNull)
+			   map.put(toLowerCaseFirstOne(args[i]),"");
+	        else {
+	        	 map.put(toLowerCaseFirstOne(args[i]), JSONObject.fromObject(jObject.getString("infoBag")).getString(args[i]));
+			}
+			 
+		 }
 		return map;
 		
 		

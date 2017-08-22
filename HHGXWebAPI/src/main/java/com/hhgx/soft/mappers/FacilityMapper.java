@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
 
@@ -31,5 +32,7 @@ public interface FacilityMapper {
 	void deleteManoeuvre(@Param("manoeuvreID") String manoeuvreID);
 
 	Training getTraingingDetail(@Param("trainingID") String trainingID);
+
+	List<Firesystype> getAllSys();
 
 }

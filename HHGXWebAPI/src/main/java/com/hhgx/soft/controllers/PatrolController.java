@@ -19,9 +19,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.FireSafetyCheck;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.PatrolDetail;
+import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckPic;
+import com.hhgx.soft.entitys.UserCheckProjectContent;
 import com.hhgx.soft.services.PatrolService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
@@ -30,6 +32,7 @@ import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -227,7 +230,45 @@ public class PatrolController {
 		}
 		return ResponseJson.responseFindJson(lmList, statusCode);
 	}
-	
+
+	/**
+	 * 16.按防火单位获取应该巡查的项目/获取所有巡查项目
+	 * @throws JsonProcessingException 
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/GetPatrolProject", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getPatrolProject(@RequestBody String reqBody) throws JsonProcessingException {
+		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<PatrolProject> patrolProjectList = null;
+		int statusCode = -1;
+		JSONArray jsonList = new JSONArray();
+		try {
+			patrolProjectList = patrolService.getPatrolProject(orgid);
+			
+			JSONObject jsonObject = new JSONObject();
+			
+			for (PatrolProject patrolProject : patrolProjectList) {
+				jsonObject.put("tiSysType", patrolProject.getTiSysType());
+				jsonObject.put("vSysdesc", patrolProject.getvSysdesc());
+				
+				for (UserCheckProjectContent userCheckProjectContent : patrolProject.getUserCheckProjectContentList()) {
+					JSONArray jsonArray =new JSONArray();
+					Map<String, String> map2 = new HashMap<String, String>();
+					map2.put("ProjectId", userCheckProjectContent.getProjectId());
+					map2.put("ProjectContent", userCheckProjectContent.getProjectContent());
+					jsonArray.put(map2);
+					jsonObject.put("Contents", jsonArray);
+				}
+				jsonList.put(jsonObject);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(jsonList.toString().replace("\"",""), statusCode);
+	}
 	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】

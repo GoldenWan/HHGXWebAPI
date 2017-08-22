@@ -169,6 +169,127 @@
 		#{startPos},#{pageSize}
 	</select>
 	
+	<select id="briefsiteList" resultType="site">
+	SELECT
+		s.siteid,
+		s.sitename
+	FROM
+		site s
+	WHERE
+		s.orgid = #{orgid}
+
+	</select>
+	<delete id="deleteorgSys">
+	 DELETE
+	 FROM
+		onlinefiresystem
+	 WHERE
+		siteid = #{siteid} and tiSysType=#{tiSysType}
+	</delete>
+	<delete id="deleteGatewaySysInfo">
+	DELETE
+	FROM
+		gatewaysysteminfo
+	WHERE
+		Gatewayaddress  = #{gatewayaddress}
+	</delete>	
 	
+	<delete id="deleteGateway">
+	DELETE
+	FROM
+		gateway
+	WHERE
+		Gatewayaddress = #{gatewayaddress}
+	</delete>
+	<select id="gePatrolRecordByOrgCount" resultType="int">
+	SELECT
+	count(*)
+	FROM
+		gateway g
+	INNER JOIN v_Gateway v on g.Gatewayaddress = v.Gatewayaddress
+	WHERE
+		v.orgid =  #{orgid}
+	
+	</select>
+	
+	<select id="selectGateway" resultMap="gatewayMap">
+	SELECT
+		g.Gatewayaddress Gatewayaddress,
+		Manufacturer,
+		Model,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo,
+		ynonline,
+		onlinetime
+	FROM
+		gateway g
+	INNER JOIN v_Gateway v ON g.Gatewayaddress = v.Gatewayaddress
+	WHERE
+		v.orgid = #{orgid}
+	limit
+		#{startPos},#{pageSize}
+	</select>
+	<resultMap type="gateway" id="gatewayMap">
+	    <id column="siteid" property="siteid" />
+		<result column="sitename" property="sitename" />
+		<result column="tiSysType" property="tiSysType" />
+		<result column="vSysdesc" property="vSysdesc" />
+		<result column="Sysaddress" property="Sysaddress" />
+		<collection property="gatewaySystemInfoList" column="Gatewayaddress" select="selectVgateway" />
+	</resultMap>
+	
+	<select id="selectVgateway" resultType="gatewaySystemInfo">
+	SELECT
+		siteid,
+		sitename,
+		tiSysType,
+		vSysdesc,
+		Sysaddress
+	FROM
+		v_Gateway
+	WHERE
+		gatewayaddress = #{gatewayaddress}
+	</select>
+	<insert id="addGatewaySysInfo">
+	INSERT INTO gatewaysysteminfo (
+		Sysaddress,
+		Gatewayaddress,
+		tiSysType,
+		siteid
+	)
+	VALUES
+		(
+			#{sysaddress},
+			#{gatewayaddress},
+			#{tiSysType},
+			#{siteid}
+		)
+	</insert>
+	<insert id="addGateway">
+	INSERT INTO gateway (
+		Gatewayaddress,
+		Manufacturer,
+		Model,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo
+	)
+	VALUES
+		(
+			#{gatewayaddress},
+			#{manufacturer},
+			#{model},
+			#{productdate},
+			#{setupdate},
+			#{controlorManufacture},
+			#{controlorMode},
+			#{memo}
+		)
+	</insert>
 	
 </mapper>

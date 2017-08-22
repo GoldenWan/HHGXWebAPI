@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hhgx.soft.entitys.Firesystype;
+import com.hhgx.soft.entitys.ManagerOrg;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Page;
+import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.services.FacilityService;
 import com.hhgx.soft.utils.ConstValues;
@@ -35,6 +38,27 @@ public class FacilityController {
 
 	@Autowired
 	private FacilityService facilityService;
+	
+	/**
+	 * 15.获取所有的消防系统
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/GetAllSys", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getAllSys(@RequestBody String reqBody) throws JsonProcessingException {
+		List<Firesystype> list =null;
+		int statusCode = -1;
+		try {
+			list = facilityService.getAllSys();
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		
+		return ResponseJson.responseFindJson(list, statusCode);
+
+	}
 
 	/**
 	 * 160.获取消防安全培训情况【**】

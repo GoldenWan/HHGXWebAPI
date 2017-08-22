@@ -18,6 +18,7 @@
 	    <typeAlias alias="userCheckInfo" type="com.hhgx.soft.entitys.UserCheckInfo"/> 
 	    <typeAlias alias="ztree" type="com.hhgx.soft.entitys.Ztree"/> 
 	    <typeAlias alias="fireSafetyCheck" type="com.hhgx.soft.entitys.FireSafetyCheck"/> 
+	    <typeAlias alias="patrolProject" type="com.hhgx.soft.entitys.PatrolProject"/> 
 		<package name="com.hhgx.soft.entitys"/>
 	</typeAliases> 
 

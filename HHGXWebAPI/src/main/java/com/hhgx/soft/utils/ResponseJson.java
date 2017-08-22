@@ -6,10 +6,9 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import net.sf.json.JSONObject;
 
 public class ResponseJson {
-	
+
 	
 	public static String responseAddJson(String dataBag, int statusCode) throws JsonProcessingException{
 	
