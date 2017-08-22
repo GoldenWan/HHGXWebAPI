@@ -107,20 +107,23 @@ public class OrginfoController {
 		String orgid = map.get("orgid");
 		List<Site> siteList = null;
 		int statusCode = -1;
+		JSONObject jsonO = new JSONObject();
+
 		JSONArray jsonList = new JSONArray();
 		try {
 			siteList =orginfoService.briefsiteList(orgid);
 			for (Site site : siteList) {
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("Siteid", site.getSiteid());
-				map2.put("sitename", site.getSitename());
-				jsonList.put(map2);	
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("Siteid", site.getSiteid());
+				jsonObject.put("sitename", site.getSitename());
+				jsonList.put(jsonObject);	
 			}
+			jsonO.put("siteList", jsonList);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(jsonList.toString().replace("\"",""), statusCode);
+		return ResponseJson.responseFindJson(jsonO.toString().replace("\"",""), statusCode);
 	}
 	/**
 	 * 20.删除防火单位的系统

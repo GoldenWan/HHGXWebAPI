@@ -55,7 +55,8 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		
+		//JSONObject jsonObject = new JSONObject();
+		//jsonObject.put("sysList", list);
 		return ResponseJson.responseFindJson(list, statusCode);
 
 	}
