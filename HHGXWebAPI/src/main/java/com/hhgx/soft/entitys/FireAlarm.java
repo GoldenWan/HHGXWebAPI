@@ -1,4 +1,4 @@
-package com.hhgx.soft.controllers;
+package com.hhgx.soft.entitys;
 
 public class FireAlarm {
 

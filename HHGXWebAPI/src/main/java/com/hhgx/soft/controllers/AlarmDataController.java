@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hhgx.soft.entitys.FireAlarm;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.utils.ConstValues;
