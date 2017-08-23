@@ -316,6 +316,7 @@
 		INNER JOIN usercheckprojectcontent c ON i.ProjectId = c.ProjectId
 		INNER JOIN firesystype f ON c.tiSysType = f.tiSysType
 		where i.UserCheckId =#{userCheckId}
+		
 	</select>
 	<select id="getPatrolPic" resultType="userCheckPic">
 		SELECT

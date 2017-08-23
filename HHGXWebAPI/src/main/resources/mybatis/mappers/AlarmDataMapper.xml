@@ -4,13 +4,39 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.AlarmDataMapper">
 
-	<select id="getTrainingListCount" resultType="int">
+	<select id="getfireAlarmCount" resultType="int">
 		SELECT
-		count(*)
+		COUNT(*)
 		FROM
-		training
+		eventinfos e,
+		v_FireAlarm v
 		WHERE
-		orgid = #{orgid}
+		e.cAlarmtype = #{cAlarmtype}
+		AND v.orgid = #{orgid}
 	</select>
-	
+	<select id="findFireAlarm" resultType="fireAlarm">
+		SELECT
+		e.Firealarmid firealarmid,
+		e.cAlarmtype cAlarmtype,
+		v.orgname orgname,
+		v.vSysdesc vSysdesc,
+		v.DeviceTypeName deviceTypeName,
+		v.sitename sitename,
+		v.floornum floornum,
+		v.location location,
+		e.faultdesc faultdesc,
+		e.GateWayAddress gateWayAddress,
+		e.sysaddress sysaddress,
+		e.deviceaddress deviceaddress,
+		e.dFirstAlarmtime dFirstAlarmtime,
+		e.AlarmNum alarmNum,
+		e.dRecentAlarmtime dRecentAlarmtime
+		FROM
+		eventinfos e,
+		v_FireAlarm v
+		WHERE
+		e.cAlarmtype = #{cAlarmtype}
+		AND v.orgid = #{orgid}
+	</select>
+
 </mapper>

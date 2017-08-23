@@ -12,7 +12,10 @@ public class PatrolTotal {
 	private String projectRatio;
 	private String normalNum;
 	private String normalRatio;
-
+	
+	
+	
+	
 	public String getOrgid() {
 		return orgid;
 	}
