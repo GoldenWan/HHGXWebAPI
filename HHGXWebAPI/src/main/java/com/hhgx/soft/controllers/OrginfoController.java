@@ -1,6 +1,5 @@
 package com.hhgx.soft.controllers;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,22 +18,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.DeviceList;
+import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
+import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Page;
-import com.hhgx.soft.entitys.PatrolProject;
-import com.hhgx.soft.entitys.PatrolRecord;
+import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.Site;
-import com.hhgx.soft.entitys.UserCheckProjectContent;
 import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
-import com.hhgx.soft.utils.UUIDGenerator;
-import com.hhgx.soft.utils.UploadUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -107,12 +105,12 @@ public class OrginfoController {
 		String orgid = map.get("orgid");
 		List<Site> siteList = null;
 		int statusCode = -1;
-		JSONObject jsonO = new JSONObject();
+		//JSONObject jsonO = new JSONObject();
 
-		JSONArray jsonList = new JSONArray();
+		//jsonList = new JSONArray();
 		try {
 			siteList =orginfoService.briefsiteList(orgid);
-			for (Site site : siteList) {
+			/*for (Site site : siteList) {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("Siteid", site.getSiteid());
 				jsonObject.put("sitename", site.getSitename());
@@ -120,10 +118,11 @@ public class OrginfoController {
 			}
 			jsonO.put("siteList", jsonList);
 			statusCode = ConstValues.OK;
+		return ResponseJson.responseFindJson(jsonO.toString().replace("\"",""), statusCode);*/
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(jsonO.toString().replace("\"",""), statusCode);
+			return ResponseJson.responseFindJson(siteList, statusCode);
 	}
 	/**
 	 * 20.删除防火单位的系统
@@ -213,6 +212,72 @@ public class OrginfoController {
 	
 	
 	/**
+	 * 22.修改传输设备
+	 */
+
+	
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value = "/UpdateGateway", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String updateGateway(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+		
+		String gatewayaddress = map.get("Gatewayaddress");//设备传输地址
+		String newGatewayaddress = map.get("newGatewayaddress");
+		String manufacturer = map.get("Manufacturer");
+		String model = map.get("Model");
+		String productdate = map.get("productdate");
+		String setupdate = map.get("setupdate");
+		String controlorManufacture = map.get("ControlorManufacture");
+		String controlorMode = map.get("ControlorMode");
+		String memo = map.get("memo");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Gateway gateway = new Gateway();
+			gateway.setGatewayaddress(newGatewayaddress);
+			gateway.setManufacturer(manufacturer);
+			gateway.setModel(model);
+			gateway.setProductdate(productdate);
+			gateway.setSetupdate(setupdate);
+			gateway.setControlorManufacture(controlorManufacture);
+			gateway.setControlorMode(controlorMode);
+			gateway.setMemo(memo);
+			//GatewaySystemInfo删除Gatewayaddress相关的所有数据
+			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+		
+			if(orginfoService.findGatewayaddressExist(newGatewayaddress)){
+				orginfoService.updateGatewayExist(gateway);
+			}else {
+				orginfoService.updateGateway(gateway);
+			}
+			
+			JSONArray json = JSONArray.fromObject(map.get("FireSysList")); 
+			if(json.length()>0){
+				for(int i=0;i<json.length();i++){
+					JSONObject jobj = json.getJSONObject(i);
+					GatewaySystemInfo gatewaySystemInfo = new GatewaySystemInfo();
+					gatewaySystemInfo.setSiteid(jobj.getString("siteid"));//
+					gatewaySystemInfo.setTiSysType(jobj.getString("tisystype"));
+					gatewaySystemInfo.setSysaddress(jobj.getString("Sysaddress"));//主键
+					gatewaySystemInfo.setGatewayaddress(newGatewayaddress);//主键
+					orginfoService.updateGatewaySysInfo(gatewaySystemInfo);
+				
+				}
+			}
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
+	}
+	
+	
+	/**
 	 * 23.查询传输设备
 	 */
 	
@@ -298,6 +363,326 @@ public class OrginfoController {
 		}
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
+	
+	/**
+	 * 25.查询楼层平面图信息
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetflatpicList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String getflatpicList(@RequestBody final Map<String, Object> map) throws JsonProcessingException {
+
+		Map<String, String> ret = (Map<String, String>) map.get("infoBag");
+		String orgid = ret.get("orgid");
+		String siteid = ret.get("siteid");
+		List<Flatpic> flatpicList=null;
+		int statusCode = -1;
+		try {
+			 flatpicList= orginfoService.getflatpicList(orgid, siteid);
+				statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(flatpicList, statusCode);
+	}
+	/**
+	 * 28.删除平面图
+	 */
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/DeleteflatPic", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String deleteflatPic(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
+
+		Map<String, String> map = RequestJson.reqJson(reqBody, "cFlatPic");
+		String cFlatPic = map.get("cFlatPic");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			orginfoService.deleteDevicesBycflatPic(cFlatPic);
+			orginfoService.deleteflatPic(cFlatPic);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
+	/**
+	 * 29.添加自动报警部件
+	 */
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value = "/AddDevices", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String addDevices(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+		
+		String road = map.get("Road");
+		String address = map.get("Address");
+		String sysaddress = map.get("sysaddress");
+		String gatewayaddress = map.get("gatewayaddress");
+		String vdesc = map.get("vdesc");
+		String fPositionX = map.get("fPositionX");
+		String fPositionY = map.get("fPositionY");
+		String location = map.get("location");
+		String manufacture = map.get("Manufacture");
+		String model = map.get("Model");
+		String productDate = map.get("ProductDate");
+		String expdate = map.get("expdate");
+		String addTime = map.get("AddTime");
+		String memo = map.get("memo");
+		String cFlatPic = map.get("cFlatPic");
+		String iDeviceType = map.get("iDeviceType");
+		
+		
+		int statusCode = -1;
+		String dataBag = null;
+		try {
+			Devices  devices = new Devices();
+			//插入数据时DeviceNo：根据cFlatPic查找，若没有数据DeviceNo=1，若有数据则取最大数据+1
+			
+			int deviceNo =1;
+			deviceNo=orginfoService.findMaxDeviceNo(cFlatPic)+1;
+			devices.setDeviceaddress(road+"."+address);
+			devices.setRoad(road);
+			devices.setAddress(gatewayaddress);
+			devices.setSysaddress(Integer.parseInt(sysaddress));
+			devices.setDeviceNo(deviceNo);
+			devices.setGatewayaddress(gatewayaddress);
+			devices.setVdesc(vdesc);
+			devices.setfPositionX(fPositionX);
+			devices.setfPositionY(fPositionY);
+			devices.setLocation(location);
+			devices.setManufacture(manufacture);
+			devices.setModel(model);
+			devices.setProductDate(DateUtils.stringToTimestamp(productDate));
+			devices.setExpdate(DateUtils.stringToTimestamp(expdate));
+			devices.setAddTime(DateUtils.stringToTimestamp(addTime));
+			devices.setMemo(memo);
+			devices.setcFlatPic(cFlatPic);
+			devices.setiDeviceType(iDeviceType);
+			
+
+		  orginfoService.addDevices(devices);
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	/**
+	 * 30.修改自动报警部件
+	 * @param maprq
+	 * @return
+	 * @throws JsonProcessingException:TODO
+	 
+	 */
+	
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value = "/UpdateDevices", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String updateDevices(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+	
+		String road = map.get("Road");
+		String address = map.get("Address");
+		String sysaddress = map.get("sysaddress");
+		String gatewayaddress = map.get("gatewayaddress");
+		String vdesc = map.get("vdesc");
+		String fPositionX = map.get("fPositionX");
+		String fPositionY = map.get("fPositionY");
+		String location = map.get("location");
+		String manufacture = map.get("Manufacture");
+		String model = map.get("Model");
+		String productDate = map.get("ProductDate");
+		String expdate = map.get("expdate");
+		String addTime = map.get("AddTime");
+		String memo = map.get("memo");
+		String cFlatPic = map.get("cFlatPic");
+		String iDeviceType = map.get("iDeviceType");
+		String deviceNo = map.get("DeviceNo");
+		
+		
+		int statusCode = -1;
+		String dataBag = null;
+		try {
+			Devices  devices = new Devices();
+			
+			devices.setDeviceaddress(road+"."+address);
+			devices.setRoad(road);
+			devices.setAddress(address);
+			devices.setSysaddress(Integer.parseInt(sysaddress));
+			devices.setDeviceNo(Integer.parseInt(deviceNo));
+			devices.setGatewayaddress(gatewayaddress);
+			devices.setVdesc(vdesc);
+			devices.setfPositionX(fPositionX);
+			devices.setfPositionY(fPositionY);
+			devices.setLocation(location);
+			devices.setManufacture(manufacture);
+			devices.setModel(model);
+			devices.setProductDate(DateUtils.stringToTimestamp(productDate));
+			devices.setExpdate(DateUtils.stringToTimestamp(expdate));
+			devices.setAddTime(DateUtils.stringToTimestamp(addTime));
+			devices.setMemo(memo);
+			devices.setcFlatPic(cFlatPic);
+			devices.setiDeviceType(iDeviceType);
+			
+
+		  orginfoService.updateDevices(devices);
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	
+	/**
+	 * 31.删除自动报警部件
+	 * @param reqBody
+	 * @param request
+	 * @return
+	 * @throws JsonProcessingException:TODO
+	 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeleteDevices", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String deleteDevices(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
+	
+		Map<String, String> map = RequestJson.reqJson(reqBody, "deviceaddress","sysaddress","gatewayaddress");
+		String deviceaddress = map.get("deviceaddress");
+		String sysaddress = map.get("sysaddress");
+		String gatewayaddress = map.get("gatewayaddress");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			orginfoService.deleteDevices(deviceaddress, sysaddress, gatewayaddress);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
+	/**
+	 * 32.查询自动报警部件列表
+	 */
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/SelectDevicesList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String selectDevicesList(@RequestBody final Map<String, Object> map) throws JsonProcessingException {
+
+		Map<String, String> ret = (Map<String, String>) map.get("infoBag");
+		String cFlatPic = ret.get("cFlatPic");
+		String iDeviceType= ret.get("iDeviceType");//若为0，忽略此条件
+		String deviceaddress= ret.get("deviceaddress");//若为0，忽略此条件
+		String pageIndex= ret.get("PageIndex");
+		Page page = null;
+		List<DeviceList> deviceLists = null;
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		int totalCount = orginfoService.selectDevicesListCount(cFlatPic,iDeviceType,deviceaddress);
+		int statusCode = -1;
+
+		try {
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				deviceLists = orginfoService.selectDevicesLists(cFlatPic,iDeviceType,deviceaddress, page.getStartPos(),
+						page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				deviceLists = orginfoService.selectDevicesLists(cFlatPic,iDeviceType,deviceaddress, page.getStartPos(),
+						page.getPageSize());
+			}
+			for (DeviceList deviceList : deviceLists) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("deviceaddress",deviceList.getDeviceaddress());
+				map2.put("sysaddress",deviceList.getSysaddress());
+				map2.put("gatewayaddress",deviceList.getGatewayaddress());
+				map2.put("fPositionX",deviceList.getfPositionX());
+				map2.put("fPositionY",deviceList.getfPositionY());
+				map2.put("location",deviceList.getLocation());
+				map2.put("DeviceNo",deviceList.getDeviceNo());
+				map2.put("iDeviceType",deviceList.getiDeviceType());
+				map2.put("imFlatPic",deviceList.getImFlatPic());
+				map2.put("DeviceTypeName",deviceList.getDeviceTypeName());
+			
+				lmList.add(map2);
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+
+	}
+	/**
+	 * 33.查询自动报警部件详情
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SelectDeviceDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String selectDeviceDetail(@RequestBody final Map<String, Object> map) throws JsonProcessingException {
+
+		Map<String, String> ret = (Map<String, String>) map.get("infoBag");
+		String gatewayaddress = ret.get("gatewayaddress");
+		String sysaddress= ret.get("sysaddress");
+		String deviceaddress= ret.get("deviceaddress");
+		Map<String, String> map2 = new HashMap<String, String>();
+		int statusCode = -1;
+		Devices devices = new Devices();
+		try {
+			devices = orginfoService.selectDeviceDetail(gatewayaddress, sysaddress, deviceaddress);
+			if(!StringUtils.isEmpty(devices)){
+				
+			map2.put("deviceaddress",devices.getDeviceaddress());
+			map2.put("sysaddress",String.valueOf(devices.getSysaddress()));
+			map2.put("gatewayaddress",devices.getGatewayaddress());
+			map2.put("vdesc",devices.getVdesc());
+			map2.put("fPositionX",devices.getfPositionX());
+			map2.put("fPositionY",devices.getfPositionY());
+			map2.put("location",devices.getLocation());
+			map2.put("Manufacture",devices.getManufacture());
+			map2.put("Model",devices.getModel());
+			map2.put("ProductDate",DateUtils.formatDateTime(devices.getProductDate()));
+			map2.put("expdate",DateUtils.formatDateTime(devices.getExpdate()));
+			map2.put("AddTime",devices.getDeviceaddress());
+			map2.put("memo",devices.getMemo());
+			map2.put("DeviceNo",String.valueOf(devices.getDeviceNo()));
+			map2.put("cFlatPic",devices.getcFlatPic());
+			map2.put("iDeviceType",devices.getiDeviceType());
+			map2.put("StateValue",devices.getStateValue());
+			map2.put("StateTime",DateUtils.formatDateTime(devices.getStateTime()));
+			map2.put("DeviceTypeName",devices.getDeviceTypeName());
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(map2, statusCode);
+
+	}
+	/**
+	 * 34.标注一个自动报警部件在平面图上的位置
+	 */
 	
 	
 	/**

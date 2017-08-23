@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Firesystype;
-import com.hhgx.soft.entitys.ManagerOrg;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Page;
-import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.services.FacilityService;
 import com.hhgx.soft.utils.ConstValues;

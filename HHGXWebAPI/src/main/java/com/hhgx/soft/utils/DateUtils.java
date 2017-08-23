@@ -93,7 +93,7 @@ public class DateUtils {
      * @param times
      * @return
      */
-	public  static Timestamp   stringToTimestamp(String times) {
+	public  static Timestamp stringToTimestamp(String times) {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());  
 	    try {  
 	        ts = Timestamp.valueOf(times);  

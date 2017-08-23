@@ -59,47 +59,61 @@
 	<update id="updateOnlineOrg">
 		UPDATE onlineorg
 		SET orgcode = #{orgcode} ,
-		orgname = #{orgname} ,
+		orgname =
+		#{orgname} ,
 		vAddress = #{vAddress} ,
 		OrganType = #{organType} ,
 		vNamelegalperson = #{vNamelegalperson} ,
 		otherthings = #{otherthings} ,
 		YnImportant = #{ynImportant} ,
 		SuperiorOrg = #{superiorOrg} ,
-		cZip = #{cZip} ,
+		cZip =
+		#{cZip} ,
 		vTel = #{vTel} ,
 		fax = #{fax} ,
 		`E-Mail` = #{eMail} ,
 		howmanypeople = #{howmanypeople} ,
 		souyouzhi = #{souyouzhi} ,
-		SetupDate = #{setupDate} ,
+		SetupDate
+		= #{setupDate} ,
 		realtymoney = #{realtymoney} ,
-		ipersonnum = #{ipersonnum} ,
+		ipersonnum =
+		#{ipersonnum} ,
 		fAreanum = #{fAreanum} ,
-		fBuildingarea = #{fBuildingarea} ,
+		fBuildingarea =
+		#{fBuildingarea} ,
 		GasType = #{gasType} ,
-		howmanyfireman = #{howmanyfireman} ,
+		howmanyfireman =
+		#{howmanyfireman} ,
 		howmanyexit = #{howmanyexit} ,
-		howmanystair = #{howmanystair} ,
+		howmanystair =
+		#{howmanystair} ,
 		howmanylane = #{howmanylane} ,
-		howmanyelevator = #{howmanyelevator} ,
+		howmanyelevator =
+		#{howmanyelevator} ,
 		lanelocation = #{lanelocation} ,
-		vfireroomtel = #{vfireroomtel} ,
+		vfireroomtel =
+		#{vfireroomtel} ,
 		escapefloor = #{escapefloor} ,
-		escapebuildingarea = #{escapebuildingarea} ,
+		escapebuildingarea =
+		#{escapebuildingarea} ,
 		escapelocation = #{escapelocation} ,
-		neareast = #{neareast} ,
+		neareast =
+		#{neareast} ,
 		nearsouth = #{nearsouth} ,
 		nearwest = #{nearwest} ,
 		nearnorth = #{nearnorth} ,
 		AutoFireFacility = #{autoFireFacility} ,
 		bFlatpic = #{bFlatpic} ,
 		dRecordDate = #{dRecordDate} ,
-		managegrade = #{managegrade} ,
+		managegrade =
+		#{managegrade} ,
 		NetworkStatus = #{networkStatus},
-		NetworkTime = #{networkTime},
+		NetworkTime =
+		#{networkTime},
 		ApproveState = #{approveState},
-		ApproveTime = #{approveTime},
+		ApproveTime =
+		#{approveTime},
 		ApproveMan = #{approveMan},
 		AreaId = #{areaId},
 		ManagerOrgID = #{managerOrgID}
@@ -107,7 +121,7 @@
 		OrgID = #{orgID}
 	</update>
 	<select id="getBusinessLicence" resultType="businessLicence">
-	SELECT
+		SELECT
 		LicenceCode,
 		ConpanyName,
 		CompanyType,
@@ -121,100 +135,110 @@
 		RegistTime,
 		PictureUrl,
 		orgid
-	FROM
+		FROM
 		businesslicence
-	WHERE
+		WHERE
 		orgid = #{orgid}
 	</select>
-	
+
 	<select id="getFireSystemList" resultType="fireSystem">
-	SELECT
+		SELECT
 		s.siteid,
 		s.sitename,
 		o.tiSysType,
 		f.vSysdesc
-	FROM
+		FROM
 		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
-	WHERE
+		INNER JOIN onlinefiresystem
+		o ON s.siteid = o.siteid
+		INNER JOIN firesystype f ON o.tiSysType =
+		f.tiSysType
+		WHERE
 		s.orgid = #{orgid}
 	</select>
-	
+
 	<select id="getFireSystemListCount" resultType="int">
-	SELECT
+		SELECT
 		count(*)
-	FROM
+		FROM
 		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
-	WHERE
+		INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+		INNER
+		JOIN firesystype f ON o.tiSysType = f.tiSysType
+		WHERE
 		s.orgid = #{orgid}
-	
+
 	</select>
-	
+
 	<select id="getFireSystemListByPage" resultType="fireSystem">
-	SELECT
+		SELECT
 		s.siteid,
 		s.sitename,
 		o.tiSysType,
 		f.vSysdesc
-	FROM
+		FROM
 		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
-	WHERE
+		INNER JOIN onlinefiresystem
+		o ON s.siteid = o.siteid
+		INNER JOIN firesystype f ON o.tiSysType =
+		f.tiSysType
+		WHERE
 		s.orgid = #{orgid}
-	limit
+		limit
 		#{startPos},#{pageSize}
 	</select>
-	
+
 	<select id="briefsiteList" resultType="site">
-	SELECT
+		SELECT
 		s.siteid,
 		s.sitename
-	FROM
+		FROM
 		site s
-	WHERE
+		WHERE
 		s.orgid = #{orgid}
 
 	</select>
 	<delete id="deleteorgSys">
-	 DELETE
-	 FROM
+		DELETE
+		FROM
 		onlinefiresystem
-	 WHERE
-		siteid = #{siteid} and tiSysType=#{tiSysType}
+		WHERE
+		siteid = #{siteid} and
+		tiSysType=#{tiSysType}
 	</delete>
 	<delete id="deleteGatewaySysInfo">
-	DELETE
-	FROM
+		DELETE
+		FROM
 		gatewaysysteminfo
-	WHERE
-		Gatewayaddress  = #{gatewayaddress}
-	</delete>	
-	
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+	</delete>
+
 	<delete id="deleteGateway">
-	DELETE
-	FROM
+		DELETE
+		FROM
 		gateway
-	WHERE
-		Gatewayaddress = #{gatewayaddress}
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
 	</delete>
 	<select id="gePatrolRecordByOrgCount" resultType="int">
-	SELECT
-	count(*)
-	FROM
+		SELECT
+		count(*)
+		FROM
 		gateway g
-	INNER JOIN v_Gateway v on g.Gatewayaddress = v.Gatewayaddress
-	WHERE
-		v.orgid =  #{orgid}
-	
+		INNER JOIN v_Gateway v on g.Gatewayaddress =
+		v.Gatewayaddress
+		WHERE
+		v.orgid = #{orgid}
+
 	</select>
-	
+
 	<select id="selectGateway" resultMap="gatewayMap">
-	SELECT
-		g.Gatewayaddress Gatewayaddress,
+		SELECT
+		g.Gatewayaddress
+		Gatewayaddress,
 		Manufacturer,
 		Model,
 		productdate,
@@ -224,52 +248,54 @@
 		memo,
 		ynonline,
 		onlinetime
-	FROM
+		FROM
 		gateway g
-	INNER JOIN v_Gateway v ON g.Gatewayaddress = v.Gatewayaddress
-	WHERE
+		INNER JOIN v_Gateway v ON g.Gatewayaddress = v.Gatewayaddress
+		WHERE
 		v.orgid = #{orgid}
-	limit
+		limit
 		#{startPos},#{pageSize}
 	</select>
 	<resultMap type="gateway" id="gatewayMap">
-	    <id column="siteid" property="siteid" />
+		<id column="siteid" property="siteid" />
 		<result column="sitename" property="sitename" />
 		<result column="tiSysType" property="tiSysType" />
 		<result column="vSysdesc" property="vSysdesc" />
 		<result column="Sysaddress" property="Sysaddress" />
-		<collection property="gatewaySystemInfoList" column="Gatewayaddress" select="selectVgateway" />
+		<collection property="gatewaySystemInfoList" column="Gatewayaddress"
+			select="selectVgateway" />
 	</resultMap>
-	
+
 	<select id="selectVgateway" resultType="gatewaySystemInfo">
-	SELECT
+		SELECT
 		siteid,
 		sitename,
 		tiSysType,
 		vSysdesc,
 		Sysaddress
-	FROM
+		FROM
 		v_Gateway
-	WHERE
-		gatewayaddress = #{gatewayaddress}
+		WHERE
+		gatewayaddress =
+		#{gatewayaddress}
 	</select>
 	<insert id="addGatewaySysInfo">
-	INSERT INTO gatewaysysteminfo (
+		INSERT INTO gatewaysysteminfo (
 		Sysaddress,
 		Gatewayaddress,
 		tiSysType,
 		siteid
-	)
-	VALUES
+		)
+		VALUES
 		(
-			#{sysaddress},
-			#{gatewayaddress},
-			#{tiSysType},
-			#{siteid}
+		#{sysaddress},
+		#{gatewayaddress},
+		#{tiSysType},
+		#{siteid}
 		)
 	</insert>
 	<insert id="addGateway">
-	INSERT INTO gateway (
+		INSERT INTO gateway (
 		Gatewayaddress,
 		Manufacturer,
 		Model,
@@ -278,18 +304,272 @@
 		ControlorManufacture,
 		ControlorMode,
 		memo
-	)
-	VALUES
+		)
+		VALUES
 		(
-			#{gatewayaddress},
-			#{manufacturer},
-			#{model},
-			#{productdate},
-			#{setupdate},
-			#{controlorManufacture},
-			#{controlorMode},
-			#{memo}
+		#{gatewayaddress},
+		#{manufacturer},
+		#{model},
+		#{productdate},
+		#{setupdate},
+		#{controlorManufacture},
+		#{controlorMode},
+		#{memo}
 		)
 	</insert>
-	
+
+	<insert id="updateGateway">
+		INSERT INTO gateway (
+		Manufacturer,
+		Model,
+		Gatewayaddress,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo
+		)
+		VALUES
+		(
+		#{manufacturer} ,
+		#{model} ,
+		#{gatewayaddress},
+		#{productdate} ,
+		#{setupdate} ,
+		#{controlorManufacture} ,
+		#{controlorMode} ,
+		#{memo}
+		)
+	</insert>
+
+	<select id="findGatewayaddressExist" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		gateway
+		WHERE
+		Gatewayaddress = #{gatewayaddress}
+	</select>
+
+	<update id="updateGatewaySame">
+		UPDATE gateway
+		SET Manufacturer = #{manufacturer},
+		Model = #{model} ,
+		productdate = #{productdate} ,
+		setupdate =
+		#{setupdate} ,
+		ControlorManufacture = #{controlorManufacture} ,
+		ControlorMode = #{controlorMode} ,
+		memo = #{memo}
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+	</update>
+	<insert id="updateGatewaySysInfo">
+		INSERT INTO
+		gatewaysysteminfo
+		(siteid,tiSysType,Gatewayaddress,Sysaddress)
+		values
+		(#{siteid},#{tiSysType},#{gatewayaddress}, #{sysaddress} )
+
+	</insert>
+
+	<select id="getflatpicList" resultType="flatpic">
+		SELECT
+		s.siteid siteid,
+		sitename sitename,
+		cFlatPic cFlatPic,
+		floornum floornum,
+		dRecordSet
+		dRecordSet,
+		imFlatPic imFlatPic
+		FROM
+		site s,
+		flatpic f
+		WHERE
+		s.siteid =
+		#{siteid}
+		AND orgid = #{orgid}
+	</select>
+
+	<delete id="deleteflatPic">
+		DELETE
+		FROM
+		flatpic
+		WHERE
+		cFlatPic = #{cFlatPic}
+	</delete>
+	<delete id="deleteDevices">
+		DELETE
+		FROM
+		devices
+		WHERE
+		deviceaddress =
+		#{deviceaddress} and
+		Sysaddress = #{sysaddress} and
+		Gatewayaddress =
+		#{gatewayaddress}
+	</delete>
+	<select id="findMaxDeviceNo" resultType="string">
+		SELECT
+		max(DeviceNo)
+		FROM
+		devices
+		WHERE
+		cFlatPic = #{cFlatPic}
+	</select>
+
+	<insert id="addDevices">
+		INSERT INTO devices (
+		DeviceNo,
+		deviceaddress,
+		Road,
+		Address,
+		sysaddress,
+		gatewayaddress,
+		vdesc,
+		fPositionX,
+		fPositionY,
+		location,
+		Manufacture,
+		Model,
+		ProductDate,
+		expdate,
+		AddTime,
+		memo,
+		cFlatPic,
+		iDeviceType
+		)
+		VALUES
+		(
+		#{deviceNo} ,
+		#{deviceaddress} ,
+		#{road} ,
+		#{address}
+		,
+		#{sysaddress} ,
+		#{gatewayaddress} ,
+		#{vdesc} ,
+		#{fPositionX} ,
+		#{fPositionY} ,
+		#{location} ,
+		#{manufacture} ,
+		#{model} ,
+		#{productDate} ,
+		#{expdate} ,
+		#{addTime} ,
+		#{memo} ,
+		#{cFlatPic} ,
+		#{iDeviceType}
+		)
+	</insert>
+	<update id="updateDevices">
+		UPDATE devices
+		SET DeviceNo = #{deviceNo} ,
+		Road =
+		#{road} ,
+		Address = #{address} ,
+		vdesc = #{vdesc} ,
+		fPositionX =
+		#{fPositionX} ,
+		fPositionY = #{fPositionY} ,
+		location = #{location} ,
+		Manufacture = #{manufacture} ,
+		Model = #{model} ,
+		ProductDate =
+		#{productDate} ,
+		expdate = #{expdate} ,
+		AddTime = #{addTime} ,
+		memo =
+		#{memo } ,
+		cFlatPic = #{cFlatPic} ,
+		iDeviceType = #{iDeviceType}
+		WHERE
+		deviceaddress = #{deviceaddress} and
+		Sysaddress = #{sysaddress} and
+		Gatewayaddress = #{gatewayaddress}
+	</update>
+	<delete id="deleteDevicesBycflatPic">
+		DELETE
+		FROM
+		devices
+		WHERE
+		cFlatPic = #{cFlatPic}
+	</delete>
+	<select id="selectDevicesListCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		devices
+		where
+		cFlatPic = #{cFlatPic}
+		<if test="iDeviceType!='0'.toString()">
+			AND
+			iDeviceType = #{iDeviceType}
+		</if>
+		<if test="deviceaddress!='0'.toString() ">
+			AND
+			deviceaddress = #{deviceaddress}
+		</if>
+	</select>
+	<select id="selectDevicesLists" resultType="deviceList">
+		SELECT
+		c.deviceaddress deviceaddress,
+		c.sysaddress sysaddress,
+		c.gatewayaddress gatewayaddress,
+		c.fPositionX fPositionX,
+		c.fPositionY fPositionY,
+		c.location location,
+		c.DeviceNo deviceNo,
+		c.iDeviceType iDeviceType,
+		f.imFlatPic imFlatPic,
+		d.DeviceTypeName deviceTypeName
+		FROM
+		devices c
+		INNER JOIN flatpic f ON c.cFlatPic = f.cFlatPic
+		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+		WHERE
+		c.cFlatPic = #{cFlatPic}
+		<if test="iDeviceType!='0'.toString()">
+			AND
+			c.iDeviceType = #{iDeviceType}
+		</if>
+		<if test="deviceaddress!='0'.toString() ">
+			AND
+			c.deviceaddress = #{deviceaddress}
+		</if>
+	</select>
+	<select id="selectDeviceDetail" resultType="devices">
+		SELECT
+		deviceaddress,
+		sysaddress,
+		gatewayaddress,
+		vdesc,
+		fPositionX,
+		fPositionY,
+		location,
+		Manufacture manufacture,
+		Model model,
+		ProductDate productDate,
+		expdate expdate,
+		AddTime addTime,
+		memo memo,
+		DeviceNo deviceNo,
+		cFlatPic cFlatPic,
+		c.iDeviceType iDeviceType,
+		StateValue stateValue,
+		StateTime stateTime,
+		d.DeviceTypeName deviceTypeName
+		FROM
+		devices c
+		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+		WHERE
+		c.Gatewayaddress = #{gatewayaddress}
+		AND c.Sysaddress = #{sysaddress}
+		AND c.deviceaddress = #{deviceaddress}
+
+	</select>
+
+
+
 </mapper>
