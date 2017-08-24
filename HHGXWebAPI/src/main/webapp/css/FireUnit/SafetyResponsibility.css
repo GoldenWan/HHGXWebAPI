@@ -1,0 +1,28 @@
+.prohibitModal label{
+    width: 130px;
+}
+
+#checkPage .form-group{
+    margin-left:0px;
+}
+#checkPage table th,#checkPage table td{
+    text-align: center !important;
+}
+
+#matic{
+    margin-left: 10px;
+    color: #5E9DE6;
+    border-color: #5E9DE6;
+}
+
+.date input{
+    background-color: white!important;
+}
+.date span{
+    background-color: white!important;
+}
+
+.mybox>div{
+    display: inline-block;
+    margin: 10px 20px;
+}

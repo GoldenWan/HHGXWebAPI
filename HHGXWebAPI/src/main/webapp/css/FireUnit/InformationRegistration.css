@@ -1,0 +1,93 @@
+#chooseManagerLabel{
+    text-align: left;
+    margin-top: 5px;
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.companyRegister>label{
+    text-align: right;
+}
+.companyRegister>div{
+    padding-left: 0px;
+}
+#chooseManagerLabel+div{
+    padding-left: 0px;
+    padding-right: 18px;
+}
+#checkProgramH4,#findProgramH4{
+    text-align: left;
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+}
+
+#checkProgramTb th, #checkProgramTb td{
+    text-align: center;
+}
+#checkProgramTb,#findProgramTb{
+    margin-top: 10px;
+}
+#checkProgramAddBtn{
+    margin: 0px auto;
+    position: relative;
+    height: 40px;
+    margin-top: 10px;
+    border-bottom: 1px solid #C8C7CC;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 98%;
+
+}
+#checkProgramAddBtn>button{
+   /* position: absolute;
+    top: 10px;
+    right: 0;*/
+    float: right;
+}
+#findProgramAddBtn{
+    margin: 0px auto;
+    position: relative;
+    height: 40px;
+    margin-top: 10px;
+    border-bottom: 1px solid #C8C7CC;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 98%;
+}
+#findProgramAddBtn>button{
+   /* position: absolute;
+    top: 10px;
+    right: 3%;*/
+    float: right;
+}
+#findProgramTb th, #findProgramTb td{
+    text-align: center;
+}
+#submitDiv{
+    margin-top: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+#submitDiv>button{
+    width: 25%;
+}
+#checkProgramModalTb td,#findProgramModalTbBody td{
+    text-align: center;
+    vertical-align: middle;
+}
+#selectAllLabelCheckProgram{
+
+}
+#firstDiv{
+    margin-top: 40px;
+}
+#findProgramModalTb,#checkProgramModalTb{
+    width: 95%;
+    margin: 0 auto;
+}
+
+
+
+
+

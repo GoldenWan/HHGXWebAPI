@@ -1,0 +1,67 @@
+/*#addFireStation{
+    float: right;
+    width: 7%;
+}*/
+#FireStationTb th,#FireStationTb td{
+    text-align: center;
+}
+#FireStationTb{
+    margin-top: 10px;
+}
+.fireStaInput{
+    width: 80%;
+}
+#addBtnDidv{
+
+}
+.titleAndBtn{
+    margin: 0 auto;
+    margin-top: 40px;
+    position: relative;
+    border-bottom: 1px solid #C8C7CC;
+    padding-bottom: 15px;
+}
+.titleAndBtn span{
+    margin-top: 5px;
+    font-size: 24px;
+    color: #4A90E2
+}
+.titleAndBtn div{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 100px;
+    float: right;
+    text-align: right;
+}
+/*.titleAndBtn div button{
+    width: 100px;
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

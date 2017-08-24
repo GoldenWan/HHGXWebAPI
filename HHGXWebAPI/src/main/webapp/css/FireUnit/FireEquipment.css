@@ -1,0 +1,54 @@
+.chooseEquipment>label{
+    margin-top: 5px;
+    text-align: right;
+}
+#addEquipment{
+    float: right;
+    width: 7%;
+}
+#fireEquipmentTb th,#fireEquipmentTb td{
+    text-align: center;
+}
+#fireEquipmentTb{
+    clear: both;
+    margin-top: 10px;
+}
+#fireEquipmentBody label{
+    text-align: center;
+}
+.equipmentInput,.addBuyTime,.changeBuyTime{
+    width: 80%;
+}
+#addBtnDiv{
+    margin-top: 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

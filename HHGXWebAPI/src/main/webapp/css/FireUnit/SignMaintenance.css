@@ -1,0 +1,45 @@
+#tableTitleDiv{
+    position: relative;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+    margin-top: 40px;
+    border-bottom: 1px solid #C8C7CC;
+    padding-bottom: 20px;
+}
+#tableTitleDiv>h3{
+    float: left;
+    width: 20%;
+    padding-top: 0px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+#tableTitleDiv>button{
+    float: right;
+    /*width: 20%;*/
+}
+table,table td,table th{
+    text-align: center;
+}
+#alertUser{
+    /*background-color: red;*/
+    margin: 20% auto;
+    text-align: center;
+    display: none;
+    color: #8F8E94;
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

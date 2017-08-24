@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+    <!--单独引用js-->
+    <script type="text/javascript" src="../../js/jquery.form.js"></script>
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../../css/style.css"/>
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../../css/FireUnit/DrawingInformation.css"/>
+</head>
+<body>
+<div class="main_title">
+    <a>单位基本信息</a>
+    <span>></span>
+    <a href="./DrawingInformation.html" class="titlt_active">单位图纸信息</a>
+</div>
+
+    <div class="container newMain_page">
+        <div class="row" id="firstDiv">
+            <!--<div class="form-group col-sm-6 chooseBuilding">-->
+                <label class="col-sm-1 control-label" style="margin-top: 5px;padding-left: 0px">选择建筑物：</label>
+                <!--<div class="col-sm-3">-->
+                    <select style="width: 250px" id="indexSelectBuilding" class="selectpicker show-tick form-control" data-live-search="true">
+                    </select>
+                <!--</div>-->
+                <button type="button" id="addDrawingInfo" class="myBtn">新增</button>
+            <!--</div>-->
+            <!--<div class="col-sm-12">
+            </div>-->
+        </div>
+
+        <div class="row">
+            <table class="table table-bordered" id="buildingTb">
+                <tr class="fontBlue">
+                    <th>建筑物名称</th>
+                    <th>楼层</th>
+                    <th>上传时间</th>
+                    <th>操作</th>
+                </tr>
+                <tbody id="buildingTbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 模态框（点击各种按钮） -->
+    <div class="modal fade" id="buildingDeleteModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="buildingDeleteDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">删除平面图</h4>
+                </div>
+                <div class="modal-body" id="buildingDeleteBody">
+                    <h3 style="text-align: center">是否要删除平面图</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn" id="modalDeleteConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（点击首页的详情按钮） -->
+    <div class="modal fade" id="buildingDetailModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="buildingDetailDialog" style="width: 1000px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">平面图详情</h4>
+                </div>
+                <div class="modal-body" id="buildingDetailBody" style="height: 600px">
+                    <div id="imgDiv">
+                        <svg id="svgContainer" xmlns="http://www.w3.org/2000/svg" width="950" height="600">
+                            <!--<img id="imFlatPicTarget" src="" alt=""/>-->
+                            <image id="imFlatPicTarget" class="imgs" width="100%" height="100%" x="0" y="0" xlink:href="" src=""/>
+                        </svg>
+                    </div>
+                    <button id="big" type="button" class="btn btn-default">+</button>
+                    <button id="small" type="button" class="btn btn-default">-</button>
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="myBtn" id="buildingDetailConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（点击首页的修改按钮） -->
+    <div class="modal fade" id="buildingChangeModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="buildingChangeDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">修改平面图</h4>
+                </div>
+                <div class="modal-body" id="buildingChangeBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn" id="buildingChangeConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--下面是添加模态框-->
+    <div class="modal fade" id="buildingModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="buildingDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">新增建筑物平面图</h4>
+                </div>
+                <div class="modal-body" id="buildingBody">
+                    <form enctype="multipart/form-data" id="buildingForm">
+                        <input type="hidden" name="siteid" id="siteid" value=""/>
+                        <input type="hidden" name="floornum" id="floornum" value=""/>
+                        <input type="hidden" name="imFlatPic" id="imFlatPic" value=""/>
+                        <input type="hidden" name="orgid" id="orgid" value=""/>
+                        <div class="row">
+                            <div class="form-group col-sm-12 addBuildingDiv">
+                                <label class="col-sm-3 control-label" for="dwbm">选择建筑物：</label>
+                                <div class="col-sm-8">
+                                    <select id="addModalSelect" class="selectpicker show-tick form-control addBuilding" data-live-search="true">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12 addBuildingDiv">
+                                <label class="col-sm-3 control-label" for="dwbm">平面楼层：</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="floorLevel" class="addBuilding form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12 addBuildingDiv">
+                                <label class="col-sm-3 control-label" for="dwbm">选择上传：</label>
+                                <div class="col-sm-8">
+                                    <div class="file addBuilding">
+                                        <!--<label for="file">文件：</label>-->
+                                        <div class="userdefined-file">
+                                            <input type="text" name="userdefinedFile" id="userdefinedFile" value="未选择任何文件">
+                                            <button type="button">上传</button>
+                                        </div>
+                                        <input type="file" name="imFlatPic" id="file">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn" id="modalConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--下面是从后台传的数据渲染的-->
+
+    <!--下面是修改平面图部分渲染-->
+    <script id="changeBuildingData" type="text/html">
+        <form enctype="multipart/form-data" id="buildingChangeForm">
+            <input type="hidden" name="cFlatPic" id="cFlatPicChange" value=""/>
+            <input type="hidden" name="siteid" id="siteidChange" value=""/>
+            <!--<input type="hidden" name="floornum" id="floorChangenum" value=""/>-->
+            <!--<input type="hidden" name="imFlatPic" id="imFlatPicChange" value=""/>-->
+            <div class="row">
+                <div class="form-group col-sm-12 addBuildingDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">选择建筑物：</label>
+                    <div class="col-sm-8">
+                        <select id="ChangeModalSelect" class="selectpicker show-tick form-control addBuilding" data-live-search="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addBuildingDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">平面楼层：</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="floornum" id="floorLevelChange" class="addBuilding form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addBuildingDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">选择上传：</label>
+                    <div class="col-sm-8">
+                        <div class="file addBuilding">
+                            <!--<label for="file">文件：</label>-->
+                            <div class="userdefined-file">
+                                <input type="text" name="userdefinedFile" id="userdefinedFileChange" value="未选择任何文件">
+                                <button type="button">上传</button>
+                            </div>
+                            <input type="file" name="imFlatPic" id="fileChange">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </script>
+
+    <!--下面是首页建筑物下拉框-->
+    <script id="buildingSelectData" type="text/html">
+        <option value="0">全部</option>
+        {{#each DataBag}}
+        <option value="{{siteid}}">{{sitename}}</option>
+        {{/each}}
+    </script>
+
+    <!--点击新增的按钮新增数据-->
+    <script id="addBuildingData" type="text/html">
+    </script>
+
+    <!--点击删除按钮提示是否删除-->
+    <script id="idDeleteData" type="text/html">
+        <h3>是否要删除选中数据</h3>
+    </script>
+
+    <!--首页显示表的数据-->
+    <script id="buildingTbData" type="text/html">
+        {{#each DataBag}}
+        <tr>
+            <td>{{sitename}}</td>
+            <td>{{floornum}}</td>
+            <td>{{dRecordSet}}</td>
+            <td>
+                <a imFlatPic="{{imFlatPic}}" cFlatPic="{{cFlatPic}}" class="operation" data-toggle="modal" data-target="">详情</a>
+                <a siteid="{{siteid}}" floornum="{{floornum}}" cFlatPic="{{cFlatPic}}" class="operation" data-toggle="modal" data-target="">修改</a>
+                <a cFlatPic="{{cFlatPic}}" class="operation" data-toggle="modal" data-target="">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+<!--公共js引用-->
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<!--单页面js引用-->
+<script type="text/javascript" src="../../js/FireUnit/DrawingInformation.js"></script>
+
+</body>
+</html>

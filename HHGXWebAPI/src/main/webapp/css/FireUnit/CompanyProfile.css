@@ -1,0 +1,149 @@
+body{
+    overflow-x: hidden;
+}
+.companyInfo>label{
+    text-align: right;
+    margin-top: 5px;
+}
+.companyInfo div{
+    padding-left: 0px;
+
+}
+#dwqtqkLabel{
+    /*margin-left: -2%;*/
+    /*text-align: center;*/
+    /*padding-left: -2%;*/
+}
+
+#labelName{
+    text-align: left;
+}
+#labelPeopleId{
+    text-align: center;
+}
+#labelTel{
+    text-align: right;
+}
+.seperalRow>label{
+    margin-left: -4%
+}
+.seperalRow input{
+    width: 105%
+}
+.seperalRowEdit>label{
+    margin-left: -4%
+}
+
+#haveOrNot{
+    margin-top: 5px;
+}
+.bar {
+    height: 18px;
+    background: green;
+}
+#handleCompanyLicnese{
+    width: 100%;
+    /*margin-left: 82%;*/
+    /*position: absolute;*/
+}
+#handleCompanyLicnese span{
+    float: left;
+    font-size: 24px;
+    color: #4A90E2;
+}
+#handleCompanyLicnese div{
+    float: right;
+    width: 220px;
+}
+
+#upLicenseDialog{
+    width: 1000px;
+}
+#companyIndexFormDataDivRow>div>div{
+    margin-top: 5px;
+}
+#editjlsj{
+    position: relative;
+}
+#recordTimeCover{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 35px;
+    /*background-color: red;*/
+    z-index: 99;
+}
+#registerImg{
+    max-width: 700px;
+    max-height: 500px;
+}
+#handleCompanyLicneseDiv{
+    margin-top: 40px;
+}
+
+
+/*模态框里面的上传控件*/
+.file {
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+}
+.file label {
+    display: inline-block;
+}
+.userdefined-file {
+    position: absolute;
+    top: 0;
+    /*left: 0px;*/
+    z-index: 2;
+    width: 155px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 0;  /*应对子元素为 inline-block 引起的外边距*/
+}
+.userdefined-file input[type="text"] {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 14px;
+    padding-left: 14px;
+    width: 105px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.userdefined-file button {
+    display: inline-block;
+    vertical-align: middle;
+    width: 50px;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    background-color: #f54;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+.file input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    z-index: 3;
+    opacity: 0;
+    filter:Alpha(Opacity=0);/*兼容IE8*/
+    /*display: none;*/
+    width: 155px;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+
+
+

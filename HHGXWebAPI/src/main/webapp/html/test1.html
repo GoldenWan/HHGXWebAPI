@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/../js/handlebars.js"></script>
+
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../css/style.css"/>
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../css/FireUnit/BuildingInfo.css"/>
+
+    <!--下面是时间的插件-->
+    <link href="../plug/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+<div class='input-group date' id='jlsj'>
+    <input name="annalTime" type='text' class="form-control inputDate" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+</div>
+
+
+<!--<h1 class="">测试页1</h1>-->
+<table id="test1TB" class="table table-bordered">
+    <tr>
+        <td>报警序号</td>
+        <td>报警类型</td>
+        <td>联网单位</td>
+        <td>建筑物</td>
+        <td>楼层</td>
+        <td>位置</td>
+        <td>站号</td>
+        <td>回路</td>
+        <td>部件名称</td>
+        <td>首次报警时间</td>
+        <td>报警次数</td>
+        <td>最近报警时间</td>
+        <td>操作</td>
+    </tr>
+    <tr>
+        <td>2020095020482</td>
+        <td>火警</td>
+        <td>成都恒华光讯科技有限公司</td>
+        <td>四栋</td>
+        <td>4</td>
+        <td>401号室</td>
+        <td>24</td>
+        <td>5</td>
+        <td>测温式电器火灾监控器</td>
+        <td>2017-03-05</td>
+        <td>3</td>
+        <td>2017-05-03</td>
+        <td>查看</td>
+    </tr>
+</table>
+
+
+
+<!--公共js引用-->
+<script type="text/javascript" src="../js/config.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<!--下面是引用的时间插件-->
+<script type="text/javascript" src="../plug/datepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../plug/datepicker/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<!-- 单页面地图信息引入-->
+<!--单页面js引用-->
+<script type="text/javascript">
+    dataPick("#jlsj");
+
+
+</script>
+
+
+</body>
+</html>
