@@ -34,6 +34,7 @@ import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.Md5Util;
 import com.hhgx.soft.utils.RegistMessage;
 import com.hhgx.soft.utils.RequestJson;
@@ -210,6 +211,7 @@ public class UserManagerController {
 	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET }, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String loginBy(HttpServletRequest request) throws JsonProcessingException {
+		
 		String sessionCode = (String) request.getSession().getAttribute("certCode");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -238,6 +240,7 @@ public class UserManagerController {
 			dataBag = "没有用户 请先注册";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
+			System.out.println(username+"-----"+password+"------"+Md5Util.getMD5(password));
 			User user = userManagerService.loginBy(username, Md5Util.getMD5(password));
 			if (user != null) {
 				request.setAttribute("UserID", user.getUserID());
@@ -245,9 +248,9 @@ public class UserManagerController {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("message", "登陆成功  欢迎回来[" + user.getAccount() + "]," + userTypeName);
 				map.put("tokenID", user.getUserID());
-				//String content = JSONObject.fromBean(map).toString().replace("\"", "");
 				statusCode = ConstValues.OK;
-				return ResponseJson.responseFindJson(map, statusCode);
+				String content = JSONObject.fromBean(map).toString().replace("\"", "");
+				return ResponseJson.responseFindJson(content, statusCode);
 			} else {
 				statusCode = ConstValues.NOAUTHORIZED;
 				dataBag = "密码错误 找回密码";
@@ -341,15 +344,16 @@ public class UserManagerController {
 
 
 	 *              
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces  = "application/json;charset=UTF-8")
-	public String retrieveZtreeNodes(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
-		//Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
-		String tokenUUID = (String) maprq.get("tokenUUID");
-		
-	//	String tokenUUID = map.get("tokenUUID");
-		//tokenUUID==userId
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST })
+	public String retrieveZtreeNodes(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		//Map<String, String> map = RequestJson.reqJson(reqBody, "tokenUUID");
+		JSONObject map = JSONObject.fromObject(reqBody);
+//		String tokenUUID = (String) map.get("tokenUUID");
+		String tokenUUID = (String) map.get("tokenUUID");
 		Map<String, Object> dataBag = new HashMap<String, Object>();
 		int statusCode = -1;
 		try {
@@ -435,5 +439,98 @@ public class UserManagerController {
 
 		return ResponseJson.responseFindJson(dataBag, statusCode);
 	}
-
+/*	@ResponseBody
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces  = "application/json;charset=UTF-8")
+	public String retrieveZtreeNodes(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		//Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+		String tokenUUID = (String) maprq.get("tokenUUID");
+		
+		//	String tokenUUID = map.get("tokenUUID");
+		//tokenUUID==userId
+		Map<String, Object> dataBag = new HashMap<String, Object>();
+		int statusCode = -1;
+		try {
+			if (!tokenUUID.equals(null)) {
+				
+				
+				UserInfo validUser = userManagerService.getUserInfoByName(tokenUUID);
+				if(!StringUtils.isEmpty(validUser)){
+					
+					System.out.println(validUser.toString());
+					String userBelongTo = validUser.getUserBelongTo();
+					
+					switch (Integer.parseInt(userBelongTo)) {
+					// orgid
+					case 1:
+						validUser.setUserBelongName("防火单位");
+						validUser.setCompanyName(userManagerService.getOnlineorgById(validUser.getOrgID()));
+						break;
+					case 2:
+						validUser.setUserBelongName("维保单位");
+						validUser.setCompanyName(userManagerService.getMaintenanceById(validUser.getMaintenanceId()));
+						break;
+					case 3:
+						validUser.setUserBelongName("管理机构");
+						validUser.setCompanyName(userManagerService.getManagerOrgById(validUser.getManagerOrgID()));
+						break;
+					case 4:
+						validUser.setUserBelongName("系统管理员");
+						break;
+					default:
+						break;
+					}
+					
+					Map<String, Object> validUserMap = new HashMap<String, Object>();
+					validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
+					validUserMap.put("userBelongName", validUser.getUserBelongName());
+					validUserMap.put("usertype", validUser.getUsertype());
+					validUserMap.put("account", validUser.getAccount());
+					validUserMap.put("RealName", validUser.getRealName());
+					validUserMap.put("OrgID", validUser.getOrgID());
+					validUserMap.put("CompanyName", validUser.getCompanyName());
+					System.out.println(JSONObject.fromBean(validUserMap).toString());
+					List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);
+					List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+					
+					for (Ztree ztree : ztrees) {
+						Map<String, Object> ztreeMap = new HashMap<String, Object>();
+						ztreeMap.put("ModuleID", ztree.getModuleID());
+						ztreeMap.put("ModuleName", ztree.getModuleName());
+						ztreeMap.put("URL", ztree.getuRL());
+						ztreeMap.put("OrderNum", ztree.getOrderNum());
+						ztreeMap.put("ParentID", ztree.getParentID());
+						ztreeMap.put("levelnum", ztree.getLevelnum());
+						ztreeMap.put("pic", ztree.getPic());
+						List<Map<String, String>> childModuleMapList = new ArrayList<Map<String, String>>();
+						
+						for (ChildModule childModule : ztree.getDKZTree()) {
+							Map<String, String> childModuleMap = new HashMap<String, String>();
+							childModuleMap.put("ModuleID", childModule.getModuleID());
+							childModuleMap.put("ModuleName", childModule.getModuleName());
+							childModuleMap.put("URL", childModule.getuRL());
+							childModuleMap.put("OrderNum", childModule.getOrderNum());
+							childModuleMap.put("ParentID", childModule.getModuleID());
+							childModuleMap.put("levelnum", childModule.getLevelnum());
+							childModuleMap.put("pic", childModule.getPic());
+							childModuleMapList.add(childModuleMap);
+						}
+						ztreeMap.put("DKZTree", childModuleMapList);
+						
+						list.add(ztreeMap);
+					}
+					dataBag.put("userInfo", validUserMap);
+					dataBag.put("ztree", list);
+					
+				}
+				statusCode = ConstValues.OK;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			
+		}
+		
+		return ResponseJson.responseFindJson(dataBag, statusCode);
+	}
+*/
 }
