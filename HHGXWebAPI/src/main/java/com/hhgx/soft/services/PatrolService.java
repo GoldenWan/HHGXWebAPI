@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.hhgx.soft.entitys.FireSafetyCheck;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
@@ -149,6 +150,10 @@ public class PatrolService {
 	public List<PatrolProject> getPatrolProject(String orgid) {
 		return patrolMapper.getPatrolProject(orgid);
 				}
+
+	public void addorgSys(OnlineFiresystem onlineFiresystem) {
+		 patrolMapper.addorgSys(onlineFiresystem);		
+	}
 
 
 }

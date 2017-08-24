@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.FireSafetyCheck;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
@@ -269,6 +270,49 @@ public class PatrolController {
 		}
 		return ResponseJson.responseFindJson(jsonList.toString().replace("\"",""), statusCode);
 	}
+	/**
+	 * 
+	 * 19.添加防火单位的系统
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/AddorgSys", method = {
+			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String addorgSys(@RequestBody final Map<String, Object> reqBody) throws JsonProcessingException {
+		@SuppressWarnings("unchecked")
+		Map<String, String> map =  (Map<String, String>) reqBody.get("infoBag");
+
+		String siteid = map.get("siteid");
+		String tiSysType = map.get("tiSysType");
+		String states = map.get("states");
+		String ynOnline = map.get("ynOnline");
+		String remarks = map.get("remarks");
+
+		int statusCode = -1;
+		String dataBag =null;
+		try{
+			OnlineFiresystem onlineFiresystem = new OnlineFiresystem();
+			onlineFiresystem.setStates(states);
+			onlineFiresystem.setYnOnline(ynOnline);
+			onlineFiresystem.setRemarks(remarks);
+			onlineFiresystem.setSiteid(siteid);
+			onlineFiresystem.setTiSysType(tiSysType);
+			patrolService.addorgSys(onlineFiresystem);
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+			
+		
+	}
+	
+	
+	
+	
 	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】

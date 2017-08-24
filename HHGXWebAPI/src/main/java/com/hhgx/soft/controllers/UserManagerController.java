@@ -157,10 +157,12 @@ public class UserManagerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/RegistMessage", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String registMessage(@RequestBody String reqBody, HttpServletRequest request) {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserPoneNo");
+			RequestMethod.POST } ,consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+	public String registMessage(@RequestBody final Map<String, Object> reqBody, HttpServletRequest request) {
+		
+		@SuppressWarnings("unchecked")
+		Map<String, String> map =  (Map<String, String>) reqBody.get("infoBag");
+	System.out.println(map.get("userPoneNo"));
 		// 设置短信内容参数
 		String userPoneNo = map.get("userPoneNo");
 		String smsFreeSignName = "恒华光迅H";
@@ -169,7 +171,7 @@ public class UserManagerController {
 		String smsParamJson = "{\"number\":\"" + number + "\"}";
 		int ret = -1;
 		String dataTag = null;
-		// 发短信
+		// 发短信`
 		try {
 			SendSmsResponse response = RegistMessage.sendSms(smsFreeSignName, smsTemplateCode, smsParamJson,
 					userPoneNo);
@@ -186,12 +188,12 @@ public class UserManagerController {
 
 		Map<String, String> result = new HashMap<String, String>();
 		if (ret == 1) {
-			dataTag = "发送成功";
+			dataTag = "短信发送成功";
 			// 把图片内容存入Session中
 			request.getSession().setAttribute("number", String.valueOf(number));
 
 		} else
-			dataTag = "发送失败";
+			dataTag = "短信发送失败";
 		result.put("DataTag", dataTag);
 		result.put("ret", String.valueOf(ret));
 		return JSONObject.fromBean(result).toString();
@@ -220,7 +222,7 @@ public class UserManagerController {
 			dataBag = "对不起，账号或密码不能为空";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
-		} else if (StringUtils.isEmpty(code)) {
+	/*	} else if (StringUtils.isEmpty(code)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "没有验证码，请先获取验证码";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -228,7 +230,7 @@ public class UserManagerController {
 		} else if (!code.equalsIgnoreCase(sessionCode)) {
 			statusCode = ConstValues.NOAUTHORIZED;
 			dataBag = "验证码错误";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+			return ResponseJson.responseAddJson(dataBag, statusCode);*/
 		}
 
 		else if (!userManagerService.findAccount(username)) {
@@ -239,13 +241,13 @@ public class UserManagerController {
 			User user = userManagerService.loginBy(username, Md5Util.getMD5(password));
 			if (user != null) {
 				request.setAttribute("UserID", user.getUserID());
-				statusCode = ConstValues.OK;
 				String userTypeName = userManagerService.getUserTypeName(user.getUserTypeID());
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("message", "登陆成功  欢迎回来[" + user.getAccount() + "]," + userTypeName);
 				map.put("tokenID", user.getUserID());
-				String content = JSONObject.fromBean(map).toString().replace("\"", "");
-				return ResponseJson.responseFindJson(content, statusCode);
+				//String content = JSONObject.fromBean(map).toString().replace("\"", "");
+				statusCode = ConstValues.OK;
+				return ResponseJson.responseFindJson(map, statusCode);
 			} else {
 				statusCode = ConstValues.NOAUTHORIZED;
 				dataBag = "密码错误 找回密码";
@@ -266,7 +268,9 @@ public class UserManagerController {
 		BufferedImage img = new BufferedImage(68, 22, BufferedImage.TYPE_INT_RGB);
 		// 得到该图片的对象
 		Graphics g = img.getGraphics();
-		Color c = new Color(200, 150, 255);// 产生颜色
+		// Color.Blue, Color.DarkRed, 1.2f
+		
+		Color c = new Color(255,251,255);// 产生颜色
 		g.setColor(c);// 对图像设置颜色
 		g.fillRect(0, 0, 68, 22);// 填充图片
 		// 向图片输出数字和字母
@@ -279,7 +283,7 @@ public class UserManagerController {
 			index = r.nextInt(len);// 从字符流中输出下一个字符----产生一个字符
 			g.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
 			// 输出字体和大小
-			g.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 22));
+			g.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));
 			// 写什么数字，在在图片的什么位子画
 			g.drawString("" + ch[index], (i * 15) + 3, 18);// 迭代器，位置x,位置y
 			sb.append(ch[index]);
@@ -320,22 +324,42 @@ public class UserManagerController {
 	 * UserBelongName=”管理机构”,CompanyName..... case4:UserBelongName=”系统管理员”
 	 * 
 	 * 
-	 * @return  
-	 * @throws JsonProcessingException:TODO
+
+    [Description("SLS:根据用户账号获取模块列表")]
+        [HttpPost]
+        public string RetrieveZtreeNodes()
+        {
+            //这里应该根据token统一检查用户令牌是否过期
+            var validUser = LinqDBContext.Users
+                          .Where(o => o.UserID.Equals(tokenid))
+                          .Select(o => o).SingleOrDefault();
+
+            // 3.成功登录 3.1获取ZTree 3.2
+            //T-SQL:[获取ZTree侧边栏] 
+            
+
+
+
 	 *              
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public String retrieveZtreeNodes(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "username");
-		String username = map.get("username");
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces  = "application/json;charset=UTF-8")
+	public String retrieveZtreeNodes(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
+		//Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
+		String tokenUUID = (String) maprq.get("tokenUUID");
+		
+	//	String tokenUUID = map.get("tokenUUID");
+		//tokenUUID==userId
 		Map<String, Object> dataBag = new HashMap<String, Object>();
-		int statusCode = 0;
-try {
-	
-		if (!username.equals(null)) {
-			UserInfo validUser = userManagerService.getUserInfoByName(username);
+		int statusCode = -1;
+		try {
+		if (!tokenUUID.equals(null)) {
+			
+			
+			UserInfo validUser = userManagerService.getUserInfoByName(tokenUUID);
+			if(!StringUtils.isEmpty(validUser)){
+				
+			System.out.println(validUser.toString());
 			String userBelongTo = validUser.getUserBelongTo();
 
 			switch (Integer.parseInt(userBelongTo)) {
@@ -368,7 +392,7 @@ try {
 			validUserMap.put("OrgID", validUser.getOrgID());
 			validUserMap.put("CompanyName", validUser.getCompanyName());
 			System.out.println(JSONObject.fromBean(validUserMap).toString());
-			List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(username);
+			List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 			for (Ztree ztree : ztrees) {
@@ -399,8 +423,9 @@ try {
 			}
 			dataBag.put("userInfo", validUserMap);
 			dataBag.put("ztree", list);
+			
+			}
 			statusCode = ConstValues.OK;
-			list=null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

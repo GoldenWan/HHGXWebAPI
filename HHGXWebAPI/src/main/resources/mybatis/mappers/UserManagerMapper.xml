@@ -50,12 +50,11 @@
 
 	<select id="getUserTypeName" resultType="string">
 		SELECT
-		ut.UserTypeName
+			UserTypeName
 		FROM
-		users u
-		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+			usertype
 		WHERE
-		u.UserTypeID = #{userTypeID};
+			UserTypeID =#{userTypeID};
 	</select>
 	<select id="findMaxBack6" resultType="string">
 		SELECT
@@ -79,7 +78,7 @@
 		users u
 	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
 	WHERE
-		account = #{username}
+		u.UserID = #{username}
 	</select>
 
 

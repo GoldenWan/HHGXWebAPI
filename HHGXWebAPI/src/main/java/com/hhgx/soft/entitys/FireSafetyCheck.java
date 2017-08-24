@@ -16,7 +16,7 @@ public class FireSafetyCheck {
 
 	private String  orgid;//
 	
-	
+	 
 
 	public String getFireSafetyCheckID() {
 		return fireSafetyCheckID;

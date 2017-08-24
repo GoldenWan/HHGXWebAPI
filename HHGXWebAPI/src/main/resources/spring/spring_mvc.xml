@@ -16,6 +16,12 @@
 	<context:component-scan base-package="com.hhgx.soft" />
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/fonts/**" location="/fonts/" />
+	<mvc:resources mapping="/html/**" location="/html/" />
+	<mvc:resources mapping="/image/**" location="/image/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/plug/**" location="/plug/" />
 	<mvc:default-servlet-handler />
     <mvc:interceptors>  
             <!-- 多个拦截器，顺序执行 -->  
@@ -38,7 +44,10 @@
 					class="org.springframework.http.converter.StringHttpMessageConverter">
 					<property name="supportedMediaTypes">
 						<list>
+                			<value>application/json;charset=UTF-8</value>
 							<value>text/plain;charset=UTF-8</value>
+							<value>text/json;charset=UTF-8</value>
+               				<value>text/html;charset=UTF-8</value>
 						</list>
 					</property>
 				</bean>

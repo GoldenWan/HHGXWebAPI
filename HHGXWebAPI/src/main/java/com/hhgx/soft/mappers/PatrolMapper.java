@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.FireSafetyCheck;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
@@ -74,5 +75,7 @@ public interface PatrolMapper {
 
 	List<PatrolProject> getPatrolProject(@Param("orgid")String orgid);
 	List<UserCheckProjectContent> selectUserCheckProjectContentById(@Param("tiSysType")String tiSysType);
+
+	void addorgSys(OnlineFiresystem onlineFiresystem);
 
 }

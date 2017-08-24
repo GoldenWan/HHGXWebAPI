@@ -9,6 +9,25 @@ import net.sf.json.JSONObject;
 public class RequestJson {
 
 	
+	public static 	Map<String, String> reqJsonToMap(Map<String, Object> reqBody,String... args) {
+		//有问题
+		@SuppressWarnings("unchecked")
+		Map<String, String> map =  (Map<String, String>) reqBody.get("infoBag");
+		
+		for (int i = 0; i < args.length; i++) {
+			Object o = JSONObject.fromObject(reqBody.get("infoBag")).getString(args[i]);
+			if(o instanceof JSONNull)
+				map.put(toLowerCaseFirstOne(args[i]),"");
+			else {
+				map.put(toLowerCaseFirstOne(args[i]), JSONObject.fromObject(reqBody.get("infoBag")).getString(args[i]));
+			}
+			
+		}
+		return map;
+		
+		
+	}
+	
 	public static 	Map<String, String> reqJson(String reqBody,String... args) {
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		Map<String, String> map = new HashMap<String, String>();

@@ -360,5 +360,21 @@
 		tiSysType = #{tiSysType}
 
 	</select>
-
+	<insert id="addorgSys">
+	INSERT INTO onlinefiresystem (
+		siteid,
+		tiSysType,
+		states,
+		YnOnline,
+		Remarks
+	)
+	VALUES
+		(
+			#{siteid},
+			#{tiSysType},
+			#{states},
+			#{ynOnline},
+			#{remarks}
+		)	
+	</insert>
 </mapper>

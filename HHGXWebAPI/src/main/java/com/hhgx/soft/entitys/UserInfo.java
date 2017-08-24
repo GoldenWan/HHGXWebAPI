@@ -68,5 +68,11 @@ public class UserInfo {
 	public void setManagerOrgID(String managerOrgID) {
 		this.managerOrgID = managerOrgID;
 	}
+	@Override
+	public String toString() {
+		return "UserInfo [userBelongTo=" + userBelongTo + ", userBelongName=" + userBelongName + ", usertype="
+				+ usertype + ", account=" + account + ", realName=" + realName + ", orgID=" + orgID + ", companyName="
+				+ companyName + ", maintenanceId=" + maintenanceId + ", managerOrgID=" + managerOrgID + "]";
+	}
 
 }

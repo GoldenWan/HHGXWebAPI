@@ -3,7 +3,7 @@ package com.hhgx.soft.utils;
 public interface ConstValues {
 	/*系统设定*/
 	public static final String RESPDATA ="DataBag";
-	public static final String RESPCODE ="StatusMessage";
+	public static final String RESPCODE ="StateMessage";
 	public static final String TOKEN ="tokenUUID";
 	public static final String REQDATA ="infoBag";
 	
