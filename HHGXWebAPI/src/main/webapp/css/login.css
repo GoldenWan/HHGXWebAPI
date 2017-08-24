@@ -1,0 +1,373 @@
+html{
+    height: 100%;
+    min-height: 100%;
+}
+body{
+    /*height: 100%;*/
+    /*background-color: #dcf3ff;*/
+    /*min-height: 100%;*/
+    overflow-y: hidden;
+}
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/*陈星光*/
+.login_content{
+    float: left;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 120px;
+    background-image: url("../image/origin/backgroundImg.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+.login_content>div:nth-child(1){
+    display: inline-block;
+    width: 0px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.content_main{
+    display: inline-block;
+    position: relative;
+    width: 760px;
+    height: 400px;
+    vertical-align: middle;
+    margin-top: 60px;
+}
+.content_main>.main_head{
+    position: absolute;
+    top: -80px;
+    left: 100px;
+    width: 560px;
+}
+
+.login_page_1{
+    position: absolute;
+    width: 760px;
+    height: 320px;
+    left: 0px;
+    top: 40px;
+    background-color: #FFFFFF;
+    opacity: .2;
+    border-radius: 4px;
+}
+.login_page_2{
+    position: absolute;
+    width: 720px;
+    height: 360px;
+    left: 20px;
+    top: 20px;
+    background-color: #FFFFFF;
+    opacity: .2;
+    border-radius: 4px;
+}
+.login_page_3{
+    position: absolute;
+    width: 680px;
+    height: 400px;
+    left: 40px;
+    top: 0px;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    background-image: url("../image/origin/login_img.png");
+    background-position: 100% 100%;
+}
+
+.logRegDiv{
+    margin: auto;
+    margin-top: 28px;
+    width: 280px;
+    height: 56px;
+    border-bottom: 1px solid rgba(0,0,0,.2);
+}
+#loginDivBtn{
+    float: left;
+    width: 48px;
+    height: 58px;
+    font-size: 22px;
+    color: #A0A0A0;
+    cursor: pointer;
+}
+#reginDivBtn{
+    float: right;
+    width: 48px;
+    height: 58px;
+    font-size: 22px;
+    color: #A0A0A0;
+    cursor: pointer;
+}
+.login_active{
+    color: rgba(0,0,0,1) !important;
+    border-bottom: 5px solid #4A90E2;
+}
+.logRegDiv>div:last-child{
+    clear: both;
+}
+
+.login_info{
+    margin: auto;
+    margin-top: 22px;
+    width: 560px;
+    height: 290px;
+    position: relative;
+    text-align: center;
+}
+
+.login_info input{
+    width: 260px;
+    height: 40px;
+    padding: 6px 12px;
+    border: none;
+    border-bottom: 1px solid rgba(200,199,204,0.5);
+    font-size: 16px;
+    outline: none;
+}
+
+.login_page{
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    left: 0px;
+    top: 0px;
+}
+.login_page>div{
+    display: block;
+    margin: auto;
+    margin-bottom: 20px;
+    width: 260px;
+    height: 40px;
+    position: relative;
+}
+
+#login_telErro,#login_mimaErro,#login_yzmErro{
+    color: red;
+    font-size: 12px;
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+#u_code{
+    float: left;
+    width: 170px;
+}
+#yzm{
+    float: right;
+    width: 80px;
+    height: 40px;
+    cursor:pointer;
+}
+.login_page>.login_btn{
+    margin-bottom: 0px;
+    height: inherit;
+}
+#login_okbtn{
+    margin-top: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    background-color: #4990E2;
+    color: #FFFFFF;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#login_miss{
+    margin-top: 11px;
+    float: right;
+    font-size: 14px;
+    color: #A0A0A0;
+    cursor: pointer;
+}
+
+.regin_page{
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    visibility: hidden;
+}
+.regin_page>div{
+    display: inline-block;
+    position: relative;
+    margin-bottom: 20px;
+    width: 260px;
+    height: 40px;
+}
+.regin_page>div:nth-of-type(odd){
+    margin-right: 35px;
+}
+
+#u_type{
+    width: 260px;
+    height: 40px;
+    padding: 6px 12px;
+    border: none;
+    border-bottom: 1px solid rgba(200,199,204,0.5);
+    font-size: 16px;
+    outline: none;
+}
+#u_type::-ms-expand{
+    background:none;
+    border: none;
+}
+
+.area>select{
+    width: 80px;
+    height: 40px;
+    /*padding: 6px 12px;*/
+    border: none;
+    border-bottom: 1px solid rgba(200,199,204,0.5);
+    font-size: 16px;
+    outline: none;
+    margin-right: 3px;
+}
+.area>select::-ms-expand{
+    background:none;
+    border: none;
+}
+#getTelCodeBtn{
+    position: absolute;
+    right: 0px;
+    top: 4px;
+    width: 64px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+    background-color: #4A90E2;
+    color: #FFFFFF;
+    border: none;
+}
+
+#showPwdIcon{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 16px;
+    color: #A0A0A0;
+    cursor: pointer;
+}
+
+.regin_page>.regin_btn{
+    margin-bottom: 0px;
+    height: inherit;
+    position: relative;
+}
+#regin_okbtn{
+    margin-top: 20px;
+    margin-bottom: 8px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    background-color: #4990E2;
+    color: #FFFFFF;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#checks{
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin: 0px;
+}
+#userReaded{
+    color: #A0A0A0;
+    font-weight: normal;
+    vertical-align: middle;
+    font-size: 14px;
+}
+#user_protocol{
+    color: rgba(73,144,226,0.8);
+    cursor: pointer;
+}
+
+#regin_telErro,#regin_pwdErro,#regin_rePwdErro,#regin_yzmErro{
+    color: red;
+    font-size: 12px;
+    /*display: none;*/
+}
+#regin_pwdErro{
+    display: block;
+    width: 260px;
+    text-align: center;
+    color: red;
+    font-size: 14px;
+    position: absolute;
+    top: -10px;
+    left: 0px;
+}
+
+#mimaErro{
+    color: red;
+    font-size: 12px;
+    /*display: none;*/
+}
+
+.login_footer{
+    float: left;
+    position: relative;
+    z-index: 2;
+    margin-top: -120px;
+    width: 100%;
+    height: 120px;
+    background-color: #2E3234;
+    text-align: center;
+}
+.login_footer>div{
+    display: inline-block;
+    height: 120px;
+    text-align: left;
+    color: #FFFFFF;
+    vertical-align: top;
+}
+.footer_center{
+    margin: 0 85px;
+}
+.footer_center>div:nth-child(1){
+    margin-top: 26px;
+}
+.footer_center>div:nth-child(2){
+    margin-top: 16px;
+    font-size: 16px;
+}
+.footer_center a{
+    margin-right: 12px;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+    /*cursor: pointer;*/
+}
+
+.footer_left>div{
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 20px;
+}
+.footer_left>div>img{
+    height: 70px;
+    margin-right: 12px;
+}
+.footer_left>div>div{
+    font-size: 16px;
+}
+
+.footer_right>div{
+    text-align: center;
+}
+.footer_right>div:nth-child(1){
+    margin-top: 14px;
+    margin-bottom: 11px;
+}
+.footer_right>div>img{
+    width: 64px;
+    height: 64px;
+}
+/*陈星光*/

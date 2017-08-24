@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>获取表单测试</title>
+</head>
+
+<script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+
+<body>
+
+<div>
+    <form id="myForm">
+        <div>
+            输入框：<input type="text" name="text"/>
+        </div>
+        <div>
+            文本框：<textarea name="textarea"></textarea>
+        </div>
+        <div>
+            下拉框：
+            <select name="select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+        <div>
+            输入框：<input type="checkbox" value="1" name="check"/>1<input type="checkbox" value="2" name="check"/>2
+        </div>
+        <div>
+            <input type="button" id="btn" value="获取数据"/>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<script>
+    $("#btn").click(function(){
+        var data = getForm("#myForm");
+        console.log(data)
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+#chooseManagerLabel{
+    text-align: right;
+    margin-top: 5px;
+}
+.companyRegister>label{
+    text-align: right;
+}
+.companyRegister>div{
+    padding-left: 0px;
+}
+#chooseManagerLabel+div{
+    padding-left: 0px;
+    padding-right: 18px;
+}
+#checkProgramH4,#findProgramH4{
+    text-align: center;
+}
+#checkProgramTb th, #checkProgramTb td{
+    text-align: center;
+}
+#checkProgramTb,#findProgramTb{
+    margin-top: 10px;
+}
+#checkProgramAddBtn{
+    position: relative;
+    height: 40px;
+}
+#checkProgramAddBtn>button{
+    position: absolute;
+    top: 10px;
+    right: 18%;
+}
+#findProgramAddBtn{
+    position: relative;
+    height: 40px;
+}
+#findProgramAddBtn>button{
+    position: absolute;
+    top: 10px;
+    right: 18%;
+}
+#findProgramTb th, #findProgramTb td{
+    text-align: center;
+}
+#submitDiv{
+    margin-top: 15px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+#submitDiv>button{
+    width: 25%;
+}
+#checkProgramModalTb td,#findProgramModalTbBody td{
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+
+
+
+
+

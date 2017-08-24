@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+
+    <style type="text/css">
+
+
+    </style>
+</head>
+<body>
+
+
+
+<script type="text/javascript">
+    //借用构造函数继承
+    function aa(name){
+        this.name = name;
+        this.color=['red'];
+    }
+    aa.prototype.sayName=function(){
+        return this.name;
+    }
+    function bb(name,age){
+        aa.call(this,name);
+        this.age=age;
+    }
+    bb.prototype=new aa();
+    bb.prototype.constructor=aa;
+    bb.prototype.sayAge=function(){
+        return this.age;
+    }
+    var instance = new bb('qiu',23);
+    instance.color.push('blue');
+    console.log(instance.color);//["red", "blue"]
+    console.log(instance.sayAge());//23
+    console.log(instance.sayName());//qiu
+
+    //因为用的是构造函数里继承，所以构造函数里面的color作为属性，就算一个实例改变了，那么下一个实例不会改变
+    var instance2 = new bb('qiu',24);
+    console.log(instance2.color);//["red"]
+    console.log(instance2.sayAge());//24
+    console.log(instance2.sayName());//qiu
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

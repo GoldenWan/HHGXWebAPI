@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单项检测详情</title>
+
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../../css/style.css"/>
+
+    <!--下面是时间的插件-->
+    <link href="../../plug/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../../css/Competent/EquipmentTestInfo.css"/>
+
+</head>
+<body>
+
+<div class="main_title">
+    <a>消防管理情况</a>
+    <span>></span>
+    <a href="./EquipmentTest.html" class="titlt_active">单项检测情况</a>
+    <span>></span>
+    <a href="./EquipmentTestInfo.html" class="titlt_active">单项检测详情</a>
+</div>
+
+<div class="container main_page">
+
+    <div class="row">
+
+        <div class="col-sm-12 page_title">
+            <div>
+                <span><span id="title_name"></span>-单项检测</span>
+            </div>
+        </div>
+
+        <!-- 列表页面组-->
+        <div class="col-sm-12 page_content" id="my_page">
+
+            <!-- 头部按钮组-->
+            <div class="col-sm-12">
+
+                <form role="form" class="content_condition">
+
+                    <label>日期</label>
+
+                    <div class='input-group date' id='startDate'>
+                        <input type='text' class="form-control inputDate" name="startDate" readonly/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <label>-</label>
+
+                    <div class='input-group date' id='stopDate'>
+                        <input type='text' class="form-control inputDate" name="stopDate" readonly/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <button type="button" class="myBtn" id="check_btn">查询</button>
+
+                </form>
+
+            </div>
+
+            <div class="col-sm-12" id="in_page"></div>
+
+            <div class="col-sm-12" id="in_paging"></div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- 模态框（详情） -->
+<div class="modal fade prohibitModal" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel"
+     aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog myDialog_900">
+        <div class="modal-content" id="checkPage">
+
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（查看图片） -->
+<div class="modal fade prohibitModal" id="imgModal" tabindex="-1" role="dialog" aria-hidden="true"
+     data-backdrop="false">
+    <div class="modal-dialog myDialog_600">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="imgPage"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--详情模板-->
+<script id="imgView" type="text/html">
+    {{#if len}}<i class="iconfont icon-left" id="img_left"></i>{{/if}}
+    <div class="imgContent">
+        {{#each data}}
+        <img src="{{#imgSrc picpath}}{{/imgSrc}}"/>
+        {{/each}}
+    </div>
+    {{#if len}}<i class="iconfont icon-right" id="img_right"></i>{{/if}}
+</script>
+
+<!--详情模板-->
+<script id="checkView" type="text/html">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="checkModalLabel">{{CompanyName}}-单项检测记录</h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" role="form">
+
+            <div class="row">
+
+                <div class="col-sm-12" style="margin-bottom: 10px">
+                    <label>检查时间：</label>
+                    <span>{{wbRepairTime}}</span>
+                </div>
+
+                <div class="col-sm-12" style="margin-bottom: 10px">
+                    <label>测试人：</label>
+                    <span>{{wbRepairPerson}}</span>
+                </div>
+
+                <div class="col-sm-12" style="margin-bottom: 10px">
+                    <label>消防安全管理人：</label>
+                    <span>{{OrgManagerMarl}}</span>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <div class="col-sm-12">
+                        <table class="table table-striped table-hover main_table">
+                            <thead>
+                            <tr>
+                                <th>检测系统</th>
+                                <th>检测项目</th>
+                                <th>检测内容</th>
+                                <th>检测结果</th>
+                                <th>检测现象</th>
+                                <th>是否当场处理</th>
+                                <th>现场处理情况</th>
+                                <th>已测数量</th>
+                                <th>图片</th>
+                            </tr>
+                            </thead>
+                            {{#myTd checkProjects}}{{/myTd}}
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="myBtn" data-dismiss="modal">关闭</button>
+    </div>
+</script>
+
+<script type="text/html" id="in_view">
+    <table class="table table-striped table-hover main_table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>维保单位</th>
+            <th>检测时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{num}}</td>
+            <td>{{UnitName}}</td>
+            <td>{{wbRepairTime}}</td>
+            <td>
+                <a class="operation btn_check" data-id="{{wbRepairListId}}" data-toggle="modal"
+                   data-target="#checkModal">查看详情</a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<!--公共js引用-->
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<!--下面是引用的时间插件-->
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.zh-CN.js"
+        charset="UTF-8"></script>
+
+<!--单页面js引用-->
+<script type="text/javascript" src="../../js/Competent/EquipmentTestInfo.js"></script>
+
+</body>
+</html>

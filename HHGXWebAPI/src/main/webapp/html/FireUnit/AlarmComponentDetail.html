@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+    <!--单独引用js(上传插件)-->
+    <script type="text/javascript" src="../../js/jquery.form.js"></script>
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../../css/style.css"/>
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../../css/FireUnit/AlarmComponentDetail.css"/>
+    <!--下面是时间的插件-->
+    <link href="../../plug/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="main_title">
+    <a>消防设施情况</a>
+    <span>></span>
+    <a>报警部件信息</a>
+    <span>></span>
+    <a href="./AlarmComponentDetail.html" class="titlt_active">报警部件信息详情</a>
+</div>
+    <div class="container newMain_page">
+        <div class="row" id="firstDiv">
+            <h3 style="color: #4A90E2;"><span id="sitename"></span><span id="floornum"></span>楼 报警部件</h3>
+            <div class="form-group col-sm-8 ComponentKind">
+                <label class="col-sm-2 control-label setLeft" for="dwbm">部件类型：</label>
+                <div class="col-sm-4">
+                    <select id="compoentTypeSelect" class="selectpicker show-tick form-control" data-live-search="true">
+                        <!--<option value="">消防部件</option>-->
+                    </select>
+                </div>
+                <button type="button" id="ComponentConfirm" class="myBtn">查询</button>
+            </div>
+
+            <div class="form-group col-sm-8 ComponentKind">
+                <label class="col-sm-2 control-label setLeft" for="dwbm">部件地址：</label>
+                <div class="col-sm-4">
+                    <input id="deviceaddress" class="form-control" type="text"/>
+                </div>
+            </div>
+
+            <!--<div class="col-sm-12" id="operateBtns">
+                <button type="button" id="ComponentConfirm" class="myBtn">查询</button>
+            </div>-->
+
+            <div class="col-sm-12" id="componentOperateBtns">
+                <button type="button" class="operateBtns myBtn">标注部件位置</button>
+                <button type="button" class="operateBtns myBtn">批量导入部件</button>
+                <button type="button" class="operateBtns myBtn">新增部件</button>
+                <button type="button" class="operateBtns myBtn">批量删除部件</button>
+            </div>
+        </div>
+
+        <!--首页的表格-->
+        <div class="row" style="min-height: 600px">
+            <table class="table table-bordered" id="ComponentTb">
+                <tr class="fontBlue">
+                    <th></th>
+                    <th>序号</th>
+                    <th>部件地址</th>
+                    <th>系统地址</th>
+                    <th>传输设备地址</th>
+                    <th>安装点</th>
+                    <th>部件类型</th>
+                    <th>操作</th>
+                </tr>
+                <tbody id="buildingTbody">
+
+                </tbody>
+            </table>
+        </div>
+
+        <!--放分页的地方-->
+        <div class="col-sm-12" id="in_paging"></div>
+    </div>
+
+    <!--模态框（各种按钮操作）-->
+    <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="changeDialog" style="width: 800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close AlarmComponentDetailClose" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" id="changeBody" style="height: 600px;overflow-y: auto">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn AlarmComponentDetailClose" id="modalConfirm">确定</button>
+                    <button type="button" class="myBtn AlarmComponentDetailClose" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--模态框（批量导入部件模态框）-->
+    <div class="modal fade" id="intoExcelModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="intoExcelDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" id="intoExcelBody">
+                    <form enctype="multipart/form-data" id="upComponentForm">
+                        <div class="file">
+                            <label for="file">选择文件：</label>
+                            <div class="userdefined-file">
+                                <input type="text" name="userdefinedFile" id="userdefinedFile" value="未选择任何文件">
+                                <button type="button">上传</button>
+                            </div>
+                            <input type="file" multiple name="excelFile" id="file">
+
+                        </div>
+                        <input type="hidden" id="cFlatpic" name="cFlatpic" value=""/>
+                    </form>
+                    <div style="margin-top: 20px">
+                        <a href="" id="downFile">下载模板</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn" id="intoExcelModalConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--标注部件位置的单独模态框-->
+    <div class="modal fade" id="caseComponentModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" style="width: 980px" id="caseComponentDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close AlarmComponentDetailClose" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" id="caseComponentBody" style="height: 750px;overflow-y: auto">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn AlarmComponentDetailClose" id="caseComponentConfirm">确定</button>
+                    <button type="button" class="myBtn AlarmComponentDetailClose" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--下面是删除某部件的模态框-->
+    <div class="modal fade" id="deleteComponentModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" id="deleteComponentDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" id="deleteComponentBody">
+                    <h3 style="text-align: center">是否要删除被选择的项</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn" id="deleteComponentConfirm">确定</button>
+                    <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--下面是标注部件比较难的那块-->
+    <div class="modal fade" id="pointComponentModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" style="width: 980px" id="pointComponentDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close AlarmComponentDetailClose" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" id="pointComponentBody" style="height: 750px;overflow-y: auto">
+                    <div class="row">
+                        <div class="form-group col-sm-6 addComponentDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">序号：</label>
+                            <div class="col-sm-6" id="DeviceNo"></div>
+                        </div>
+
+                        <div class="form-group col-sm-6 addBuildingDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">部件地址：</label>
+                            <div class="col-sm-6" id="deviceaddress2">
+
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 addBuildingDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">系统地址：</label>
+                            <div class="col-sm-6" id="sysaddress">
+
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 addBuildingDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">网关地址：</label>
+                            <div class="col-sm-6" id="gatewayaddress">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6 addBuildingDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">部件类型：</label>
+                            <div class="col-sm-6" id="iDeviceType">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12 addComponentDiv" id="gotoRow" style="text-align: right;">
+                           <!-- <div class="col-sm-4" id="preNextDIv">
+                                <button type="button" class="btn btn-default" id="preBtn">上一个</button>
+                                <button type="button" class="btn btn-default" id="nextBtn">下一个</button>
+                            </div>-->
+                            <div class="col-sm-4 col-sm-offset-8" id="gotoDIv">
+                                <input type="text" class="form-control" id="indexInput"/>
+                                <button type="button" class="btn btn-default" id="gotoBtn">跳转</button>
+                            </div>
+                        </div>
+
+                        <!--<div class="form-group col-sm-6 addBuildingDiv">
+                            <label class="col-sm-3 control-label" for="dwbm">部件类型：</label>
+                            <div class="col-sm-6">
+
+                            </div>
+                        </div>-->
+                        <div class="form-group col-sm-12 addBuildingDiv">
+                            <label class="col-sm-12 control-label" for="dwbm">标注提示：请点击平面图中该序号部件所在位置进行部件位置标注</label>
+                        </div>
+
+                    </div>
+
+                    <div id="svgDiv"><!--这里是标注部件的部分-->
+                        <svg id="svgContainer"  xmlns="http://www.w3.org/2000/svg" width="950" height="500">
+                            <image id="imgs" class="imgs" width="100%" height="100%" x="0" y="0" xlink:href="" src=""/>
+                            <!--<image id="imgs" width="100%" height="100%" x="0" y="0" xlink:href="../../image/origin/backgroundImg.jpg" src="../../image/origin/backgroundImg.jpg"/>-->
+                            <!--<image  width="60" height="60" x="8%" y="18%" xlink:href="../../image/origin/logoBig.png" src="../../image/origin/logoBig.png"/>-->
+                        </svg>
+                        <button id="big" type="button" class="btn btn-default">+</button>
+                        <button id="small" type="button" class="btn btn-default">-</button>
+                        <div id="toolTip">
+                            <p>部件序号：<span id="bjxh"></span></p>
+                            <p>部件地址：<span id="bjdz"></span></p>
+                            <p>部件类型：<span id="bjlx"></span></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="myBtn AlarmComponentDetailClose" data-dismiss="modal" id="pointComponentConfirm">确定</button>
+                    <button type="button" class="myBtn AlarmComponentDetailClose" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--下面是后台返回的数据渲染-->
+    <!--下面是后台返回的部件类型下拉框-->
+    <script id="compoentTypeSelectData" type="text/html">
+        <option iDeviceType="0" value="0">全部</option>
+        {{#each DataBag}}
+            <option value="{{iDeviceType}}">{{DeviceTypeName}}</option>
+        {{/each}}
+    </script>
+
+    <!--点击某一个表格里面的查看详情-->
+    <script id="detailComponentData" type="text/html">
+        <div class="row">
+            <h3 id="setTitle"><span id="buildingName"></span><span id="floorID"></span>楼 部件详情</h3>
+            {{#each DataBag}}
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">部件地址：</label>
+                <div class="col-sm-8">
+                    {{deviceaddress}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">部件类型：</label>
+                <div class="col-sm-8">
+                    {{DeviceTypeName}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">系统地址：</label>
+                <div class="col-sm-8">
+                    {{Sysaddress}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">传输设备地址：</label>
+                <div class="col-sm-8">
+                    {{Gatewayaddress}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">安装点：</label>
+                <div class="col-sm-8">
+                    {{location}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">生产日期：</label>
+                <div class="col-sm-8">
+                    {{ProductDate}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">过期日期：</label>
+                <div class="col-sm-8">
+                    {{expdate}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">安装日期：</label>
+                <div class="col-sm-8">
+                    {{AddTime}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">描述信息：</label>
+                <div class="col-sm-8">
+                    {{vdesc}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">备注：</label>
+                <div class="col-sm-8">
+                    {{memo}}
+                </div>
+            </div>
+
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">状态值：</label>
+                <div class="col-sm-8">
+                    {{StateValue}}
+                </div>
+            </div>
+            <div class="form-group col-sm-6 addComponentDiv">
+                <label class="col-sm-4 control-label" for="dwbm">状态时间：</label>
+                <div class="col-sm-8">
+                    {{StateTime}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        <div id="svgDiv2"><!--查看详情部分-->
+            <svg id="svgContainer2"  xmlns="http://www.w3.org/2000/svg" width="950" height="500">
+                <image id="imgs" class="imgs" width="100%" height="100%" x="0" y="0" xlink:href="" src=""/>
+                <!--<image  width="60" height="60" x="8%" y="18%" xlink:href="../../image/origin/logoBig.png" src="../../image/origin/logoBig.png"/>-->
+            </svg>
+            <button id="big2" type="button" class="btn btn-default">+</button>
+            <button id="small2" type="button" class="btn btn-default">-</button>
+        </div>
+
+    </script>
+
+    <!--下面是点击标注部件位置数据渲染-->
+    <script id="coreComponentData" type="text/html">
+
+    </script>
+
+    <!--批量导入部件-->
+    <script id="fileUpData" type="text/html">
+
+    </script>
+
+    <!--新增部件数据-->
+    <script id="addComponentData" type="text/html">
+        <form enctype="multipart/form-data" id="addComponentForm">
+            <div class="row">
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">部件类型：</label>
+                    <div class="col-sm-8">
+                        <select name='iDeviceType' id="alarmComponentSelect" class="addComponentInput selectpicker show-tick form-control" data-live-search="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">回路：</label>
+                    <div class="col-sm-8">
+                        <input name="Road" onkeyup="javascript:this.value=this.value.replace(/\D/g,'')" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">地址：</label>
+                    <div class="col-sm-8">
+                        <input name="Address" onkeyup="javascript:this.value=this.value.replace(/\D/g,'')" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">传输设备地址：</label>
+                    <div class="col-sm-8">
+                        <select name='gatewayaddress' id="gatewayaddressSelect" class="addComponentInput selectpicker show-tick form-control" data-live-search="true">
+                        </select>
+                        <!--<input name="gatewayaddress" type="text" class="addComponentInput form-control"/>-->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">系统地址：</label>
+                    <div class="col-sm-8">
+                        <select name='sysaddress' id="sysaddressSelect" class="addComponentInput selectpicker show-tick form-control" data-live-search="true">
+                        </select>
+                        <!--<input name="sysaddress" onkeyup="javascript:this.value=this.value.replace(/\D/g,'')" type="text" class="addComponentInput form-control"/>-->
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">描述信息：</label>
+                    <div class="col-sm-8">
+                        <input name="vdesc" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">安装点：</label>
+                    <div class="col-sm-8">
+                        <input name="location" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">生产厂家：</label>
+                    <div class="col-sm-8">
+                        <input name="Manufacture" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">型号：</label>
+                    <div class="col-sm-8">
+                        <input name="Model" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">生产日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='createDate'>
+                            <input name="ProductDate" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">过期日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='outDate'>
+                            <input name="expdate" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">安装日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='installDate'>
+                            <input name="AddTime" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">备注：</label>
+                    <div class="col-sm-8">
+                        <input name="memo" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">标注部件位置：</label>
+                    <div class="col-sm-8">
+                        <div class="col-sm-6">在平面图中的x坐标：<span id="fPositionX" name="fPositionX"></span></div>
+                        <div class="col-sm-6">在平面图中的y坐标：<span id="fPositionY" name="fPositionY"></span></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" id="addSvgRow"><!--新增部件部分-->
+                <div id="addSvgDiv">
+                    <svg id="addSvgContainer" xmlns="http://www.w3.org/2000/svg" width="780" height="500">
+                        <image id="imgs" class="imgs" width="100%" height="100%" x="0" y="0" xlink:href="" src=""/>
+                        <!--<image  width="60" height="60" x="8%" y="18%" xlink:href="../../image/origin/logoBig.png" src="../../image/origin/logoBig.png"/>-->
+                    </svg>
+                    <button id="addBig" type="button" class="btn btn-default">+</button>
+                    <button id="addSmall" type="button" class="btn btn-default">-</button>
+                </div>
+            </div>
+
+
+        </form>
+    </script>
+
+    <!--下面是首页的列表修改-->
+    <script id="changeComponentData" type="text/html">
+        <form enctype="multipart/form-data" id="changeComponentForm">
+            <div class="row">
+                {{#each DataBag}}
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">部件类型：</label>
+                    <div class="col-sm-8">
+                        <select name='iDeviceType' id="changeComponentSelect" class="addComponentInput selectpicker show-tick form-control" data-live-search="true">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">回路：</label>
+                    <div class="col-sm-8">
+                        <input id="changeRoad" name="Road" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">地址：</label>
+                    <div class="col-sm-8">
+                        <input id="changeAddress" name="Address" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">系统地址：</label>
+                    <div class="col-sm-8">
+                        <input value="{{Sysaddress}}" name="sysaddress" onkeyup="javascript:this.value=this.value.replace(/\D/g,'')" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">传输设备地址：</label>
+                    <div class="col-sm-8">
+                        <input value="{{Gatewayaddress}}" name="gatewayaddress" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">描述信息：</label>
+                    <div class="col-sm-8">
+                        <input value="{{vdesc}}" name="vdesc" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">安装点：</label>
+                    <div class="col-sm-8">
+                        <input value="{{location}}" name="location" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">生产厂家：</label>
+                    <div class="col-sm-8">
+                        <input value="{{Manufacture}}" name="Manufacture" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">型号：</label>
+                    <div class="col-sm-8">
+                        <input value="{{Model}}" name="Model" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">生产日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='changecreateDate'>
+                            <input value="{{ProductDate}}" name="ProductDate" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">过期日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='changeoutDate'>
+                            <input value="{{expdate}}" name="expdate" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">安装日期：</label>
+                    <div class="col-sm-8">
+                        <div class='input-group date addComponentInput' id='changeinstallDate'>
+                            <input value="{{AddTime}}" name="AddTime" type='text' class="form-control inputDate" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">备注：</label>
+                    <div class="col-sm-8">
+                        <input value="{{memo}}" name="memo" type="text" class="addComponentInput form-control"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 addComponentDiv">
+                    <label class="col-sm-3 control-label" for="dwbm">标注部件位置：</label>
+                    <div class="col-sm-8">
+                        <div class="col-sm-6">在平面图中的x坐标：<span id="changefPositionX" name="fPositionX">{{fPositionX}}</span></div>
+                        <div class="col-sm-6">在平面图中的y坐标：<span id="changefPositionY" name="fPositionY">{{fPositionY}}</span></div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            <div class="row" id="changeSvgRow"><!--修改部分的-->
+                <div id="changeSvgDiv">
+                    <svg id="changeSvgContainer" xmlns="http://www.w3.org/2000/svg" width="950" height="500">
+                        <image id="imgs" class="imgs" width="100%" height="100%" x="0" y="0" xlink:href="" src=""/>
+                        <!--<image  width="60" height="60" x="8%" y="18%" xlink:href="../../image/origin/logoBig.png" src="../../image/origin/logoBig.png"/>-->
+                    </svg>
+                    <button id="changeAddBig" type="button" class="btn btn-default">+</button>
+                    <button id="changeAddSmall" type="button" class="btn btn-default">-</button>
+                </div>
+            </div>
+
+        </form>
+    </script>
+
+
+    <!--批量删除部件-->
+    <script id="isDeleteData" type="text/html">
+        <h3>确认对选中文件删除操作吗</h3>
+    </script>
+
+    <!--首页表格的数据-->
+    <script id="buildingTbData" type="text/html">
+        {{#each DataBag.PageDatas}}
+        <tr>
+            <td><input deviceaddress="{{deviceaddress}}" Sysaddress="{{Sysaddress}}" Gatewayaddress="{{Gatewayaddress}}" class="indexChecks" type="checkbox"/></td>
+            <td>{{number}}</td>
+            <td>{{deviceaddress}}</td>
+            <td>{{Sysaddress}}</td>
+            <td>{{Gatewayaddress}}</td>
+            <td>{{location}}</td>
+            <td>{{DeviceTypeName}}</td>
+            <td>
+                <a DeviceNo="{{DeviceNo}}" deviceaddress="{{deviceaddress}}" Sysaddress="{{Sysaddress}}" Gatewayaddress="{{Gatewayaddress}}" class="operation" data-toggle="modal" data-target="">查看详情</a>
+                <a DeviceNo="{{DeviceNo}}" deviceaddress="{{deviceaddress}}" Sysaddress="{{Sysaddress}}" Gatewayaddress="{{Gatewayaddress}}"  class="operation" data-toggle="modal" data-target="">修改</a>
+                <a DeviceNo="{{DeviceNo}}" deviceaddress="{{deviceaddress}}" Sysaddress="{{Sysaddress}}" Gatewayaddress="{{Gatewayaddress}}"  class="operation" data-toggle="modal" data-target="">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+
+    </script>
+
+
+<!--公共js引用-->
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<!--下面是引用的时间插件-->
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<!--单页面js引用-->
+<script type="text/javascript" src="../../js/FireUnit/AlarmComponentDetail.js"></script>
+</body>
+</html>

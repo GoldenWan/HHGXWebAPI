@@ -1,0 +1,37 @@
+.prohibitModal label{
+    width: 130px;
+}
+
+#checkPage .form-group{
+    margin-left:0px;
+}
+#checkPage table th,#checkPage table td{
+    text-align: center !important;
+}
+
+#matic{
+    margin-left: 10px;
+    color: #5E9DE6;
+    border-color: #5E9DE6;
+}
+
+.prohibitModal .modal-body>h1{
+    text-align: center;
+    font-size: 16px;
+    margin: 20px 0;
+}
+
+#sign_trueModal .modal-dialog{
+    width: 400px;
+}
+#sign_falseModal .modal-dialog{
+    width: 400px;
+}
+
+#cancel_trueModal .modal-dialog{
+    width: 400px;
+}
+#cancel_falseModal .modal-dialog{
+    width: 400px;
+}
+

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../../css/style.css"/>
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../../css/FireUnit/AlarmRecordHandel.css"/>
+
+
+</head>
+<body>
+<div class="main_title">
+    <a>远程监控</a>
+    <span>></span>
+    <a>报警处理记录</a>
+    <span>></span>
+    <a href="./AlarmRecordHandel.html" class="titlt_active">报警处理记录详情</a>
+</div>
+<div id="navDiv">
+    <ul id="navBar">
+        <li>基本信息</li>
+        <li>总平图</li>
+        <li>地图</li>
+        <li>外观图</li>
+        <li>平面图</li>
+        <li>处理详情</li>
+    </ul>
+
+    <div id="handleBackBtn">
+        <!--<button class="btn btn-default" id="dealBtn">处理</button>-->
+        <button class="myBtn" id="goBack">返回</button>
+    </div>
+</div>
+
+<div class="container newMain_page">
+    <div class="row" id="targBaseInfoRow">
+
+    </div><!--row-end-->
+
+</div>
+
+<!-- 模态框（警情处理） -->
+<div class="modal fade" id="alarmHandleModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">警情处理</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-12 buildingForm">
+                        <label class="col-sm-4" id="comfirmAlarm">确认警情：</label>
+                        <div class="col-sm-8 checkboxInputDiv">
+                            <div><input type="radio" value="误报" class="alarm" name="alarm"/>误报</div>
+                            <div><input type="radio" value="真实火警" class="alarm" name="alarm"/>真实火警</div>
+                            <div><input type="radio" value="测试" class="alarm" name="alarm"/>测试</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 buildingForm">
+                        <label class="col-sm-4" id="writePapaer">填写故障处理单：</label>
+                        <div class="col-sm-8 checkboxInputDiv">
+                            <div><input type="radio" value="是" class="isWrite" name="isWrite"/>是</div>
+                            <div><input type="radio" value="否" class="isWrite" name="isWrite"/>否</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12 buildingForm">
+                        <label class="col-sm-4" id="statement">情况说明：</label>
+                        <div class="col-sm-8 checkboxInputDiv">
+                            <textarea id="statementInfo" rows="8" cols="35"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn" id="doAlarmHandleModal">确定</button>
+                <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--下面是从后台取得数据渲染的-->
+<!--处理详情模板-->
+<script id="handelDetailData" type="text/html">
+    {{#each DataBag}}
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">确认结果：</label>
+        <div class="col-sm-8">
+            <input readonly value="{{checkresult}}" type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">填写故障处理单：</label>
+        <div class="col-sm-8">
+            <input readonly value="{{YnRequest}}" type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">确认时间：</label>
+        <div class="col-sm-8">
+            <input readonly value="{{chulidate}}" type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">确认人：</label>
+        <div class="col-sm-8">
+            <input readonly value="{{chuliren}}" type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-12 baseInfo">
+        <label class="col-sm-2 control-label" for="dwbm">确认情况说明：</label>
+        <div class="col-sm-10">
+            <input readonly value="{{checkdesc}}" type="text" class="form-control inputText">
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<!--平面图-->
+<script id="graphData" type="text/html">
+    <div id="svgDiv">
+        <svg id="svgContainer"  xmlns="http://www.w3.org/2000/svg" width="1200" height="1200">
+            {{#each DataBag}}
+            <image id="imgs" width="100%" height="100%" x="0" y="0" xlink:href="{{#imgSrc this.imFlatPic}}{{/imgSrc}}" src="{{#imgSrc this.imFlatPic}}{{/imgSrc}}"/>
+            <!--<image  width="60" height="60" x="8%" y="18%" xlink:href="../../image/origin/logoBig.png" src="../../image/origin/logoBig.png"/>-->
+            {{/each}}
+        </svg>
+        <button id="big" type="button" class="btn btn-default">+</button>
+        <button id="small" type="button" class="btn btn-default">-</button>
+        <div id="toolTip">
+            <p>部件序号：<span id="bjxh"></span></p>
+            <p>部件地址：<span id="bjdz"></span></p>
+            <p>部件类型：<span id="bjlx"></span></p>
+        </div>
+    </div>
+</script>
+
+<!--外观图-->
+<script id="outViewImgData" type="text/html">
+    {{#each DataBag}}
+    {{#each Picpath}}
+    <div class="col-sm-4">
+        <div href="#" class="thumbnail buildingImg">
+            <img src="{{#imgSrc this}}{{/imgSrc}}" alt="...">
+            <div class="caption buildingImgName">
+                <h4></h4>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{/each}}
+</script>
+
+<!--总平图-->
+<script id="allBigImgData" type="text/html">
+    <div id="svgDivbFlatpic">
+        <svg id="allBigImg"  xmlns="http://www.w3.org/2000/svg" width="1200" height="1200">
+            {{#each DataBag}}
+            <image id="imgs" width="100%" height="100%" x="0" y="0" xlink:href="{{#imgSrc this.bFlatpic}}{{/imgSrc}}" src="{{#imgSrc this.bFlatpic}}{{/imgSrc}}"/>
+            {{/each}}
+        </svg>
+        <button id="bigbFlatpic" type="button" class="btn btn-default">+</button>
+        <button id="smallbFlatpic" type="button" class="btn btn-default">-</button>
+    </div>
+</script>
+
+<!--地图-->
+<script id="mapData" type="text/html">
+    <!--<div id="lngAndLat" class="row">
+        <div class="form-group col-sm-4">
+            <label class="col-sm-5" for="lng">经度：</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="lng">
+            </div>
+        </div>
+
+        <div class="form-group col-sm-4">
+            <label class="col-sm-5" for="lat">纬度：</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="lat">
+            </div>
+        </div>
+    </div>-->
+    <div id="mapContainer"></div>
+</script>
+
+<!--基本信息-->
+<script id="baseInfoData" type="text/html">
+    {{#each DataBag}}
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">单位名称：</label>
+        <div class="col-sm-8">
+            <input value="{{orgname}}" readonly type="text" class="form-control inputText" id="dwbm">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">建筑物：</label>
+        <div class="col-sm-8">
+            <input value="{{sitename}}" type="text" readonly class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">传输设备地址：</label>
+        <div class="col-sm-8">
+            <input value="{{Gatewayaddress}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">报警部件：</label>
+        <div class="col-sm-8">
+            <input value="{{DeviceTypeName}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">部件地址：</label>
+        <div class="col-sm-8">
+            <input value="{{deviceaddress}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">报警系统：</label>
+        <div class="col-sm-8">
+            <input value="{{vSysdesc}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">信息来源：</label>
+        <div class="col-sm-8">
+            <input value="{{vAlarmsource}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">最近报警时间：</label>
+        <div class="col-sm-8">
+            <input value="{{dRecentAlarmtime}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">报警次数：</label>
+        <div class="col-sm-8">
+            <input value="{{AlarmNum}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">消防控制电话：</label>
+        <div class="col-sm-8">
+            <input value="{{vfireroomtel}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">楼层：</label>
+        <div class="col-sm-8">
+            <input value="{{floornum}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">位置：</label>
+        <div class="col-sm-8">
+            <input value="{{location}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">首次报警时间：</label>
+        <div class="col-sm-8">
+            <input value="{{dFirstAlarmtime}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">最近接受时间：</label>
+        <div class="col-sm-8">
+            <input value="{{dReceivetime}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+
+    <div class="form-group col-sm-6 baseInfo">
+        <label class="col-sm-4 control-label" for="dwbm">系统地址：</label>
+        <div class="col-sm-8">
+            <input value="{{sysaddress}}" readonly type="text" class="form-control inputText">
+        </div>
+    </div>
+    {{/each}}
+</script>
+
+<!--公共js引用-->
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<!-- 单页面地图信息引入-->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.1&services=true"></script>
+<!--单页面js引用-->
+<script type="text/javascript" src="../../js/FireUnit/AlarmRecordHandel.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>灭火应急预案</title>
+
+    <!-- 主要框架引用-->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../fonts/icon/iconfont.css"/>
+    <script type="text/javascript" src="../../js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../js/handlebars.js"></script>
+
+    <!-- 公共样式引用-->
+    <link rel="stylesheet" href="../../css/style.css"/>
+
+    <!-- 单页面样式-->
+    <link rel="stylesheet" href="../../css/FireUnit/FireEmergency.css"/>
+
+    <!--下面是时间的插件-->
+    <link href="../../plug/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+
+<div class="main_title">
+    <a>消防工作记录</a>
+    <span>></span>
+    <a href="./FireEmergency.html" class="titlt_active">灭火应急预案</a>
+</div>
+
+<div class="container main_page">
+
+    <div class=" row">
+
+        <div class="col-sm-12 page_title">
+            <div>
+                <span>灭火应急预案</span>
+                <div>
+                    <button type="button" class="myBtn" data-toggle="modal" data-target="#addModal">添加</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 列表页面组-->
+        <div class="col-sm-12 page_content" id="my_page">
+
+            <!-- 头部按钮组-->
+            <div class="col-sm-12">
+
+                <form role="form" class="content_condition">
+                    <label>演练时间</label>
+
+                    <div class='input-group date' id='startDate'>
+                        <input type='text' class="form-control inputDate"  readonly/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <label>-</label>
+
+                    <div class='input-group date' id='stopDate'>
+                        <input type='text' class="form-control inputDate" readonly/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <button type="button" class="myBtn" id="check_btn">查询</button>
+
+                </form>
+
+            </div>
+
+            <div class="col-sm-12" id="in_page"></div>
+
+            <div class="col-sm-12" id="in_paging"></div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- 模态框（添加） -->
+<div class="modal fade prohibitModal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+     aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog myDialog_900">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addModalLabel">新增应急预案</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal" role="form" id="form_add">
+
+                    <input type="hidden" name="orgid" id="orgid_add"/>
+
+                    <div class="row">
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">演练时间：</label>
+
+                            <div class="col-sm-7">
+                                <div class='input-group date' id='fireDate_add'>
+                                    <input type='text' class="form-control inputDate" name="manoeuvretime" readonly/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">演练地点：</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="address">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">组织部门：</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="Department">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">演练负责人：</label>
+
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="manager">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">演练内容：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="content"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">演练方案：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="scheme"></textarea>
+
+                                <div style="margin-top: 10px">
+                                    <span class="up_name"></span>
+                                    <a class="up_btn">
+                                        选择文件
+                                        <input type="file" name="schemafile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">参加人员：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="attendperson"></textarea>
+
+                                <div style="margin-top: 10px">
+                                    <span class="up_name"></span>
+                                    <a class="up_btn">
+                                        选择文件
+                                        <input type="file" name="attendpersonfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">演练实施情况：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="implementation"></textarea>
+
+                                <div style="margin-top: 10px">
+                                    <span class="up_name"></span>
+                                    <a class="up_btn">
+                                        选择文件
+                                        <input type="file" name="implementationfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">演练小结：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="summary"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <label class="control-label">对预案的改进意见：</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="suggestion"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn" id="add_btn">提交</button>
+                <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（删除） -->
+<div class="modal fade prohibitModal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true"
+     data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h1>是否删除？</h1>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn" id="deleteModal_btn">确定</button>
+                <button type="button" class="myBtn" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（修改） -->
+<div class="modal fade prohibitModal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+     aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog myDialog_900">
+        <div class="modal-content" id="editPage">
+
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（详情） -->
+<div class="modal fade prohibitModal" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel"
+     aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog myDialog_900">
+        <div class="modal-content" id="checkPage">
+
+        </div>
+    </div>
+</div>
+
+
+<!--修改模板-->
+<script id="editView" type="text/html">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="editModalLabel">修改安全培训记录</h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" role="form" id="form_edit">
+
+            <input type="hidden" name="manoeuvreID" value="{{manoeuvreID}}"/>
+            <input type="hidden" name="orgid" value="{{orgid}}"/>
+
+            <div class="row">
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练时间：</label>
+
+                    <div class="col-sm-7">
+                        <div class='input-group date' id='fireDate_edit'>
+                            <input type='text' class="form-control inputDate" name="manoeuvretime" value="{{manoeuvretime}}" readonly/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练地点：</label>
+
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="address" value="{{address}}">
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">组织部门：</label>
+
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="Department" value="{{Department}}">
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练负责人：</label>
+
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" name="manager" value="{{manager}}">
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练内容：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="content">{{content}}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练方案：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="scheme">{{scheme}}</textarea>
+
+                        <div style="margin-top: 10px">
+                            <span class="up_name">{{schemafile}}</span>
+                            <a class="up_btn">
+                                选择文件
+                                <input type="file" name="schemafile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">参加人员：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="attendperson">{{attendperson}}</textarea>
+
+                        <div style="margin-top: 10px">
+                            <span class="up_name">{{attendpersonfile}}</span>
+                            <a class="up_btn">
+                                选择文件
+                                <input type="file" name="attendpersonfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练实施情况：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="implementation">{{implementation}}</textarea>
+
+                        <div style="margin-top: 10px">
+                            <span class="up_name">{{implementationfile}}</span>
+                            <a class="up_btn">
+                                选择文件
+                                <input type="file" name="implementationfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练小结：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="summary">{{summary}}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">对预案的改进意见：</label>
+
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" name="suggestion">{{suggestion}}</textarea>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="myBtn" id="edit_btn">提交</button>
+        <button type="button" class="myBtn" data-dismiss="modal">关闭</button>
+    </div>
+</script>
+<!--详情模板-->
+<script id="checkView" type="text/html">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="checkModalLabel">安全培训记录详情</h4>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" role="form">
+
+            <div class="row">
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练时间：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{manoeuvretime}}</p>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练地点：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{address}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label class="control-label">组织部门：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{Department}}</p>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label">演练负责人：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{manager}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练内容内容：</label>
+
+                    <div class="col-sm-9">
+                        <p class="form-control-static">{{content}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练方案：</label>
+
+                    <div class="col-sm-9">
+                        <p class="form-control-static">{{scheme}}</p>
+                    </div>
+
+                    <label class="control-label" style="font-weight: inherit">附件：</label>
+
+                    <div class="col-sm-9">
+                        <div class="form-control-static"><a class="operation" href="{{api}}/Orginfo/DownFile?filepath={{schemafile}}">{{schemafileName}}</a></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">参与人员：</label>
+
+                    <div class="col-sm-9">
+                        <p class="form-control-static">{{attendperson}}</p>
+                    </div>
+
+                    <label class="control-label" style="font-weight: inherit">附件：</label>
+
+                    <div class="col-sm-9">
+                        <div class="form-control-static"><a class="operation" href="{{api}}/Orginfo/DownFile?filepath={{attendpersonfile}}">{{attendpersonfileName}}</a></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练实施情况：</label>
+
+                    <div class="col-sm-9">
+                        <p class="form-control-static">{{implementation}}</p>
+                    </div>
+
+                    <label class="control-label" style="font-weight: inherit">附件：</label>
+
+                    <div class="col-sm-9">
+                        <div class="form-control-static"><a class="operation" href="{{api}}/Orginfo/DownFile?filepath={{implementationfile}}">{{implementationfileName}}</a></div>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">演练小结：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{summary}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label">对预案的改进意见：</label>
+
+                    <div class="col-sm-7">
+                        <p class="form-control-static">{{suggestion}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="myBtn" data-dismiss="modal">关闭</button>
+    </div>
+</script>
+
+<script type="text/html" id="in_view">
+    <table class="table table-striped table-hover main_table">
+        <thead>
+        <tr>
+            <th>演练时间</th>
+            <th>演练地点</th>
+            <th>组织部门</th>
+            <th>演练负责人</th>
+            <th>演练内容</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{manoeuvretime}}</td>
+            <td>{{address}}</td>
+            <td>{{Department}}</td>
+            <td>{{manager}}</td>
+            <td>{{content}}</td>
+            <td>
+                <a class="operation btn_check" data-id="{{manoeuvreID}}" data-toggle="modal" data-target="#checkModal">详情</a>
+                <a class="operation btn_edit" data-id="{{manoeuvreID}}" data-toggle="modal" data-target="#editModal">修改</a>
+                <a class="operation btn_delete" data-id="{{manoeuvreID}}" data-toggle="modal" data-target="#deleteModal">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<!--公共js引用-->
+<script type="text/javascript" src="../../js/config.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+
+<!--下面是引用的时间插件-->
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="../../plug/datepicker/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+
+<!--form提交插件引用-->
+<script type="text/javascript" src="../../js/jquery.form.js"></script>
+
+<!--单页面js引用-->
+<script type="text/javascript" src="../../js/FireUnit/FireEmergency.js"></script>
+
+</body>
+</html>

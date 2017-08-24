@@ -1,0 +1,58 @@
+.transportEquipmentDiv>label{
+    margin-top: 5px;
+    text-align: right;
+}
+#addTransportEquipment{
+    float: right;
+    /*width: 7%;*/
+}
+#transportEquipmentTb th,#transportEquipmentTb td{
+    text-align: center;
+}
+#transportEquipmentTb{
+    clear: both;
+    margin-top: 10px;
+}
+#addTransportEquipmentTb td,#addTransportEquipmentTb th{
+    text-align: center;
+}
+.addInput{
+    width: 80%;
+}
+.detailTables td,.detailTables th{
+    text-align: center;
+}
+
+#changeTransportTb td,#changeTransportTb th{
+    text-align: center;
+}
+#firstDiv{
+    margin-top: 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

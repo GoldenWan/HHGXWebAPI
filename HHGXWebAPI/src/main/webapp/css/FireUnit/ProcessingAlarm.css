@@ -1,0 +1,109 @@
+.Pro_tab{
+    height: 64px;
+}
+.Pro_tab>div{
+    float: left;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#my_page>div{
+    display: none;
+}
+
+#fireAlarm_automatic>input{
+    vertical-align: middle;
+}
+#fireAlarm_automatic>span{
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 3px;
+}
+
+#fault_automatic>input{
+    vertical-align: middle;
+}
+#fault_automatic>span{
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 3px;
+}
+
+.handle_btn{
+    border: none;
+    background-color: transparent;
+    color: #5E9DE6;
+}
+
+#fireSelectBuildingDiv,#firealarmTypeDiv,#faultSelectBuildingDiv,#faultalarmTypeDiv{
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-top: 20px;
+    width: 260px;
+    padding-right: 0px;
+}
+#firealarmTypeDiv,#faultalarmTypeDiv{
+    margin-left: 20px;
+    padding-left: 0px;
+    margin-top: 20px;
+    width: 260px;
+    padding-right: 0px;
+}
+#fireSelectBuildingDiv select,#firealarmTypeDiv select,#faultSelectBuildingDiv select,#faultalarmTypeDiv select{/*,#firealarmTypeDiv select,#faultSelectBuildingDiv select,#faultalarmTypeDiv select,*/
+    width: 58%;
+    float: left;
+    margin-left: 33px;
+}
+#faultSelectBuildingDiv label,#faultalarmTypeDiv label,#fireSelectBuildingDiv label,#firealarmTypeDiv label{
+    float: left;
+}
+
+.floor{
+    cursor: pointer;
+}
+#imFlatPicImgDiv{
+    width: 100%;
+    height: 630px;
+    overflow: hidden;
+    position: relative;
+}
+#imFlatPicSvg{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+#imFlatPicImg{
+    width: 100%;
+    height: 100%;
+}
+#big{
+    position: absolute;
+    bottom: 10px;
+    right: 70px;
+    color: rgba(74,144,226,1);
+    border: 1px solid rgba(74,144,226,1);
+}
+#small{
+    position: absolute;
+    bottom: 10px;
+    right: 30px;
+    color: rgba(74,144,226,1);
+    border: 1px solid rgba(74,144,226,1);
+}
+
+.checkboxInputDiv div{
+    display: inline-block;
+    margin-right: 15px;
+}
+.checkboxInputDiv input{
+    margin-top: 3px;
+}
+
+#statement,#writePapaer,#comfirmAlarm{
+    text-align: right;
+}
