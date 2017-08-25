@@ -76,7 +76,7 @@
                         <button type="button" class="myBtn" id="fireAlarm_check">查询</button>
 
                         <div style="float: right;width: 280px;margin-right: 0px">
-                            <button type="button" class="myBtn alarmImgBtn" id="" style="margin-right: 20px">警情平面图</button>
+                            <button type="button" class="myBtn alarmImgBtn" id="" style="margin-right: 20px">火警平面图</button>
                             <label id="fireAlarm_automatic"><input class="inputCheckBox" type="checkbox" checked="true"><span>自动刷新</span></label>
                             <button type="button" class="myBtn matic" style="margin-left: 10px">刷新</button>
                         </div>
@@ -134,7 +134,7 @@
                         <button type="button" class="myBtn" id="fault_check">查询</button>
 
                         <div style="float: right;width: 280px;margin-right: 0px">
-                            <button type="button" class="myBtn alarmImgBtn" style="margin-right: 20px">警情平面图</button>
+                            <button type="button" class="myBtn alarmImgBtn" style="margin-right: 20px">故障平面图</button>
                             <label id="fault_automatic"><input class="inputCheckBox" type="checkbox" checked="true"><span>自动刷新</span></label>
                             <button type="button" class="myBtn matic" style="margin-left: 10px">刷新</button>
                         </div>
@@ -213,7 +213,7 @@
                         <label class="col-sm-4" id="comfirmAlarm">确认警情：</label>
                         <div class="col-sm-8 checkboxInputDiv">
                             <div class="alarmDiv"><input type="radio" value="误报" class="alarm" name="alarm"/>误报</div>
-                            <div class="alarmDiv"><input type="radio" value="真实火警" class="alarm" name="alarm"/>真实火警</div>
+                            <div class="alarmDiv"><input type="radio" value="真实火警" class="alarm" name="alarm"/><span>真实火警</span></div>
                             <div class="alarmDiv"><input type="radio" value="测试" class="alarm" name="alarm"/>测试</div>
                         </div>
                     </div>
@@ -249,7 +249,7 @@
 
 <!--火警模板-->
 <script type="text/html" id="fireAlarm_view">
-    <table class="table table-striped table-hover main_table">
+    <table id="fireTb" class="table table-striped table-hover main_table">
         <thead>
         <tr>
             <th>序号</th>
@@ -289,7 +289,7 @@
 </script>
 <!--故障模板-->
 <script type="text/html" id="fault_view">
-    <table class="table table-striped table-hover main_table">
+    <table id="faultTb" class="table table-striped table-hover main_table">
         <thead>
         <tr>
             <th>序号</th>

@@ -77,13 +77,25 @@
     //添加处理方法
     $("#add_btn").click(function () {
 
-        var myJson = getForm("#form_add");
-        myJson["orgid"] = sessionStorage.getItem("OrgID");
-        HH.post("/Patrol/AddFireSafetyCheck", myJson, function (data) {
-            $('#addModal').modal('hide')
-            document.getElementById("form_add").reset();
-            pageReload();
-        });
+        var addList = [
+            "#form_add input[name='checkposite']",
+            "#form_add textarea[name='Problem']",
+            "#form_add textarea[name='handing']",
+            "#form_add input[name='RecordMan']",
+            "#form_add input[name='SafetyMan']"
+        ];
+
+        var addState = inJudge(addList);
+
+        if(addState){
+            var myJson = getForm("#form_add");
+            myJson["orgid"] = sessionStorage.getItem("OrgID");
+            HH.post("/Patrol/AddFireSafetyCheck", myJson, function (data) {
+                $('#addModal').modal('hide')
+                document.getElementById("form_add").reset();
+                pageReload();
+            });
+        }
 
     });
 
@@ -107,13 +119,27 @@
             render("#editView", "#editPage", myJson);
 
             $("#edit_btn").click(function () {
-                var myJson = getForm("#form_edit");
-                myJson["orgid"] = sessionStorage.getItem("OrgID");
-                myJson["FireSafetyCheckID"] = operationId;
-                HH.post("/Patrol/EditFireSafetyCheck", myJson, function (data) {
-                    $('#editModal').modal('hide');
-                    pageReload();
-                });
+
+                var editList = [
+                    "#form_edit input[name='checkposite']",
+                    "#form_edit textarea[name='Problem']",
+                    "#form_edit textarea[name='handing']",
+                    "#form_edit input[name='RecordMan']",
+                    "#form_edit input[name='SafetyMan']"
+                ];
+
+                var editState = inJudge(editList);
+
+                if(editState){
+                    var myJson = getForm("#form_edit");
+                    myJson["orgid"] = sessionStorage.getItem("OrgID");
+                    myJson["FireSafetyCheckID"] = operationId;
+                    HH.post("/Patrol/EditFireSafetyCheck", myJson, function (data) {
+                        $('#editModal').modal('hide');
+                        pageReload();
+                    });
+                }
+
             });
         });
 

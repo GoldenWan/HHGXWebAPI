@@ -173,6 +173,42 @@ function deleteImg(containImg, i) {
                     $("#isDeleteImg").modal("hide");
                 }
             });
+            //PhoneAPI/DeleteAppearance
+            /*var myJson = {
+                tokenUUID: get_cookie("UserId"),
+                infoBag: {
+                    "iphotoID":iphotoID
+                }
+            };
+            console.log(myJson);
+            $.ajax({
+                type:"POST",
+                url:"http://192.168.11.77:8077/PhoneAPI/DeleteAppearance",
+                data:JSON.stringify(myJson),
+                dataType:"json",
+                success:function(data){
+                    if(data.StateMessage==1000){
+                        console.log("成功的");
+                        console.log(data);
+                        if (data.DataBag && data.StateMessage == "1000") {
+                            img.remove();
+                            $("#isDeleteImg").modal("hide");
+                        }
+                    }else if(data.StateMessage==-2){
+                        console.log("-2");
+                        console.log(data);
+                    }else{
+                        console.log("else");
+                        console.log(data);
+                    }
+                },
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    console.log("erro");
+                    console.log(XMLHttpRequest);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                }
+            });*/
         };
     })
 }
@@ -373,6 +409,7 @@ function checkMobile(s) {
 //param2：option的文字信息
 //node：渲染节点位置
 //value：初始化值
+//allFalse：是否不加全部
 function getList(api, info, param1, param2, node, value, method, allFalse) {
     var op = "<option value='all'>全部</option>";
     if(allFalse){
@@ -615,4 +652,32 @@ function fileUp(node, type) {
     var file = $(node).val().split("\\");
     file = file[file.length - 1];
     $(node).parent().prev().text(file);
+}
+
+//输入框判空验证
+//list：一个节点数组
+function inJudge(list){
+    var state = true;
+    $.each(list,function(i,v){
+        var value = $(v).val();
+        value = value.replace(/(^\s+)|(\s+$)/g, "");
+        value = value.replace(/\s/g, "");
+        if(value==""||value==" "||value==undefined||value==null){
+            $(v).next().css("visibility", "visible");
+            $(v).css("border-color", "red");
+            $(v).focus();
+            $(v).on("blur",function(){
+                var value = $(this).val();
+                value = value.replace(/(^\s+)|(\s+$)/g, "");
+                value = value.replace(/\s/g, "");
+                if(value!=""&&value!=" "&&value!=undefined&&value!=null){
+                    $(this).next().css("visibility", "hidden")
+                    $(this).css("border-color", "#ccc");
+                }
+            });
+            state = false;
+            return state;
+        }
+    });
+    return state;
 }

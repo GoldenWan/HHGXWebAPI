@@ -179,6 +179,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="PeopleName">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -200,6 +201,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="identification">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -209,6 +211,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="job">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -429,7 +432,7 @@
                         <div class="col-sm-12" style="text-align: center">
                             <a class="up_btn" id="people_portrait_add">
                                 选择文件
-                                <input type="file" name="PeoplePicPath">
+                                <input type="file" unselectable="on" name="PeoplePicPath">
                             </a>
                         </div>
                     </div>
@@ -471,6 +474,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="PeopleName" value="{{data.PeopleName}}">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -492,6 +496,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="identification" value="{{data.identification}}">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -501,6 +506,7 @@
 
                         <div class="col-sm-7">
                             <input type="text" class="form-control" name="job" value="{{data.job}}">
+                            <i class="Warning">*</i>
                         </div>
                     </div>
                     {{/if}}
@@ -721,7 +727,7 @@
                         <div class="col-sm-12" style="text-align: center">
                             <a class="up_btn" id="people_portrait_edit">
                                 选择文件
-                                <input type="file" name="PeoplePicPath">
+                                <input type="file" unselectable="on" name="PeoplePicPath">
                             </a>
                         </div>
                     </div>

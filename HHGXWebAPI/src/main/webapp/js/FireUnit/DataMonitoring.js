@@ -30,7 +30,7 @@
 
                 render("#in_view", "#in_page", myJson);
 
-                allNum = data.DataBag.PageCount;
+                allNum = data.DataBag.pageCount;
 
                 createPaging("#in_paging", nowNum, allNum);
 

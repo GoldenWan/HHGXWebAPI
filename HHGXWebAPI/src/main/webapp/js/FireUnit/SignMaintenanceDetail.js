@@ -15,6 +15,7 @@
             render("#signDetailTbodyData", "#signDetailTbody",myJson);
         });
     });
+    $("#findCity").click();
     //点击选择
     $("#signDetailTbody").on("click",".signDetailChoose",function(){
         $("#signDetailModal").modal({backdrop:"static"});
@@ -77,7 +78,8 @@
     //获取省市区数据对象
     var shenObj = area;
     //添加省节点
-    var node1="";
+    var node1="<option value=''>全部</option>";
+    console.log(shenObj);
     $.each(shenObj,function(i,v){
         node1=node1+"<option value="+i+">"+ v.AreaName+"</option>";
     });
@@ -87,11 +89,15 @@
     });
     //市改变事件
     function shiChange(){
+        //$("#city").html("");
         var shenVal = $("#province").val();
-        console.log(shenVal);
+        console.log(shenVal+"==");
+        if(shenVal==""){
+            //alert('sd');
+            return;
+        }
         var shiArr = shenObj[shenVal].child;
-
-        var node2=""
+        var node2="<option value=''>全部</option>";
         $.each(shiArr,function(i,v){
             node2=node2+"<option value="+i+">"+ v.AreaName+"</option>";
         });

@@ -5,8 +5,8 @@
     var indexSelectData="";
     //渲染首页下拉框数据
     HH.post("/Orginfo/GetSiteName",{"orgid":sessionStorage.getItem("OrgID")},function(data) {
-      //  console.log("后台返回的首页建筑物");
-      //  console.log(data);
+        console.log("后台返回的首页建筑物");
+        console.log(data);
         indexSelectData = data;
         if (data.DataBag && data.StateMessage=="1000") {
             //渲染首页下拉框数据
@@ -15,24 +15,24 @@
             var indexSelectBuilding = $("#indexSelectBuilding");
             var indexSelectBuildingVal = indexSelectBuilding.val();
             //渲染默认下拉框
-            findTbBuilding(indexSelectBuildingVal);
+            findTbBuilding(indexSelectBuildingVal,1);
             //选择渲染下拉框
             indexSelectBuilding.change(function(){
                 indexSelectBuildingVal = $(this).val();
-                findTbBuilding(indexSelectBuildingVal);
+                findTbBuilding(indexSelectBuildingVal,1);
             });
         }
     });
     //下面的方法是根据选中的下拉框数据查询建筑物列表
-    function findTbBuilding(siteid){
+    function findTbBuilding(siteid,nowPage){
         var myData = {
             "orgid":sessionStorage.getItem("OrgID"),
-            "siteid":siteid
-            //"PageIndex":1
+            "siteid":siteid,
+            "PageIndex":nowPage
         };
         HH.post("/Orginfo/GetflatpicList",myData,function(data) {
-       //     console.log("下面是返回的建筑物列表");
-        //    console.log(data);
+            console.log("下面是返回的建筑物列表");
+            console.log(data);
             render("#buildingTbData","#buildingTbody",data);
         });
     }
@@ -51,7 +51,7 @@
           //          console.log(data);
                     if (data.DataBag=="删除数据成功" && data.StateMessage=="1000") {
                         $('#buildingDeleteModal').modal("hide");
-                        findTbBuilding($("#indexSelectBuilding").val());
+                        findTbBuilding($("#indexSelectBuilding").val(),1);
                         //location.reload();
                     }
                     //render("#buildingTbData","#buildingTbody",data);
@@ -84,7 +84,7 @@
         }else if($(this).text()=="修改"){
             render("#changeBuildingData","#buildingChangeBody");
             $('#buildingChangeModal').modal({"backdrop":"static"});
-            $("#floorLevelChange");
+           // $("#floorLevelChange");
          //   console.log(indexSelectData);
             var str="";
             for(var i=0; i<indexSelectData.DataBag.length; i++){
@@ -99,13 +99,13 @@
 
             var cFlatPic = $(this).attr("cFlatPic");
             var siteid = $(this).attr("siteid");
+            console.log(cFlatPic+"="+siteid);
+            $("#cFlatPicChange").val(cFlatPic);
+            $("#siteidChange").val(siteid);
             //点击修改模态框的保存按钮
             $("#buildingChangeConfirm").get(0).onclick=function(){
                 //设置隐藏的提交给表单的值
             //    console.log(cFlatPic+"=="+siteid);
-                $("#cFlatPicChange").val(cFlatPic);
-                $("#siteidChange").val(siteid);
-
                 //上传文件jQuery表单提交
                 var options = {
                     //beforeSubmit: showRequest,  //提交前的回调函数
@@ -127,7 +127,7 @@
                         var indexSelectBuilding = $("#indexSelectBuilding");
                         var indexSelectBuildingVal = indexSelectBuilding.val();
                         //渲染默认下拉框
-                        findTbBuilding(indexSelectBuildingVal);
+                        findTbBuilding(indexSelectBuildingVal,1);
                     }
                 }
                 $("#buildingChangeForm").ajaxSubmit(options);
@@ -198,7 +198,7 @@
                     $('#buildingModal').modal("hide");
                     var addModalSelectVal = $("#addModalSelect").val();
                     $("#indexSelectBuilding").val(addModalSelectVal);
-                    findTbBuilding(addModalSelectVal);
+                    findTbBuilding(addModalSelectVal,1);
 
                     //location.reload();
                     //alert(myDate.toLocaleTimeString()+"/"+myDate.toLocaleDateString());

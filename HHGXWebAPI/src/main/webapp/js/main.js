@@ -40,7 +40,6 @@
         //3:主管部门
         //4:系统管理
         if(userData.UserBelongTo=="1"){
-            $("#sjb").text("防火单位");
             $("#my_page").prop("src","./FireUnit/ProcessingAlarm.html");
             for(var i=0;i<moduleData.length;i++){
                 for(var j=0;j<moduleData[i].DKZTree.length;j++){
@@ -52,7 +51,6 @@
                 }
             }
         }else if(userData.UserBelongTo=="3"){
-            $("#sjb").text("主管部门");
             $("#my_page").prop("src","./Competent/AlarmInformation.html");
             for(var i=0;i<moduleData.length;i++){
                 for(var j=0;j<moduleData[i].DKZTree.length;j++){
@@ -64,9 +62,9 @@
                 }
             }
         }else if(userData.UserBelongTo=="2"){
-            $("#sjb").text("维保单位");
+
         }else if(userData.UserBelongTo=="4"){
-            $("#sjb").text("系统管理");
+
         }
 
     });

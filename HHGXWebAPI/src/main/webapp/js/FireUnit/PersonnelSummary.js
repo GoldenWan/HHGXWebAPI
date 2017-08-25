@@ -63,7 +63,7 @@
     getList("/PersonInfo/GetPeopleType", {}, "PeopleTypeName", "PeopleTypeName", "#peopleType", null, function () {
         $("#check_btn").click()
     });
-    getList("/PersonInfo/GetPeopleType", {}, "PeopleTypeName", "PeopleTypeName", "#peopleType_add");
+    getList("/PersonInfo/GetPeopleType", {}, "PeopleTypeName", "PeopleTypeName", "#peopleType_add",null,null,true);
 
     $("#selectModal_btn").click(function () {
         var add_type = $("#peopleType_add").val();
@@ -108,28 +108,39 @@
     //添加人员
     $("#addPage").on("click", "#add_btn", function () {
 
-        var options = {
-            url: ApiUrl + "/Form/AddPeople", //默认是form的action， 如果申明，则会覆盖
-            type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
-            dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
-            //clearForm: true,          //成功提交后，清除所有表单元素的值
-            resetForm: true,          //成功提交后，重置所有表单元素的值
-            //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
-            //beforeSubmit: showRequest,  //提交前的回调函数
-            success: function (data) {
-                if (data.StateMessage == 1000) {
-                    $('#addModal').modal('hide');
-                    pageReload();
-                } else if (data.StateMessage == -1) {
-                    window.location.href = "../index.html";
-                } else if (data.StateMessage == -2) {
-                    console.log(data.DataBag);
-                } else if (data.StateMessage == -256) {
-                    console.log(data.DataBag);
-                }
-            }//提交后的回调函数
-        };
-        $("#form_add").ajaxSubmit(options);
+        var addList = [
+            "#form_add input[name='PeopleName']",
+            "#form_add input[name='identification']",
+            "#form_add input[name='job']"
+        ];
+
+        var addState = inJudge(addList);
+
+        if(addState){
+            var options = {
+                url: ApiUrl + "/Form/AddPeople", //默认是form的action， 如果申明，则会覆盖
+                type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
+                dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                //clearForm: true,          //成功提交后，清除所有表单元素的值
+                resetForm: true,          //成功提交后，重置所有表单元素的值
+                //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+                //beforeSubmit: showRequest,  //提交前的回调函数
+                success: function (data) {
+                    if (data.StateMessage == 1000) {
+                        $('#addModal').modal('hide');
+                        pageReload();
+                    } else if (data.StateMessage == -1) {
+                        window.location.href = "../index.html";
+                    } else if (data.StateMessage == -2) {
+                        console.log(data.DataBag);
+                    } else if (data.StateMessage == -256) {
+                        console.log(data.DataBag);
+                    }
+                }//提交后的回调函数
+            };
+            $("#form_add").ajaxSubmit(options);
+
+        }
 
     });
 
@@ -183,28 +194,40 @@
             dataPick("#licensingDate_edit");
 
             $("#edit_btn").click(function () {
-                var options = {
-                    url: ApiUrl + "/Form/UpdatePeople", //默认是form的action， 如果申明，则会覆盖
-                    type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
-                    dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
-                    //clearForm: true,          //成功提交后，清除所有表单元素的值
-                    //resetForm: true,          //成功提交后，重置所有表单元素的值
-                    //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
-                    //beforeSubmit: showRequest,  //提交前的回调函数
-                    success: function (data) {
-                        if (data.StateMessage == 1000) {
-                            $('#editModal').modal('hide');
-                            pageReload();
-                        } else if (data.StateMessage == -1) {
-                            window.location.href = "../index.html";
-                        } else if (data.StateMessage == -2) {
-                            console.log(data.DataBag);
-                        } else if (data.StateMessage == -256) {
-                            console.log(data.DataBag);
-                        }
-                    }//提交后的回调函数
+
+                var editList = [
+                    "#form_edit input[name='PeopleName']",
+                    "#form_edit input[name='identification']",
+                    "#form_edit input[name='job']"
+                ];
+
+                var editState = inJudge(editList);
+
+                if(editState){
+                    var options = {
+                        url: ApiUrl + "/Form/UpdatePeople", //默认是form的action， 如果申明，则会覆盖
+                        type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
+                        dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                        //clearForm: true,          //成功提交后，清除所有表单元素的值
+                        //resetForm: true,          //成功提交后，重置所有表单元素的值
+                        //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+                        //beforeSubmit: showRequest,  //提交前的回调函数
+                        success: function (data) {
+                            if (data.StateMessage == 1000) {
+                                $('#editModal').modal('hide');
+                                pageReload();
+                            } else if (data.StateMessage == -1) {
+                                window.location.href = "../index.html";
+                            } else if (data.StateMessage == -2) {
+                                console.log(data.DataBag);
+                            } else if (data.StateMessage == -256) {
+                                console.log(data.DataBag);
+                            }
+                        }//提交后的回调函数
+                    };
+                    $("#form_edit").ajaxSubmit(options);
                 }
-                $("#form_edit").ajaxSubmit(options);
+
             });
 
         });

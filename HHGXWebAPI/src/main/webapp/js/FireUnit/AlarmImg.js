@@ -2,10 +2,24 @@
  * Created by Qiu on 2017/8/21.
  */
 (function(){
-    $("#imFlatPicImg").attr("xlink:href","");
-    $("#imFlatPicImg").attr("src","");
-    $("#imFlatPicImg").attr("xlink:href",ImgUrl+""+sessionStorage.getItem("imFlatPic"));
-    $("#imFlatPicImg").attr("src",ImgUrl+""+sessionStorage.getItem("imFlatPic"));
+    if(sessionStorage.getItem("imFlatPicStatus")=="default"){
+        $("#imFlatPicImg").attr("xlink:href","");
+        $("#imFlatPicImg").attr("src","");
+        $("#imFlatPicImg").attr("xlink:href","../../image/origin/watching.jpg");
+        $("#imFlatPicImg").attr("src","../../image/origin/watching.jpg");
+    }else {
+        $("#imFlatPicImg").attr("xlink:href", "");
+        $("#imFlatPicImg").attr("src", "");
+        $("#imFlatPicImg").attr("xlink:href", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
+        $("#imFlatPicImg").attr("src", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
+        window.setInterval(function () {
+            $("#imFlatPicImg").attr("xlink:href", "");
+            $("#imFlatPicImg").attr("src", "");
+            $("#imFlatPicImg").attr("xlink:href", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
+            $("#imFlatPicImg").attr("src", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
+            console.log(sessionStorage.getItem("imFlatPic"));
+        }, 5000);
+    }
 
     //点击放大和缩小按钮事件
     var big = $("#big");

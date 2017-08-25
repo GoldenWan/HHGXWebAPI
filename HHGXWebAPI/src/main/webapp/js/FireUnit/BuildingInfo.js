@@ -116,7 +116,6 @@ $(document.body).on("click",".operationBuild",function(){
                      location.reload();
                  }
              });
-
         }
 
     }else if(type=="showImg"){
@@ -128,7 +127,7 @@ $(document.body).on("click",".operationBuild",function(){
         HH.post("/Orginfo/GetAppearancepicList",{"siteid":siteid},function(data) {
            // console.log("下面是返回的详情图片信息");
             console.log(data);
-            if (data.DataBag && data.StateMessage=="1000") {
+            if (data.DataBag!="暂无图片" && data.StateMessage=="1000") {
                 //data.sitename = sitename;
                 render("#showImgModelData", "#showImgModalDivs", data);
                 //调用封装的删除图片方法，buildingImg：传入图片的父元素，i：当前点击的某个元素
@@ -136,9 +135,46 @@ $(document.body).on("click",".operationBuild",function(){
                 //$("#detailModal").modal({backdrop:"static"});
             }
         });
-        $("#showImgModalBody").on("change","#file",function(){
+        /*console.log(siteid);
+        var myJson = {
+            tokenUUID: get_cookie("UserId"),
+            infoBag: {
+                "siteid":siteid
+            }
+        };
+        console.log(myJson);
+        $.ajax({
+            type:"POST",
+            url:"http://192.168.11.77:8077/Orginfo/GetAppearancepicList",
+            data:JSON.stringify(myJson),
+            dataType:"json",
+            success:function(data){
+                if(data.StateMessage==1000 && data.DataBag!="暂无图片"){
+                    console.log("成功的");
+                    console.log(data);
+                    render("#showImgModelData", "#showImgModalDivs", data);
+                    //调用封装的删除图片方法，buildingImg：传入图片的父元素，i：当前点击的某个元素
+                    deleteImg("buildingImg","i");
+                }else if(data.StateMessage==-2){
+                    console.log("-2");
+                    console.log(data);
+                }else{
+                    console.log("else");
+                    console.log(data);
+                }
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                console.log("erro");
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });*/
+
+        $("#file").get(0).onchange=function(){
             var vPhotoname = $(this).val().split("\\");
             vPhotoname = vPhotoname[vPhotoname.length-1];
+            console.log(vPhotoname);
             //设置这两个魏隐藏，提交到后台
             $("#siteid").val(siteid);
             $("#vPhotoname").val(vPhotoname);
@@ -146,7 +182,7 @@ $(document.body).on("click",".operationBuild",function(){
             var options = {
                 //beforeSubmit: showRequest,  //提交前的回调函数
                 success: showResponse,      //提交后的回调函数
-                url: ApiUrl+"/Form/AddAppearance", //默认是form的action， 如果申明，则会覆盖
+                url: ApiUrl+"/Site/AddAppearance", //默认是form的action， 如果申明，则会覆盖
                 type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
                 dataType: "json"           //html(默认), xml, script, json...接受服务端返回的类型
                 //clearForm: true,          //成功提交后，清除所有表单元素的值
@@ -154,13 +190,13 @@ $(document.body).on("click",".operationBuild",function(){
                 //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
             }
             function showResponse(responseText, statusText){
-               // console.log("下面是返回的上传情况");
-               // console.log(responseText);
+                // console.log("下面是返回的上传情况");
+                // console.log(responseText);
                 if(responseText.StateMessage=="1000"){
                     $("#showImgModalDivs").html('');
                     HH.post("/Orginfo/GetAppearancepicList",{"siteid":siteid},function(data) {
-                 //       console.log("下面是返回的详情图片信息");
-                 //       console.log(data);
+                        //       console.log("下面是返回的详情图片信息");
+                        //       console.log(data);
                         if (data.DataBag && data.StateMessage=="1000") {
                             data.sitename = sitename;
                             render("#showImgModelData", "#showImgModalDivs", data);
@@ -170,13 +206,10 @@ $(document.body).on("click",".operationBuild",function(){
                         }
                     });
                 }
-                /*if(statusText=="success"){
-                 alert('上传成功');
-                 }*/
             }
             $("#showImgModalForm").ajaxSubmit(options);
+        }
 
-        });
 
     }else if(type=="add"){
         //alert(sessionStorage.getItem("fLongitude")+"=="+sessionStorage.getItem("fLatitude"));

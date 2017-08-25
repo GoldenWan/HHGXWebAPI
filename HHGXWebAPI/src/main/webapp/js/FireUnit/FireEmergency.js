@@ -70,33 +70,47 @@
     //添加处理方法
     $("#add_btn").click(function () {
 
-        $("#orgid_add").val(sessionStorage.getItem("OrgID"));
+        var addList = [
+            "#form_add input[name='manoeuvretime']",
+            "#form_add input[name='address']",
+            "#form_add input[name='Department']",
+            "#form_add textarea[name='content']",
+            "#form_add textarea[name='scheme']",
+            "#form_add textarea[name='implementation']",
+            "#form_add textarea[name='summary']"
+        ];
 
-        var options = {
-            url: ApiUrl + "/Form/AddManoeuvre", //默认是form的action， 如果申明，则会覆盖
-            type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
-            dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
-            //clearForm: true,          //成功提交后，清除所有表单元素的值
-            resetForm: true,          //成功提交后，重置所有表单元素的值
-            //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
-            //beforeSubmit: showRequest,  //提交前的回调函数
-            success: function (data) {
-                if (data.StateMessage == 1000) {
-                    $('#addModal').modal('hide');
-                    $("#form_add").find("input[type=file]").parent().prev().text("");
-                    pageReload();
-                } else if (data.StateMessage == -1) {
-                    window.location.href = "../index.html";
-                } else if (data.StateMessage == -2) {
-                    alert(data.DataBag);
-                } else if (data.StateMessage == -256) {
-                    console.log(data.DataBag);
-                } else {
-                    console.log("状态码不对，StateMessage=" + data.StateMessage);
-                }
-            }//提交后的回调函数
-        };
-        $("#form_add").ajaxSubmit(options);
+        var addState = inJudge(addList);
+
+        if(addState){
+            $("#orgid_add").val(sessionStorage.getItem("OrgID"));
+
+            var options = {
+                url: ApiUrl + "/Form/AddManoeuvre", //默认是form的action， 如果申明，则会覆盖
+                type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
+                dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                //clearForm: true,          //成功提交后，清除所有表单元素的值
+                resetForm: true,          //成功提交后，重置所有表单元素的值
+                //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+                //beforeSubmit: showRequest,  //提交前的回调函数
+                success: function (data) {
+                    if (data.StateMessage == 1000) {
+                        $('#addModal').modal('hide');
+                        $("#form_add").find("input[type=file]").parent().prev().text("");
+                        pageReload();
+                    } else if (data.StateMessage == -1) {
+                        window.location.href = "../index.html";
+                    } else if (data.StateMessage == -2) {
+                        alert(data.DataBag);
+                    } else if (data.StateMessage == -256) {
+                        console.log(data.DataBag);
+                    } else {
+                        console.log("状态码不对，StateMessage=" + data.StateMessage);
+                    }
+                }//提交后的回调函数
+            };
+            $("#form_add").ajaxSubmit(options);
+        }
 
     });
 
@@ -152,30 +166,44 @@
 
             $("#edit_btn").click(function () {
 
-                var options = {
-                    url: ApiUrl + "/Form/UpdateManoeuvre", //默认是form的action， 如果申明，则会覆盖
-                    type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
-                    dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
-                    //clearForm: true,          //成功提交后，清除所有表单元素的值
-                    //resetForm: true,          //成功提交后，重置所有表单元素的值
-                    //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
-                    //beforeSubmit: showRequest,  //提交前的回调函数
-                    success: function (data) {
-                        if (data.StateMessage == 1000) {
-                            $('#editModal').modal('hide');
-                            pageReload();
-                        } else if (data.StateMessage == -1) {
-                            window.location.href = "../index.html";
-                        } else if (data.StateMessage == -2) {
-                            console.log(data.DataBag);
-                        } else if (data.StateMessage == -256) {
-                            console.log(data.DataBag);
-                        } else {
-                            console.log("状态码不对，StateMessage=" + data.StateMessage);
-                        }
-                    }//提交后的回调函数
-                };
-                $("#form_edit").ajaxSubmit(options);
+                var editList = [
+                    "#form_edit input[name='manoeuvretime']",
+                    "#form_edit input[name='address']",
+                    "#form_edit input[name='Department']",
+                    "#form_edit textarea[name='content']",
+                    "#form_edit textarea[name='scheme']",
+                    "#form_edit textarea[name='implementation']",
+                    "#form_edit textarea[name='summary']"
+                ];
+
+                var editState = inJudge(editList);
+
+                if(editState){
+                    var options = {
+                        url: ApiUrl + "/Form/UpdateManoeuvre", //默认是form的action， 如果申明，则会覆盖
+                        type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
+                        dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                        //clearForm: true,          //成功提交后，清除所有表单元素的值
+                        //resetForm: true,          //成功提交后，重置所有表单元素的值
+                        //timeout: 3000               //限制请求的时间，当请求大于3秒后，跳出请求
+                        //beforeSubmit: showRequest,  //提交前的回调函数
+                        success: function (data) {
+                            if (data.StateMessage == 1000) {
+                                $('#editModal').modal('hide');
+                                pageReload();
+                            } else if (data.StateMessage == -1) {
+                                window.location.href = "../index.html";
+                            } else if (data.StateMessage == -2) {
+                                console.log(data.DataBag);
+                            } else if (data.StateMessage == -256) {
+                                console.log(data.DataBag);
+                            } else {
+                                console.log("状态码不对，StateMessage=" + data.StateMessage);
+                            }
+                        }//提交后的回调函数
+                    };
+                    $("#form_edit").ajaxSubmit(options);
+                }
 
             });
 

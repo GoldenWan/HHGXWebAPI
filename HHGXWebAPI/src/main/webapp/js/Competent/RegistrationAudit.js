@@ -3,7 +3,7 @@
     var allNum = 1;
 
     //¾Ö²¿Ë¢ÐÂ
-    function pageReload(nowNum) {
+    function pageReload(nowNum,name) {
 
         var nowNum = parseInt(nowNum);
 
@@ -16,6 +16,7 @@
 
         var info = {
             ManagerOrgID: sessionStorage.getItem("OrgID"),
+            OrgName:name,
             PageIndex: nowNum
         };
 
@@ -30,7 +31,12 @@
 
     };
 
-    pageReload(1);
+    $("#check_btn").click(function () {
+        var company = $("#CompanyName").val();
+        pageReload(1, company);
+    });
+
+    $("#check_btn").click();
 
     //Ò³Âë
     $("#in_paging").on("click", ".pagination>.pageNum", function () {

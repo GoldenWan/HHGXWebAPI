@@ -32,6 +32,26 @@
 </head>
 <body>
 
+<div class="modal fade" id="gotoModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog" style="margin-top: 250px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <!--<h3 class="modal-title"></h3>-->
+            </div>
+            <div class="modal-body">
+               <p style="text-align: center"><span id="gotoTime">3</span>秒后跳转到登录</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn" id="gotoModalConfirm" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <div class="login_content">
 
     <div></div>
@@ -97,8 +117,8 @@
                     </div>
                     <div>
                         <input type="text" onkeypress="javascript:if(event.keyCode==32)event.returnValue=false;" maxlength="6" placeholder="请输入手机验证码" id="regin_u_code"/>
-                        <button id="getTelCodeBtn" type="button">获取</button>
-                        <span id="regin_yzmErro"></span>
+                        <button id="getTelCodeBtn" type="button">获取</button><!--  disabled style="background-color: #A0A0A0;color: white"-->
+                        <span id="regin_yzmErro"></span><!--#A0A0A0-->
                     </div>
                     <div>
                         <input type="text" onkeypress="javascript:if(event.keyCode==32)event.returnValue=false;" placeholder="请输入公司名" id="company_name"/>

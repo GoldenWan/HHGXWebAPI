@@ -3,6 +3,7 @@ package com.hhgx.soft.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
@@ -34,11 +35,27 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
+	public static String responseFindJsonArray(Object dataBag, int statusCode) throws JsonProcessingException{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(ConstValues.RESPDATA, JSONArray.fromObject(dataBag));
+		jsonObject.put(ConstValues.RESPCODE, statusCode);
+		return jsonObject.toString();
+		
+	}
 
 	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("pageCount", pageCount);
 		jsonObject.put("PageDatas", JSONObject.fromBean(dataBag));
+		jsonObject.put(ConstValues.RESPCODE, statusCode);
+		
+		return jsonObject.toString();
+		
+	}
+	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("pageCount", pageCount);
+		jsonObject.put("PageDatas", JSONArray.fromObject(dataBag));
 		jsonObject.put(ConstValues.RESPCODE, statusCode);
 		
 		return jsonObject.toString();

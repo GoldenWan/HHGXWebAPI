@@ -148,11 +148,8 @@
 
             render("#in_view", "#in_page", myJson);
 
-            allNum = Math.ceil(data.DataBag.pageCount / 20);
+            allNum = data.DataBag.pageCount;
 
-            if (allNum == 0) {
-                allNum = 1
-            }
             createPaging("#in_paging", 1, allNum);
 
         });

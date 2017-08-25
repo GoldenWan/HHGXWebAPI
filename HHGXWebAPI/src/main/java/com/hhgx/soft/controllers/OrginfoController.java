@@ -107,24 +107,12 @@ public class OrginfoController {
 		String orgid = map.get("orgid");
 		List<Site> siteList = null;
 		int statusCode = -1;
-		// JSONObject jsonO = new JSONObject();
-
-		// jsonList = new JSONArray();
 		try {
 			siteList = orginfoService.briefsiteList(orgid);
-			/*
-			 * for (Site site : siteList) { JSONObject jsonObject = new
-			 * JSONObject(); jsonObject.put("Siteid", site.getSiteid());
-			 * jsonObject.put("sitename", site.getSitename());
-			 * jsonList.put(jsonObject); } jsonO.put("siteList", jsonList);
-			 * statusCode = ConstValues.OK; return
-			 * ResponseJson.responseFindJson(jsonO.toString().replace("\"",""),
-			 * statusCode);
-			 */
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(siteList, statusCode);
+		return ResponseJson.responseFindJsonArray(siteList, statusCode);
 	}
 
 	/**

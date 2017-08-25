@@ -105,6 +105,7 @@
                             <div class="col-sm-7">
                                 <div class='input-group date' id='fireDate_add'>
                                     <input type='text' class="form-control inputDate" name="TrainingTime" readonly/>
+                                    <i class="Warning" style="right: -17px">*</i>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -128,6 +129,7 @@
 
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" name="TrainingAddress">
+                                <i class="Warning">*</i>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -143,6 +145,7 @@
 
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" name="HowmanyPeople" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <i class="Warning">*</i>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -166,6 +169,7 @@
 
                             <div class="col-sm-9">
                                 <textarea type="text" class="form-control" name="TrainingContent"></textarea>
+                                <i class="Warning">*</i>
 
                                 <div style="margin-top: 10px">
                                     <span class="up_name"></span>
@@ -191,7 +195,7 @@
                                     <span class="up_name"></span>
                                     <a class="up_btn">
                                         选择文件
-                                        <input type="file" name="signtable" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                        <input type="file" unselectable="on" name="signtable" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
                                     </a>
                                 </div>
                             </div>
@@ -208,7 +212,7 @@
                                     <span class="up_name"></span>
                                     <a class="up_btn">
                                         选择文件
-                                        <input type="file" name="examfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                        <input type="file" unselectable="on" name="examfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
                                     </a>
                                 </div>
                             </div>
@@ -288,6 +292,7 @@
                     <div class="col-sm-7">
                         <div class='input-group date' id='fireDate_edit'>
                             <input type='text' class="form-control inputDate" name="TrainingTime" value="{{TrainingTime}}" readonly/>
+                            <i class="Warning" style="right: -17px">*</i>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -311,6 +316,7 @@
 
                     <div class="col-sm-7">
                         <input type="text" class="form-control" name="TrainingAddress" value="{{TrainingAddress}}">
+                        <i class="Warning">*</i>
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
@@ -326,6 +332,7 @@
 
                     <div class="col-sm-7">
                         <input type="text" class="form-control" name="HowmanyPeople" value="{{HowmanyPeople}}">
+                        <i class="Warning">*</i>
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
@@ -349,12 +356,13 @@
 
                     <div class="col-sm-9">
                         <textarea type="text" class="form-control" name="TrainingContent">{{TrainingContent}}</textarea>
+                        <i class="Warning">*</i>
 
                         <div style="margin-top: 10px">
                             <span class="up_name">{{ContentFile}}</span>
                             <a class="up_btn">
                                 选择文件
-                                <input type="file" name="ContentFile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                <input type="file" unselectable="on" name="ContentFile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
                             </a>
                         </div>
                     </div>
@@ -371,7 +379,7 @@
                             <span class="up_name">{{signtable}}</span>
                             <a class="up_btn">
                                 选择文件
-                                <input type="file" name="signtable" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                <input type="file" unselectable="on" name="signtable" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
                             </a>
                         </div>
                     </div>
@@ -388,7 +396,7 @@
                             <span class="up_name">{{examfile}}</span>
                             <a class="up_btn">
                                 选择文件
-                                <input type="file" name="examfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
+                                <input type="file" unselectable="on" name="examfile" accept="application/msword,application/vnd.ms-works,application/vnd.ms-powerpoint,application/pdf,application/vnd.ms-excel,application/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain">
                             </a>
                         </div>
                     </div>

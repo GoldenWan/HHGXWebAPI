@@ -115,7 +115,7 @@
             '<div class="img_new">' +
             '<a class="img_body" target="view_window"><img/></a>' +
             '<div type-id="2" class="new_del del_btn">删除</div>' +
-            '<a class="up_new">添加图片<input type="file" name="imgFile'+ imgNum + '" accept="image/*"></a>' +
+            '<a class="up_new">添加图片<input type="file" unselectable="on" name="imgFile'+ imgNum + '" accept="image/*"></a>' +
             '</div>';
         $("#upImg").append(node);
     }

@@ -11,15 +11,19 @@
             console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
                 render("#transportEquipmentData","#transportEquipmentTbody",data);
+                for(var i=0; i<data.DataBag.PageDatas.length; i++){
+                    var sitename = data.DataBag.PageDatas[i].FireSysList[0].sitename;
+                    var vSysdesc = data.DataBag.PageDatas[i].FireSysList[0].vSysdesc;
+                    $(".atBuildingSystem").eq(i).text(sitename+"("+vSysdesc+")");
+                }
                 //去除最后一个逗号
-                var trs= $("#transportEquipmentTb tr");
+                /*var trs= $("#transportEquipmentTb tr");
                 for(var i=1; i<trs.length; i++){
                     var tdText = trs.eq(i).get(0).cells[6].innerHTML;
                     tdText = $.trim(tdText);
                     var newVal = tdText.substring(0,tdText.length-1);
                     trs.eq(i).get(0).cells[6].innerHTML = newVal;
-                }
-
+                }*/
                 allNum = Math.ceil(data.DataBag.pageCount / 20);
 
                 if (allNum == 0) {
@@ -100,6 +104,11 @@
            // console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
                 render("#addAddModalData","#addTransportBody",data);
+                var trs = $("#addTransportEquipmentTb").find("tr").length;
+                if(trs>1){
+                    $("#addAddSelect").attr("disabled",true);
+                }
+
             }
         });
         //下面是点击添加模态框里面的添加保存按钮
@@ -112,10 +121,11 @@
     $('#transportEquipmentBody').on("click","#modalChangeBtn", function () {
         $('#addTransportModal').modal({"backdrop":"static"});
         HH.post("/Orginfo/GetFireSystemList",{"orgid":sessionStorage.getItem("OrgID"),"isDivid":"No"},function(data) {
-           // console.log("后台返回的添加模态框里面的添加信息");
-           // console.log(data);
+            console.log("后台返回的添加模态框里面的添加信息");
+            console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
                 render("#addAddModalData","#addTransportBody",data);
+                $("#addAddSelect").val(indexTbDetailData.DataBag[0].FireSysList[0].sitename+"("+indexTbDetailData.DataBag[0].FireSysList[0].vSysdesc+")");
                 $("#addAddSelect").attr("disabled",true);
             }
         });
@@ -125,7 +135,6 @@
         };
         //$("#addTransportEquipmentTb").get(0);
     });
-
 
     //点击首页表格的修改按钮
     $('#transportEquipmentTbody').on("click",".operation", function (){
@@ -138,8 +147,8 @@
 
             //事先绑定好查询数据
             HH.post("/Orginfo/GatewayInfo",{"orgid":sessionStorage.getItem("OrgID"),"Gatewayaddress":$(this).attr("Gatewayaddress")},function(data) {
-               // console.log("后台返回的首页查看详情信息");
-               // console.log(data);
+                console.log("后台返回的首页查看详情信息");
+                console.log(data);
                 indexTbDetailData = data;
                 if (data.DataBag && data.StateMessage=="1000") {
                     //$('#transportEquipmentModal').modal("hide");
@@ -163,9 +172,9 @@
                             "</tr>";
                     }
                     $("#changeTransportTb").append(str);
-                    $(".addDeleteTr").get(0).onclick=function(){
+                    $(".addDeleteTr").click(function(){
                         $(this).parent().parent("tr").remove();
-                    };
+                    });
                 }
             });
 

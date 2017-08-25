@@ -41,7 +41,9 @@ public class RequestJson {
 	/**
 	 * 将前端传递json 按照原来格式放进map
 	 * 
-	 *  * @param reqBody  * @param args  * @return:TODO  
+	 *  * @param reqBody 
+	 *  * @param args 
+	 *  * @return:TODO  
 	 */
 	public static Map<String, String> reqOriginJson(String reqBody, String... args) {
 		JSONObject jObject = JSONObject.fromObject(reqBody);

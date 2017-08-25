@@ -51,8 +51,8 @@
     var equipmentData = "";
     //获取首页的装备类型
     HH.post("/Organdpeople/GetEquipmentType","",function(data) {
-        // console.log("后台返回装备类型");
-       //  console.log(data);
+         console.log("后台返回装备类型");
+         console.log(data);
          if (data.DataBag && data.StateMessage=="1000") {
              equipmentData = data;
              //render("#equipmentTypeData","#equipmentType",data);
@@ -92,8 +92,9 @@
         //点击模态框的确定按钮
         $("#fireEquipmentModalConfirm").get(0).onclick=function(){
             var myJson = getForm("#FireEquipmentForm");
-          //  console.log(myJson);
-            myJson.firecompayid = sessionStorage.getItem("firecompayid");
+             console.log(myJson);
+            //myJson.firecompayid = sessionStorage.getItem("firecompayid");
+            //alert(sessionStorage.getItem("firecompayid"));
             HH.post("/Organdpeople/Addequipment",myJson,function(data) {
            //     console.log("后台返回添加信息");
            //     console.log(data);
@@ -101,7 +102,7 @@
                     $('#fireEquipmentModal').modal("hide");
                     //var equipmentType = $("#equipmentType").val();
                     //findEquipments(equipmentType);
-                    indexTb();
+                    indexTb(parseInt($(".pageNum").text()));
                 }
             });
 
@@ -119,8 +120,8 @@
             };
             //渲染详情
             HH.post("/Organdpeople/getequipmentdetail",myJson,function(data) {
-             //   console.log("后台返回某个装备信息");
-              //  console.log(data);
+                console.log("后台返回某个装备信息");
+                console.log(data);
                 if (data.DataBag && data.StateMessage=="1000") {
                     render("#changeFireEquipmentData","#fireEquipmentBody",data);
                     $("#changeEquipmentSel").html("");
@@ -131,7 +132,7 @@
                     }
                     $("#changeEquipmentSel").append(str);
                     //绑定修改里面的下拉框
-                    $("#changeEquipmentSel").val(data.DataBag[0].equipmenttype);
+                    $("#changeEquipmentSel").val(data.DataBag.PageDatas[0].equipmenttype);
                     dataPick(".changeBuyTime");
                     //修改保存按钮
                     $("#fireEquipmentModalConfirm").get(0).onclick=function(){
@@ -143,7 +144,8 @@
                         //     console.log(data);
                              if (data.DataBag && data.StateMessage=="1000") {
                                  $('#fireEquipmentModal').modal("hide");
-                                 indexTb();
+                                 //console.log($(".pageNum").text());
+                                 indexTb(parseInt($(".pageNum").text()));
                                  /*var equipmentType = $("#equipmentType").val();
                                  findEquipments(equipmentType);*/
                              }
@@ -165,7 +167,7 @@
                   //  console.log(data);
                     if (data.DataBag && data.StateMessage=="1000") {
                         $('#fireEquipmentModal').modal("hide");
-                        indexTb();
+                        indexTb(parseInt($(".pageNum").text()));
                         /*var equipmentType = $("#equipmentType").val();
                         findEquipments(equipmentType);*/
                     }

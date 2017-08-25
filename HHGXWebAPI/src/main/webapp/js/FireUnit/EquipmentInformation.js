@@ -66,19 +66,31 @@
     });
 
     //获取建筑物列表
-    getList("/Orginfo/BriefsiteList", {orgid: sessionStorage.getItem("OrgID")}, "siteid", "sitename", "#build_add");
+    getList("/Orginfo/BriefsiteList", {orgid: sessionStorage.getItem("OrgID")}, "siteid", "sitename", "#build_add",null,null,true);
     //获取部件类型列表
-    getList("/Facility/GetDeviceType", {}, "iDeviceType", "DeviceTypeName", "#sys_add");
+    getList("/Facility/GetDeviceType", {}, "iDeviceType", "DeviceTypeName", "#sys_add",null,null,true);
 
     //添加处理方法
     $("#add_btn").click(function () {
-        var myJson = getForm("#form_add");
 
-        HH.post("/Facility/AddFireDevice", myJson, function (data) {
-            $('#addModal').modal('hide');
-            document.getElementById("form_add").reset();
-            pageReload();
-        });
+        var addList = [
+            "#form_add input[name='devicename']",
+            "#form_add input[name='model']",
+            "#form_add input[name='SetLocation']"
+        ];
+
+        var addState = inJudge(addList);
+
+        if(addState){
+            var myJson = getForm("#form_add");
+
+            HH.post("/Facility/AddFireDevice", myJson, function (data) {
+                $('#addModal').modal('hide');
+                document.getElementById("form_add").reset();
+                pageReload();
+            });
+        }
+
     });
 
     //操作详情
@@ -105,16 +117,27 @@
             dataPick("#installDate_edit", myJson.SetupDate);
 
             //获取建筑物列表
-            getList("/Orginfo/BriefsiteList", {orgid: sessionStorage.getItem("OrgID")}, "siteid", "sitename", "#build_edit", myJson.siteid);
+            getList("/Orginfo/BriefsiteList", {orgid: sessionStorage.getItem("OrgID")}, "siteid", "sitename", "#build_edit", myJson.siteid,null,true);
             //获取部件类型列表
-            getList("/Facility/GetDeviceType", {}, "iDeviceType", "DeviceTypeName", "#sys_edit", myJson.iDeviceType);
+            getList("/Facility/GetDeviceType", {}, "iDeviceType", "DeviceTypeName", "#sys_edit", myJson.iDeviceType,null,true);
 
             $("#edit_btn").click(function () {
-                var myJson = getForm("#form_edit");
-                HH.post("/Facility/UpdateFireDevice", myJson, function (data) {
-                    $('#editModal').modal('hide')
-                    pageReload();
-                });
+
+                var editList = [
+                    "#form_edit input[name='devicename']",
+                    "#form_edit input[name='model']",
+                    "#form_edit input[name='SetLocation']"
+                ];
+
+                var editState = inJudge(editList);
+
+                if(editState){
+                    var myJson = getForm("#form_edit");
+                    HH.post("/Facility/UpdateFireDevice", myJson, function (data) {
+                        $('#editModal').modal('hide');
+                        pageReload();
+                    });
+                }
             });
 
         });
