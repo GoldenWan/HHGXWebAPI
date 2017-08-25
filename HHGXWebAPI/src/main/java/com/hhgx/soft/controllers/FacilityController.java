@@ -1,19 +1,20 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Page;
@@ -21,6 +22,7 @@ import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.services.FacilityService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 
@@ -39,11 +41,11 @@ public class FacilityController {
 	
 	/**
 	 * 15.获取所有的消防系统
+	 * @throws IOException 
 	 */
-
 	@ResponseBody
-	@RequestMapping(value = "/GetAllSys", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getAllSys(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/GetAllSys", method = RequestMethod.POST)
+	public String getAllSys() throws IOException {
 		List<Firesystype> list =null;
 		int statusCode = -1;
 		try {
@@ -64,13 +66,14 @@ public class FacilityController {
 	 * 
 	 * @param reqBody
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getTrainingList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getTrainingList(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/getTrainingList", method = RequestMethod.POST)
+	public String getTrainingList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "startTime", "endTime", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "startTime", "endTime", "PageIndex");
 		String orgid = map.get("orgid");
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
@@ -117,12 +120,15 @@ public class FacilityController {
 
 	/**
 	 * 163.获取消防安全培训详情【**】
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/GetTraingingDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getTraingingDetail(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "TrainingID");
+	@RequestMapping(value = "/GetTraingingDetail", method = RequestMethod.POST)
+	public String getTraingingDetail(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "TrainingID");
 		String trainingID = map.get("trainingID");
 
 		Map<String, String> map2 = new HashMap<String, String>();
@@ -160,14 +166,16 @@ public class FacilityController {
 
 	/**
 	 * 166.删除消防安全培训【**】
+	 * @throws IOException 
 	 * 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/DeleteTraining", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteTraining(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/DeleteTraining", method = RequestMethod.POST)
+	public String deleteTraining(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "TrainingID");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "TrainingID");
 		String trainingID = map.get("trainingID");
 		String dataBag = null;
 		int statusCode = -1;
@@ -193,13 +201,15 @@ public class FacilityController {
 
 	/**
 	 * 167.获取灭火应急演练列表【**】
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/GetManoeuvreList", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getManoeuvreList(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "PageIndex");
+			RequestMethod.POST })
+	public String getManoeuvreList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
 
@@ -241,12 +251,14 @@ public class FacilityController {
 
 	/**
 	 * 169.获取灭火应急演练详情【**】
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/GetManoeuvreDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getManoeuvreDetail(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "manoeuvreID");
+	@RequestMapping(value = "/GetManoeuvreDetail", method = RequestMethod.POST)
+	public String getManoeuvreDetail(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "manoeuvreID");
 		String manoeuvreID = map.get("manoeuvreID");
 
 		Map<String, String> map2 = new HashMap<String, String>();
@@ -284,12 +296,14 @@ public class FacilityController {
 
 	/**
 	 * 174.删除灭火应急演练预案【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/DeleteManoeuvre", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteManoeuvre(@RequestBody String reqBody) throws JsonProcessingException {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "manoeuvreID");
+	@RequestMapping(value = "/DeleteManoeuvre", method = RequestMethod.POST)
+	public String deleteManoeuvre(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "manoeuvreID");
 		String manoeuvreID = map.get("manoeuvreID");
 		String dataBag = null;
 		int statusCode = -1;

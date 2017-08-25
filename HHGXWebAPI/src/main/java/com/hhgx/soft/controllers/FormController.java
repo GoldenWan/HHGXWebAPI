@@ -44,7 +44,7 @@ public class FormController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateFireSystemList", method = {
-			RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+			RequestMethod.POST })
 	public String updateFireSystemList(HttpServletRequest request,@RequestParam("SysFlatpic") MultipartFile sysFlatpic) throws JsonProcessingException {
 		
 		String siteid = request.getParameter("siteid");
@@ -91,7 +91,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = {
-			RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+			RequestMethod.POST })
 	public String addOrUpdateCheckRecord(HttpServletRequest request) throws JsonProcessingException {
 
 		String userCheckId = request.getParameter("UserCheckId");
@@ -164,7 +164,7 @@ public class FormController {
 	 * 161.添加消防安全培训情况【**】
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/AddTraining", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/AddTraining", method = RequestMethod.POST)
 	public String addTraining(HttpServletRequest request, @RequestParam("ContentFile") MultipartFile contentFile,
 			@RequestParam("examfile") MultipartFile examfile, @RequestParam("signtable") MultipartFile signtable)
 					throws JsonProcessingException {
@@ -223,7 +223,7 @@ public class FormController {
 	 * 164.修改消防安全培训情况【**】
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateTraining", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/UpdateTraining", method = RequestMethod.POST)
 	public String updateTraining(HttpServletRequest request, @RequestParam("ContentFile") MultipartFile contentFile,
 			@RequestParam("examfile") MultipartFile examfile, @RequestParam("signtable") MultipartFile signtable)
 					throws JsonProcessingException {
@@ -283,7 +283,7 @@ public class FormController {
 	 * 170.新增灭火应急演练【**】
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/AddManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/AddManoeuvre", method = RequestMethod.POST)
 	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
 			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
 			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
@@ -343,7 +343,7 @@ public class FormController {
 	 * 171.修改灭火应急演练预案【**】
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateManoeuvre", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/UpdateManoeuvre", method = RequestMethod.POST)
 	public String updateManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
 			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
 			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
@@ -406,7 +406,7 @@ public class FormController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST)
 	public String updateManoeuvre(HttpServletRequest request, @RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
@@ -448,7 +448,7 @@ public class FormController {
 	 * @throws JsonProcessingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST)
 	public String updateSafeManageRules(HttpServletRequest request,
 			@RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
 		String safeManageRulesID = request.getParameter("safeManageRulesID");
@@ -496,7 +496,7 @@ public class FormController {
 	
 	
 	@ResponseBody
-	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST)
 	public String addSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
@@ -541,7 +541,7 @@ public class FormController {
 	 */
 	
 	@ResponseBody
-	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST)
 	public String updateSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
@@ -587,7 +587,7 @@ public class FormController {
 	
 	
 	@ResponseBody
-	@RequestMapping(value = "/AddBusinessLicence", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/AddBusinessLicence", method = RequestMethod.POST)
 	public String addBusinessLicence(HttpServletRequest request, @RequestParam("PictureUrl") MultipartFile pictureUrl) throws JsonProcessingException {
 		String licenceCode=request.getParameter("LicenceCode");
 		String conpanyName=request.getParameter("ConpanyName");

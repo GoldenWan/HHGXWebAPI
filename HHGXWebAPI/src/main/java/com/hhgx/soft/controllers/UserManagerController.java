@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,15 +56,15 @@ public class UserManagerController {
 	 * 1. 用户注册
 	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	@RequestMapping(value = "/RegisterNew", method = {
-			RequestMethod.POST })
-	public @ResponseBody String registerNew(HttpServletRequest request)
-			throws IOException {
+	@ResponseBody
+	@RequestMapping(value = "/RegisterNew", method = { RequestMethod.POST })
+	public String registerNew(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID", "verifycode",
-				"UserBelongTo");
+
+		Map<String, String> m = RequestJson.reqFirstLowerJson(reqBody, "username", "password", "orgname", "AreaID",
+				"verifycode", "UserBelongTo");
 		RegisterNew registerNew = new RegisterNew();
 		String userBelongTo = m.get("userBelongTo");
 		String areaID = m.get("areaID");
@@ -103,75 +102,78 @@ public class UserManagerController {
 			orgid = areaID + String.valueOf(neworgid_);
 		}
 		registerNew.setOrgid(orgid);
-		System.err.println(orgid);
 		String number = (String) request.getSession().getAttribute("number");
 
 		String dataBag = null;
+		int code = -1;
 		int statusCode = -1;
 
-		if (StringUtils.isEmpty(userBelongTo) || userBelongTo == "0") {
-			statusCode = ConstValues.ERROR;
-			dataBag = "请选择用户类型";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-
-		} else if (StringUtils.isEmpty(username)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "请输入手机号";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else if (StringUtils.isEmpty(verifycode)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "请输入手机验证码";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-
-		/*} else if (!verifycode.equals(number)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "手机验证码错误";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-*/
-		} else if (StringUtils.isEmpty(orgname)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "请输入公司名";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else if (StringUtils.isEmpty(password)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "请输入密码";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else if (userManagerService.findAccount(username)) {
+		/*
+		 * if (StringUtils.isEmpty(userBelongTo) || userBelongTo == "0") {
+		 * statusCode = ConstValues.; dataBag = "请选择用户类型"; return
+		 * ResponseJson.responseAddJson(dataBag, statusCode);
+		 * 
+		 * } else if (StringUtils.isEmpty(username)) { statusCode =
+		 * ConstValues.; dataBag = "请输入手机号"; return
+		 * ResponseJson.responseAddJson(dataBag, statusCode); }
+		 */
+		if (StringUtils.isEmpty(verifycode)) {
 			statusCode = ConstValues.NOAUTHORIZED;
+			code = 2;
+			dataBag = "验证码为空，请先获取验证码";
+			return ResponseJson.responseRegistJson(code, dataBag, statusCode);
+
+		} else if (!verifycode.equals(number)) {
+			statusCode = ConstValues.NOAUTHORIZED;
+			code = 3;
+			dataBag = "验证码不正确";
+			return ResponseJson.responseRegistJson(code, dataBag, statusCode);
+
+		} /*
+			 * else if (StringUtils.isEmpty(orgname)) { statusCode =
+			 * ConstValues.; dataBag = "请输入公司名"; return
+			 * ResponseJson.responseAddJson(dataBag, statusCode); } else if
+			 * (StringUtils.isEmpty(password)) { statusCode = ConstValues.;
+			 * dataBag = "请输入密码"; return ResponseJson.responseAddJson(dataBag,
+			 * statusCode); }
+			 */else if (userManagerService.findAccount(username)) {
+			statusCode = ConstValues.NOAUTHORIZED;
+			code = 1;
 			dataBag = "已经有这个用户了 请更换手机号";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+			return ResponseJson.responseRegistJson(code, dataBag, statusCode);
 		} else {
 			if (userManagerService.registerNew(registerNew, userBelongTo)) {
 				dataBag = "插入成功";
 				statusCode = ConstValues.OK;
-				return ResponseJson.responseAddJson(dataBag, statusCode);
+				return ResponseJson.responseRegistJson(code, dataBag, statusCode);
 			} else {
 				dataBag = "注册失败";
 				statusCode = ConstValues.FAILED;
 			}
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+			return ResponseJson.responseRegistJson(code, dataBag, statusCode);
 		}
-
 	}
 
 	/**
 	 * 158. 短信发送
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/RegistMessage", method = {RequestMethod.POST } )
+	@RequestMapping(value = "/RegistMessage", method = { RequestMethod.POST })
 	public String registMessage(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map =RequestJson.reqJson(reqBody,"UserPoneNo");
-	    System.out.println(map.get("userPoneNo"));
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserPoneNo");
+		System.out.println(map.get("userPoneNo"));
 		// 设置短信内容参数
 		String userPoneNo = map.get("userPoneNo");
 		String smsFreeSignName = "恒华光迅H";
 		String smsTemplateCode = "SMS_83185001";
 		int number = CommonMethod.getRandNum(100000, 999999);
 		String smsParamJson = "{\"number\":\"" + number + "\"}";
-		int ret = -1;
+		int ret = -256;
 		String dataTag = null;
 		// 发短信
 		try {
@@ -180,25 +182,25 @@ public class UserManagerController {
 			System.out.println(response.getCode());
 			System.out.println(response.getCode().equals("OK"));
 			if (response.getCode().equals("OK") && response.getMessage().equals("OK")) {
-				ret = 1;
+				ret = 1000;
+				dataTag = "短信发送成功";
+				request.getSession().setAttribute("number", String.valueOf(number));
+			} else {
+				ret = -256;
+				dataTag = "短信发送失败";
 			}
 
 		} catch (ClientException e) {
 			e.printStackTrace();
-			ret = -1;
+			ret = -256;
+			dataTag = "短信发送失败";
 		}
 
-		Map<String, String> result = new HashMap<String, String>();
-		if (ret == 1) {
-			dataTag = "短信发送成功";
-			// 把图片内容存入Session中
-			request.getSession().setAttribute("number", String.valueOf(number));
+		JSONObject result = new JSONObject();
 
-		} else
-			dataTag = "短信发送失败";
-		result.put("DataTag", dataTag);
-		result.put("ret", String.valueOf(ret));
-		return JSONObject.fromBean(result).toString();
+		result.put("DataBag", dataTag);
+		result.put("StateMessage", ret);
+		return result.toString();
 
 	}
 	/****************** 登录 ****************************/
@@ -207,13 +209,14 @@ public class UserManagerController {
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
 	 * 
 	 * @throws JsonProcessingException
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 
-	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET })
 	@ResponseBody
+	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET })
 	public String loginBy(HttpServletRequest request) throws JsonProcessingException, UnsupportedEncodingException {
 		request.setCharacterEncoding("UTF-8");
+
 		String sessionCode = (String) request.getSession().getAttribute("certCode");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -221,43 +224,43 @@ public class UserManagerController {
 		int statusCode = 0;
 		String dataBag = null;
 
-		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-			statusCode = ConstValues.FAILED;
-			dataBag = "对不起，账号或密码不能为空";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-
-		} else if (StringUtils.isEmpty(code)) {
-			statusCode = ConstValues.ERROR;
-			dataBag = "没有验证码，请先获取验证码";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-
-		} else if (!code.equalsIgnoreCase(sessionCode)) {
+		if (StringUtils.isEmpty(username) || !userManagerService.findAccount(username)) {
 			statusCode = ConstValues.NOAUTHORIZED;
-			dataBag = "验证码错误";
+			dataBag = "没有用户 请注册";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 
-		else if (!userManagerService.findAccount(username)) {
+		else if (StringUtils.isEmpty(code) || !code.equalsIgnoreCase(sessionCode)) {
 			statusCode = ConstValues.NOAUTHORIZED;
-			dataBag = "没有用户 请先注册";
+			dataBag = "您输入的验证码不正确！";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
-			System.out.println(username+"-----"+password+"------"+Md5Util.getMD5(password));
+		}
+
+		else {
 			User user = userManagerService.loginBy(username, Md5Util.getMD5(password));
 			if (user != null) {
 				request.setAttribute("UserID", user.getUserID());
 				String userTypeName = userManagerService.getUserTypeName(user.getUserTypeID());
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("message", "登陆成功  欢迎回来[" + user.getAccount() + "]," + userTypeName);
-				map.put("tokenID", user.getUserID());
 				statusCode = ConstValues.OK;
-				String content = JSONObject.fromBean(map).toString().replace("\"", "");
-				return ResponseJson.responseFindJson(content, statusCode);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("message", "登录成功 欢迎回来[" + user.getAccount() + "]," + userTypeName);
+				map.put("tokenID", user.getUserID());
+				// String content = JSONObject.fromBean(map).toString();
+
+				return ResponseJson.responseFindJson(map, statusCode);
 			} else {
 				statusCode = ConstValues.NOAUTHORIZED;
-				dataBag = "密码错误 找回密码";
+				dataBag = "密码错误";
 				return ResponseJson.responseAddJson(dataBag, statusCode);
 			}
+
+			/**
+			 * 
+			 * {"StateMessage":-1,"DataBag":"没有用户 请先注册"} { "DataBag": "没有用户 请注册"
+			 * , "StateMessage": -1 } { "DataBag": { "message":
+			 * "登录成功 欢迎回来[18866668888],防火单位管理员", "tokenID":
+			 * "6e2cda35-2a40-4c44-8b3a-d8d3817e9a6d" }, "StateMessage": 1000 }
+			 */
 		}
 	}
 
@@ -274,8 +277,8 @@ public class UserManagerController {
 		// 得到该图片的对象
 		Graphics g = img.getGraphics();
 		// Color.Blue, Color.DarkRed, 1.2f
-		
-		Color c = new Color(255,251,255);// 产生颜色
+
+		Color c = new Color(255, 251, 255);// 产生颜色
 		g.setColor(c);// 对图像设置颜色
 		g.fillRect(0, 0, 68, 22);// 填充图片
 		// 向图片输出数字和字母
@@ -329,27 +332,18 @@ public class UserManagerController {
 	 * UserBelongName=”管理机构”,CompanyName..... case4:UserBelongName=”系统管理员”
 	 * 
 	 * 
-
-    [Description("SLS:根据用户账号获取模块列表")]
-        [HttpPost]
-        public string RetrieveZtreeNodes()
-        {
-            //这里应该根据token统一检查用户令牌是否过期
-            var validUser = LinqDBContext.Users
-                          .Where(o => o.UserID.Equals(tokenid))
-                          .Select(o => o).SingleOrDefault();
-
-            // 3.成功登录 3.1获取ZTree 3.2
-            //T-SQL:[获取ZTree侧边栏] 
-            
-
-
-
-	 *              
-	 * @throws IOException 
+	 * 
+	 * [Description("SLS:根据用户账号获取模块列表")] [HttpPost] public string
+	 * RetrieveZtreeNodes() { //这里应该根据token统一检查用户令牌是否过期 var validUser =
+	 * LinqDBContext.Users .Where(o => o.UserID.Equals(tokenid)) .Select(o =>
+	 * o).SingleOrDefault();
+	 * 
+	 * // 3.成功登录 3.1获取ZTree 3.2 //T-SQL:[获取ZTree侧边栏]  
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST })
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = { RequestMethod.POST })
 	public String retrieveZtreeNodes(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		JSONObject map = JSONObject.fromObject(reqBody);
@@ -357,79 +351,75 @@ public class UserManagerController {
 		Map<String, Object> dataBag = new HashMap<String, Object>();
 		int statusCode = -1;
 		try {
-		if (!tokenUUID.equals(null)) {
-			
-			
-			UserInfo validUser = userManagerService.getUserInfoByName(tokenUUID);
-			if(!StringUtils.isEmpty(validUser)){
-				
-			System.out.println(validUser.toString());
-			String userBelongTo = validUser.getUserBelongTo();
+			if (!tokenUUID.equals(null)) {
 
-			switch (Integer.parseInt(userBelongTo)) {
-			// orgid
-			case 1:
-				validUser.setUserBelongName("防火单位");
-				validUser.setCompanyName(userManagerService.getOnlineorgById(validUser.getOrgID()));
-				break;
-			case 2:
-				validUser.setUserBelongName("维保单位");
-				validUser.setCompanyName(userManagerService.getMaintenanceById(validUser.getMaintenanceId()));
-				break;
-			case 3:
-				validUser.setUserBelongName("管理机构");
-				validUser.setCompanyName(userManagerService.getManagerOrgById(validUser.getManagerOrgID()));
-				break;
-			case 4:
-				validUser.setUserBelongName("系统管理员");
-				break;
-			default:
-				break;
-			}
+				UserInfo validUser = userManagerService.getUserInfoByName(tokenUUID);
+				if (!StringUtils.isEmpty(validUser)) {
+					String userBelongTo = validUser.getUserBelongTo();
 
-			Map<String, Object> validUserMap = new HashMap<String, Object>();
-			validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
-			validUserMap.put("userBelongName", validUser.getUserBelongName());
-			validUserMap.put("usertype", validUser.getUsertype());
-			validUserMap.put("account", validUser.getAccount());
-			validUserMap.put("RealName", validUser.getRealName());
-			validUserMap.put("OrgID", validUser.getOrgID());
-			validUserMap.put("CompanyName", validUser.getCompanyName());
-			System.out.println(JSONObject.fromBean(validUserMap).toString());
-			List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);
-			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+					switch (Integer.parseInt(userBelongTo)) {
+					case 1:
+						validUser.setUserBelongName("防火单位");
+						validUser.setCompanyName(userManagerService.getOnlineorgById(validUser.getOrgID()));
+						break;
+					case 2:
+						validUser.setUserBelongName("维保单位");
+						validUser.setCompanyName(userManagerService.getMaintenanceById(validUser.getMaintenanceId()));
+						break;
+					case 3:
+						validUser.setUserBelongName("管理机构");
+						validUser.setCompanyName(userManagerService.getManagerOrgById(validUser.getManagerOrgID()));
+						break;
+					case 4:
+						validUser.setUserBelongName("系统管理员");
+						break;
+					default:
+						break;
+					}
 
-			for (Ztree ztree : ztrees) {
-				Map<String, Object> ztreeMap = new HashMap<String, Object>();
-				ztreeMap.put("ModuleID", ztree.getModuleID());
-				ztreeMap.put("ModuleName", ztree.getModuleName());
-				ztreeMap.put("URL", ztree.getuRL());
-				ztreeMap.put("OrderNum", ztree.getOrderNum());
-				ztreeMap.put("ParentID", ztree.getParentID());
-				ztreeMap.put("levelnum", ztree.getLevelnum());
-				ztreeMap.put("pic", ztree.getPic());
-				List<Map<String, String>> childModuleMapList = new ArrayList<Map<String, String>>();
+					Map<String, Object> validUserMap = new HashMap<String, Object>();
+					validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
+					validUserMap.put("userBelongName", validUser.getUserBelongName());
+					validUserMap.put("usertype", validUser.getUsertype());
+					validUserMap.put("account", validUser.getAccount());
+					validUserMap.put("RealName", validUser.getRealName());
+					validUserMap.put("OrgID", validUser.getOrgID());
+					validUserMap.put("CompanyName", validUser.getCompanyName());
+					System.out.println(JSONObject.fromBean(validUserMap).toString());
+					List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);
+					List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-				for (ChildModule childModule : ztree.getDKZTree()) {
-					Map<String, String> childModuleMap = new HashMap<String, String>();
-					childModuleMap.put("ModuleID", childModule.getModuleID());
-					childModuleMap.put("ModuleName", childModule.getModuleName());
-					childModuleMap.put("URL", childModule.getuRL());
-					childModuleMap.put("OrderNum", childModule.getOrderNum());
-					childModuleMap.put("ParentID", childModule.getModuleID());
-					childModuleMap.put("levelnum", childModule.getLevelnum());
-					childModuleMap.put("pic", childModule.getPic());
-					childModuleMapList.add(childModuleMap);
+					for (Ztree ztree : ztrees) {
+						Map<String, Object> ztreeMap = new HashMap<String, Object>();
+						ztreeMap.put("ModuleID", ztree.getModuleID());
+						ztreeMap.put("ModuleName", ztree.getModuleName());
+						ztreeMap.put("URL", ztree.getuRL());
+						ztreeMap.put("OrderNum", ztree.getOrderNum());
+						ztreeMap.put("ParentID", ztree.getParentID());
+						ztreeMap.put("levelnum", ztree.getLevelnum());
+						ztreeMap.put("pic", ztree.getPic());
+						List<Map<String, String>> childModuleMapList = new ArrayList<Map<String, String>>();
+
+						for (ChildModule childModule : ztree.getDKZTree()) {
+							Map<String, String> childModuleMap = new HashMap<String, String>();
+							childModuleMap.put("ModuleID", childModule.getModuleID());
+							childModuleMap.put("ModuleName", childModule.getModuleName());
+							childModuleMap.put("URL", childModule.getuRL());
+							childModuleMap.put("OrderNum", childModule.getOrderNum());
+							childModuleMap.put("ParentID", childModule.getModuleID());
+							childModuleMap.put("levelnum", childModule.getLevelnum());
+							childModuleMap.put("pic", childModule.getPic());
+							childModuleMapList.add(childModuleMap);
+						}
+						ztreeMap.put("DKZTree", childModuleMapList);
+
+						list.add(ztreeMap);
+					}
+					dataBag.put("userInfo", validUserMap);
+					dataBag.put("ztree", list);
+
 				}
-				ztreeMap.put("DKZTree", childModuleMapList);
-
-				list.add(ztreeMap);
-			}
-			dataBag.put("userInfo", validUserMap);
-			dataBag.put("ztree", list);
-			
-			}
-			statusCode = ConstValues.OK;
+				statusCode = ConstValues.OK;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

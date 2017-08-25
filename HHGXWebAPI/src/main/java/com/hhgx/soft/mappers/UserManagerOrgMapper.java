@@ -33,7 +33,7 @@ public interface UserManagerOrgMapper {
 
 	UserInfo getUserInfoByName(@Param("username") String username);
 	List<Ztree> selectDKZTreeById(@Param("moduleID") String moduleID);
-	List<Ztree> retrieveZtreeNodes(@Param("username") String username);
+	List<Ztree> retrieveZtreeNodes(@Param("tokenUUID") String tokenUUID);
 
 	String getOnlineorgById(@Param("orgID")String orgID);
 

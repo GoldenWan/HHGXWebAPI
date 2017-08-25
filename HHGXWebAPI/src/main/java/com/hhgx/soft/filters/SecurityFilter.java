@@ -1,6 +1,5 @@
 package com.hhgx.soft.filters;
 
-import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class SecurityFilter implements HandlerInterceptor {
 	        
 	        if(StringUtils.isEmpty(user)){
 	        	//不符合条件的，跳转到登录界面  
-	            response.sendRedirect(contextPath+"/static/index.html");
+	            response.sendRedirect(contextPath+"/index.html");
 	        	return false;
 	        }        
 	        return true;

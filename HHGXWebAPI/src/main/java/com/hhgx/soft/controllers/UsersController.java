@@ -1,22 +1,24 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Users;
 import com.hhgx.soft.services.UsersService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 
@@ -31,13 +33,15 @@ public class UsersController {
 	 * 53获取用户列表【**】【分页】
 	 * @param reqBody
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/GetUserList", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getUserList(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid","UserBelongTo", "PageIndex");
+			RequestMethod.POST })
+	public String getUserList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","UserBelongTo", "PageIndex");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
 		String userBelongTo = map.get("userBelongTo");
@@ -78,11 +82,14 @@ public class UsersController {
 	
 	/**
 	 * 54.修改用户信息【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateUser", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String updateUser(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "Userid", "RealName", "mobilephone", "tel", "Email","Status","Remark","UserTypeID");
+	@RequestMapping(value = "/UpdateUser", method = RequestMethod.POST)
+	public String updateUser(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "Userid", "RealName", "mobilephone", "tel", "Email","Status","Remark","UserTypeID");
 		Users users = new Users();
 		users.setUserid(map.get("userid"));
 		users.setMobilephone(map.get("mobilephone"));
@@ -111,13 +118,15 @@ public class UsersController {
 	}
 	/**
 	 * 55.删除用户信息【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/DeleteUser", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteUser(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/DeleteUser", method = RequestMethod.POST)
+	public String deleteUser(HttpServletRequest request) throws IOException {
+		//String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "Userid");
-		String userCheckId = map.get("userid");
+		//Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "Userid");
+		//String userCheckId = map.get("userid");
 		String dataBag = null;
 		int statusCode = -1;
 		try {

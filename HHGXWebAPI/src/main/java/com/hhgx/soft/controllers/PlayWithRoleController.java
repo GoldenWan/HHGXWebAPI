@@ -1,5 +1,6 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,18 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.ManagerOrg;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.User;
 import com.hhgx.soft.services.PlayWithRoleService;
 import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -36,13 +36,14 @@ public class PlayWithRoleController {
 
 	/**
 	 * 4. 查询所有消防管理部门
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 
-	@RequestMapping(value = "GetManagerOrgAll", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "GetManagerOrgAll", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getManagerOrgAll() throws JsonProcessingException {
+	public String getManagerOrgAll(HttpServletRequest request) throws IOException {
+	
+		
 		List<ManagerOrg> list =null;
 		int statusCode = -1;
 		try {
@@ -69,13 +70,15 @@ public class PlayWithRoleController {
 	 * 
 	 * @param reqBody
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 
-	@RequestMapping(value = "/GetManagersSubs", method = { RequestMethod.POST }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/GetManagersSubs", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getManagersSubs(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "infoBag.MID", "managerorgname", "PageIndex");
+	public String getManagersSubs(HttpServletRequest request) throws IOException {
+		
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "infoBag.MID", "managerorgname", "PageIndex");
 		String infoBagMID = map.get("infoBag.MID");
 		String managerorgname = map.get("managerorgname");// 模糊查询
 		String pageIndex = map.get("pageIndex");
@@ -98,7 +101,6 @@ public class PlayWithRoleController {
 				managerOrgList = playWithRoleService.getManagersSubs(infoBagMID,managerorgname, page.getStartPos(),
 						page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
 			for (ManagerOrg managerOrg : managerOrgList ) {
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("managerorgid", managerOrg.getManagerOrgID());
@@ -115,6 +117,7 @@ public class PlayWithRoleController {
 				map2.put("ContactTel", managerOrg.getContactTel());
 				lmList.add(map2);
 			}
+			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -127,18 +130,19 @@ public class PlayWithRoleController {
 	 * 6. 添加消防管理部门
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
-	@RequestMapping(value = "/AddManagerSubs", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public @ResponseBody String addManagerSubs(@RequestBody String reqBody, HttpServletRequest request)
-			throws JsonProcessingException {
-
-		Map<String, String> m = RequestJson.reqJson(reqBody, "ManagerOrgName", "YnSetMonitor", "tel", "Status",
+	@RequestMapping(value = "/AddManagerSubs", method = {RequestMethod.POST })
+	public @ResponseBody String addManagerSubs(HttpServletRequest request)
+			throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> m = RequestJson.reqFirstLowerJson(reqBody, "ManagerOrgName", "YnSetMonitor", "tel", "Status",
 				"ParentID", "AreaId", "Remark", "ManagerAddress", "ManageOrgGrade", "PName",
 				"ManagerJob", "ContactName", "ContactTel"
 		);
-		
+		int ret=1;
+		String  dataTag=null;
+		try{
 		ManagerOrg managerOrg = new ManagerOrg();
 		String managerOrgName = m.get("managerOrgName");
 		String ynSetMonitor = m.get("ynSetMonitor");
@@ -153,6 +157,7 @@ public class PlayWithRoleController {
 		String managerJob = m.get("managerJob");
 		String contactName = m.get("contactName");
 		String contactTel = m.get("contactTel");
+		
 		String managerOrgID = UUIDGenerator.getUUID();
 		managerOrg.setManagerOrgID(managerOrgID);
 		managerOrg.setManagerOrgName(managerOrgName);
@@ -168,22 +173,17 @@ public class PlayWithRoleController {
 		managerOrg.setManagerJob(managerJob);
 		managerOrg.setContactName(contactName);
 		managerOrg.setContactTel(contactTel);
-		int ret=1;
-		String  dataTag=null;
-			
 		
-		
-		try {
-			playWithRoleService.addManagerSubs(managerOrg);
+		playWithRoleService.addManagerSubs(managerOrg);
 			
-			User user = new User();
-			user.setUserID(UUIDGenerator.getUUID());
-			user.setAccount(String.valueOf(CommonMethod.getRandNum(100000, 999999)));
-			user.setPassword("123456");
-			user.setUserBelongTo("3");
-			user.setUserTypeID("119manager");
-			user.setManagerOrgID(managerOrgID);
-			playWithRoleService.addManagerSubsUser(user);
+		User user = new User();
+		user.setUserID(UUIDGenerator.getUUID());
+		user.setAccount(String.valueOf(CommonMethod.getRandNum(100000, 999999)));
+		user.setPassword("123456");
+		user.setUserBelongTo("3");
+		user.setUserTypeID("119manager");
+		user.setManagerOrgID(managerOrgID);
+		playWithRoleService.addManagerSubsUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ret=0;
@@ -202,12 +202,15 @@ public class PlayWithRoleController {
 	
 	/**
 	 * 7.	删除消防管理部门
+	 * @throws IOException 
 	 * 
 	 */
-	@RequestMapping(value="/RemoveManagerSubs", method={RequestMethod.POST},consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String removeManagerSubs(@RequestBody String reqBody){
-		Map<String, String> map = RequestJson.reqJson(reqBody, "ManagerOrgID");
+	@RequestMapping(value="/RemoveManagerSubs", method={RequestMethod.POST})
+	public String removeManagerSubs(HttpServletRequest request) throws IOException{
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "ManagerOrgID");
 		String managerOrgID = map.get("managerOrgID");
 		int ret = -1;
 		String dataTag=null;

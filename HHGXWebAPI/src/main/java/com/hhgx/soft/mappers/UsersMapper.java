@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
-import com.hhgx.soft.entitys.User;
 import com.hhgx.soft.entitys.Users;
 
 @Component

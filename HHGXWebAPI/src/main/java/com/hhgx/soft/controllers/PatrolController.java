@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,12 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.FireSafetyCheck;
 import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.Page;
@@ -28,6 +27,7 @@ import com.hhgx.soft.entitys.UserCheckProjectContent;
 import com.hhgx.soft.services.PatrolService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -53,12 +53,14 @@ public class PatrolController {
 	/*************** 每日防火巡查 ***********************/
 	/**
 	 * 11.获取防火单位的巡查总体情况
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/GetPatrolTotal", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolTotal(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/GetPatrolTotal", method = RequestMethod.POST)
+	public String getPatrolTotal(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "ManagerOrgID", "StartDate", "EndDate", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "ManagerOrgID", "StartDate", "EndDate", "PageIndex");
 		String managerOrgID = map.get("managerOrgID");
 		String startDate = map.get("startDate");
 		String endDate = map.get("endDate");
@@ -112,14 +114,14 @@ public class PatrolController {
 	 * @param reqBody
 	 *            ?*
 	 * @return:TODO ?
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/GetPatrolRecordByOrg", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolRecordByOrg(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/GetPatrolRecordByOrg", method = RequestMethod.POST)
+	public String getPatrolRecordByOrg(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "OrgID", "StartDate", "EndDate", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "OrgID", "StartDate", "EndDate", "PageIndex");
 		String orgID = map.get("orgID");
 		String startDate = map.get("startDate");
 		String endDate = map.get("endDate");
@@ -172,11 +174,14 @@ public class PatrolController {
 	}
 /**
  * 13.按巡查记录编号查询巡查记录详情
+ * @throws IOException 
  */
 	@ResponseBody
-	@RequestMapping(value = "/GetPatrolDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolDetail(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+	@RequestMapping(value = "/GetPatrolDetail", method = RequestMethod.POST)
+	public String getPatrolDetail(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("userCheckId");
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 
@@ -204,12 +209,15 @@ public class PatrolController {
 	}
 	/**
 	 * 14.按巡查记录编号查询巡查图片
+	 * @throws IOException 
 	 */
 	
 	@ResponseBody
-	@RequestMapping(value = "/GetPatrolPic", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolPic(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+	@RequestMapping(value = "/GetPatrolPic", method = RequestMethod.POST)
+	public String getPatrolPic(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("userCheckId");
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		
@@ -234,13 +242,15 @@ public class PatrolController {
 
 	/**
 	 * 16.按防火单位获取应该巡查的项目/获取所有巡查项目
-	 * @throws JsonProcessingException 
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/GetPatrolProject", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String getPatrolProject(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid");
+	@RequestMapping(value = "/GetPatrolProject", method = RequestMethod.POST)
+	public String getPatrolProject(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
 		String orgid = map.get("orgid");
 		List<PatrolProject> patrolProjectList = null;
 		int statusCode = -1;
@@ -273,14 +283,15 @@ public class PatrolController {
 	/**
 	 * 
 	 * 19.添加防火单位的系统
+	 * @throws IOException 
 	 */
 	
 	@ResponseBody
 	@RequestMapping(value = "/AddorgSys", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String addorgSys(@RequestBody final Map<String, Object> reqBody) throws JsonProcessingException {
-		@SuppressWarnings("unchecked")
-		Map<String, String> map =  (Map<String, String>) reqBody.get("infoBag");
+			RequestMethod.POST })
+	public String addorgSys(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map =  RequestJson.reqOriginJson(reqBody, "infoBag");
 
 		String siteid = map.get("siteid");
 		String tiSysType = map.get("tiSysType");
@@ -316,15 +327,14 @@ public class PatrolController {
 	
 	/**
 	 * 119.删除巡查记录【**】 【说明：使用了级联删除，但需要代码删除与之相关的巡查照片】
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/DeleteCheckRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteCheckRecord(@RequestBody String reqBody,HttpServletRequest request) throws JsonProcessingException {
-
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+	@RequestMapping(value = "/DeleteCheckRecord", method = RequestMethod.POST)
+	public String deleteCheckRecord(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("userCheckId");
 		String dataBag = null;
 		int statusCode = -1;
@@ -359,15 +369,15 @@ public class PatrolController {
 	/**
 	 * 126.新增巡查记录【**】
 	 * 【说明：新增巡查记录，并按防火单位查找UserCheckContent表获得巡查内容编号，再相应插入UserCheckInfo表】
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/AddUserCheckList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String addUserCheckList(@RequestBody String reqBody) throws JsonProcessingException {
+	@RequestMapping(value = "/AddUserCheckList", method = RequestMethod.POST)
+	public String addUserCheckList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "OrgID", "UserCheckTime", "OrgUser", "OrgManagerId");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "OrgID", "UserCheckTime", "OrgUser", "OrgManagerId");
 		String orgID = map.get("orgID");
 		String userCheckTime = map.get("userCheckTime");
 		String orgUser = map.get("orgUser");
@@ -393,14 +403,15 @@ public class PatrolController {
 
 	/**
 	 * 127.修改巡查记录【**】
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateUserCheckList", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String updateUserCheckList(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId", "UserCheckTime");
+	@RequestMapping(value = "/UpdateUserCheckList", method = RequestMethod.POST)
+	public String updateUserCheckList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId", "UserCheckTime");
 		String userCheckId = map.get("userCheckId");
 		String userCheckTime = map.get("userCheckTime");
 		String dataBag = null;
@@ -418,13 +429,14 @@ public class PatrolController {
 
 	/**
 	 * 157.检查并修改巡查记录状态【**】 【所用表：巡查情况UserCheckInfo，巡查记录UerCheckList】
-	 * 
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateSubmitState", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String updateSubmitState(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "UserCheckId");
+	@RequestMapping(value = "/UpdateSubmitState", method = RequestMethod.POST)
+	public String updateSubmitState(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId");
 		String userCheckId = map.get("UserCheckId");
 		String submitState = "已提交";
 		boolean flag = false;
@@ -458,14 +470,15 @@ public class PatrolController {
 	 * 
 	 * @param reqBody
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/FireSafetyCheckList", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
+			RequestMethod.POST })
 	@ResponseBody
-	public String fireSafetyCheckList(@RequestBody String reqBody) throws JsonProcessingException {
+	public String fireSafetyCheckList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "StartTime", "EndTime", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "StartTime", "EndTime", "PageIndex");
 		String orgid = map.get("orgid");
 		String startTime = map.get("startTime");
 		String endTime = map.get("endTime");
@@ -523,11 +536,14 @@ public class PatrolController {
 	 * @param reqBody
 	 * @return
 	 * @throws JsonProcessingException:TODO
-	 */
+	 
+	 * @throws IOException */
 	@ResponseBody
-	@RequestMapping(value = "/FireSafetyCheckDetail", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireSafetyCheckDetail(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "FireSafetyCheckID");
+	@RequestMapping(value = "/FireSafetyCheckDetail", method = RequestMethod.POST)
+	public String fireSafetyCheckDetail(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "FireSafetyCheckID");
 		String fireSafetyCheckID = map.get("fireSafetyCheckID");
 
 		Map<String, String> map2 = new HashMap<String, String>();
@@ -554,11 +570,14 @@ public class PatrolController {
 
 	/**
 	 * 117.编辑防火检查记录【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/EditFireSafetyCheck", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String editFireSafetyCheck(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "FireSafetyCheckID", "checkposite",
+	@RequestMapping(value = "/EditFireSafetyCheck", method = RequestMethod.POST)
+	public String editFireSafetyCheck(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "FireSafetyCheckID", "checkposite",
 				"Department", "Problem", "handing", "attendperson", "CheckedDepartment", "RecordMan", "SafetyMan");
 		String orgid = map.get("orgid");
 		String fireSafetyCheckID = map.get("fireSafetyCheckID");
@@ -602,11 +621,14 @@ public class PatrolController {
 
 	/**
 	 * 118.新增防火检查记录【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/AddFireSafetyCheck", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String addFireSafetyCheck(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "checkposite", "Department", "Problem",
+	@RequestMapping(value = "/AddFireSafetyCheck", method = RequestMethod.POST)
+	public String addFireSafetyCheck(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "checkposite", "Department", "Problem",
 				"handing", "attendperson", "CheckedDepartment", "RecordMan", "SafetyMan");
 		String orgid = map.get("orgid");
 		String fireSafetyCheckID = UUIDGenerator.getUUID();
@@ -649,11 +671,14 @@ public class PatrolController {
 
 	/**
 	 * 137.删除防火检查记录【**】
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/DeleteFireSafetyCheck", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String deleteFireSafetyCheck(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "FireSafetyCheckID");
+	@RequestMapping(value = "/DeleteFireSafetyCheck", method = RequestMethod.POST)
+	public String deleteFireSafetyCheck(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "FireSafetyCheckID");
 		String orgid = map.get("orgid");
 		String fireSafetyCheckID = map.get("fireSafetyCheckID");
 

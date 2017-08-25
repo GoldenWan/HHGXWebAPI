@@ -96,12 +96,39 @@
                 "UserPoneNo":$("#regin_u_name").val()
             };
             HH.post("/UserManager/RegistMessage",temp,function(data){
-               // console.log('手机验证码返回数据');
-               // console.log(data);
+                console.log('手机验证码返回数据');
+                console.log(data);
+                if(data.StateMessage==1000){
+                    setTelCodeFunc();
+                }
                 sessionStorage.setItem("yzm",data.DataBag);
             });
         }
     });
+    //设置手机获取验证码按钮
+    function setTelCodeFunc(){
+        $("#getTelCodeBtn").attr("disabled",true);
+        var timeSecond = 60;
+        $("#getTelCodeBtn").text(timeSecond+"S");
+        var timeInterval = window.setInterval(function(){
+            timeSecond = timeSecond - 1;
+            //var timeRes = timeSecond;
+            $("#getTelCodeBtn").text(timeSecond+"S");
+            if(timeSecond==0){
+                window.clearInterval(timeInterval);
+                $("#getTelCodeBtn").text("获取");
+                $("#getTelCodeBtn").css({
+                    "background-color":"#4A90E2",
+                    "color":"#FFFFFF"
+                });
+                $("#getTelCodeBtn").attr("disabled",false);
+            }
+        },1000);
+        $("#getTelCodeBtn").css({
+            "background-color":"#A0A0A0",
+            "color":"white"
+        });
+    }
 
     //点击登录的时候判断
     $("#login_okbtn").click(function(){
@@ -147,11 +174,14 @@
                                 document.cookie = "UserId="+encodeURI(data.DataBag.tokenID)+"; path=/";
                                 window.location.href="./html/main.html";
                             }else if(data.StateMessage==-2){
-                                alert(data.DataBag);
+                                //console.log(data.DataBag);
+                                $("#login_mimaErro").text("密码错误");
+                                $("#login_mimaErro").css('display',"block");
                                 return;
                             }else if(data.DataBag=="您输入的验证码不正确！"){
                                 $("#login_yzmErro").text("您输入的验证码有错");
                                 $("#login_yzmErro").css('display',"block");
+                                $('#yzm').click();
                                 return;
                             }else if(data.DataBag=="没有用户 请注册"){
                                 $("#login_yzmErro").text("用户名或密码错误!");
@@ -255,7 +285,9 @@
         //console.log(area)
         //if(selectedIndex=="" || province=="请选择省份" || area=="请选择市"){
             if(selectedIndex==""){
-                alert("请选择用户类型");
+                //alert("请选择用户类型");
+                $("#regin_pwdErro").text("请选择用户类型");
+                $("#regin_pwdErro").css("display","block");
                 return;
             }/*if(province=="请选择省份"){
                 alert("请选择省份");
@@ -298,7 +330,8 @@
                     if(codeStatus=="ok"){
                         if(pwdStatus=="ok"){
                             if($("#checks").prop("checked")==false){
-                                alert("请阅读使用协议");
+                                //alert("请阅读使用协议");
+                                $("#regin_pwdErro").text("请阅读使用协议");
                                 return;
                             }
                             var data = {
@@ -325,7 +358,23 @@
                                     //-256不成功
                                 //    console.log("登录返回数据");
                                     if(datas.StateMessage==1000){
-                                        chooseLogin();
+                                        $("#gotoModal").modal({backdrop:"static"});
+                                        var gotoTime = 3;
+                                        $("#gotoTime").text(gotoTime);
+                                        var gotoInterval = window.setInterval(function(){
+                                            gotoTime = gotoTime - 1;
+                                            $("#gotoTime").text(gotoTime);
+                                            if(gotoTime==0){
+                                                window.clearInterval(gotoInterval);
+                                                $("#gotoModal").modal("hide");
+                                                chooseLogin();
+                                            }
+                                        },1000);
+                                        $("#gotoModalConfirm").get(0).onclick=function(){
+                                            $("#gotoModal").modal("hide");
+                                            chooseLogin();
+                                        };
+
                                     }else if(datas.StateMessage==-1 && datas.DataBag.code==1){
                                         //alert('asdf');
                                         //$("#regin_pwdErro").text('');

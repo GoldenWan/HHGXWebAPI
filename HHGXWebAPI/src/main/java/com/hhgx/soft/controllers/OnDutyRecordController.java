@@ -1,19 +1,21 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.OnDutyRecord;
 import com.hhgx.soft.services.OnDutyRecordService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -26,12 +28,14 @@ public class OnDutyRecordController {
 
 	/**
 	 * 87.新增值班记录
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/AddOnDutyRecord", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String addOnDutyRecord(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid", "FireControlor", "gangcontrolor",
+	@RequestMapping(value = "/AddOnDutyRecord", method = RequestMethod.POST)
+	public String addOnDutyRecord(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "FireControlor", "gangcontrolor",
 				"ProcessResult", "ControlorModel", "selfcheck    ", "eliminateVoice", "Reset        ", "MainPower    ",
 				"SecondPower", "Faulthandling", "CheckPeople", "DutySignID");
 		String orgid = map.get("orgid");
@@ -83,11 +87,13 @@ public class OnDutyRecordController {
 	
 	/**
 	 * 8.编辑值班记录获取编辑详情
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/EditOnDutyRecordInfo", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String editOnDutyRecordInfo(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody,"RecordID", "RecordTime","FireControlor", "gangcontrolor",
+	@RequestMapping(value = "/EditOnDutyRecordInfo", method = RequestMethod.POST)
+	public String editOnDutyRecordInfo(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody,"RecordID", "RecordTime","FireControlor", "gangcontrolor",
 				"ProcessResult", "ControlorModel", "selfcheck    ", "eliminateVoice", "Reset        ", "MainPower    ",
 				"SecondPower", "Faulthandling", "CheckPeople", "DutySignID");
 		
@@ -136,9 +142,6 @@ public class OnDutyRecordController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
 	
-	/**
-	 * 
-	 */
 	
 	
 

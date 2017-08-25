@@ -569,7 +569,77 @@
 		AND c.deviceaddress = #{deviceaddress}
 
 	</select>
-
-
+	<!-- <update id="updateMarkPoint">
+	UPDATE devices
+	SET 
+	fPositionX = #{fPositionX},
+	 fPositionY = #{fPositionY}
+	WHERE
+		deviceaddress = #{deviceaddress}
+	AND sysaddress = #{sysaddress}
+	AND gatewayaddress = #{gatewayaddress}
+	</update>
+	<select id="returnMarkPoint" resultType="devices">
+	SELECT
+		c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress,
+		c.DeviceNo,
+		d.iDeviceType iDeviceType,
+		d.DeviceTypeName
+	FROM
+		devices c,
+		devicetype d
+	WHERE
+		c.cFlatPic = #{cFlatPic}
+	AND c.DeviceNo = #{deviceNo}
+	
+	</select>
+	<select id="findMarkPoint" resultType="devices">
+	SELECT
+		c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress,
+		c.DeviceNo,
+		d.iDeviceType iDeviceType,
+		d.DeviceTypeName
+	FROM
+		devices c,
+		devicetype d
+	WHERE
+		deviceaddress = #{deviceaddress}
+	AND sysaddress = #{sysaddress}
+	AND gatewayaddress = #{gatewayaddress}
+	
+	
+	</select>
+	<select id="getFirstDevice" resultType="devices">
+	SELECT
+		c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress,
+		c.DeviceNo,
+		c.iDeviceType,
+		d.DeviceTypeName
+	FROM
+		devices c,
+		devicetype d
+	WHERE
+		c.cFlatPic = #{cFlatPic}
+	</select>
+	<select id="getOneDevice" resultType="devices">
+	SELECT
+		c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress,
+		c.DeviceNo
+	FROM
+		devices c
+	WHERE
+		c.cFlatPic = #{cFlatPic}
+	AND c.DeviceNo = #{deviceNo}
+	</select> -->
+	
+	
 
 </mapper>

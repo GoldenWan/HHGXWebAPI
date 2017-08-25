@@ -1,23 +1,25 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.FireAlarm;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 
@@ -30,13 +32,16 @@ public class AlarmDataController {
 	/*******************************远程监控******************************/
 	/**
 	  10.获取报警信息【**】【分页】
+	 * @throws IOException 
 	 */
 	
 	@ResponseBody
 	@RequestMapping(value = "/FireAlarm", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireAlarm(@RequestBody String reqBody) throws JsonProcessingException {
-		Map<String, String> map = RequestJson.reqJson(reqBody, "orgid","cAlarmtype", "PageIndex");
+			RequestMethod.POST })
+	public String fireAlarm(HttpServletRequest request) throws IOException {
+	String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+			
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","cAlarmtype", "PageIndex");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
 		String cAlarmtype = map.get("cAlarmtype");
@@ -88,28 +93,28 @@ public class AlarmDataController {
 	/**
 	 * 124.警情处理【**】
 	 */
-	@ResponseBody
+	/**@ResponseBody
 	@RequestMapping(value="/FireDetail", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireDetail(@RequestBody String reqBody){
-		Map<String, String> map = RequestJson.reqJson(reqBody, "Firealarmid","username", "checkresult", "checkdesc", "YnRequest");
+			RequestMethod.POST })
+	public String fireDetail(HttpServletRequest request){
+	//	Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "Firealarmid","username", "checkresult", "checkdesc", "YnRequest");
 
 		
-		return reqBody;
+		return "";
 		
-	}
+	}*/
 	/**
 	 *188.警情未处理详情【**】
 	 */
-	@ResponseBody
+	/**@ResponseBody
 	@RequestMapping(value="/FireUnDealInfo", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String fireUnDealInfo(@RequestBody String reqBody){
-		Map<String, String> map = RequestJson.reqJson(reqBody, "Firealarmid");
+			RequestMethod.POST })
+	public String fireUnDealInfo(HttpServletRequest request){
+		//Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "Firealarmid");
 
 		
-		return reqBody;
+		return "";
 		
-	}
+	}*/
 	
 }

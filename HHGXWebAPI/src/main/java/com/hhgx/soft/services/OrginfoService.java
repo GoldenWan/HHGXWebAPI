@@ -144,5 +144,33 @@ public class OrginfoService {
 	public Devices selectDeviceDetail(String gatewayaddress, String sysaddress, String deviceaddress) {
 		return  orginfoMapper.selectDeviceDetail( gatewayaddress,  sysaddress,  deviceaddress);
 	}
+/**
+	public Devices markPoint(Devices devices) {
+		//据联合主键修改部件的fPositionX,fPositionY,
+		orginfoMapper.updateMarkPoint(devices);
+		//然后根据cFlatPic和DeviceNo,返回下一个节点信息，下一个节点是大于当前节点的最小节点
+		List<Devices> devicesList = orginfoMapper.returnMarkPoint(devices);
+		Devices devices2 = orginfoMapper.findMarkPoint(devices);
+		int currentiDeviceType = Integer.parseInt(devices2.getiDeviceType());
+		for(int i= 0;i<devicesList.size();i++){
+			if(Integer.parseInt(devicesList.get(i).getiDeviceType())>currentiDeviceType ){
+		}
+
+		}
+		
+		return devices;
+	}
+
+
+
+	public Devices getOneDevice(String cFlatPic, String deviceNo ) {
+		return orginfoMapper.getOneDevice(cFlatPic, deviceNo);
+	}
+
+	public Devices getFirstDevice(String cFlatPic) {
+		return orginfoMapper.getFirstDevice(cFlatPic);
+	}
+	
+	*/
 	
 }

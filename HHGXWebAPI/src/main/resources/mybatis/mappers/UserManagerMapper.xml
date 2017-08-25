@@ -115,7 +115,7 @@
 	INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
 	INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
 	WHERE
-		account = #{username}
+		u.UserID = #{tokenUUID}
 	</select>
 
 

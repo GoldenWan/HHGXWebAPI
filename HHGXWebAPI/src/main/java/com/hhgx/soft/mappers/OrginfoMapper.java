@@ -73,11 +73,22 @@ public interface OrginfoMapper {
 	int findGatewayaddressExist(String newGatewayaddress);
 
 	void deleteDevicesBycflatPic(String cFlatPic);
-//
 	int selectDevicesListCount(@Param("cFlatPic")String cFlatPic, @Param("iDeviceType")String iDeviceType, @Param("deviceaddress")String deviceaddress);
 	List<DeviceList> selectDevicesLists(@Param("cFlatPic")String cFlatPic, @Param("iDeviceType")String iDeviceType, @Param("deviceaddress")String deviceaddress, @Param("startPos")int startPos,
 			@Param("pageSize")int pageSize);
 	Devices selectDeviceDetail(@Param("gatewayaddress") String gatewayaddress, @Param("sysaddress") String sysaddress,
 			@Param("deviceaddress") String deviceaddress);
 
+	
+	/**
+	void updateMarkPoint(Devices devices);
+
+	List<Devices> returnMarkPoint(Devices devices);
+
+	Devices getFirstDevice(String cFlatPic);
+
+	Devices getOneDevice(@Param("cFlatPic")String cFlatPic, @Param("deviceNo")String deviceNo);
+
+	Devices findMarkPoint(Devices devices);
+*/
 }

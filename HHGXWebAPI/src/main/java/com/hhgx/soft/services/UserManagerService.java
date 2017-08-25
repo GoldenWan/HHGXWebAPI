@@ -62,9 +62,9 @@ public class UserManagerService {
 	}
 
 	
-	public List<Ztree> retrieveZtreeNodes(String username) {
+	public List<Ztree> retrieveZtreeNodes(String tokenUUID) {
 		
-		return userManagerMapper.retrieveZtreeNodes(username);
+		return userManagerMapper.retrieveZtreeNodes(tokenUUID);
 	}
 
 	public String getOnlineorgById(String orgID) {
