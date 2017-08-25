@@ -126,7 +126,7 @@ public class ManageRuleController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 
@@ -246,7 +246,7 @@ public class ManageRuleController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 

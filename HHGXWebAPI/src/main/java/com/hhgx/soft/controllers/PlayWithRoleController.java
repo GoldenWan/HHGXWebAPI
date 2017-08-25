@@ -122,7 +122,7 @@ public class PlayWithRoleController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responsePalyWithRoleFindPageJson(lmList,managerorgname,statusCode, totalCount);
+		return ResponseJson.respPalyWithRoleFindPageJsonArray(lmList,managerorgname,statusCode, totalCount);
 
 		}
 

@@ -57,7 +57,7 @@ public class FacilityController {
 		}
 		//JSONObject jsonObject = new JSONObject();
 		//jsonObject.put("sysList", list);
-		return ResponseJson.responseFindJson(list, statusCode);
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
 
@@ -114,7 +114,7 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 
@@ -245,7 +245,7 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 

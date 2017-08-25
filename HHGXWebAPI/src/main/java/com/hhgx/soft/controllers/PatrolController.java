@@ -102,7 +102,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 	
@@ -169,7 +169,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 /**
@@ -205,7 +205,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(lmList, statusCode);
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 	}
 	/**
 	 * 14.按巡查记录编号查询巡查图片
@@ -237,7 +237,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(lmList, statusCode);
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 
