@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.services.UserManagerService;
 import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.Md5Util;
 import com.hhgx.soft.utils.RegistMessage;
 import com.hhgx.soft.utils.RequestJson;
@@ -55,12 +57,13 @@ public class UserManagerController {
 	 * 1. 用户注册
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/RegisterNew", method = {
-			RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces = "text/html;charset=UTF-8")
-	public @ResponseBody String registerNew(@RequestBody String reqBody, HttpServletRequest request)
-			throws JsonProcessingException {
+			RequestMethod.POST })
+	public @ResponseBody String registerNew(HttpServletRequest request)
+			throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> m = RequestJson.reqJson(reqBody, "username", "password", "orgname", "AreaID", "verifycode",
 				"UserBelongTo");
 		RegisterNew registerNew = new RegisterNew();
@@ -120,11 +123,11 @@ public class UserManagerController {
 			dataBag = "请输入手机验证码";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
-		} else if (!verifycode.equals(number)) {
+		/*} else if (!verifycode.equals(number)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "手机验证码错误";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
-
+*/
 		} else if (StringUtils.isEmpty(orgname)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "请输入公司名";
@@ -153,16 +156,15 @@ public class UserManagerController {
 
 	/**
 	 * 158. 短信发送
+	 * @throws IOException 
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/RegistMessage", method = {
-			RequestMethod.POST } ,consumes = "application/json;charset=UTF-8", produces = "application/json;charset=UTF-8")
-	public String registMessage(@RequestBody final Map<String, Object> reqBody, HttpServletRequest request) {
-		
-		@SuppressWarnings("unchecked")
-		Map<String, String> map =  (Map<String, String>) reqBody.get("infoBag");
-	System.out.println(map.get("userPoneNo"));
+	@RequestMapping(value = "/RegistMessage", method = {RequestMethod.POST } )
+	public String registMessage(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map =RequestJson.reqJson(reqBody,"UserPoneNo");
+	    System.out.println(map.get("userPoneNo"));
 		// 设置短信内容参数
 		String userPoneNo = map.get("userPoneNo");
 		String smsFreeSignName = "恒华光迅H";
@@ -171,7 +173,7 @@ public class UserManagerController {
 		String smsParamJson = "{\"number\":\"" + number + "\"}";
 		int ret = -1;
 		String dataTag = null;
-		// 发短信`
+		// 发短信
 		try {
 			SendSmsResponse response = RegistMessage.sendSms(smsFreeSignName, smsTemplateCode, smsParamJson,
 					userPoneNo);
@@ -205,11 +207,13 @@ public class UserManagerController {
 	 * 2.用户登录  * @return  * @throws JsonProcessingException:TODO  
 	 * 
 	 * @throws JsonProcessingException
+	 * @throws UnsupportedEncodingException 
 	 */
 
-	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET }, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET })
 	@ResponseBody
-	public String loginBy(HttpServletRequest request) throws JsonProcessingException {
+	public String loginBy(HttpServletRequest request) throws JsonProcessingException, UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
 		String sessionCode = (String) request.getSession().getAttribute("certCode");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -222,7 +226,7 @@ public class UserManagerController {
 			dataBag = "对不起，账号或密码不能为空";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
-	/*	} else if (StringUtils.isEmpty(code)) {
+		} else if (StringUtils.isEmpty(code)) {
 			statusCode = ConstValues.ERROR;
 			dataBag = "没有验证码，请先获取验证码";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -230,7 +234,7 @@ public class UserManagerController {
 		} else if (!code.equalsIgnoreCase(sessionCode)) {
 			statusCode = ConstValues.NOAUTHORIZED;
 			dataBag = "验证码错误";
-			return ResponseJson.responseAddJson(dataBag, statusCode);*/
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 
 		else if (!userManagerService.findAccount(username)) {
@@ -238,6 +242,7 @@ public class UserManagerController {
 			dataBag = "没有用户 请先注册";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
+			System.out.println(username+"-----"+password+"------"+Md5Util.getMD5(password));
 			User user = userManagerService.loginBy(username, Md5Util.getMD5(password));
 			if (user != null) {
 				request.setAttribute("UserID", user.getUserID());
@@ -245,9 +250,9 @@ public class UserManagerController {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("message", "登陆成功  欢迎回来[" + user.getAccount() + "]," + userTypeName);
 				map.put("tokenID", user.getUserID());
-				//String content = JSONObject.fromBean(map).toString().replace("\"", "");
 				statusCode = ConstValues.OK;
-				return ResponseJson.responseFindJson(map, statusCode);
+				String content = JSONObject.fromBean(map).toString().replace("\"", "");
+				return ResponseJson.responseFindJson(content, statusCode);
 			} else {
 				statusCode = ConstValues.NOAUTHORIZED;
 				dataBag = "密码错误 找回密码";
@@ -341,15 +346,14 @@ public class UserManagerController {
 
 
 	 *              
+	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST }, consumes = "application/json;charset=UTF-8", produces  = "application/json;charset=UTF-8")
-	public String retrieveZtreeNodes(@RequestBody final Map<String, Object> maprq) throws JsonProcessingException {
-		//Map<String, String> map = (Map<String, String>) maprq.get("infoBag");
-		String tokenUUID = (String) maprq.get("tokenUUID");
-		
-	//	String tokenUUID = map.get("tokenUUID");
-		//tokenUUID==userId
+	@RequestMapping(value = "/RetrieveZtreeNodes", method = {RequestMethod.POST })
+	public String retrieveZtreeNodes(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		JSONObject map = JSONObject.fromObject(reqBody);
+		String tokenUUID = (String) map.get("tokenUUID");
 		Map<String, Object> dataBag = new HashMap<String, Object>();
 		int statusCode = -1;
 		try {
