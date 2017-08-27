@@ -172,5 +172,9 @@ public class OrginfoService {
 	}
 	
 	*/
+
+	public List<Site> getSiteName(String orgid) {
+		return orginfoMapper.getSiteName(orgid);
+	}
 	
 }

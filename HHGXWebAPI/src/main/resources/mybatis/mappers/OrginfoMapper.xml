@@ -157,6 +157,16 @@
 		s.orgid = #{orgid}
 	</select>
 
+	<select id="getSiteName" resultType="site">
+	SELECT
+		siteid,
+		sitename
+	FROM
+		site
+	WHERE
+		orgid = #{orgid}
+	</select>
+
 	<select id="getFireSystemListCount" resultType="int">
 		SELECT
 		count(*)

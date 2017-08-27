@@ -1060,5 +1060,48 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJson(map2, statusCode);
 	}
+	
+	/**
+	 * 测试结果	
+接口地址	/ Orginfo/GetSiteName
+接口方法	GetSiteName
+请求方式	POST
+接口请求
+参数名称	参数代码	参数类型
+防火单位编号	orgid	string
+接口返回
+建筑物编号	siteid	string
+建筑物名称	sitename	string
+数据库表：
+
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetSiteName", method = RequestMethod.POST)
+	public String getSiteName(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody,"orgid");
+		String orgid = map.get("orgid");
+List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
+		int statusCode =-1;
+		try{
+	
+		
+		List<Site> sites= orginfoService.getSiteName(orgid);
+		
+		for(Site site: sites){
+			Map<String, String> map2 = new HashMap<String, String>();
+			map2.put("siteid", site.getSiteid());
+			map2.put("sitename", site.getSitename());
+			lists.add(map2);
+		} 
+			statusCode = ConstValues.OK;
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		statusCode = ConstValues.FAILED;
+	}
+	return ResponseJson.responseFindJsonArray(lists, statusCode);
+}	
 
 }

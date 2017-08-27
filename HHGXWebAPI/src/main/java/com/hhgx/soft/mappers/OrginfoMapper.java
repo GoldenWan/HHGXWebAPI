@@ -79,6 +79,8 @@ public interface OrginfoMapper {
 	Devices selectDeviceDetail(@Param("gatewayaddress") String gatewayaddress, @Param("sysaddress") String sysaddress,
 			@Param("deviceaddress") String deviceaddress);
 
+	List<Site> getSiteName(String orgid);
+
 	
 	/**
 	void updateMarkPoint(Devices devices);
