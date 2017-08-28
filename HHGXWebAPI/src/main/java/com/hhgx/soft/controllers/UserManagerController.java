@@ -249,7 +249,7 @@ public class UserManagerController {
 
 				return ResponseJson.responseFindJson(map, statusCode);
 			} else {
-				statusCode = ConstValues.NOAUTHORIZED;
+				statusCode = ConstValues.ERROR;
 				dataBag = "密码错误";
 				return ResponseJson.responseAddJson(dataBag, statusCode);
 			}
@@ -284,7 +284,7 @@ public class UserManagerController {
 		// 向图片输出数字和字母
 		StringBuffer sb = new StringBuffer();
 		// 字符数组
-		char[] ch = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+		char[] ch = "abcdefghixyz023DFGHJKLZXCVBNM456jkmnopqstuvw789QWERTYUOPAS".toCharArray();
 		int index, len = ch.length;
 		Random r = new Random();
 		for (int i = 0; i < 4; i++) {// 产生四个字符
@@ -297,14 +297,17 @@ public class UserManagerController {
 			sb.append(ch[index]);
 		}
 		g.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
-		// 绘制干扰线
-		for (int i = 0; i < 2; i++) {
+		Graphics gg = img.getGraphics();
+		gg.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
+		gg.setFont(new Font("Arial", Font.ITALIC , 1));
 
+		// 绘制干扰线
+		for (int i = 0; i <3; i++) {
 			int x = r.nextInt(width);
 			int y = r.nextInt(height);
 			int x1 = r.nextInt(12);
 			int y1 = r.nextInt(12);
-			g.drawLine(x1, y1, x, y);
+			gg.drawLine(x1, y1, x, y);
 		}
 
 		// 把图片内容存入Session中
@@ -313,7 +316,6 @@ public class UserManagerController {
 		ImageIO.write(img, "JPG", response.getOutputStream());
 
 	}
-
 	/**
 	 * 3.根据用户帐号获取模块列表  
 	 * 
