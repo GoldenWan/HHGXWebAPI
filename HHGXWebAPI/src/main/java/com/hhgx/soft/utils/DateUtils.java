@@ -109,10 +109,14 @@ public class DateUtils {
 	 * @param times
 	 * @return
 	 */
-	public static Timestamp stringToTimestamp1(String times) {
+	public static Timestamp stringToTimestamp(String times,String ext) {
+		if(ext==null)
+		ext=" 00:00:00";
+		String formatDATE ="";
+		formatDATE=times.replaceAll("/", "-").concat(ext);
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		try {
-			ts = Timestamp.valueOf(times);
+			ts = Timestamp.valueOf(formatDATE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

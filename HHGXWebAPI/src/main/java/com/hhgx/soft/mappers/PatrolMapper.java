@@ -1,5 +1,6 @@
 package com.hhgx.soft.mappers;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -20,11 +21,11 @@ import com.hhgx.soft.entitys.UserCheckProjectContent;
 @Component("/patrolMapper")
 public interface PatrolMapper {
 
-	int gePatrolRecordByOrgCount(@Param("orgID") String orgID, @Param("startDate") String startDate,
-			@Param("endTime") String EndDate);
+	int gePatrolRecordByOrgCount(@Param("orgID") String orgID, @Param("startDate") Timestamp timestamp,
+			@Param("endTime") Timestamp timestamp2);
 
-	List<PatrolRecord> getPatrolRecordByOrg(@Param("orgID") String orgID, @Param("startDate") String startDate,
-			@Param("endTime") String EndDate, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
+	List<PatrolRecord> getPatrolRecordByOrg(@Param("orgID") String orgID, @Param("startDate") Timestamp timestamp,
+			@Param("endTime") Timestamp timestamp2, @Param("startPos") int startPos, @Param("pageSize") int pageSize);
 
 
 	void addUserCheckList(@Param("userCheckId") String userCheckId, @Param("orgID") String orgID,

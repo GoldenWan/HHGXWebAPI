@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -126,27 +127,30 @@ public class PatrolController {
 		String startDate = map.get("startDate");
 		String endDate = map.get("endDate");
 		String pageIndex = map.get("pageIndex");
+		//如果日期为空，则默认添加两月期间
+		
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,startDate,endDate);
-		int statusCode = -1;
+		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"));
+		int statusCode = -1;		
+		String submitFlag = null;
+
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
-				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, startDate, endDate, page.getStartPos(),
+				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"), page.getStartPos(),
 						page.getPageSize());
 
 			} else {
 				page = new Page(totalCount, 1);
-				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, startDate, endDate, page.getStartPos(),
+				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"), page.getStartPos(),
 						page.getPageSize());
 			}
 			statusCode = ConstValues.OK;
 			for (PatrolRecord patrolRecord : patrolRecordList) {
 				String submitStatet = patrolRecord.getSubmitStatet();
-				String submitFlag = null;
-				if (submitStatet.equals("已提交"))
+				if (!StringUtils.isEmpty(submitStatet) && submitStatet.equals("已提交"))
 					submitFlag = "true";
 				else {
 					submitFlag = "false";

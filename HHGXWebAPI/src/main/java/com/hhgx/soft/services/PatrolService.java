@@ -1,5 +1,6 @@
 package com.hhgx.soft.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,13 @@ public class PatrolService {
 	@Autowired
 	private PatrolMapper patrolMapper;
 
-	public int gePatrolRecordByOrgCount(String orgID, String startDate, String endDate) {
-		return patrolMapper.gePatrolRecordByOrgCount(orgID, startDate, endDate);
+	public int gePatrolRecordByOrgCount(String orgID, Timestamp timestamp, Timestamp timestamp2) {
+		return patrolMapper.gePatrolRecordByOrgCount(orgID, timestamp, timestamp2);
 	}
 
-	public List<PatrolRecord> getPatrolRecordByOrg(String orgID, String startDate, String endDate, int startPos,
+	public List<PatrolRecord> getPatrolRecordByOrg(String orgID, Timestamp timestamp, Timestamp timestamp2, int startPos,
 			int pageSize) {
-		return patrolMapper.getPatrolRecordByOrg(orgID, startDate, endDate, startPos, pageSize);
+		return patrolMapper.getPatrolRecordByOrg(orgID, timestamp, timestamp2, startPos, pageSize);
 	}
 
 	public void deleteUserCheckList(String userCheckId) {
