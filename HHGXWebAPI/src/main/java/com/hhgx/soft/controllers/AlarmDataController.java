@@ -33,6 +33,10 @@ public class AlarmDataController {
 	/**
 	  10.获取报警信息【**】【分页】
 	 * @throws IOException 
+	 * 
+	 * {"tokenUUID":"6ec04b9ed0144ff58de3605da4010157",
+	 * "infoBag":
+	 * {"orgid":"null","cAlarmtype":"火警","StartTime":"","EndTime":"","PageIndex":null,"siteid":null}}:
 	 */
 	
 	@ResponseBody
@@ -53,14 +57,17 @@ public class AlarmDataController {
 		
 		int totalCount = alarmDataService.getfireAlarmCount(orgid, cAlarmtype);
 		try {
-			if (StringUtils.isEmpty(pageIndex) ) {
+			if(StringUtils.isEmpty(orgid)|| orgid.equals("null")){
+				statusCode = ConstValues.FAILED;
+				return  ResponseJson.responseAddJson("orgid为空", statusCode);
+			}
+			if (StringUtils.isEmpty(pageIndex)|| pageIndex.equals("null")) {
 				page = new Page(totalCount, 1);
 				fireAlarmList = alarmDataService.findFireAlarm(orgid, cAlarmtype, page.getStartPos(), page.getPageSize());
 			} else {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				fireAlarmList = alarmDataService.findFireAlarm(orgid, cAlarmtype, page.getStartPos(), page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
 			for (FireAlarm fireAlarm : fireAlarmList) {
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("Firealarmid",fireAlarm.getFirealarmid());
@@ -81,6 +88,9 @@ public class AlarmDataController {
 		
 				lmList.add(map2);
 			}
+			statusCode = ConstValues.OK;
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;

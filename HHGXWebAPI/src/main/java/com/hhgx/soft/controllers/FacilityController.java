@@ -101,7 +101,7 @@ public class FacilityController {
 			for (Training training : trainingList) {
 
 				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("TrainingTime ", DateUtils.formatDateTime(training.getTrainingTime()));
+				map2.put("TrainingTime ", DateUtils.formatDate(training.getTrainingTime(),null));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
@@ -137,7 +137,7 @@ public class FacilityController {
 			Training training = facilityService.getTraingingDetail(trainingID);
 			if (!StringUtils.isEmpty(training)) {
 				map2.put("TrainingID", training.getTrainingID());
-				map2.put("TrainingTime", DateUtils.formatDateTime(training.getTrainingTime()));
+				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(),null));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingType", training.getTrainingType());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
@@ -212,12 +212,14 @@ public class FacilityController {
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
-
 		Page page = null;
 		List<Manoeuvre> manoeuvreList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		int totalCount = facilityService.getManoeuvreCount(orgid);
 		int statusCode = -1;
+		if(StringUtils.isEmpty(orgid) || orgid.equals("null")){
+			return ResponseJson.responseAddJson("orgid 为空", statusCode);
+		}
 
 		try {
 			if (pageIndex != null) {
@@ -234,7 +236,7 @@ public class FacilityController {
 
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("manoeuvreID", manoeuvre.getManoeuvreID());
-				map2.put("manoeuvretime", manoeuvre.getManoeuvretime());
+				map2.put("manoeuvretime", DateUtils.formatToDate(manoeuvre.getManoeuvretime()));
 				map2.put("address", manoeuvre.getAddress());
 				map2.put("Department", manoeuvre.getDepartment());
 				map2.put("manager", manoeuvre.getManager());
@@ -245,7 +247,7 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 

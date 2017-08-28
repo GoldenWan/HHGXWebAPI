@@ -25,6 +25,7 @@ public class DateUtils {
 	 * @param String
 	 */
 	public static String formatDate(String pattern) {
+		
 		Date d = new Date();
 		if (pattern == null)
 			pattern = "yyyy-MM-dd";
@@ -45,6 +46,21 @@ public class DateUtils {
 			pattern = "yyyy-MM-dd";
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		return (sdf.format(date));
+	}
+	
+	/**
+	 * 按照指定的格式返回日期字符串. 默认 "yyyy/MM/dd"
+	 * 
+	 * @param Date
+	 * @param String
+	 */
+	public static String formatToDate(String date) 
+	{  String formatDATE ="";
+		if (date == null)
+			return "";
+		String d = date.substring(0,10);
+		formatDATE=d.replaceAll("-", "/");
+		return formatDATE;
 	}
 
 	/**
@@ -93,7 +109,7 @@ public class DateUtils {
 	 * @param times
 	 * @return
 	 */
-	public static Timestamp stringToTimestamp(String times) {
+	public static Timestamp stringToTimestamp1(String times) {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		try {
 			ts = Timestamp.valueOf(times);
@@ -102,6 +118,7 @@ public class DateUtils {
 		}
 		return ts;
 	}
+	
 
 	public static String timesstampToString() {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -258,11 +275,7 @@ public class DateUtils {
 		return calendar.getTime();
 	}
 
-	public static void main(String args[]) {
-		// System.out.println(formatDateTime(DateUtils.addDay(new Date(),1)));
-
-	}
-
+	
 	
 	/**
 	 * function format time

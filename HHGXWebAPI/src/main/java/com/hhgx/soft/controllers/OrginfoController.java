@@ -460,9 +460,9 @@ public class OrginfoController {
 			devices.setLocation(location);
 			devices.setManufacture(manufacture);
 			devices.setModel(model);
-			devices.setProductDate(DateUtils.stringToTimestamp(productDate));
-			devices.setExpdate(DateUtils.stringToTimestamp(expdate));
-			devices.setAddTime(DateUtils.stringToTimestamp(addTime));
+			devices.setProductDate(DateUtils.StringToDate(productDate,"yyyy/MM/dd"));
+			devices.setExpdate(DateUtils.StringToDate(expdate,"yyyy/MM/dd"));
+			devices.setAddTime(DateUtils.StringToDate(addTime,"yyyy/MM/dd"));
 			devices.setMemo(memo);
 			devices.setcFlatPic(cFlatPic);
 			devices.setiDeviceType(iDeviceType);
@@ -529,9 +529,9 @@ public class OrginfoController {
 			devices.setLocation(location);
 			devices.setManufacture(manufacture);
 			devices.setModel(model);
-			devices.setProductDate(DateUtils.stringToTimestamp(productDate));
-			devices.setExpdate(DateUtils.stringToTimestamp(expdate));
-			devices.setAddTime(DateUtils.stringToTimestamp(addTime));
+			devices.setProductDate(DateUtils.StringToDate(productDate,"yyyy/MM/dd"));
+			devices.setExpdate(DateUtils.StringToDate(expdate,"yyyy/MM/dd"));
+			devices.setAddTime(DateUtils.StringToDate(addTime,"yyyy/MM/dd"));
 			devices.setMemo(memo);
 			devices.setcFlatPic(cFlatPic);
 			devices.setiDeviceType(iDeviceType);
@@ -767,9 +767,9 @@ public class OrginfoController {
 		onlineOrg.setNearnorth(nearnorth);
 		onlineOrg.setManagegrade(managegrade);
 		onlineOrg.setNetworkStatus(networkStatus);
-		onlineOrg.setNetworkTime(DateUtils.stringToTimestamp(networkTime));
+		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime,"yyyy/MM/dd"));
 		onlineOrg.setApproveMan(approveMan);
-		onlineOrg.setApproveTime(DateUtils.stringToTimestamp(approveTime));
+		onlineOrg.setApproveTime(DateUtils.StringToDate(approveTime,"yyyy/MM/dd"));
 		onlineOrg.setOrgID(orgID);
 		onlineOrg.setOrgcode(orgcode);
 		onlineOrg.setOrgname(orgname);
@@ -778,7 +778,7 @@ public class OrginfoController {
 		onlineOrg.setOtherthings(otherthings);
 		onlineOrg.setYnImportant(ynImportant);
 		onlineOrg.setSuperiorOrg(superiorOrg);
-		onlineOrg.setSetupDate(DateUtils.stringToTimestamp(setupDate));
+		onlineOrg.setSetupDate(DateUtils.StringToDate(setupDate,"yyyy/MM/dd"));
 		onlineOrg.setvNamelegalperson(vNamelegalperson);
 		onlineOrg.setvTel(vTel);
 		onlineOrg.setFax(fax);
@@ -800,7 +800,7 @@ public class OrginfoController {
 		onlineOrg.setLanelocation(lanelocation);
 		onlineOrg.setHowmanypeople(howmanypeople);
 		onlineOrg.seteMail(eMail);
-		onlineOrg.setdRecordDate(DateUtils.stringToTimestamp(dRecordDate));
+		onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate,"yyyy/MM/dd"));
 		onlineOrg.setEscapefloor(escapefloor);
 		onlineOrg.setSouyouzhi(souyouzhi);
 		onlineOrg.setfAreanum(fAreanum);

@@ -2,6 +2,7 @@ package com.hhgx.soft.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.services.ManageRuleService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
@@ -98,7 +100,6 @@ public class ManageRuleController {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				safeManageRulesList = manageRuleService.safeManageRulesList(orgid, page.getStartPos(),
 						page.getPageSize());
-
 			} else {
 				page = new Page(totalCount, 1);
 				safeManageRulesList = manageRuleService.safeManageRulesList(orgid, page.getStartPos(),
@@ -110,7 +111,7 @@ public class ManageRuleController {
 					Map<String, String> map2 = new HashMap<String, String>();
 					map2.put("SafeManageRulesID", safeManageRules.getSafeManageRulesID());
 					map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
-					map2.put("UploadTime", safeManageRules.getUploadTime());
+					map2.put("UploadTime", DateUtils.formatToDate(safeManageRules.getUploadTime()));
 					map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesID());
 					map2.put("filePath", safeManageRules.getFilepath());
 					map2.put("orgid", safeManageRules.getOrgid());

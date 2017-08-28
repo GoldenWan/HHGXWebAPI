@@ -49,7 +49,17 @@
 		<property name="messageConverters">
 			<list>
 				<bean
-					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" >
+					<property name="supportedMediaTypes">
+					<list>  
+                        <!-- 设置响应支持的类型 -->  
+                        <value>text/html;charset=UTF-8</value>  
+                        <!-- 设置请求body支持的类型 -->  
+                        <value>application/x-www-form-urlencoded</value>  
+                        <value>application/json;charset=UTF-8</value>  
+                    </list>  
+					</property>
+					</bean>
 			</list>
 		</property>
 	</bean>

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -192,7 +193,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(DateUtils.stringToTimestamp(trainingTime));
+			training.setTrainingTime(DateUtils.StringToDate(trainingTime,"yyyy/MM/dd"));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -251,7 +252,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(DateUtils.stringToTimestamp(trainingTime));
+			training.setTrainingTime(DateUtils.StringToDate(trainingTime,"yyyy/MM/dd"));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -287,13 +288,15 @@ public class FormController {
 	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
 			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
 			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
-		String orgid = request.getParameter("Orgid");
+		
+		
+		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
-		String address = request.getParameter("Address");
+		String address = request.getParameter("address");
 		String department = request.getParameter("Department");
-		String manager = request.getParameter("Manager");
-		String content = request.getParameter("Content");
-		String scheme = request.getParameter("Scheme");
+		String manager = request.getParameter("manager");
+		String content = request.getParameter("content");
+		String scheme = request.getParameter("scheme");
 		String attendperson = request.getParameter("attendperson");
 		String implementation = request.getParameter("implementation");
 		String summary = request.getParameter("Summary");
@@ -315,17 +318,25 @@ public class FormController {
 			manoeuvre.setOrgid(orgid);
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
+			if(!StringUtils.isEmpty(schemafile)){
+				
+				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
+						"Manoeuvre/"+manoeuvreID);
+				manoeuvre.setSchemafile(schemafile1);
+			}
+			if(!StringUtils.isEmpty(attendpersonfile)){
+				
+				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
+						attendpersonfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+				manoeuvre.setAttendpersonfile(attendpersonfile1);
+			}
+			if(!StringUtils.isEmpty(implementationfile)){
+				
+				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
+						implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+				manoeuvre.setImplementationfile(implementationfile1);
+			}
 
-			String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
-					"Manoeuvre/"+manoeuvreID);
-			String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
-					attendpersonfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
-			String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
-					implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
-
-			manoeuvre.setSchemafile(schemafile1);
-			manoeuvre.setAttendpersonfile(attendpersonfile1);
-			manoeuvre.setImplementationfile(implementationfile1);
 			formService.addManoeuvre(manoeuvre);
 
 			statusCode = ConstValues.OK;
@@ -376,16 +387,25 @@ public class FormController {
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
 
-			String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
-					"Manoeuvre/"+manoeuvreID);
-			String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
-					attendpersonfile.getOriginalFilename(),"Manoeuvre/"+ manoeuvreID);
-			String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
-					implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+		if(!StringUtils.isEmpty(schemafile)){
+				
+				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
+						"Manoeuvre/"+manoeuvreID);
+				manoeuvre.setSchemafile(schemafile1);
+			}
+			if(!StringUtils.isEmpty(attendpersonfile)){
+				
+				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
+						attendpersonfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+				manoeuvre.setAttendpersonfile(attendpersonfile1);
+			}
+			if(!StringUtils.isEmpty(implementationfile)){
+				
+				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
+						implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+				manoeuvre.setImplementationfile(implementationfile1);
+			}
 
-			manoeuvre.setSchemafile(schemafile1);
-			manoeuvre.setAttendpersonfile(attendpersonfile1);
-			manoeuvre.setImplementationfile(implementationfile1);
 			formService.updateManoeuvre(manoeuvre);
 
 			statusCode = ConstValues.OK;
@@ -609,8 +629,8 @@ public class FormController {
 			BusinessLicence businessLicence= new BusinessLicence();
 			businessLicence.setLicenceCode(licenceCode);
 			businessLicence.setAuditingDepartment(auditingDepartment);
-			businessLicence.setBuildTime(DateUtils.stringToTimestamp(buildTime));
-			businessLicence.setBusinessEndTime(DateUtils.stringToTimestamp(businessEndTime));
+			businessLicence.setBuildTime(DateUtils.StringToDate(buildTime,"yyyy/MM/dd"));
+			businessLicence.setBusinessEndTime(DateUtils.StringToDate(businessEndTime,"yyyy/MM/dd"));
 			businessLicence.setBusinessScope(businessScope);
 			businessLicence.setRegistMoney(registMoney);
 			businessLicence.setConpanyName(conpanyName);
@@ -618,7 +638,7 @@ public class FormController {
 			businessLicence.setCompanyRegister(companyRegister);
 			businessLicence.setCompanyType(companyType);
 			businessLicence.setOrgid(orgid);
-			businessLicence.setRegistTime(DateUtils.stringToTimestamp(registTime));
+			businessLicence.setRegistTime(DateUtils.StringToDate(registTime,"yyyy/MM/dd"));
 			String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
 			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl,UUIDGenerator.getUUID()+"."+ext,
 					orgid+"/BusinessLicence");

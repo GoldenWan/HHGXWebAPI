@@ -136,13 +136,15 @@ public class UserManagerController {
 			 * (StringUtils.isEmpty(password)) { statusCode = ConstValues.;
 			 * dataBag = "请输入密码"; return ResponseJson.responseAddJson(dataBag,
 			 * statusCode); }
-			 */else if (userManagerService.findAccount(username)) {
+			 */
+		else if (userManagerService.findAccount(username)) {
 			statusCode = ConstValues.NOAUTHORIZED;
 			code = 1;
 			dataBag = "已经有这个用户了 请更换手机号";
 
 			return ResponseJson.responseRegistJson(code, dataBag, statusCode);
 		} else {
+			
 			if (userManagerService.registerNew(registerNew, userBelongTo)) {
 				dataBag = "插入成功";
 				statusCode = ConstValues.OK;

@@ -1,4 +1,58 @@
 
+{
+  "DataBag": {
+    "pageCount": 2,
+    "PageDatas": [
+      {
+        "manoeuvreID": "fb7d76fc-7dd7-44d8-b7bd-e83385c02c12",
+        "manoeuvretime": "2017/8/2",
+        "address": "2未全",
+        "Department": "请问",
+        "manager": "切勿",
+        "content": "去请问",
+        "orgid": "510108000001"
+      }
+    ]
+  },
+  "StateMessage": 1000
+}
+
+{
+    "DataBag": {
+        "pageCount": 1,
+        "PageDatas": [
+            {
+                "content": "恒华光迅",
+                "manoeuvreID": "b1bbe7b092f342eebff8d58ab1f98cad",
+                "manager": "恒华光迅",
+                "address": "恒华光迅",
+                "manoeuvretime": "2017/08/01",
+                "Department": "恒华光迅"
+            }
+        ],
+        "StateMessage": 1000
+    }
+}
+
+
+
+
+     HH.post("/Facility/GetManoeuvreList", info, function (data) {
+            var myJson = {data: data.DataBag.PageDatas};
+
+            render("#in_view", "#in_page", myJson);
+
+            allNum = data.DataBag.pageCount;
+
+            createPaging("#in_paging", nowNum, allNum);
+
+        });
+
+
+
+
+
+
 SELECT
 	m1.ModuleID,
 	m1.ModuleName,

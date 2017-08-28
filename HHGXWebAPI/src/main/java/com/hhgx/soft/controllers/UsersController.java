@@ -77,7 +77,7 @@ public class UsersController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 	}
 	
 	/**

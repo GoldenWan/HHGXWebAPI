@@ -17,16 +17,14 @@ public interface UserManagerOrgMapper {
 
 
 	User loginBy(@Param("username") String username, @Param("password") String password);
-
 	int findAccount(@Param("username") String username);
 
 
 	void onlineorgRegister(RegisterNew registerNew);
-
-	void usersRegister(RegisterNew registerNew);
-
 	void maintenanceRegister(RegisterNew registerNew);
-
+	void usersRegisterOrg(RegisterNew registerNew);
+	void usersRegisterMaintenance(RegisterNew registerNew);
+	
 	String getUserTypeName(@Param("userTypeID") String userTypeID);
 
 	String findMaxBack6(@Param("areaID") String areaID);
@@ -40,5 +38,7 @@ public interface UserManagerOrgMapper {
 	String getMaintenanceById(@Param("maintenanceId") String maintenanceId);
 
 	String getManagerOrgById(@Param("managerOrgID") String managerOrgID);
+
+
 
 }

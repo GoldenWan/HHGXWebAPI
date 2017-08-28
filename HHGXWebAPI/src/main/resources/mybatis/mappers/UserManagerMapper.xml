@@ -17,24 +17,38 @@
 		(#{orgid},#{areaID},#{orgname},#{approveState});
 	</insert>
 	<insert id="maintenanceRegister" parameterType="registerNew">
-
 		INSERT INTO
 		maintenance (MaintenanceId,AreaID, UnitName)
 		VALUES
 		(#{maintenanceId},#{areaID}, #{orgname});
 	</insert>
-	<insert id="usersRegister" parameterType="registerNew">
+	<insert id="usersRegisterMaintenance" parameterType="registerNew">
 		INSERT INTO users (
 		UserID,
 		account,
 		PASSWORD,
 		UserBelongTo,
 		UsertypeID,
-		isFirstEnroll
+		isFirstEnroll,
+		MaintenanceId
 		)
 		VALUES
 		(#{userID},#{username}, #{password},
-		#{userBelongTo},#{usertypeID},#{isFirstEnroll});
+		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{maintenanceId});
+	</insert>
+	<insert id="usersRegisterOrg" parameterType="registerNew">
+		INSERT INTO users (
+		UserID,
+		account,
+		PASSWORD,
+		UserBelongTo,
+		UsertypeID,
+		isFirstEnroll,
+		orgid
+		)
+		VALUES
+		(#{userID},#{username}, #{password},
+		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{orgid});
 	</insert>
 
 

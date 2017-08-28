@@ -126,7 +126,6 @@ public class PatrolController {
 		String startDate = map.get("startDate");
 		String endDate = map.get("endDate");
 		String pageIndex = map.get("pageIndex");
-
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -169,7 +168,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 /**
@@ -254,31 +253,32 @@ public class PatrolController {
 		String orgid = map.get("orgid");
 		List<PatrolProject> patrolProjectList = null;
 		int statusCode = -1;
-		JSONArray jsonList = new JSONArray();
+		List<Map<String, Object>> lists = new ArrayList<Map<String, Object>>();
 		try {
 			patrolProjectList = patrolService.getPatrolProject(orgid);
 			
-			JSONObject jsonObject = new JSONObject();
+			Map<String, Object>  jsonObject = new HashMap<String, Object>();
 			
 			for (PatrolProject patrolProject : patrolProjectList) {
 				jsonObject.put("tiSysType", patrolProject.getTiSysType());
 				jsonObject.put("vSysdesc", patrolProject.getvSysdesc());
 				
+				List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 				for (UserCheckProjectContent userCheckProjectContent : patrolProject.getUserCheckProjectContentList()) {
-					JSONArray jsonArray =new JSONArray();
 					Map<String, String> map2 = new HashMap<String, String>();
 					map2.put("ProjectId", userCheckProjectContent.getProjectId());
 					map2.put("ProjectContent", userCheckProjectContent.getProjectContent());
-					jsonArray.put(map2);
-					jsonObject.put("Contents", jsonArray);
+					list.add(map2);
 				}
-				jsonList.put(jsonObject);
+				jsonObject.put("Contents", list);
+				lists.add(jsonObject);
+				System.out.println(lists);
 			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(jsonList.toString().replace("\"",""), statusCode);
+		return ResponseJson.responseFindJsonArray(lists, statusCode);
 	}
 	/**
 	 * 
@@ -524,7 +524,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 

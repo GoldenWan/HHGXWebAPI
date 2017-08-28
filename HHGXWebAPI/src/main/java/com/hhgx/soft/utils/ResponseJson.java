@@ -61,6 +61,18 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
+	public static String responseFindPageJsonArray1(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+
+		JSONObject jsonO = new JSONObject();
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("pageCount", pageCount);
+		jsonObject.put("PageDatas", JSONArray.fromObject(dataBag));
+		jsonO.put(ConstValues.RESPCODE, statusCode);
+		jsonO.put("DataBag", jsonObject);
+		return jsonO.toString();
+		
+	}
+	
 	public static String respPalyWithRoleFindPageJsonArray(Object dataBag, String mangerorgname, int statusCode, int pageCount) throws JsonProcessingException{
 		JSONObject jsonObject = new JSONObject();
 		

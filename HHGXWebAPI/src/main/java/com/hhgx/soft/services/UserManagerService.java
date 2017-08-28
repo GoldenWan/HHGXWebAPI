@@ -23,20 +23,18 @@ public class UserManagerService {
 	public boolean registerNew(RegisterNew registerNew, String userBelongTo) {
 		int temp = 1;
 		try {
-			
-		if (userBelongTo.equals("1")) {
-			registerNew.setUsertypeID("Orgmanager");
-			userManagerMapper.onlineorgRegister(registerNew);
-		} else if (userBelongTo.equals("2")) {
-			registerNew.setUsertypeID("maintenancemanager");
-			userManagerMapper.maintenanceRegister(registerNew);
-			System.err.println(registerNew.toString());
-		} else {
-			temp = -1;
-		}
-		if (temp > 0) {
-			userManagerMapper.usersRegister(registerNew);
-		}
+			if (userBelongTo.equals("1")) {
+				registerNew.setUsertypeID("Orgmanager");
+				userManagerMapper.onlineorgRegister(registerNew);
+				userManagerMapper.usersRegisterOrg(registerNew);
+	
+			} else if (userBelongTo.equals("2")) {
+				registerNew.setUsertypeID("maintenancemanager");
+				userManagerMapper.maintenanceRegister(registerNew);
+				userManagerMapper.usersRegisterMaintenance(registerNew);
+			} else {
+				temp = -1;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			temp = -1;
