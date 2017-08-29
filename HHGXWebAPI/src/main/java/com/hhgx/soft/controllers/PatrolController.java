@@ -232,7 +232,7 @@ public class PatrolController {
 				map2.put("PicID", userCheckPic.getPicID());
 				map2.put("PicType", userCheckPic.getPicType());
 				map2.put("PicPath", userCheckPic.getPicPath());
-				map2.put("UploadTime", userCheckPic.getUploadTime());
+				map2.put("UploadTime", DateUtils.formatToDateTime(userCheckPic.getUploadTime()));
 				lmList.add(map2);
 			}
 			statusCode = ConstValues.OK;

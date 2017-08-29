@@ -101,12 +101,12 @@ public class FacilityController {
 			for (Training training : trainingList) {
 
 				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("TrainingTime ", DateUtils.formatDate(training.getTrainingTime(),null));
+				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(),null));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
 				map2.put("TrainingType ", training.getTrainingType());
-				map2.put("Lecturer ", training.getLecturer());
+				map2.put("Lecturer", training.getLecturer());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
 				lmList.add(map2);
 			}

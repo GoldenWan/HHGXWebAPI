@@ -111,7 +111,7 @@ public class ManageRuleController {
 					Map<String, String> map2 = new HashMap<String, String>();
 					map2.put("SafeManageRulesID", safeManageRules.getSafeManageRulesID());
 					map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
-					map2.put("UploadTime", DateUtils.formatToDate(safeManageRules.getUploadTime()));
+					map2.put("UploadTime", safeManageRules.getUploadTime());
 					map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesID());
 					map2.put("filePath", safeManageRules.getFilepath());
 					map2.put("orgid", safeManageRules.getOrgid());
@@ -127,7 +127,7 @@ public class ManageRuleController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 

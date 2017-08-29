@@ -36,18 +36,17 @@ import com.hhgx.soft.utils.UploadUtil;
 public class FormController {
 	@Autowired
 	private FormService formService;
-	
-	
+
 	/**
 	 * 9.修改防火单位的系统
 	 * 
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/UpdateFireSystemList", method = {
-			RequestMethod.POST })
-	public String updateFireSystemList(HttpServletRequest request,@RequestParam("SysFlatpic") MultipartFile sysFlatpic) throws JsonProcessingException {
-		
+	@RequestMapping(value = "/UpdateFireSystemList", method = { RequestMethod.POST })
+	public String updateFireSystemList(HttpServletRequest request, @RequestParam("SysFlatpic") MultipartFile sysFlatpic)
+			throws JsonProcessingException {
+
 		String siteid = request.getParameter("siteid");
 		String tisystype = request.getParameter("tisystype");
 		String newTisystype = request.getParameter("newTisystype");
@@ -57,18 +56,19 @@ public class FormController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-		UpdateFireSystem  updateFireSystem = new UpdateFireSystem();
-		updateFireSystem.setNewTisystype(newTisystype);
-		updateFireSystem.setRemarks(remarks);
-		updateFireSystem.setSiteid(siteid);
-		updateFireSystem.setStates(states);
-		updateFireSystem.setTisystype(tisystype);
-		updateFireSystem.setYnOnline(ynOnline);
-		String fName = sysFlatpic.getOriginalFilename();
-		String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, fName, "SysFlatpic/"+UUIDGenerator.getUUID());
-		updateFireSystem.setSysFlatpic(sysFlatpic1);
-		formService.updateFireSystemList(updateFireSystem);
-		//遗留小问题，如果数据插入失败，上传的照片没有删掉
+			UpdateFireSystem updateFireSystem = new UpdateFireSystem();
+			updateFireSystem.setNewTisystype(newTisystype);
+			updateFireSystem.setRemarks(remarks);
+			updateFireSystem.setSiteid(siteid);
+			updateFireSystem.setStates(states);
+			updateFireSystem.setTisystype(tisystype);
+			updateFireSystem.setYnOnline(ynOnline);
+			String fName = sysFlatpic.getOriginalFilename();
+			String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, fName,
+					"SysFlatpic/" + UUIDGenerator.getUUID());
+			updateFireSystem.setSysFlatpic(sysFlatpic1);
+			formService.updateFireSystemList(updateFireSystem);
+			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
 			dataBag = "修改成功";
 		} catch (Exception e) {
@@ -76,12 +76,10 @@ public class FormController {
 			statusCode = ConstValues.FAILED;
 			dataBag = "修改失败";
 		}
-		
+
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-		
+
 	}
-	
-	
 
 	/**
 	 * 129.巡查记录填写【**】
@@ -91,8 +89,7 @@ public class FormController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = {
-			RequestMethod.POST })
+	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = { RequestMethod.POST })
 	public String addOrUpdateCheckRecord(HttpServletRequest request) throws JsonProcessingException {
 
 		String userCheckId = request.getParameter("UserCheckId");
@@ -118,7 +115,8 @@ public class FormController {
 			String[] picIDList = delList.split(",");
 			for (int i = 0; i < picIDList.length; i++) {
 				String picType = formService.findPicType(picIDList[i]);
-				UploadUtil.deleteOneFileOrDirectory(request, picIDList[i] + "." + picType, "CheckRecord/"+userCheckId);
+				UploadUtil.deleteOneFileOrDirectory(request, picIDList[i] + "." + picType,
+						"CheckRecord/" + userCheckId);
 				formService.deletePicByID(picIDList[i]);
 			}
 			// 上传图片
@@ -136,7 +134,8 @@ public class FormController {
 						MultipartFile mFile = mRequest.getFile(files.next());
 						String picID = UUIDGenerator.getUUID();
 						String picType = UploadUtil.getExtention(mFile.getOriginalFilename());
-						String picPath = UploadUtil.uploadOneFile(request, mFile, picID + "." + picType, "CheckRecord/"+userCheckId);
+						String picPath = UploadUtil.uploadOneFile(request, mFile, picID + "." + picType,
+								"CheckRecord/" + userCheckId);
 						UserCheckPic userCheckPic = new UserCheckPic();
 						userCheckPic.setPicID(picID);
 						userCheckPic.setPicPath(picPath);
@@ -193,7 +192,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(DateUtils.StringToDate(trainingTime,"yyyy/MM/dd"));
+			training.setTrainingTime(DateUtils.StringToDate(trainingTime, "yyyy/MM/dd"));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -201,13 +200,23 @@ public class FormController {
 			String fName = contentFile.getOriginalFilename();
 			String fName1 = examfile.getOriginalFilename();
 			String fName2 = signtable.getOriginalFilename();
+			if (!StringUtils.isEmpty(contentFile)) {
 
-			String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/"+trainingID);
-			String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/"+trainingID);
-			String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/"+trainingID);
-			training.setExamfile(examfile1);
-			training.setContentFile(contentFile1);
-			training.setSigntable(signtable1);
+				String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
+				training.setContentFile(contentFile1);
+
+			}
+			if (!StringUtils.isEmpty(examfile)) {
+
+				String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
+				training.setExamfile(examfile1);
+
+			}
+			if (!StringUtils.isEmpty(signtable)) {
+				String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
+				training.setSigntable(signtable1);
+
+			}
 			formService.addTraining(training);
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
@@ -252,7 +261,7 @@ public class FormController {
 			training.setLecturer(lecturer);
 			training.setTrainingAddress(trainingAddress);
 			training.setTrainingManager(trainingManager);
-			training.setTrainingTime(DateUtils.StringToDate(trainingTime,"yyyy/MM/dd"));
+			training.setTrainingTime(DateUtils.StringToDate(trainingTime, "yyyy/MM/dd"));
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
@@ -261,9 +270,9 @@ public class FormController {
 			String fName1 = examfile.getOriginalFilename();
 			String fName2 = signtable.getOriginalFilename();
 
-			String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/"+trainingID);
-			String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/"+trainingID);
-			String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/"+trainingID);
+			String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
+			String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
+			String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
 			training.setExamfile(examfile1);
 			training.setContentFile(contentFile1);
 			training.setSigntable(signtable1);
@@ -288,8 +297,7 @@ public class FormController {
 	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
 			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
 			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
-		
-		
+
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
 		String address = request.getParameter("address");
@@ -318,22 +326,22 @@ public class FormController {
 			manoeuvre.setOrgid(orgid);
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
-			if(!StringUtils.isEmpty(schemafile)){
-				
+			if (!StringUtils.isEmpty(schemafile)) {
+
 				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
-						"Manoeuvre/"+manoeuvreID);
+						"Manoeuvre/" + manoeuvreID);
 				manoeuvre.setSchemafile(schemafile1);
 			}
-			if(!StringUtils.isEmpty(attendpersonfile)){
-				
+			if (!StringUtils.isEmpty(attendpersonfile)) {
+
 				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
-						attendpersonfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+						attendpersonfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setAttendpersonfile(attendpersonfile1);
 			}
-			if(!StringUtils.isEmpty(implementationfile)){
-				
+			if (!StringUtils.isEmpty(implementationfile)) {
+
 				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
-						implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+						implementationfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setImplementationfile(implementationfile1);
 			}
 
@@ -387,22 +395,22 @@ public class FormController {
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
 
-		if(!StringUtils.isEmpty(schemafile)){
-				
+			if (!StringUtils.isEmpty(schemafile)) {
+
 				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
-						"Manoeuvre/"+manoeuvreID);
+						"Manoeuvre/" + manoeuvreID);
 				manoeuvre.setSchemafile(schemafile1);
 			}
-			if(!StringUtils.isEmpty(attendpersonfile)){
-				
+			if (!StringUtils.isEmpty(attendpersonfile)) {
+
 				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
-						attendpersonfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+						attendpersonfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setAttendpersonfile(attendpersonfile1);
 			}
-			if(!StringUtils.isEmpty(implementationfile)){
-				
+			if (!StringUtils.isEmpty(implementationfile)) {
+
 				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
-						implementationfile.getOriginalFilename(), "Manoeuvre/"+manoeuvreID);
+						implementationfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setImplementationfile(implementationfile1);
 			}
 
@@ -427,7 +435,8 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST)
-	public String updateManoeuvre(HttpServletRequest request, @RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
+	public String updateManoeuvre(HttpServletRequest request, @RequestParam("SafeRuleFile") MultipartFile safeRuleFile)
+			throws JsonProcessingException {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
 		String safeManageRulesType = request.getParameter("SafeManageRulesType");
@@ -444,7 +453,7 @@ public class FormController {
 			safeManageRules.setOrgid(orgid);
 
 			String filepath = UploadUtil.uploadOneFile(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
-					"ManageRule/"+safeManageRulesID);
+					"ManageRule/" + safeManageRulesID);
 
 			safeManageRules.setFilepath(filepath);
 			formService.addSafeManageRules(safeManageRules);
@@ -491,7 +500,7 @@ public class FormController {
 			// 先删除文件
 			UploadUtil.deleteFile(filedir);
 			String filepath = UploadUtil.uploadOneFile(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
-					"ManageRule/"+safeManageRulesID);
+					"ManageRule/" + safeManageRulesID);
 
 			safeManageRules.setFilepath(filepath);
 			formService.updateSafeManageRules(safeManageRules);
@@ -505,27 +514,24 @@ public class FormController {
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
+
 	/**
-	 * 50.添加消防安全职责【**】
-	 * @param request
-	 * @param safeDutyFile
-	 * @return
-	 * @throws JsonProcessingException:TODO
-	 
+	 * 50.添加消防安全职责【**】  * @param request  * @param safeDutyFile  * @return
+	 *  * @throws JsonProcessingException:TODO  
 	 */
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST)
-	public String addSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
+	public String addSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile)
+			throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("orgid");
-		
+
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			
+
 			SafeDuty safeDuty = new SafeDuty();
 			String safeDutyID = UUIDGenerator.getUUID();
 			safeDuty.setSafeDutyID(safeDutyID);
@@ -533,12 +539,12 @@ public class FormController {
 			safeDuty.setUploadtime(DateUtils.timesstampToString());
 			safeDuty.setOrgid(orgid);
 			safeDuty.setSafedutytype(safedutytype);
-			
+
 			String filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
-					"SafeDuty/"+safeDutyID);
-			
+					"SafeDuty/" + safeDutyID);
+
 			safeDuty.setFilepath(filepath);
-			
+
 			formService.addSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
@@ -548,47 +554,44 @@ public class FormController {
 			dataBag = "插入失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-		
+
 	}
-	
+
 	/**
-	 * 51.修改消防安全职责【**】
-	 * @param request
-	 * @param safeDutyFile
-	 * @return
-	 * @throws JsonProcessingException:TODO
-	 
+	 * 51.修改消防安全职责【**】  * @param request  * @param safeDutyFile  * @return
+	 *  * @throws JsonProcessingException:TODO  
 	 */
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST)
-	public String updateSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile) throws JsonProcessingException {
+	public String updateSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile)
+			throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("orgid");
 		String safeDutyID = request.getParameter("SafeDutyID");
-		
+
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			
+
 			SafeDuty safeDuty = new SafeDuty();
 			safeDuty.setSafeDutyID(safeDutyID);
 			safeDuty.setDutyname(dutyname);
 			safeDuty.setOrgid(orgid);
 			safeDuty.setSafedutytype(safedutytype);
 			safeDuty.setUploadtime(DateUtils.timesstampToString());
-			//先删除文件
+			// 先删除文件
 			String filepathBefore = formService.findSafeDutyFilePath(safeDutyID);
 			String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
 			// 先删除文件
 			UploadUtil.deleteFile(filedir);
-			
+
 			String filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
-					"SafeDuty/"+safeDutyID);
-			
+					"SafeDuty/" + safeDutyID);
+
 			safeDuty.setFilepath(filepath);
-						
+
 			formService.updateSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
 			dataBag = "修改成功";
@@ -598,39 +601,39 @@ public class FormController {
 			dataBag = "修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-		
+
 	}
-	
+
 	/**
 	 * 86.修改和添加营业执照【**】
 	 */
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/AddBusinessLicence", method = RequestMethod.POST)
-	public String addBusinessLicence(HttpServletRequest request, @RequestParam("PictureUrl") MultipartFile pictureUrl) throws JsonProcessingException {
-		String licenceCode=request.getParameter("LicenceCode");
-		String conpanyName=request.getParameter("ConpanyName");
-		String companyType=request.getParameter("CompanyType");
-		String companyAddress=request.getParameter("CompanyAddress");
-		String companyRegister=request.getParameter("CompanyRegister");
-		String registMoney=request.getParameter("RegistMoney");
-		String buildTime=request.getParameter("BuildTime");
-		String businessEndTime=request.getParameter("BusinessEndTime");
-		String businessScope=request.getParameter("BusinessScope");
-		String auditingDepartment=request.getParameter("AuditingDepartment");
-		String registTime=request.getParameter("RegistTime");
-		String orgid=request.getParameter("orgid");
-		
+	public String addBusinessLicence(HttpServletRequest request, @RequestParam("PictureUrl") MultipartFile pictureUrl)
+			throws JsonProcessingException {
+		String licenceCode = request.getParameter("LicenceCode");
+		String conpanyName = request.getParameter("ConpanyName");
+		String companyType = request.getParameter("CompanyType");
+		String companyAddress = request.getParameter("CompanyAddress");
+		String companyRegister = request.getParameter("CompanyRegister");
+		String registMoney = request.getParameter("RegistMoney");
+		String buildTime = request.getParameter("BuildTime");
+		String businessEndTime = request.getParameter("BusinessEndTime");
+		String businessScope = request.getParameter("BusinessScope");
+		String auditingDepartment = request.getParameter("AuditingDepartment");
+		String registTime = request.getParameter("RegistTime");
+		String orgid = request.getParameter("orgid");
+
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			
-			BusinessLicence businessLicence= new BusinessLicence();
+
+			BusinessLicence businessLicence = new BusinessLicence();
 			businessLicence.setLicenceCode(licenceCode);
 			businessLicence.setAuditingDepartment(auditingDepartment);
-			businessLicence.setBuildTime(DateUtils.StringToDate(buildTime,"yyyy/MM/dd"));
-			businessLicence.setBusinessEndTime(DateUtils.StringToDate(businessEndTime,"yyyy/MM/dd"));
+			businessLicence.setBuildTime(DateUtils.StringToDate(buildTime, "yyyy/MM/dd"));
+			businessLicence.setBusinessEndTime(DateUtils.StringToDate(businessEndTime, "yyyy/MM/dd"));
 			businessLicence.setBusinessScope(businessScope);
 			businessLicence.setRegistMoney(registMoney);
 			businessLicence.setConpanyName(conpanyName);
@@ -638,11 +641,11 @@ public class FormController {
 			businessLicence.setCompanyRegister(companyRegister);
 			businessLicence.setCompanyType(companyType);
 			businessLicence.setOrgid(orgid);
-			businessLicence.setRegistTime(DateUtils.StringToDate(registTime,"yyyy/MM/dd"));
+			businessLicence.setRegistTime(DateUtils.StringToDate(registTime, "yyyy/MM/dd"));
 			String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
-			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl,UUIDGenerator.getUUID()+"."+ext,
-					orgid+"/BusinessLicence");
-			
+			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
+					orgid + "/BusinessLicence");
+
 			businessLicence.setPictureUrl(pictureUrl1);
 			formService.addBusinessLicence(businessLicence);
 			statusCode = ConstValues.OK;
@@ -653,9 +656,7 @@ public class FormController {
 			dataBag = "插入失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-		
+
 	}
-	
-	
 
 }

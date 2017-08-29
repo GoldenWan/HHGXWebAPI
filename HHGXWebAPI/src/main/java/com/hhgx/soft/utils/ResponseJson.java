@@ -1,7 +1,6 @@
 package com.hhgx.soft.utils;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -10,7 +9,7 @@ import net.sf.json.JSONObject;
 public class ResponseJson {
 
 	
-	public static String responseRegistJson(int code, String dataBag, int statusCode) throws JsonProcessingException{
+	public static String responseRegistJson(int code, String dataBag, int statusCode){
 		//{DataBag: {code: 2, message: "没有验证码，请先获取验证码"}, StateMessage: -1}
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonObject1 = new JSONObject();
@@ -21,21 +20,31 @@ public class ResponseJson {
 		jsonObject.put(ConstValues.RESPDATA, jsonObject1);
 		return jsonObject.toString();
 	}
-	public static String responseAddJson(String dataBag, int statusCode) throws JsonProcessingException{
+	public static String responseAddJson(String dataBag, int statusCode){
 		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(ConstValues.RESPDATA, dataBag);
 		jsonObject.put(ConstValues.RESPCODE, statusCode);
 		return jsonObject.toString();
 	}
-	public static String responseFindJson(Object dataBag, int statusCode) throws JsonProcessingException{
+	public static String responseFindJsonDictionary(Object dataBag, int statusCode){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(ConstValues.RESPDATA, JSONObject.fromBean(dataBag));
 		jsonObject.put(ConstValues.RESPCODE, statusCode);
 		return jsonObject.toString();
 		
 	}
-	public static String responseFindJsonArray(Object dataBag, int statusCode) throws JsonProcessingException{
+	public static String responseFindJson(Object dataBag, int statusCode){
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(ConstValues.RESPDATA, JSONObject.fromBean(dataBag));
+		jsonObject.put(ConstValues.RESPCODE, statusCode);
+		return jsonObject.toString();
+		
+	}
+	
+	
+	
+	public static String responseFindJsonArray(Object dataBag, int statusCode){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(ConstValues.RESPDATA, JSONArray.fromObject(dataBag));
 		jsonObject.put(ConstValues.RESPCODE, statusCode);
@@ -43,7 +52,7 @@ public class ResponseJson {
 		
 	}
 
-	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("pageCount", pageCount);
 		jsonObject.put("PageDatas", JSONObject.fromBean(dataBag));
@@ -52,7 +61,7 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
-	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("pageCount", pageCount);
 		jsonObject.put("PageDatas", JSONArray.fromObject(dataBag));
@@ -61,7 +70,7 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
-	public static String responseFindPageJsonArray1(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responseFindPageJsonArray1(Object dataBag, int statusCode, int pageCount){
 
 		JSONObject jsonO = new JSONObject();
 		JSONObject jsonObject = new JSONObject();
@@ -73,7 +82,7 @@ public class ResponseJson {
 		
 	}
 	
-	public static String respPalyWithRoleFindPageJsonArray(Object dataBag, String mangerorgname, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String respPalyWithRoleFindPageJsonArray(Object dataBag, String mangerorgname, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 		
 		jsonObject.put("pageCount", pageCount);
@@ -83,7 +92,7 @@ public class ResponseJson {
 		
 		return jsonObject.toString();
 	}
-	public static String responsePalyWithRoleFindPageJson(Object dataBag, String mangerorgname, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responsePalyWithRoleFindPageJson(Object dataBag, String mangerorgname, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 
 		jsonObject.put("pageCount", pageCount);
@@ -93,7 +102,7 @@ public class ResponseJson {
 		
 		return jsonObject.toString();
 	}
-/*	public static String responseAddJson(String dataBag, int statusCode) throws JsonProcessingException{
+/*	public static String responseAddJson(String dataBag, int statusCode){
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
@@ -102,7 +111,7 @@ public class ResponseJson {
 		return mapper.writeValueAsString(params);
 		
 	}
-	public static String responseFindJson(Object dataBag, int statusCode) throws JsonProcessingException{
+	public static String responseFindJson(Object dataBag, int statusCode){
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		params.put(ConstValues.RESPDATA, dataBag);
@@ -111,7 +120,7 @@ public class ResponseJson {
 		
 	}
 	
-	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount){
 		String result=null;
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
@@ -122,7 +131,7 @@ public class ResponseJson {
 		return result;
 		
 	}
-	public static String responsePalyWithRoleFindPageJson(Object dataBag, String mangerorgname, int statusCode, int pageCount) throws JsonProcessingException{
+	public static String responsePalyWithRoleFindPageJson(Object dataBag, String mangerorgname, int statusCode, int pageCount){
 		String result=null;
 		Map<String, Object> params = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();

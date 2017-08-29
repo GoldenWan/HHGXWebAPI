@@ -19,6 +19,8 @@ public class User {
 	private String userTypeID;
 	private String orgid;
 	private String maintenanceId;
+	private String userTypeName;
+
 	public String getUserID() {
 		return userID;
 	}
@@ -121,13 +123,21 @@ public class User {
 	public void setMaintenanceId(String maintenanceId) {
 		this.maintenanceId = maintenanceId;
 	}
+
+	public String getUserTypeName() {
+		return userTypeName;
+	}
+	public void setUserTypeName(String userTypeName) {
+		this.userTypeName = userTypeName;
+	}
 	@Override
 	public String toString() {
 		return "User [userID=" + userID + ", account=" + account + ", password=" + password + ", realName=" + realName
 				+ ", mobilephone=" + mobilephone + ", tel=" + tel + ", email=" + email + ", status=" + status
 				+ ", isFirstEnroll=" + isFirstEnroll + ", remark=" + remark + ", userBelongTo=" + userBelongTo
 				+ ", tokenID=" + tokenID + ", tokenExpireDate=" + tokenExpireDate + ", managerOrgID=" + managerOrgID
-				+ ", userTypeID=" + userTypeID + ", orgid=" + orgid + ", maintenanceId=" + maintenanceId + "]";
+				+ ", userTypeID=" + userTypeID + ", orgid=" + orgid + ", maintenanceId=" + maintenanceId
+				+ ", userTypeName=" + userTypeName + "]";
 	}
 
 

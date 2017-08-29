@@ -5,13 +5,21 @@ public class Users {
 	private String email       ;
 	private String remark      ;
 	private String userTypeID  ;
-
+	private String password;
 	private String account;
 	private String realName;
 	private String mobilephone;
 	private String tel;
 	private String status;
 	private String userTypeName;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public String getUserid() {
 		return userid;

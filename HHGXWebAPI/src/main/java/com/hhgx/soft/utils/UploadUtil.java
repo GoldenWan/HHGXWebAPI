@@ -13,7 +13,9 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 
 public class UploadUtil {
 
@@ -51,6 +53,15 @@ public class UploadUtil {
 		int pos = fileName.lastIndexOf(".");
 		return fileName.substring(pos+1);
 	}
+	// 获取文件名称
+	public static String getFileName(String filepath) {
+		return filepath.substring( filepath.lastIndexOf("/")+1);
+	}
+	// 获取文件目录
+	public static String getStoreName(String filepath) {
+		return  filepath.substring( filepath.indexOf("/")+1,filepath.lastIndexOf("/")+1);
+	
+	}	
 
 
 	/**
@@ -274,31 +285,8 @@ public class UploadUtil {
 		return flag;
 	}
 
-	/*
-	 * public static void main(String[] args) { //String fileName =
-	 * "g:/temp/xwz.txt"; //DeleteFileUtil.deleteFile(fileName); String fileDir
-	 * =
-	 * "D:\\apache-tomcat-6.0.18\\webapps\\cyfy\\upload\\disk\\1245117448156\\JavaScript486.rar";
-	 * //DeleteFileUtil.deleteDirectory(fileDir);
-	 * 
-	 * DeleteFileUtil.delete(fileDir); DeleteFileUtil t = new DeleteFileUtil();
-	 * delFolder("c:/bb"); System.out.println("deleted");
-	 * 
-	 * }
-	 */
-	/******************************************************************************************************************/
-	// 删除指定路径下所有空文件夹
-	public static void main(String[] args) {
-		// 要删除的目录 请勿以\\结尾，及最后一层目录后的分隔符不要
-		String rootPath = "D:\\UsersMyEclipse10Space\\JYCRM\\WebRoot\\uploads";
-		List<File> list = getAllNullDirectorys(new File(rootPath));
-		// System.out.println("---------------" + list.size());
-		/*
-		 * for (int i = 0; i < list.size(); i++) {
-		 * System.out.println(list.get(i).getPath()); }
-		 */
-		removeNullFile(list, rootPath);
-	}
+
+
 
 	/**
 	 * 递归列出某文件夹下的最深层的空文件夹绝对路径，储存至list
@@ -359,38 +347,65 @@ public class UploadUtil {
 	 * @param request
 	 * @param response
 	 * @param storeName
-	 *            下载的文件名称(下载文件路径)
-	 * @param contentType
+	 *            /Manoeuvre/b1bbe7b092f342eebff8d 下载的文件名称(下载文件路径)
+	 * @param contentType:
+	 *            application/force-download
 	 * @param realName
 	 *            下载后需要显示的文件名称
 	 * @throws Exception
 	 */
 	public static void download(HttpServletRequest request, HttpServletResponse response, String storeName,
-			String contentType, String realName) throws Exception {
+			String contentType, String realName) {
 		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
+		// request.setCharacterEncoding("UTF-8");
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
+		try {
+			String downLoadPath =null;
+			String ctxPath = request.getSession().getServletContext().getRealPath("/") + "Uploading/";
+			if(StringUtils.isEmpty(storeName)){
+			  downLoadPath = ctxPath;
+			}else {
+				 downLoadPath = ctxPath + storeName + "/" ;
+			}
+			
+			File file = new File(downLoadPath, realName);
+			if (file.exists()) {
+				long fileLength = file.length();
+				response.setContentType(contentType);// response.setContentType("application/force-download");//
+				response.setHeader("Content-disposition",
+						"attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO-8859-1"));
+				response.setHeader("Content-Length", String.valueOf(fileLength));
 
-		String ctxPath = request.getSession().getServletContext().getRealPath("/") + "uploads/";
-		String downLoadPath = ctxPath + storeName;
+				bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+				bos = new BufferedOutputStream(response.getOutputStream());
+				byte[] buff = new byte[2048];
+				int bytesRead;
+				while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+					bos.write(buff, 0, bytesRead);
+				}
+			}
 
-		long fileLength = new File(downLoadPath).length();
+		} catch (Exception e) {
 
-		response.setContentType(contentType);
-		response.setHeader("Content-disposition",
-				"attachment; filename=" + new String(realName.getBytes("gb2312"), "ISO-8859-1"));
-		response.setHeader("Content-Length", String.valueOf(fileLength));
-
-		bis = new BufferedInputStream(new FileInputStream(downLoadPath));
-		bos = new BufferedOutputStream(response.getOutputStream());
-		byte[] buff = new byte[2048];
-		int bytesRead;
-		while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-			bos.write(buff, 0, bytesRead);
+			e.printStackTrace();
+		} finally {
+			if (bis != null) {
+				try {
+					bis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		bis.close();
-		bos.close();
+
 	}
 
 }

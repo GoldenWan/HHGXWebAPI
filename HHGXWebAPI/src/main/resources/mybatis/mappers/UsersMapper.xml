@@ -3,6 +3,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.UsersMapper">
+	<delete id="deleteUser">
+		DELETE
+		FROM
+		users
+		WHERE
+        UserID = #{userid}
+	</delete>
+
+
+	<select id="getUser" resultType="user">
+SELECT
+	Userid userID,
+account ,
+	RealName realName,
+	mobilephone,
+	tel,
+	Email,
+	`Status` status,
+	Remark,
+	u.UserTypeID userTypeID,
+	UserTypeName
+FROM
+	users u
+INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+WHERE
+	u.UserID = #{userid}
+	</select>
+	<select id="getUserTypeList" resultType="userType">
+	SELECT
+		u.UserTypeID,
+		ut.UserTypeName,
+		u.UserBelongTo
+	FROM
+		users u
+	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+	WHERE
+		ut.UserBelongTo = #{userBelongTo}
+	</select>
 
 	<select id="getUserListCount" resultType="int">
 		SELECT
@@ -10,11 +48,16 @@
 		FROM
 			users
 		WHERE
-		orgid = #{orgid} and UserBelongTo = #{userBelongTo}
+		orgid = #{orgid} 
+		and UserBelongTo = #{userBelongTo}
+		<if test="userName != null and userName != ''">
+		and RealName LIKE CONCAT('%',#{userName}, '%')
+		</if>
 	</select>
 
 	<select id="getUserList" resultType="users">
 		SELECT
+			u.Userid userid,
 			u.account,
 			u.RealName,
 			u.mobilephone,
@@ -27,9 +70,44 @@
 		WHERE
 			u.orgid = #{orgid}
 		AND u.UserBelongTo = #{userBelongTo}
+		<if test="userName != null and userName != ''">
+		and RealName LIKE CONCAT('%',#{userName}, '%')
+		</if>
 		LIMIT #{startPos},#{pageSize}
 	</select>
+	<insert id="addUser">
+	INSERT INTO users (
+	UserID,
+	account,
+	PASSWORD,
+	RealName,
+	mobilephone,
+	tel,
+	Email,
+	STATUS,
+	Remark,
+	UserTypeID,
+	UserBelongTo,
+	orgid
+)
+VALUES
+	(
+	#{userID},
+	#{account},
+	#{password},
+	#{realName},
+	#{mobilephone},
+	#{tel},
+	#{email},
+	#{status},
+	#{remark},
+	#{userTypeID},
+	#{userBelongTo},
+	#{orgid}
+)
 	
+	
+	</insert>
 	<update id="updateUser">
 		UPDATE users
 		SET 
@@ -38,7 +116,7 @@
 	    tel=#{tel},
 	    Email=#{email},
 	    `Status`= #{status},
-	    Remark= #{remark},
+	    Remark = #{remark},
 	    UserTypeID=#{userTypeID}
 		WHERE
 		Userid= #{userid}

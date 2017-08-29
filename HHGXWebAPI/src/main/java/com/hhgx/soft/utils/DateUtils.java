@@ -62,6 +62,13 @@ public class DateUtils {
 		formatDATE=d.replaceAll("-", "/");
 		return formatDATE;
 	}
+	public static String formatToDateTime(String date) 
+	{  String formatDATE ="";
+	if (date == null)
+		return "";
+	formatDATE=date.replaceAll("-", "/");
+	return formatDATE;
+	}
 
 	/**
 	 * yyyy-MM-dd HH:mm:ss
