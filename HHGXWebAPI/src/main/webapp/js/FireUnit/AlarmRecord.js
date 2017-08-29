@@ -27,13 +27,21 @@
     //局部刷新
     function pageReload(type, view, page, nowNum) {
         var nowNum = parseInt(nowNum);
+        if (!nowNum) {
+            nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+            if (isNaN(nowNum)) {
+                nowNum = 1;
+            }
+        }
         var info = {
-            pageIndex:1,
+            pageIndex:nowNum,
             orgid: sessionStorage.getItem("OrgID"),
             cAlarmtype: type,
             startTime:"",
             endTime:""
         };
+        console.log("给后台数据");
+        console.log(info);
         HH.post("/OrgControl/GetAlarmDataList", info, function (data) {
             var myJson = {data: data.DataBag.PageDatas};
             console.log(data);
@@ -42,11 +50,8 @@
             });
             render(view, page, myJson);
 
-            allNum = Math.ceil(data.DataBag.pageCount / 20);
+            allNum = data.DataBag.pageCount;
 
-            if (allNum == 0) {
-                allNum = 1
-            }
             createPaging(".in_paging", nowNum, allNum);
         });
     };
@@ -102,7 +107,7 @@
         var check = $(this).get(0).checked;
         if(check){
             fireAlarm_timer = window.setInterval(function(){
-                pageReload("火警", "#fireAlarm_view", "#fireAlarm_table")
+                pageReload("火警", "#fireAlarm_view", "#fireAlarm_table",1)
             },5000);
         }else{
             clearInterval(fireAlarm_timer);
@@ -114,7 +119,7 @@
         var check = $(this).get(0).checked;
         if(check){
             fault_timer = window.setInterval(function(){
-                pageReload("故障", "#fault_view", "#fault_table")
+                pageReload("故障", "#fault_view", "#fault_table",1)
             },5000);
         }else{
             clearInterval(fault_timer);
@@ -191,9 +196,11 @@
         if(num!=1){
             num = num-1;
             if(typeNum=="1"){
+                //alert('yyyy');
                 pageReload("火警", "#fireAlarm_view", "#fireAlarm_table",num);
             }else if(typeNum=="2"){
                 pageReload("故障", "#fault_view", "#fault_table",num);
+                //alert('tttt');
             }
         }
     });

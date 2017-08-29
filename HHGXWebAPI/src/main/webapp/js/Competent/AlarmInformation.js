@@ -67,7 +67,8 @@
     });
     $("#in_paging").on("click", ".pagination>.downPage", function () {
         var num = parseInt($(".pagination>.active").text());
-        if (num != allNum) {
+        var maxNum = Math.ceil(parseInt(allNum) / 20);
+        if (num != maxNum && maxNum!=0) {
             num = num + 1;
             pageReload(num);
         }

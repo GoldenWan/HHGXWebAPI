@@ -168,7 +168,6 @@ function positionMap(temp, lngNum, latNum, lng, lat) {
     map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
     map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
 
-
     map.addControl(new BMap.MapTypeControl());//给
     map.enableScrollWheelZoom(true);//设置地图可以滚动
 

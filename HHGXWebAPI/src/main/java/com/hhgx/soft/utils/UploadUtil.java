@@ -369,15 +369,16 @@ public class UploadUtil {
 				 downLoadPath = ctxPath + storeName + "/" ;
 			}
 			
-			File file = new File(downLoadPath, realName);
+		
+			
+			File file = new File(downLoadPath,realName);
 			if (file.exists()) {
-				long fileLength = file.length();
 				response.setContentType(contentType);// response.setContentType("application/force-download");//
 				response.setHeader("Content-disposition",
 						"attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO-8859-1"));
-				response.setHeader("Content-Length", String.valueOf(fileLength));
+				response.setHeader("Content-Length", String.valueOf(file.length()));
 
-				bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+				bis = new BufferedInputStream(new FileInputStream(downLoadPath+realName));
 				bos = new BufferedOutputStream(response.getOutputStream());
 				byte[] buff = new byte[2048];
 				int bytesRead;

@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.XfCheckTimeRound;
 import com.hhgx.soft.mappers.XfCheckTimeRoundMapper;
 
 
 @Service
+@Transactional
 public class XfCheckTimeRoundService {
 	@Autowired
 	private XfCheckTimeRoundMapper xfCheckTimeRoundMapper;

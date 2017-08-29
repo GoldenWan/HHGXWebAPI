@@ -1,5 +1,6 @@
 package com.hhgx.soft.mappers;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -22,9 +23,9 @@ public interface FacilityMapper {
 
 	void deleteTraining(@Param("trainingID") String trainingID);
 
-	int getManoeuvreCount(@Param("orgid") String orgid);
+	int getManoeuvreCount(@Param("orgid") String orgid,  @Param("startTime") Timestamp startTime,  @Param("endTime") Timestamp endTime);
 
-	List<Manoeuvre> getManoeuvreByOrgid(@Param("orgid") String orgid, @Param("startPos") int startPos,
+	List<Manoeuvre> getManoeuvreByOrgid(@Param("orgid") String orgid,  @Param("startTime") Timestamp startTime,  @Param("endTime") Timestamp endTime,@Param("startPos") int startPos,
 			@Param("pageSize") int pageSize);
 
 	Manoeuvre getManoeuvreDetail(@Param("manoeuvreID") String manoeuvreID);

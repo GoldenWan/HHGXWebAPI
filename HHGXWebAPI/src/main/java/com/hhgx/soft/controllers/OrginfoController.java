@@ -1,10 +1,6 @@
 package com.hhgx.soft.controllers;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1069,18 +1065,11 @@ public class OrginfoController {
 	}
 	
 	/**
-	 * 测试结果	
-接口地址	/ Orginfo/GetSiteName
-接口方法	GetSiteName
-请求方式	POST
-接口请求
-参数名称	参数代码	参数类型
-防火单位编号	orgid	string
-接口返回
-建筑物编号	siteid	string
-建筑物名称	sitename	string
-数据库表：
-
+	 * 125根据防火单位获取建筑物名称列表
+	 * @param request
+	 * @return
+	 * @throws IOException:TODO
+	 
 	 */
 	
 	@ResponseBody
@@ -1089,7 +1078,7 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody,"orgid");
 		String orgid = map.get("orgid");
-List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
 		int statusCode =-1;
 		try{
 	
@@ -1113,7 +1102,6 @@ List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
 	/*
 	 * 
 	 * 122.文件下载
-	 * http://localhost:8888/HHGXWebAPI/Orginfo/DownFile?filepath=Uploading/Manoeuvre/b1bbe7b092f342eebff8d
 	 */
 
     @RequestMapping("/DownFile")
@@ -1121,65 +1109,9 @@ List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
             HttpServletRequest request, HttpServletResponse response) {
         if (filepath != null) {
         	String realName = UploadUtil.getFileName(filepath);
-        	System.out.println(filepath);
-        		String storeName =UploadUtil.getStoreName(filepath);
-        	System.out.println(storeName);
+        	String storeName =UploadUtil.getStoreName(filepath);
         	String contentType="application/force-download";
-        	//UploadUtil.download(request, response, storeName, contentType, realName);
-        	/**
-             * 文件下载
-             * @Description: 
-             * @param fileName
-             * @param request
-             * @param response
-             * @return
-             */
-      
-          
-                    String realPath = request.getServletContext().getRealPath(
-                            "Uploading/");
-                    File file = new File(realPath, realName);
-                    if (file.exists()) {
-                        response.setContentType("application/force-download");// 设置强制下载不打开
-                        response.addHeader("Content-Disposition",
-                                "attachment;fileName=" + realName);// 设置文件名
-                        byte[] buffer = new byte[1024];
-                        FileInputStream fis = null;
-                        BufferedInputStream bis = null;
-                        try {
-                            fis = new FileInputStream(file);
-                            bis = new BufferedInputStream(fis);
-                            OutputStream os = response.getOutputStream();
-                            int i = bis.read(buffer);
-                            while (i != -1) {
-                                os.write(buffer, 0, i);
-                                i = bis.read(buffer);
-                            }
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            e.printStackTrace();
-                        } finally {
-                            if (bis != null) {
-                                try {
-                                    bis.close();
-                                } catch (IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                            }
-                            if (fis != null) {
-                                try {
-                                    fis.close();
-                                } catch (IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                
-           
-        	
+        	UploadUtil.download(request, response, storeName, contentType, realName);
         	
          }
     }

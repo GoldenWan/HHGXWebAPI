@@ -72,7 +72,7 @@
 
                         <div class="Pro_form_right">
                             <label id="fireAlarm_automatic"><input class="inputCheckBox" type="checkbox" checked="true"><span>自动刷新</span></label>
-                            <button type="button" class="myBtn">刷新</button>
+                            <button type="button" class="myBtn" style="margin-left: 10px">刷新</button>
                         </div>
 
                     </form>
@@ -81,7 +81,7 @@
 
                 <div id="fireAlarm_table" style="min-height: 600px"></div>
                 <!--放分页的地方-->
-                <div class="col-sm-12 in_paging" style="text-align: center"></div>
+                <div class="col-sm-12 in_paging"></div>
 
             </div>
 
@@ -110,8 +110,8 @@
                         <button type="button" class="myBtn" id="gzAlarmRecord">查询</button>
 
                         <div class="Pro_form_right">
-                            <label id="fault_automatic"><input class="inputCheckBox" type="checkbox"><span>自动刷新</span></label>
-                            <button type="button" class="myBtn">刷新</button>
+                            <label id="fault_automatic"><input class="inputCheckBox" type="checkbox" checked="true"><span>自动刷新</span></label>
+                            <button type="button" class="myBtn" style="margin-left: 10px">刷新</button>
                         </div>
 
                     </form>
@@ -121,7 +121,7 @@
                 <div id="fault_table" style="min-height: 600px"></div>
 
                 <!--放分页的地方-->
-                <div class="col-sm-12 in_paging" style="text-align: center"></div>
+                <div class="col-sm-12 in_paging"></div>
             </div>
 
         </div>
@@ -148,7 +148,7 @@
         {{#each data}}
         <tr>
             <td>{{number}}</td>
-            <td>{{DeviceTypeName}}</td>
+            <td style="text-align: left;"><img src="../../image/origin/red.gif" alt=""/>{{DeviceTypeName}}</td>
             <td>{{sitename}}</td>
             <td>{{location}}</td>
             <td>{{chulidate}}</td>
@@ -179,7 +179,7 @@
         {{#each data}}
         <tr>
             <td>{{number}}</td>
-            <td>{{DeviceTypeName}}</td>
+            <td style="text-align: left;"><img src="../../image/origin/yellow.gif" alt=""/>{{DeviceTypeName}}</td>
             <td>{{sitename}}</td>
             <td>{{location}}</td>
             <td>{{chulidate}}</td>

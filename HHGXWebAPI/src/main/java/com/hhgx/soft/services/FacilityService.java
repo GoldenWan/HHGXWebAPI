@@ -1,16 +1,20 @@
 package com.hhgx.soft.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.mappers.FacilityMapper;
+import com.hhgx.soft.utils.DateUtils;
 
 @Service
+@Transactional
 public class FacilityService {
 @Autowired
 private FacilityMapper facilityMapper;
@@ -27,12 +31,12 @@ public int getTrainingListCount(String orgid, String startTime, String endTime) 
 	return facilityMapper.getTrainingListCount(orgid, startTime, endTime);
 }
 
-public int getManoeuvreCount(String orgid) {
-	return facilityMapper.getManoeuvreCount(orgid);
+public int getManoeuvreCount(String orgid, Timestamp startTime, Timestamp endTime) {
+	return facilityMapper.getManoeuvreCount(orgid,startTime,endTime);
 }
 
-public List<Manoeuvre> getManoeuvreByOrgid(String orgid, int startPos, int pageSize) {
-	return facilityMapper.getManoeuvreByOrgid(orgid, startPos, pageSize);
+public List<Manoeuvre> getManoeuvreByOrgid(String orgid,Timestamp startTime, Timestamp endTime, int startPos, int pageSize) {
+	return facilityMapper.getManoeuvreByOrgid(orgid, startTime, endTime,startPos, pageSize);
 }
 
 public Manoeuvre getManoeuvreDetail(String manoeuvreID) {

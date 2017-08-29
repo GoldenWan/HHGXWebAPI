@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +56,6 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		//JSONObject jsonObject = new JSONObject();
-		//jsonObject.put("sysList", list);
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
@@ -201,36 +200,47 @@ public class FacilityController {
 
 	/**
 	 * 167.获取灭火应急演练列表【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/GetManoeuvreList", method = {
-			RequestMethod.POST })
+	@RequestMapping(value = "/GetManoeuvreList", method = { RequestMethod.POST })
 	public String getManoeuvreList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex","startTime","endTime");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
+		String startTime_ = map.get("startTime");
+		String endTime_ = map.get("endTime");
+		Timestamp startTime= null;
+		Timestamp endTime = null;
+		
+		if(!StringUtils.isEmpty(startTime_)){
+			startTime=DateUtils.stringToTimestamp(startTime_," 00:00:00");
+		}
+		if(!StringUtils.isEmpty(endTime_)){
+			endTime=DateUtils.stringToTimestamp(endTime_," 23:59:59");
+		}
+
 		Page page = null;
 		List<Manoeuvre> manoeuvreList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = facilityService.getManoeuvreCount(orgid);
+		int totalCount = facilityService.getManoeuvreCount(orgid,startTime,endTime);
 		int statusCode = -1;
-		if(StringUtils.isEmpty(orgid) || orgid.equals("null")){
+		if (StringUtils.isEmpty(orgid) || orgid.equals("null")) {
 			return ResponseJson.responseAddJson("orgid 为空", statusCode);
 		}
 
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
-				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid, page.getStartPos(), page.getPageSize());
+				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid,startTime,endTime, page.getStartPos(), page.getPageSize());
 
 			} else {
 				page = new Page(totalCount, 1);
-				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid, page.getStartPos(), page.getPageSize());
+				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid,startTime,endTime, page.getStartPos(), page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
 
 			for (Manoeuvre manoeuvre : manoeuvreList) {
 
@@ -241,8 +251,10 @@ public class FacilityController {
 				map2.put("Department", manoeuvre.getDepartment());
 				map2.put("manager", manoeuvre.getManager());
 				map2.put("content", manoeuvre.getContent());
+				map2.put("orgid", orgid);
 				lmList.add(map2);
 			}
+			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -267,7 +279,6 @@ public class FacilityController {
 		int statusCode = -1;
 		try {
 			Manoeuvre manoeuvreDetail = facilityService.getManoeuvreDetail(manoeuvreID);
-			System.out.println(manoeuvreDetail);
 			if (!StringUtils.isEmpty(manoeuvreDetail)) {
 
 				map2.put("manoeuvreID", manoeuvreDetail.getManoeuvreID());
@@ -284,6 +295,7 @@ public class FacilityController {
 				map2.put("schemafile", manoeuvreDetail.getSchemafile());
 				map2.put("attendpersonfile", manoeuvreDetail.getAttendpersonfile());
 				map2.put("implementationfile", manoeuvreDetail.getImplementationfile());
+				map2.put("orgid", manoeuvreDetail.getOrgid());
 				statusCode = ConstValues.OK;
 			} else {
 
@@ -296,34 +308,5 @@ public class FacilityController {
 		return ResponseJson.responseFindJson(map2, statusCode);
 	}
 
-	/**
-	 * 174.删除灭火应急演练预案【**】
-	 * @throws IOException 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/DeleteManoeuvre", method = RequestMethod.POST)
-	public String deleteManoeuvre(HttpServletRequest request) throws IOException {
-		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "manoeuvreID");
-		String manoeuvreID = map.get("manoeuvreID");
-		String dataBag = null;
-		int statusCode = -1;
-		try {
-			facilityService.deleteManoeuvre(manoeuvreID);
-			statusCode = ConstValues.OK;
-		} catch (Exception e) {
-			e.printStackTrace();
-			statusCode = ConstValues.FAILED;
-		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = "刪除成功";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
-			dataBag = "刪除失败";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		}
-
-	}
-
+	
 }

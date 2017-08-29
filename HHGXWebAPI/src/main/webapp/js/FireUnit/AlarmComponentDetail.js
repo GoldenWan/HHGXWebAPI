@@ -35,11 +35,8 @@
             //componentSeveral = $("#ComponentTb").get(0).rows.length-1;
             componentSeveral = parseInt(data.DataBag.pageCount);
 
-            allNum = Math.ceil(data.DataBag.pageCount / 20);
+            allNum = Math.ceil(data.DataBag.pageCount);
 
-            if (allNum == 0) {
-                allNum = 1
-            }
             createPaging("#in_paging", 1, allNum);
         }
     });
@@ -83,7 +80,14 @@
     $("#ComponentConfirm").click(function(){
         confirmBtnSelectIndexTb(1);
     });
-    function confirmBtnSelectIndexTb(PageIndex){
+    function confirmBtnSelectIndexTb(nowNum){
+        var nowNum = parseInt(nowNum);
+        if (!nowNum) {
+            nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+            if (isNaN(nowNum)) {
+                nowNum = 1;
+            }
+        }
         var compoentTypeSelect = $("#compoentTypeSelect").val();
         var deviceaddress = $("#deviceaddress").val();
         var cFlatPic = sessionStorage.getItem("cFlatPic");
@@ -95,7 +99,7 @@
             "cFlatPic":cFlatPic,
             "iDeviceType":compoentTypeSelect,
             "deviceaddress":deviceaddress,
-            "PageIndex":PageIndex
+            "PageIndex":nowNum
         }
 
         HH.post("/Orginfo/SelectDevicesList",myData, function (data) {
@@ -108,12 +112,9 @@
                 render("#buildingTbData","#buildingTbody",data);
                 compoentTypeSelectData = data;
 
-                allNum = Math.ceil(data.DataBag.pageCount / 20);
+                allNum = Math.ceil(data.DataBag.pageCount);
 
-                if (allNum == 0) {
-                    allNum = 1
-                }
-                createPaging("#in_paging", PageIndex, allNum);
+                createPaging("#in_paging", nowNum, allNum);
             }
         });
     }

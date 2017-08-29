@@ -2,27 +2,52 @@
  * Created by Qiu on 2017/8/21.
  */
 (function(){
-    if(sessionStorage.getItem("imFlatPicStatus")=="default"){
-        $("#imFlatPicImg").attr("xlink:href","");
-        $("#imFlatPicImg").attr("src","");
-        $("#imFlatPicImg").attr("xlink:href","../../image/origin/watching.jpg");
-        $("#imFlatPicImg").attr("src","../../image/origin/watching.jpg");
-    }else {
-        $("#imFlatPicImg").attr("xlink:href", "");
-        $("#imFlatPicImg").attr("src", "");
-        $("#imFlatPicImg").attr("xlink:href", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
-        $("#imFlatPicImg").attr("src", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
-        window.setInterval(function () {
+    function judgeStatus(){
+        if(sessionStorage.getItem("imFlatPicStatus")=="default"){
+            $("#imFlatPicImg").attr("xlink:href","");
+            $("#imFlatPicImg").attr("src","");
+            $("#imFlatPicImg").attr("xlink:href","../../image/origin/watching.jpg");
+            $("#imFlatPicImg").attr("src","../../image/origin/watching.jpg");
+
+        }else {
             $("#imFlatPicImg").attr("xlink:href", "");
             $("#imFlatPicImg").attr("src", "");
             $("#imFlatPicImg").attr("xlink:href", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
             $("#imFlatPicImg").attr("src", ImgUrl + "" + sessionStorage.getItem("imFlatPic"));
-            console.log(sessionStorage.getItem("imFlatPic"));
-        }, 5000);
+
+        }
+
+        var image = document.createElementNS('http://www.w3.org/2000/svg','image');
+        //image.setAttributeNS(null,"src","../../image/origin/logoBig.png");
+        image.setAttributeNS(null,'width','20');
+        image.setAttributeNS(null,'height','20');
+        image.setAttributeNS(null,"href","../../image/origin/red.gif");
+        image.setAttributeNS(null,'x',myAllData.DataBag[0].fPositionX+"%");
+        image.setAttributeNS(null,'y',myAllData.DataBag[0].fPositionY+"%");
+        image.setAttributeNS(null, 'visibility', 'visible');
+        image.setAttributeNS(null,'class','img');
+        image.setAttributeNS(null,'data-toggle','tooltip');
+        image.setAttributeNS(null,'title','默认的 Tooltip');
+        console.log(image);
+        //$('#svgContainer').append($(image));
+        document.getElementById('svgContainer').appendChild(image);
+
+    }
+    function addImgFunc(){
+
     }
 
+
+    judgeStatus();
+    //alert(sessionStorage.getItem("imFlatPic"));
+    window.setInterval(function () {
+        judgeStatus();
+        console.log(sessionStorage.getItem("imFlatPicStatus"));
+        //location.reload();
+    }, 5000);
+
     //点击放大和缩小按钮事件
-    var big = $("#big");
+    /*var big = $("#big");
     var small = $("#small");
     big.click(function(){
         //alert('sadf');
@@ -31,7 +56,7 @@
     small.click(function(){
         showSmall("imFlatPicSvg");
     });
-    posMove("imFlatPicSvg","imFlatPicImgDiv");
+    posMove("imFlatPicSvg","imFlatPicImgDiv");*/
 
 
 

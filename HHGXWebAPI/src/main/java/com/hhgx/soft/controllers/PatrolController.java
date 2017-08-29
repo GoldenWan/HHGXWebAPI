@@ -2,6 +2,7 @@ package com.hhgx.soft.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,6 @@ import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -127,24 +127,34 @@ public class PatrolController {
 		String startDate = map.get("startDate");
 		String endDate = map.get("endDate");
 		String pageIndex = map.get("pageIndex");
-		//如果日期为空，则默认添加两月期间
+		Timestamp startTime= null;
+		Timestamp endTime = null;
+		
+		if(!StringUtils.isEmpty(startDate)){
+			startTime=DateUtils.stringToTimestamp(startDate," 00:00:00");
+		}
+		if(!StringUtils.isEmpty(endDate)){
+			endTime=DateUtils.stringToTimestamp(endDate," 23:59:59");
+		}
+
+		
 		
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"));
+		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,startTime,endTime);
 		int statusCode = -1;		
 		String submitFlag = null;
 
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
-				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"), page.getStartPos(),
+				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID,startTime,endTime, page.getStartPos(),
 						page.getPageSize());
 
 			} else {
 				page = new Page(totalCount, 1);
-				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, DateUtils.stringToTimestamp(startDate," 00:00:00"),DateUtils.stringToTimestamp(endDate," 23:59:59"), page.getStartPos(),
+				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, startTime,endTime, page.getStartPos(),
 						page.getPageSize());
 			}
 			statusCode = ConstValues.OK;
@@ -705,4 +715,13 @@ public class PatrolController {
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
+	
+	/**
+	 * 114.每日巡查记录表查询
+	 * 
+	 * {"tokenUUID":"6e2cda35-2a40-4c44-8b3a-d8d3817e9a6d",
+	 * "infoBag":{"UserCheckId":"f810d79a-ee81-4272-a1ea-f41ca7e6c9f4","siteid":"all"}}:
+	 */
+	
+	
 }

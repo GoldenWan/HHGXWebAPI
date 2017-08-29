@@ -19,6 +19,13 @@
             //alert($("#firebuildingSelect").val());
             var nowNum = parseInt(nowNum);
 
+            if (!nowNum) {
+                nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+                if (isNaN(nowNum)) {
+                    nowNum = 1;
+                }
+            }
+
             if(!nowNum){
                 if(type=="火警"){
                     nowNum = parseInt($("#fireAlarm_page>.in_paging").find(".pagination>.active").text());
@@ -40,7 +47,7 @@
                     console.log(view + "===" + page);
                     render()
                 });*/
-                siteid = $("#firebuildingSelect").val()
+                siteid = $("#firebuildingSelect").val();
             }else if(type=="故障"){
                 startTime = $("#fault_startDate").find("input").val();
                 stopTime = $("#fault_stopDate").find("input").val();
@@ -50,8 +57,6 @@
                 });*/
                 siteid = $("#faultbuildingSelect").val()
             }
-            //alert($("#firebuildingSelect").val());
-
             var info = {
                 orgid: sessionStorage.getItem("OrgID"),
                 cAlarmtype: type,
@@ -62,16 +67,15 @@
             };
 
             HH.post("/AlarmData/FireAlarm", info, function (data) {
-               /* console.log("下面是首页数据");
+              /*  console.log("下面是首页数据");
                 console.log(data);*/
-
                 var myJson = {data: data.DataBag.PageDatas};
                 $.each(myJson.data,function(i,v){
                     v["number"]=i*1+1+nowNum*20-20;
                 });
 
                 render(view, page, myJson);
-
+                latestImFlatPic(false);
                 //设置点击楼层
                 $(".floor").click(function(){
                     $("#imFlatPicModal").modal({backdrop:"static"});
@@ -84,19 +88,20 @@
                     var big = $("#big");
                     var small = $("#small");
                     big.click(function(){
-                        //alert('sadf');
                         showBig("imFlatPicSvg");
                     });
                     small.click(function(){
                         showSmall("imFlatPicSvg");
                     });
                     posMove("imFlatPicSvg","imFlatPicImgDiv");
-
                 })
 
-                //allNum = Math.ceil(data.DataBag.pageCount/20);
-
-                createPaging(".in_paging",nowNum,allNum);
+                allNum = data.DataBag.pageCount;
+                if(type=="火警"){
+                    createPaging("#fireAlarmPaging",nowNum,allNum);
+                }else if(type=="故障"){
+                    createPaging("#faultPaging",nowNum,allNum);
+                }
 
             });
         //})
@@ -125,6 +130,7 @@
         }
     });
     $(".in_paging").on("click", ".pagination>.downPage", function () {
+
         var num = parseInt($(this).parent().find(".active").text());
         var typeNum = $(".Pro_tab").attr("data-on");
         if(num!=allNum){
@@ -173,6 +179,7 @@
     $("#cover_btn").click(function () {
         $(".Pro_tab>div").css({"border-bottom": "transparent", "color": "#333"});
         $(this).css({"border-bottom": "3px solid #4A90E2", "color": "#5E9DE6"});
+
     });
 
     //选项卡，监管按钮
@@ -202,7 +209,6 @@
         if($(this).text()=="查看详情"){
             window.location.href="./AlarmHandle.html";
         }else if($(this).text()=="处理"){
-            console.log('fire');
             doDealFunc();
         }
     });
@@ -214,7 +220,6 @@
         if($(this).text()=="查看详情"){
             window.location.href="./AlarmHandle.html";
         }else if($(this).text()=="处理"){
-            console.log('fault');
             doDealFunc();
         }
         //window.location.href="./AlarmHandle.html";
@@ -234,7 +239,7 @@
         var check = $(this).get(0).checked;
         if(check){
             fireAlarm_timer = window.setInterval(function(){
-                render("#building_view","#firebuildingSelect",buildingData);
+               // render("#building_view","#firebuildingSelect",buildingData);
                 pageReload("火警", "#fireAlarm_view", "#fireAlarm_table")
             },5000);
         }else{
@@ -247,7 +252,7 @@
         var check = $(this).get(0).checked;
         if(check){
             fault_timer = window.setInterval(function(){
-                render("#building_view","#faultbuildingSelect",buildingData);
+               // render("#building_view","#faultbuildingSelect",buildingData);
                 pageReload("故障", "#fault_view", "#fault_table")
             },5000);
         }else{
@@ -265,19 +270,25 @@
         $("#fireAlarm_btn").click();
     }
 
-    fireAlarm_timer = window.setInterval(function(){
+   /* fireAlarm_timer = window.setInterval(function(){
         render("#building_view","#firebuildingSelect",buildingData);
         pageReload("火警", "#fireAlarm_view", "#fireAlarm_table")
     },5000);
     fault_timer = window.setInterval(function(){
         render("#building_view","#faultbuildingSelect",buildingData);
         pageReload("故障", "#fault_view", "#fault_table")
-    },5000);
+    },5000);*/
 
     var buildingData = "";
     function getBuilding(view,target,nowType){
          HH.post("/Orginfo/GetSiteName", {"orgid":sessionStorage.getItem("OrgID")}, function (datas) {
              buildingData = datas;
+             console.log("====");
+             console.log(datas);
+             datas.DataBag.unshift({
+                 "siteid":"",
+                 "sitename":"全部"
+             })
              render(view,target,datas);
              if(nowType=="fault"){
                  pageReload("故障", "#fault_view", "#fault_table",1);
@@ -289,7 +300,6 @@
 
     //点击最新警情平面图
     $(".alarmImgBtn").click(function(){
-
         latestImFlatPic(true);
     });
 })();
@@ -300,8 +310,25 @@ function latestImFlatPic(autoUpdate){
     //判断此时是火警还是故障状态
     if(nowType=="fault"){
         cAlarmtype="故障";
+        var trs = $("#faultTb tr").length;
+        console.log(trs);
+        if(trs<=1){
+            console.log('<=1');
+            sessionStorage.setItem("imFlatPicStatus","default");
+        }else{
+            console.log('>=1');
+            sessionStorage.setItem("imFlatPicStatus","haveImg");
+        }
     }else{
         cAlarmtype="火警";
+        var trs = $("#fireTb tr").length;
+        if(trs<=1){
+            console.log('火警<=1');
+            sessionStorage.setItem("imFlatPicStatus","default");
+        }else{
+            console.log('火警>=1');
+            sessionStorage.setItem("imFlatPicStatus","haveImg");
+        }
     }
     var myJson = {
         "orgid":sessionStorage.getItem("OrgID"),
@@ -313,26 +340,10 @@ function latestImFlatPic(autoUpdate){
         console.log(datas);
         sessionStorage.setItem("imFlatPic",datas.DataBag[0].imFlatPic);
         if(autoUpdate==true){//说明是点击跳转到新页面
-            if(nowType=="fault"){
-                var trs = $("#faultTb tr").length;
-                if(trs<=1){
-                    sessionStorage.setItem("imFlatPicStatus","default");
-                }else{
-                    sessionStorage.setItem("imFlatPicStatus","haveImg");
-                }
-            }else{
-                var trs = $("#fireTb tr").length;
-                if(trs<=1){
-                    sessionStorage.setItem("imFlatPicStatus","default");
-                }else{
-                    sessionStorage.setItem("imFlatPicStatus","haveImg");
-                }
-            }
-            window.open("./AlarmImg.html");
+            //window.open("./AlarmImg.html");
         }
     });
 }
-latestImFlatPic(false);
 var latestInterval = window.setInterval(function(){
     latestImFlatPic(false);
 },5000)
@@ -351,10 +362,12 @@ function doDealFunc(){
         $(".buildingForm:nth-of-type(2)").css("display", "none");
         $(".alarmDiv:nth-of-type(2)").css("display", "inline-block");
         $(".alarmDiv:nth-of-type(2) span").text("真实火警");
+        $(".alarmDiv:nth-of-type(2) input").val("真实火警");
     }else if(sessionStorage.getItem("AlarmType")=="fault") {
         //alert('asdf');
         $(".buildingForm:nth-of-type(2)").css("display", "inline-block");
         $(".alarmDiv:nth-of-type(2) span").text("真实故障");
+        $(".alarmDiv:nth-of-type(2) input").val("真实故障");
     }
     var myData;
     //点击警情处理的确定
@@ -385,10 +398,10 @@ function doDealFunc(){
                 "checkdesc":statementInfo
             };
         }
-        //console.log(myData);
+        console.log(myData);
         HH.post("/AlarmData/FireDetail",myData,function(data) {
-            // console.log("后台返回的警情处理信息");
-            //  console.log(data);
+             console.log("后台返回的警情处理信息");
+              console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
                 $("#alarmHandleModal").modal("hide");
                 if(sessionStorage.getItem("AlarmType")=="fault"){

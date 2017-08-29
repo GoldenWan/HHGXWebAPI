@@ -36,11 +36,6 @@
             var myJson = {data: data.DataBag.PageDatas};
             $.each(myJson.data, function (i, v) {
                 v["num"] = i * 1 + 1 + nowNum * 20 - 20;
-                if (HandingState == "未处理") {
-                    v["state"] = true;
-                } else if (HandingState == "已处理") {
-                    v["state"] = false;
-                }
             });
             allJson = myJson.data;
 
@@ -67,7 +62,8 @@
     });
     $("#in_paging").on("click", ".pagination>.downPage", function () {
         var num = parseInt($(".pagination>.active").text());
-        if (num != allNum) {
+        var maxNum = Math.ceil(parseInt(allNum) / 20);
+        if (num != maxNum && maxNum!=0) {
             num = num + 1;
             pageReload(num);
         }
@@ -95,17 +91,17 @@
         render("#checkView", "#checkPage", myJson);
     });
 
-    $("#checkPage").on("click", "#submit_btn", function () {
-        var info = {
-            wbRepaireInfoId: wbId,
-            source: source,
-            DealResult: $("#result").val()
-        };
-        HH.post("/Maintenance/RepaireDeal", info, function (data) {
-            pageReload();
-            $('#checkModal').modal('hide');
-        })
-    });
+    //$("#checkPage").on("click", "#submit_btn", function () {
+    //    var info = {
+    //        wbRepaireInfoId: wbId,
+    //        source: source,
+    //        DealResult: $("#result").val()
+    //    };
+    //    HH.post("/Maintenance/RepaireDeal", info, function (data) {
+    //        pageReload();
+    //        $('#checkModal').modal('hide');
+    //    })
+    //});
 
 
 })();

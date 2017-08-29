@@ -2,6 +2,7 @@ package com.hhgx.soft.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Manoeuvre;
@@ -14,6 +15,7 @@ import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.mappers.FormMapper;
 
 @Service
+@Transactional
 public class FormService {
 
 	@Autowired

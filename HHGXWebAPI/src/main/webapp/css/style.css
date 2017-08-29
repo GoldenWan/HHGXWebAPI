@@ -18,9 +18,9 @@ html,body{
     color: #FFFFFF;
     padding: 0 16px;
     font-size: 12px;
-    height: 32px;
+    height: 34px;
     border-radius: 4px;
-    line-height: 31px;
+    line-height: 34px;
     border: none;
 }
 
@@ -129,9 +129,13 @@ html,body{
 }
 .content_condition>div{
     display: inline-block;
+    vertical-align: middle;
     width: 200px;
     height: 32px;
     margin: 0 16px;
+}
+.content_condition>.myBtn{
+    vertical-align: middle;
 }
 .content_condition>.date{
     display: inline-table;

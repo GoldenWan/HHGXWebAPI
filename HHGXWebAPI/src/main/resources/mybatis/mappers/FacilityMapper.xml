@@ -10,8 +10,6 @@
 	FROM
 		firesystype
 	</select>
-
-
 	<select id="getTrainingListCount" resultType="int">
 		SELECT
 		count(*)
@@ -44,7 +42,7 @@
 		FROM
 		training
 		WHERE
-		TrainingID = #{trainingID};
+		TrainingID = #{trainingID}
 	</delete>
 	
 	<select id="getManoeuvreCount" resultType="int">
@@ -54,6 +52,11 @@
 		manoeuvre
 	WHERE
 		orgid =#{orgid}
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		and
+		manoeuvretime BETWEEN #{startTime} and #{endTime}
+		</if>
+		
 	</select>
 	<select id="getManoeuvreByOrgid" resultType="manoeuvre">
 	SELECT
@@ -67,10 +70,15 @@
 		manoeuvre
 	WHERE
 		orgid = #{orgid} 
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		and
+		manoeuvretime BETWEEN #{startTime} and 	#{endTime}
+		</if>
 	LIMIT #{startPos},#{pageSize}
 	</select>
 	<select id="getManoeuvreDetail" resultType="manoeuvre">
 	SELECT
+		orgid,
 		manoeuvreID,
 		manoeuvretime,
 		address,
@@ -95,7 +103,7 @@
 		FROM
 		manoeuvre
 		WHERE
-		manoeuvreID = #{manoeuvreID};
+		manoeuvreID = #{manoeuvreID}
 	</delete>
 	<select id="getTraingingDetail" resultType="training">
 	SELECT

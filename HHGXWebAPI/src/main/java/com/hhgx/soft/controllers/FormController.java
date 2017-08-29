@@ -291,13 +291,13 @@ public class FormController {
 
 	/**
 	 * 170.新增灭火应急演练【**】
+	
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/AddManoeuvre", method = RequestMethod.POST)
-	public String addManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
-			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
-			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
-
+	public String addManoeuvre(HttpServletRequest request, @RequestParam(value="schemafile", required = false) MultipartFile schemafile,
+			@RequestParam(value="attendpersonfile", required = false) MultipartFile attendpersonfile,
+			@RequestParam(value="implementationfile", required = false) MultipartFile implementationfile) throws JsonProcessingException {
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
 		String address = request.getParameter("address");
@@ -307,11 +307,12 @@ public class FormController {
 		String scheme = request.getParameter("scheme");
 		String attendperson = request.getParameter("attendperson");
 		String implementation = request.getParameter("implementation");
-		String summary = request.getParameter("Summary");
+		String summary = request.getParameter("summary");
 		String suggestion = request.getParameter("suggestion");
 		String dataBag = null;
 		int statusCode = -1;
 		try {
+			
 			Manoeuvre manoeuvre = new Manoeuvre();
 			String manoeuvreID = UUIDGenerator.getUUID();
 			manoeuvre.setManoeuvreID(manoeuvreID);
@@ -346,7 +347,6 @@ public class FormController {
 			}
 
 			formService.addManoeuvre(manoeuvre);
-
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
 		} catch (Exception e) {
@@ -363,59 +363,56 @@ public class FormController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateManoeuvre", method = RequestMethod.POST)
-	public String updateManoeuvre(HttpServletRequest request, @RequestParam("schemafile") MultipartFile schemafile,
-			@RequestParam("attendpersonfile") MultipartFile attendpersonfile,
-			@RequestParam("implementationfile") MultipartFile implementationfile) throws JsonProcessingException {
+	public String updateManoeuvre(HttpServletRequest request, @RequestParam(value="schemafile", required = false) MultipartFile schemafile,
+			@RequestParam(value="attendpersonfile", required = false) MultipartFile attendpersonfile,
+			@RequestParam(value="implementationfile", required = false) MultipartFile implementationfile) throws JsonProcessingException {
 		String manoeuvreID = request.getParameter("manoeuvreID");
-		String orgid = request.getParameter("Orgid");
+		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
-		String address = request.getParameter("Address");
+		String address = request.getParameter("address");
 		String department = request.getParameter("Department");
-		String manager = request.getParameter("Manager");
-		String content = request.getParameter("Content");
-		String scheme = request.getParameter("Scheme");
+		String manager = request.getParameter("manager");
+		String content = request.getParameter("content");
+		String scheme = request.getParameter("scheme");
 		String attendperson = request.getParameter("attendperson");
 		String implementation = request.getParameter("implementation");
-		String summary = request.getParameter("Summary");
+		String summary = request.getParameter("summary");
 		String suggestion = request.getParameter("suggestion");
 		String dataBag = null;
 		int statusCode = -1;
 		try {
+			
 			Manoeuvre manoeuvre = new Manoeuvre();
-			manoeuvre.setManoeuvreID(manoeuvreID);
-			manoeuvre.setAddress(address);
-			manoeuvre.setAttendperson(attendperson);
-			manoeuvre.setContent(content);
-			manoeuvre.setDepartment(department);
-			manoeuvre.setImplementation(implementation);
-			manoeuvre.setManoeuvretime(manoeuvretime);
-			manoeuvre.setManager(manager);
-			manoeuvre.setScheme(scheme);
 			manoeuvre.setOrgid(orgid);
+			manoeuvre.setManoeuvreID(manoeuvreID);
+			manoeuvre.setManoeuvretime(manoeuvretime);
+			manoeuvre.setAddress(address);
+			manoeuvre.setDepartment(department);
+			manoeuvre.setManager(manager);
+			manoeuvre.setContent(content);
+			manoeuvre.setScheme(scheme);
+			manoeuvre.setAttendperson(attendperson);
+			manoeuvre.setImplementation(implementation);
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
 
 			if (!StringUtils.isEmpty(schemafile)) {
-
 				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
 						"Manoeuvre/" + manoeuvreID);
 				manoeuvre.setSchemafile(schemafile1);
 			}
 			if (!StringUtils.isEmpty(attendpersonfile)) {
-
 				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
 						attendpersonfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setAttendpersonfile(attendpersonfile1);
 			}
 			if (!StringUtils.isEmpty(implementationfile)) {
-
 				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
 						implementationfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
 				manoeuvre.setImplementationfile(implementationfile1);
 			}
 
 			formService.updateManoeuvre(manoeuvre);
-
 			statusCode = ConstValues.OK;
 			dataBag = "修改成功";
 		} catch (Exception e) {
@@ -435,7 +432,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST)
-	public String updateManoeuvre(HttpServletRequest request, @RequestParam("SafeRuleFile") MultipartFile safeRuleFile)
+	public String updateManoeuvre(HttpServletRequest request, @RequestParam(value="SafeRuleFile", required = false) MultipartFile safeRuleFile)
 			throws JsonProcessingException {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
@@ -479,7 +476,7 @@ public class FormController {
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST)
 	public String updateSafeManageRules(HttpServletRequest request,
-			@RequestParam("SafeRuleFile") MultipartFile safeRuleFile) throws JsonProcessingException {
+			@RequestParam(value="SafeRuleFile", required = false) MultipartFile safeRuleFile) throws JsonProcessingException {
 		String safeManageRulesID = request.getParameter("safeManageRulesID");
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
@@ -522,7 +519,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST)
-	public String addSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile)
+	public String addSafeDuty(HttpServletRequest request, @RequestParam(value="SafeDutyFile", required = false) MultipartFile safeDutyFile)
 			throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
@@ -564,7 +561,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST)
-	public String updateSafeDuty(HttpServletRequest request, @RequestParam("SafeDutyFile") MultipartFile safeDutyFile)
+	public String updateSafeDuty(HttpServletRequest request, @RequestParam(value="SafeDutyFile", required = false) MultipartFile safeDutyFile)
 			throws JsonProcessingException {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
@@ -610,7 +607,7 @@ public class FormController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AddBusinessLicence", method = RequestMethod.POST)
-	public String addBusinessLicence(HttpServletRequest request, @RequestParam("PictureUrl") MultipartFile pictureUrl)
+	public String addBusinessLicence(HttpServletRequest request, @RequestParam(value="PictureUrl", required = false) MultipartFile pictureUrl)
 			throws JsonProcessingException {
 		String licenceCode = request.getParameter("LicenceCode");
 		String conpanyName = request.getParameter("ConpanyName");
@@ -643,9 +640,7 @@ public class FormController {
 			businessLicence.setOrgid(orgid);
 			businessLicence.setRegistTime(DateUtils.StringToDate(registTime, "yyyy/MM/dd"));
 			String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
-			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
-					orgid + "/BusinessLicence");
-
+			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext, orgid + "/BusinessLicence");
 			businessLicence.setPictureUrl(pictureUrl1);
 			formService.addBusinessLicence(businessLicence);
 			statusCode = ConstValues.OK;

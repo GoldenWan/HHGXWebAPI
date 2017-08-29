@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.ManagerOrg;
 import com.hhgx.soft.entitys.User;
 import com.hhgx.soft.mappers.PlayWithRoleMapper;
 
 @Service
+@Transactional
 public class PlayWithRoleService {
 	@Autowired
 	private PlayWithRoleMapper playWithRoleMapper;

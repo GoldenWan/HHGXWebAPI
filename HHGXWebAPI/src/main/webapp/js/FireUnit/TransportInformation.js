@@ -6,6 +6,13 @@
     var allNum = 1;
     //下面是获得首页的列表信息
     function getTransport(nowNum){
+        var nowNum = parseInt(nowNum);
+        if (!nowNum) {
+            nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+            if (isNaN(nowNum)) {
+                nowNum = 1;
+            }
+        }
         HH.post("/Orginfo/SelectGateway",{"orgid":sessionStorage.getItem("OrgID"),"PageIndex":nowNum},function(data) {
             console.log("后台返回的首页信息");
             console.log(data);
@@ -24,11 +31,8 @@
                     var newVal = tdText.substring(0,tdText.length-1);
                     trs.eq(i).get(0).cells[6].innerHTML = newVal;
                 }*/
-                allNum = Math.ceil(data.DataBag.pageCount / 20);
+                allNum = Math.ceil(data.DataBag.pageCount);
 
-                if (allNum == 0) {
-                    allNum = 1
-                }
                 createPaging("#in_paging", nowNum, allNum);
             }
         });
@@ -105,8 +109,15 @@
             if (data.DataBag && data.StateMessage=="1000") {
                 render("#addAddModalData","#addTransportBody",data);
                 var trs = $("#addTransportEquipmentTb").find("tr").length;
+                //$("#addAddSelect").val(indexTbDetailData.DataBag[0].FireSysList[0].sitename+"("+indexTbDetailData.DataBag[0].FireSysList[0].vSysdesc+")");
+                //$("#addAddSelect").attr("disabled",true);
                 if(trs>1){
+                    var tdBuilding = $("#addTransportEquipmentTb").find("tr").eq(1).get(0).cells[0].innerText;
+                    var tdSystem = $("#addTransportEquipmentTb").find("tr").eq(1).get(0).cells[1].innerText;
+                    var selectVal = tdBuilding+"("+tdSystem+")";
+                    $("#addAddSelect").val(selectVal);
                     $("#addAddSelect").attr("disabled",true);
+
                 }
 
             }

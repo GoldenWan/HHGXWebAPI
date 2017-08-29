@@ -37,9 +37,9 @@
             <div>
                 <span>每日防火巡查</span>
 
-                <div>
-                    <button type="button" class="myBtn" data-toggle="modal" data-target="#addModal">添加</button>
-                </div>
+                <!--<div>-->
+                    <!--<button type="button" class="myBtn" data-toggle="modal" data-target="#addModal">添加</button>-->
+                <!--</div>-->
             </div>
         </div>
 
@@ -216,53 +216,30 @@
 
                 <div class="col-sm-12" style="margin-bottom: 10px">
                     <label>巡查日期：</label>
-                    <span>{{data.UserCheckTime}}</span>
+                    <span>{{UserCheckTime}}</span>
                 </div>
 
                 <div class="col-sm-12" style="margin-bottom: 10px">
                     <label>巡查员：</label>
-                    <span>{{data.OrgUserId}}</span>
+                    <span>{{OrgUserId}}</span>
                 </div>
 
                 <div class="col-sm-12" style="margin-bottom: 10px">
                     <label>消防安全管理员：</label>
-                    <span>{{data.OrgManagerId}}</span>
+                    <span>{{OrgManagerId}}</span>
                 </div>
 
-                <div class="col-sm-12">
-                    <table class="table table-striped table-hover main_table">
-                        <thead>
-                        <tr>
-                            <td>巡查项目</td>
-                            <td>巡查内容</td>
-                            <td>巡查结果</td>
-                            <td>故障现象</td>
-                            <td>是否当场处理</td>
-                            <td>现场处理情况</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#myTd data.Projects}}{{/myTd}}
-                        </tbody>
-
-                    </table>
-                </div>
-
-                <div class="col-sm-12">
-                    <label>巡查现场照片：</label>
-
-                    <div class="scene_img">
-                        {{#each pic}}
-                        {{#each Picture}}
-                        <div>
-                            <a href="{{#imgSrc this.PicPath}}{{/imgSrc}}" target="view_window"><img src="{{#imgSrc this.PicPath}}{{/imgSrc}}"/></a>
-                            <span>巡查项目：{{../PicProject}}</span>
-                            <span>巡查内容：{{../PicContent}}</span>
-                        </div>
+                <div class="col-sm-12" style="margin-bottom: 10px">
+                    <label>建筑物：</label>
+                    <select id="site">
+                        <option value="all">全部</option>
+                        {{#each siteList}}
+                        <option value="{{siteid}}">{{sitename}}</option>
                         {{/each}}
-                        {{/each}}
-                    </div>
+                    </select>
                 </div>
+
+                <div id="myTable"></div>
 
             </div>
 
@@ -295,9 +272,9 @@
             <td>{{SubmitStatet}}</td>
             <td>
                 <a class="operation btn_check" data-id="{{UserCheckId}}" data-toggle="modal" data-target="#checkModal">详情</a>
-                <a class="{{#unless SubmitFlag}}operation btn_edit{{else}}btn_no{{/unless}}" data-id="{{UserCheckId}}">巡查内容维护</a>
-                <a class="{{#unless SubmitFlag}}operation btn_commit{{else}}btn_no{{/unless}}" data-id="{{UserCheckId}}">提交</a>
-                <a class="{{#unless SubmitFlag}}operation btn_delete{{else}}btn_no{{/unless}}" data-id="{{UserCheckId}}" {{#unless SubmitFlag}}data-toggle="modal" data-target="#deleteModal" {{/unless}}>删除</a>
+                <!--<a class="{{#unless SubmitFlag}}operation btn_edit{{else}}btn_no{{/unless}}" data-id="{{UserCheckId}}">巡查内容维护</a>-->
+                <!--<a class="{{#unless SubmitFlag}}operation btn_commit{{else}}btn_no{{/unless}}" data-id="{{UserCheckId}}">提交</a>-->
+                <a class="{{#if IsDelete}}operation btn_delete{{else}}btn_no{{/if}}" data-id="{{UserCheckId}}" {{#if IsDelete}}data-toggle="modal" data-target="#deleteModal" {{/if}}>删除</a>
             </td>
         </tr>
         {{/each}}

@@ -1,21 +1,57 @@
 /**
  * Created by Qiu on 2017/6/10.
  */
+
+var allNum = 1;
 (function(){
+    getIndexTb(1);
+})();
+function getIndexTb(nowNum){
+    var nowNum = parseInt(nowNum);
+    if (!nowNum) {
+        nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+        if (isNaN(nowNum)) {
+            nowNum = 1;
+        }
+    }
     //下面是将首页的表格里面的表格内容渲染到页面首页表格里面
-   // console.log(sessionStorage.OrgID);
-    //alert(sessionStorage.getItem("OrgID"));
-    HH.post("/Orginfo/GetSiteList",{"orgid":sessionStorage.getItem("OrgID")},function(data) {
-       // console.log("下面是返回的首页信息");
-       // console.log(data);
+    HH.post("/Orginfo/GetSiteList",{"orgid":sessionStorage.getItem("OrgID"),"PageIndex":nowNum},function(data) {
+        /* console.log("下面是返回的首页信息");
+         console.log(data);*/
         if (data.DataBag && data.StateMessage=="1000") {
             var myData = data;
             render("#buildIndexTbData", "#buildIndexTb", myData);
+            allNum = Math.ceil(data.DataBag.pageCount);
+
+            createPaging("#in_paging", nowNum, allNum);
         }
     });
 
-})()
-
+}
+//页码
+$("#in_paging").on("click", ".pagination>.pageNum", function () {
+    var num = parseInt($(this).text());
+    //pageReload(num)
+    getIndexTb(num);
+});
+//上一页
+$("#in_paging").on("click", ".pagination>.upPage", function () {
+    var num = parseInt($(".pagination>.active").text());
+    if (num != 1) {
+        num = num - 1;
+        //pageReload(num);
+        getIndexTb(num);
+    }
+});
+//下一页
+$("#in_paging").on("click", ".pagination>.downPage", function () {
+    var num = parseInt($(".pagination>.active").text());
+    if (num != allNum) {
+        num = num + 1;
+        // pageReload(num);
+        getIndexTb(num);
+    }
+});
 //下面是调用百度地图的用法
 /*$(document).ready(function(){
     //调用百度地图函数
@@ -23,7 +59,6 @@
     //baiDuMap("container1");
 
 })*/
-
 
 //==========================下面是建筑页面首页的按钮点击事件封装============================
 $(document.body).on("click",".operationBuild",function(){
@@ -35,10 +70,10 @@ $(document.body).on("click",".operationBuild",function(){
         var siteid = $(this).attr("siteid");
         //下面是获取详情里面的详细信息
         HH.post("/Orginfo/GetSite",{"siteid":siteid},function(data) {
-            //console.log("下面是返回的详情信息");
-            //console.log(data);
+            console.log("下面是返回的详情信息");
+            console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
-                render("#detailModelData", "#buildingInfoContainer", data);
+                render("#detailModelData", "#buildingInfoContainer", data.DataBag);
                 //$("#detailModal").modal({backdrop:"static"});
             }
         });
@@ -64,10 +99,10 @@ $(document.body).on("click",".operationBuild",function(){
         console.log(formData);*/
         var siteid = $(this).attr("siteid");
         HH.post("/Orginfo/GetSite",{"siteid":siteid},function(data) {
-            //console.log("下面是返回的后台修改信息");
-           // console.log(data);
+            console.log("下面是返回的后台修改信息");
+            console.log(data);
             if (data.DataBag && data.StateMessage=="1000") {
-                render("#changeModelData", "#changeModalForm", data);
+                render("#changeModelData", "#changeModalForm", data.DataBag);
                 //baiDuMap("changeContainer","jd","wd");
                 if(data.DataBag[0].fLongitude && data.DataBag[0].fLatitude){
                     positionMap("changeContainer", data.DataBag[0].fLongitude, data.DataBag[0].fLatitude, "jd","wd");
@@ -95,7 +130,9 @@ $(document.body).on("click",".operationBuild",function(){
            //     console.log(data);
                 if (data.DataBag && data.StateMessage=="1000") {
                     $("#changeModal").modal("hide");
-                    location.reload();
+                    var num = parseInt($(".pagination>.active").text());
+                    getIndexTb(num);
+                    //location.reload();
                 }/*else{
                     alert("请完善信息");
                     return;
@@ -113,7 +150,9 @@ $(document.body).on("click",".operationBuild",function(){
             //     console.log(data);
                  if (data.DataBag && data.StateMessage=="1000") {
                      $("#isDeleteBuilding").modal("hide");
-                     location.reload();
+                     //location.reload();
+                     var num = parseInt($(".pagination>.active").text());
+                     getIndexTb(num);
                  }
              });
         }
@@ -127,7 +166,7 @@ $(document.body).on("click",".operationBuild",function(){
         HH.post("/Orginfo/GetAppearancepicList",{"siteid":siteid},function(data) {
            // console.log("下面是返回的详情图片信息");
             console.log(data);
-            if (data.DataBag!="暂无图片" && data.StateMessage=="1000") {
+            if (data.DataBag.length>0 && data.StateMessage=="1000") {
                 //data.sitename = sitename;
                 render("#showImgModelData", "#showImgModalDivs", data);
                 //调用封装的删除图片方法，buildingImg：传入图片的父元素，i：当前点击的某个元素
@@ -182,7 +221,7 @@ $(document.body).on("click",".operationBuild",function(){
             var options = {
                 //beforeSubmit: showRequest,  //提交前的回调函数
                 success: showResponse,      //提交后的回调函数
-                url: ApiUrl+"/Site/AddAppearance", //默认是form的action， 如果申明，则会覆盖
+                url: ApiUrl+"/Form/AddAppearance", //默认是form的action， 如果申明，则会覆盖
                 type: "post",               //默认是form的method（get or post），如果申明，则会覆盖
                 dataType: "json"           //html(默认), xml, script, json...接受服务端返回的类型
                 //clearForm: true,          //成功提交后，清除所有表单元素的值
@@ -210,7 +249,6 @@ $(document.body).on("click",".operationBuild",function(){
             $("#showImgModalForm").ajaxSubmit(options);
         }
 
-
     }else if(type=="add"){
         //alert(sessionStorage.getItem("fLongitude")+"=="+sessionStorage.getItem("fLatitude"));
         if(sessionStorage.getItem("fLongitude")){
@@ -233,7 +271,9 @@ $(document.body).on("click",".operationBuild",function(){
                 if (data.DataBag && data.StateMessage=="1000") {
                     //render("#buildIndexTbData", "#buildIndexTb", data);
                     $("#addModal").modal("hide");
-                    location.reload();
+                    //location.reload();
+                    var num = parseInt($(".pagination>.active").text());
+                    getIndexTb(num);
                 }
             });
         };

@@ -139,9 +139,7 @@
 	<update id="updateManoeuvre">
 		UPDATE manoeuvre
 		SET
-		Orgid = #{orgid},
-		manoeuvretime =
-		#{manoeuvretime},
+		manoeuvretime =#{manoeuvretime},
 		Address = #{address},
 		Department = #{department},
 		Manager = #{manager},
@@ -150,14 +148,21 @@
 		attendperson = #{attendperson},
 		implementation = #{implementation},
 		Summary = #{summary},
-		suggestion = #{suggestion},
-		schemafile =
-		#{schemafile},
+		<if test="schemafile!= null and schemafile!=''">
+		schemafile =#{schemafile},
+		</if>
+	    <if test="attendpersonfile!= null and attendpersonfile!=''">
 		attendpersonfile = #{attendpersonfile},
-		implementationfile = #{implementationfile}
+		</if>
+		<if test="implementationfile!= null and implementationfile!=''">
+		implementationfile = #{implementationfile},
+		</if>
+		suggestion = #{suggestion}
 		WHERE
-		manoeuvreID =
-		#{manoeuvreID}
+		manoeuvreID =#{manoeuvreID}
+		and
+		Orgid = #{orgid}
+		
 	</update>
 
 	<insert id="addSafeManageRules">
@@ -179,11 +184,9 @@
 	<update id="updateSafeManageRules">
 		UPDATE safemanagerules
 		SET
-		SafeManageRulesName =
-		#{safeManageRulesName},
+		SafeManageRulesName =#{safeManageRulesName},
 		UploadTime = #{uploadTime},
-		SafeManageRulesType
-		= #{safeManageRulesType},
+		SafeManageRulesType= #{safeManageRulesType},
 		filepath = #{filepath},
 		orgid = #{orgid}
 		WHERE

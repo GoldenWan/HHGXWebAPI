@@ -346,12 +346,18 @@ function positionMap(temp, lngNum, latNum, lng, lat) {
     map.addControl(new BMap.NavigationControl());
     map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
     map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
+    map.addControl(new BMap.MapTypeControl());//给
+    map.enableScrollWheelZoom(true);//设置地图可以滚动
 
     var latitude = latNum;//纬度
     var longitude = lngNum;//经度
     //alert(latitude+"-"+longitude);
     var marker = new BMap.Marker(new BMap.Point(longitude, latitude));  // 创建标注
     map.addOverlay(marker);              // 将标注添加到地图中
+
+    map.addEventListener("load",function(){
+        $("#coverLoad").hide();
+    })
 
     map.centerAndZoom(new BMap.Point(longitude, latitude), 13);
     //map.centerAndZoom(new BMap.Point(latitude, longitude), 13);

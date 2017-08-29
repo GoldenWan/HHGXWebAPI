@@ -35,6 +35,13 @@
 var allNum = 1;
 //渲染首页表格
 function findIndexTb(siteid,nowNum){
+    var nowNum = parseInt(nowNum);
+    if (!nowNum) {
+        nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+        if (isNaN(nowNum)) {
+            nowNum = 1;
+        }
+    }
     var myJson = "";
     if(siteid==""){
         myJson={
@@ -53,11 +60,8 @@ function findIndexTb(siteid,nowNum){
         if (data.DataBag && data.StateMessage == "1000") {
             console.log(data);
             render("#alarmComponentTbData","#alarmComponentTbody",data);
-            allNum = Math.ceil(data.DataBag.pageCount / 20);
+            allNum = Math.ceil(data.DataBag.pageCount);
 
-            if (allNum == 0) {
-                allNum = 1
-            }
             createPaging("#in_paging", nowNum, allNum);
         }
     });

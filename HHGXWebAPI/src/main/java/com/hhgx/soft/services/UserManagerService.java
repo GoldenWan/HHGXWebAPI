@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.RegisterNew;
 import com.hhgx.soft.entitys.User;
@@ -12,6 +13,7 @@ import com.hhgx.soft.entitys.Ztree;
 import com.hhgx.soft.mappers.UserManagerOrgMapper;
 
 @Service
+@Transactional
 public class UserManagerService {
 	@Autowired
 	private UserManagerOrgMapper userManagerMapper;

@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.mappers.ManageRuleMapper;
 @Service
+@Transactional
 public class ManageRuleService {
 
 	@Autowired

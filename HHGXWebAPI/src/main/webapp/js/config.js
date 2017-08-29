@@ -3,8 +3,8 @@ var HtmlUrl = BaseUrl+"/html";
 var CssUrl = BaseUrl+"/css";
 var JsUrl = BaseUrl+"/js";
 
-var ApiUrl = BaseUrl+"/HHGXWebAPI";
-var ImgUrl = BaseUrl;
+var ApiUrl = "http://192.168.11.79:6190/HHGX_HT/HHGXWebAPI/HHGXWebAPI";
+var ImgUrl = "http://192.168.11.79:6190";
 
 var people = {
     "消防控制室操作人员":{

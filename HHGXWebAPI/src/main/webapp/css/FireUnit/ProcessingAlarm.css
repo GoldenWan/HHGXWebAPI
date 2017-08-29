@@ -107,3 +107,26 @@
 #statement,#writePapaer,#comfirmAlarm{
     text-align: right;
 }
+
+.in_paging>div>div{
+    float: left;
+    margin-top: 20px;
+}
+.in_paging>div>ul{
+    float: right;
+}
+.in_paging>div{
+    border-top: 1px solid #C8C7CC;
+}
+
+
+
+
+
+
+
+
+
+
+
+

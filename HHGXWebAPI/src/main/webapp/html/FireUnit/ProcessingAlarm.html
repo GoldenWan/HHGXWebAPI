@@ -50,8 +50,8 @@
 
         <!-- 列表页面组-->
         <div class="col-sm-12 page_content" id="my_page">
-
-            <div id="fireAlarm_page">
+            <!--火警部分-->
+            <div id="fireAlarm_page" class="processAlarmPage">
                 <!-- 头部按钮组-->
                 <div class="col-sm-12">
                     <form role="form" class="content_condition" id="fireAlarm_form">
@@ -105,11 +105,11 @@
 
                 <div class="col-sm-12" style="min-height: 600px" id="fireAlarm_table"></div>
 
-                <div class="col-sm-12 in_paging" style="text-align: center"></div>
+                <div class="col-sm-12 in_paging" id="fireAlarmPaging"></div>
 
             </div>
-
-            <div id="fault_page">
+            <!--故障部分-->
+            <div id="fault_page" class="processAlarmPage">
                 <!-- 头部按钮组-->
                 <div class="col-sm-12">
                     <form role="form" class="content_condition" id="fault_form">
@@ -164,7 +164,7 @@
 
                 <div class="col-sm-12" style="min-height: 600px" id="fault_table"></div>
 
-                <div class="col-sm-12 in_paging" style="text-align: center"></div>
+                <div class="col-sm-12 in_paging" id="faultPaging"></div>
 
             </div>
 
@@ -269,7 +269,7 @@
         {{#each data}}
         <tr>
             <td>{{number}}</td>
-            <td><img src="../../image/origin/red.gif" alt=""/>{{DeviceTypeName}}</td>
+            <td style="text-align: left;"><img src="../../image/origin/red.gif" alt=""/>{{DeviceTypeName}}</td>
             <td>{{sitename}}</td>
             <td class="fireFloor floor" imFlatPic="{{imFlatPic}}"><a class="operation">{{floornum}}</a></td>
             <td>{{location}}</td>
@@ -309,7 +309,7 @@
         {{#each data}}
         <tr>
             <td>{{number}}</td>
-            <td><img src="../../image/origin/yellow.gif" alt=""/>{{DeviceTypeName}}</td>
+            <td style="text-align: left;"><img src="../../image/origin/yellow.gif" alt=""/>{{DeviceTypeName}}</td>
             <td>{{sitename}}</td>
             <td class="faultFloor floor" imFlatPic="{{imFlatPic}}"><a class="operation">{{floornum}}</a></td>
             <td>{{location}}</td>

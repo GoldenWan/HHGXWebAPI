@@ -25,9 +25,11 @@
 		uerchecklist ul
 		INNER JOIN usercheckinfo ui ON
 		ul.userCheckId = ui.userCheckId
+		<if test="startDate !=null and startDate !='' and endTime!=null and endTime!=''">
 		and
 		ul.SubmitTime BETWEEN #{startDate}
 		and #{endTime}
+		</if>
 		WHERE
 		ul.orgid = #{orgID}
 		) n
@@ -50,9 +52,12 @@
 		INNER JOIN usercheckinfo ui ON
 		ul.userCheckId = ui.userCheckId
 		WHERE
-		ul.orgid = #{orgID} and
+		ul.orgid = #{orgID} 
+		<if test="startDate !=null and startDate !='' and endTime!=null and endTime!=''">
+		and
 		ul.SubmitTime BETWEEN #{startDate} and
 		#{endTime}
+		</if>
 		limit
 		#{startPos},#{pageSize}
 	</select>
@@ -230,16 +235,16 @@
 	<update id="editFireSafetyCheck" parameterType="fireSafetyCheck">
 		update firesafetycheck
 		<trim prefix="set" suffixOverrides=",">
-			<if test="fireSafetyCheckID!=null">FireSafetyCheckID=#{fireSafetyCheckID},</if>
-			<if test="checkTime!=null">CheckTime=#{checkTime},</if>
-			<if test="checkposite!=null">checkposite=#{checkposite},</if>
-			<if test="department!=null">Department=#{department},</if>
-			<if test="problem!=null">Problem=#{problem},</if>
-			<if test="handing!=null">handing=#{handing},</if>
-			<if test="attendperson!=null">attendperson=#{attendperson},</if>
-			<if test="checkedDepartment!=null">CheckedDepartment=#{checkedDepartment},</if>
-			<if test="recordMan!=null">RecordMan=#{recordMan},</if>
-			<if test="safetyMan!=null">SafetyMan=#{safetyMan},</if>
+			<if test="fireSafetyCheckID!=null and fireSafetyCheckID!=''">FireSafetyCheckID=#{fireSafetyCheckID},</if>
+			<if test="checkTime!=null and checkTime!=''">CheckTime=#{checkTime},</if>
+			<if test="checkposite!=null and checkposite!=''">checkposite=#{checkposite},</if>
+			<if test="department!=null and department!=''">Department=#{department},</if>
+			<if test="problem!=null and problem!=''">Problem=#{problem},</if>
+			<if test="handing!=null and handing!=''">handing=#{handing},</if>
+			<if test="attendperson!=null and attendperson!=''">attendperson=#{attendperson},</if>
+			<if test="checkedDepartment!=null and checkedDepartment!=''">CheckedDepartment=#{checkedDepartment},</if>
+			<if test="recordMan!=null and recordMan!=''">RecordMan=#{recordMan},</if>
+			<if test="safetyMan!=null and safetyMan!=''">SafetyMan=#{safetyMan},</if>
 		</trim>
 		WHERE
 		orgid = #{orgid}

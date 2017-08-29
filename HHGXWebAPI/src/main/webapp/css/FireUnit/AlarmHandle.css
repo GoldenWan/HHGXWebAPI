@@ -119,6 +119,8 @@
     position: relative;
     border: 1px solid grey;
 }
+
+
 #lngAndLat label{
     margin-top: 5px;
     text-align: right;

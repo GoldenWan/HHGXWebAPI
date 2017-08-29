@@ -2,6 +2,7 @@
  * Created by Qiu on 2017/6/30.
  */
 (function(){
+    var allNum = 1;
     var indexSelectData="";
     //渲染首页下拉框数据
     HH.post("/Orginfo/GetSiteName",{"orgid":sessionStorage.getItem("OrgID")},function(data) {
@@ -25,6 +26,13 @@
     });
     //下面的方法是根据选中的下拉框数据查询建筑物列表
     function findTbBuilding(siteid,nowPage){
+        var nowPage = parseInt(nowPage);
+        if (!nowPage) {
+            nowPage = parseInt($("#in_paging").find(".pagination>.active").text());
+            if (isNaN(nowPage)) {
+                nowPage = 1;
+            }
+        }
         var myData = {
             "orgid":sessionStorage.getItem("OrgID"),
             "siteid":siteid,
@@ -34,8 +42,45 @@
             console.log("下面是返回的建筑物列表");
             console.log(data);
             render("#buildingTbData","#buildingTbody",data);
+            allNum =data.DataBag.pageCount;
+
+            createPaging("#in_paging", nowPage, allNum);
         });
     }
+
+    //页码
+    $("#in_paging").on("click", ".pagination>.pageNum", function () {
+        var num = parseInt($(this).text());
+        //pageReload(num)
+        var indexSelectBuilding = $("#indexSelectBuilding");
+        var indexSelectBuildingVal = indexSelectBuilding.val();
+        //渲染默认下拉框
+        findTbBuilding(indexSelectBuildingVal,num);
+    });
+    //上一页
+    $("#in_paging").on("click", ".pagination>.upPage", function () {
+        var num = parseInt($(".pagination>.active").text());
+        if (num != 1) {
+            num = num - 1;
+            //pageReload(num);
+            var indexSelectBuilding = $("#indexSelectBuilding");
+            var indexSelectBuildingVal = indexSelectBuilding.val();
+            //渲染默认下拉框
+            findTbBuilding(indexSelectBuildingVal,num);
+        }
+    });
+    //下一页
+    $("#in_paging").on("click", ".pagination>.downPage", function () {
+        var num = parseInt($(".pagination>.active").text());
+        if (num != allNum) {
+            num = num + 1;
+            // pageReload(num);
+            var indexSelectBuilding = $("#indexSelectBuilding");
+            var indexSelectBuildingVal = indexSelectBuilding.val();
+            //渲染默认下拉框
+            findTbBuilding(indexSelectBuildingVal,num);
+        }
+    });
 
     //点击删除等操作
     $("#buildingTbody").on("click",".operation",function(){

@@ -28,3 +28,16 @@
     height: 20px;
     line-height: 20px;
 }
+
+#site{
+    width: 240px;
+    height: 24px;
+    padding: 0px 12px;
+    font-size: 14px;
+    line-height: 24px;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

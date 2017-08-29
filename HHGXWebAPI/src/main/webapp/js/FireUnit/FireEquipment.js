@@ -6,6 +6,13 @@
     //获取首页表格数据
     indexTb(1);
     function indexTb(nowNum){
+        var nowNum = parseInt(nowNum);
+        if (!nowNum) {
+            nowNum = parseInt($("#in_paging").find(".pagination>.active").text());
+            if (isNaN(nowNum)) {
+                nowNum = 1;
+            }
+        }
         HH.post("/Organdpeople/GetequipmentList",{"PageIndex":nowNum},function(data) {
         //HH.post("/Organdpeople/GetequipmentList",{"firecompayid":sessionStorage.getItem("firecompayid")},function(data) {
             ///console.log("后台返回装备首页数据");
@@ -13,11 +20,8 @@
             if (data.DataBag && data.StateMessage=="1000") {
                 render("#fireEquipmentData","#fireEquipmentTbody",data);
 
-                allNum = Math.ceil(data.DataBag.pageCount / 20);
+                allNum =data.DataBag.pageCount;
 
-                if (allNum == 0) {
-                    allNum = 1
-                }
                 createPaging("#in_paging", nowNum, allNum);
             }
         });
@@ -81,6 +85,7 @@
         //下面渲染新增模态框
         render("#addFireEquipmentData","#fireEquipmentBody");
         $('#fireEquipmentModal').modal({"backdrop":"static"});
+        $("#autoTitle").text("新增消防装备");
         //下面渲染新增模态框里面的装备类型
         var str="";
         for(var i=0; i<equipmentData.DataBag.length; i++){
@@ -114,6 +119,7 @@
         if($(this).text()=="修改"){
             //点击修改的时候先把详情获取
             $('#fireEquipmentModal').modal({"backdrop":"static"});
+            $("#autoTitle").text("修改消防装备");
             var EquipmentID = $(this).attr("EquipmentID");
             var myJson = {
                 "EquipmentID":EquipmentID
