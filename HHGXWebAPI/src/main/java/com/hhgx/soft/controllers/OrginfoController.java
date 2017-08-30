@@ -382,7 +382,7 @@ public class OrginfoController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(flatpicList, statusCode);
+		return ResponseJson.responseFindJsonArray(flatpicList, statusCode);
 	}
 
 	/**

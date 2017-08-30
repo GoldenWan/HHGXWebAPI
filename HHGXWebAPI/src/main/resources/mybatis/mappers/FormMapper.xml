@@ -14,18 +14,18 @@
 	</select>
 	<update id="updateFireSystemList">
 		UPDATE onlinefiresystem
-		SET
-		tisystype = #{newTisystype},
-		states = #{states},
-		Remarks = #{Remarks},
-		YnOnline = #{YnOnline},
-		SysFlatpic = #{SysFlatpic}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="newTisystype!=null and newTisystype!=''"> tisystype = #{newTisystype},</if>
+			<if test="states!=null and states!=''"> states = #{states},</if>
+			<if test="Remarks!=null and Remarks!=''"> Remarks = #{Remarks},</if>
+			<if test="YnOnline!=null and YnOnline!=''"> YnOnline = #{YnOnline},</if>
+			<if test="SysFlatpic!=null and SysFlatpic!=''"> SysFlatpic = #{SysFlatpic},</if>
+		</trim>
 		WHERE
 		tisystype = #{tisystype}
-		AND siteid = #{siteid}
-
+		AND 
+		siteid = #{siteid}
 	</update>
-
 	<delete id="deletePicByID">
 		DELETE
 		FROM
@@ -82,32 +82,29 @@
 		#{trainingObject},#{trainingContent},#{attendPeople},
 		#{examination},#{trainingManager},#{contentFile},
 		#{examfile},#{signtable},#{orgid}
-
 		)
 	</insert>
 	<update id="updateTraining" parameterType="training">
 		UPDATE training
-		SET
-		TrainingTime = #{trainingTime},
-		TrainingAddress = #{trainingAddress},
-		TrainingType = #{trainingType},
-		HowmanyPeople = #{howmanyPeople},
-		Lecturer = #{lecturer},
-		TrainingObject = #{trainingObject},
-		TrainingContent =#{trainingContent},
-		AttendPeople = #{attendPeople},
-		Examination =#{examination},
-		TrainingManager = #{trainingManager},
-		ContentFile =#{contentFile},
-		examfile = #{examfile},
-		signtable
-		=#{signtable},
-		orgid = #{orgid}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="trainingTimee!=null and trainingTime!=''"> TrainingTime = #{trainingTime},</if>
+			<if test="trainingAddress!=null and trainingAddress!=''"> TrainingAddress = #{trainingAddress},</if>
+			<if test="trainingType!=null and trainingType!=''"> TrainingType = #{trainingType},</if>
+			<if test="howmanyPeople!=null and howmanyPeople!=''"> HowmanyPeople = #{howmanyPeople},</if>
+			<if test="lecturer!=null and lecturer!=''"> Lecturer = #{lecturer},</if>
+			<if test="trainingObject!=null and trainingObject!=''"> TrainingObject = #{trainingObject},</if>
+			<if test="trainingContent!=null and trainingContent!=''"> TrainingContent =#{trainingContent},</if>
+			<if test="attendPeople!=null and attendPeople!=''"> AttendPeople = #{attendPeople},</if>
+			<if test="examination!=null and examination!=''"> Examination =#{examination},</if>
+			<if test="trainingManager!=null and trainingManager!=''"> TrainingManager = #{trainingManager},</if>
+			<if test="contentFile!=null and contentFile!=''"> ContentFile =#{contentFile},</if>
+			<if test="examfile!=null and examfile!=''"> examfile = #{examfile},</if>
+			<if test="signtable!=null and signtable!=''"> signtable=#{signtable},</if>
+			<if test="orgid!=null and orgid!=''"> orgid = #{orgid}</if>
+		</trim>
 		WHERE
 		TrainingID = #{trainingID}
 	</update>
-
-
 	<insert id="addManoeuvre">
 		INSERT INTO manoeuvre (
 		manoeuvreID,
@@ -180,16 +177,21 @@
 		#{safeManageRulesType},#{filepath},#{orgid}
 		)
 	</insert>
-
 	<update id="updateSafeManageRules">
 		UPDATE safemanagerules
-		SET
-		SafeManageRulesName =#{safeManageRulesName},
-		UploadTime = #{uploadTime},
-		SafeManageRulesType= #{safeManageRulesType},
-		filepath = #{filepath},
-		orgid = #{orgid}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="safeManageRulesName!=null and safeManageRulesName!=''">
+			SafeManageRulesName =#{safeManageRulesName},</if>
+			<if test="uploadTime!=null and uploadTime!=''">
+			UploadTime = #{uploadTime},</if>
+			<if test="safeManageRulesType !=null and safeManageRulesType!=''">
+			SafeManageRulesType= #{safeManageRulesType},</if>
+			<if test="filepath!=null and filepath!=''">
+			filepath = #{filepath},</if>
+		</trim>
 		WHERE
+		orgid = #{orgid} 
+		and
 		SafeManageRulesID = #{safeManageRulesID}
 	</update>
 	<select id="findFilePath" resultType="string">
@@ -219,17 +221,26 @@
 
 	<update id="updateSafeDuty">
 		UPDATE safeduty
-		SET
-		dutyname = #{dutyname},
-		uploadtime =
-		#{uploadtime},
-		safedutytype = #{safedutytype},
-		filepath = #{filepath},
-		orgid = #{orgid}
+		<trim prefix="set" suffixOverrides=",">
+		<if test="dutyname!=null and dutyname!=''">
+			dutyname = #{dutyname},
+		</if>
+		<if test="uploadtime!=null and uploadtime!=''">
+			uploadtime =#{uploadtime},
+		</if>
+		<if test="safedutytype !=null and safedutytype!=''">
+			safedutytype = #{safedutytype},
+		</if>
+		<if test="filepath!=null and filepath!=''">
+			filepath = #{filepath},
+		</if>
+		<if test="orgid!=null and orgid!=''">
+			orgid = #{orgid},
+		</if>
+		</trim>
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</update>
-
 	<select id="findSafeDutyFilePath" resultType="string">
 		SELECT
 		filepath

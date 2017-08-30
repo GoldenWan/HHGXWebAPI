@@ -80,11 +80,11 @@ public class PatrolService {
 		return sum > 0 ? true : false;
 	}
 
-	public int fireSafetyCheckCount(String orgid, String startTime, String endTime) {
+	public int fireSafetyCheckCount(String orgid, Timestamp startTime, Timestamp endTime) {
 		return patrolMapper.fireSafetyCheckCount(orgid, startTime, endTime);
 	}
 
-	public List<FireSafetyCheck> getfireSafetyCheckByOrgid(String orgid, String startTime, String endTime, int startPos,
+	public List<FireSafetyCheck> getfireSafetyCheckByOrgid(String orgid, Timestamp startTime, Timestamp endTime, int startPos,
 			int pageSize) {
 		return patrolMapper.getfireSafetyCheckByOrgid(orgid, startTime, endTime, startPos, pageSize);
 	}

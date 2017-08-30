@@ -16,12 +16,16 @@
 		FROM
 		training
 		WHERE
-		orgid = #{orgid} and
+		orgid = #{orgid}
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		 and
 		TrainingTime BETWEEN #{startTime} and #{endTime}
+		</if>
 	</select>
 
 	<select id="getTrainingList" resultType="training">
 	SELECT
+		TrainingID,
 		TrainingTime,
 		TrainingAddress,
 		TrainingContent,
@@ -32,8 +36,11 @@
 	FROM
 		training
 	WHERE
-		orgid = #{orgid} and
+		orgid = #{orgid}
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		 and
 		TrainingTime BETWEEN #{startTime} and #{endTime}
+		</if>
 		LIMIT #{startPos},#{pageSize}
 	</select>
 

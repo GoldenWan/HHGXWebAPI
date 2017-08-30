@@ -304,13 +304,14 @@ public class UserManagerController {
 		gg.setFont(new Font("Arial", Font.ITALIC , 1));
 
 		// 绘制干扰线
-		for (int i = 0; i <3; i++) {
+		for (int i = 0; i <2; i++) {
 			int x = r.nextInt(width);
 			int y = r.nextInt(height);
 			int x1 = r.nextInt(12);
 			int y1 = r.nextInt(12);
 			gg.drawLine(x1, y1, x, y);
 		}
+		//画出随机点
 
 		// 把图片内容存入Session中
 		request.getSession().setAttribute("certCode", sb.toString());

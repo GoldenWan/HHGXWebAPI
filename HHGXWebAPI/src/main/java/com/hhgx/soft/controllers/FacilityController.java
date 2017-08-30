@@ -74,10 +74,20 @@ public class FacilityController {
 
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "startTime", "endTime", "PageIndex");
 		String orgid = map.get("orgid");
-		String startTime = map.get("startTime");
-		String endTime = map.get("endTime");
+		String startDate = map.get("startTime");
+		String endDate = map.get("endTime");
 		String pageIndex = map.get("pageIndex");
+		Timestamp startTime= null;
+		Timestamp endTime = null;
+		
+		if(!StringUtils.isEmpty(startDate)){
+			startTime=DateUtils.stringToTimestamp(startDate," 00:00:00");
+		}
+		if(!StringUtils.isEmpty(endDate)){
+			endTime=DateUtils.stringToTimestamp(endDate," 23:59:59");
+		}
 
+		
 		Page page = null;
 		List<Training> trainingList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -95,25 +105,26 @@ public class FacilityController {
 				trainingList = facilityService.getTrainingList(orgid, startTime, endTime, page.getStartPos(),
 						page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
 
-			for (Training training : trainingList) {
-
+			for (Training training : trainingList) {				
 				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("TrainingID",training.getTrainingID());
 				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(),null));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
-				map2.put("TrainingType ", training.getTrainingType());
+				map2.put("TrainingType", training.getTrainingType());
 				map2.put("Lecturer", training.getLecturer());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
 				lmList.add(map2);
-			}
+			}	
+			statusCode = ConstValues.OK;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 
@@ -129,14 +140,17 @@ public class FacilityController {
 
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "TrainingID");
 		String trainingID = map.get("trainingID");
-
+		if(StringUtils.isEmpty(trainingID)){
+			return ResponseJson.responseAddJson("TrainingID 为空", -256);
+		}
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
 			Training training = facilityService.getTraingingDetail(trainingID);
 			if (!StringUtils.isEmpty(training)) {
+				
 				map2.put("TrainingID", training.getTrainingID());
-				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(),null));
+				map2.put("TrainingTime", DateUtils.formatToDate(DateUtils.formatDate(training.getTrainingTime(),null)));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingType", training.getTrainingType());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));

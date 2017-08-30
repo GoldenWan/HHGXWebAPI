@@ -40,9 +40,9 @@ public interface PatrolMapper {
 
 	void updateSubmitState(@Param("userCheckId") String userCheckId, @Param("submitState") String submitState);
 
-	int fireSafetyCheckCount(@Param("orgid") String orgid,@Param("startTime")String startTime, @Param("endTime") String endTime);
+	int fireSafetyCheckCount(@Param("orgid") String orgid,@Param("startTime")Timestamp startTime, @Param("endTime") Timestamp endTime);
 
-	List<FireSafetyCheck> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")String startTime, @Param("endTime") String endTime, @Param("startPos") int startPos,
+	List<FireSafetyCheck> getfireSafetyCheckByOrgid(@Param("orgid") String orgid, @Param("startTime")Timestamp startTime, @Param("endTime") Timestamp endTime, @Param("startPos") int startPos,
 			@Param("pageSize") int pageSize);
 
 	FireSafetyCheck fireSafetyCheckDetail(@Param("fireSafetyCheckID")String fireSafetyCheckID);

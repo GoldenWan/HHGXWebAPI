@@ -79,8 +79,8 @@
 			orgid =#{orgid}
 		limit
 			#{startPos},#{pageSize}
-			
 	</select>
+	
 	<select id="safeDutyInfo" resultType="safeDuty">
 		SELECT
 			SafeDutyID,

@@ -21,6 +21,7 @@ import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.services.ManageRuleService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
@@ -86,6 +87,9 @@ public class ManageRuleController {
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
 
+		if(StringUtils.isEmpty(orgid)){
+			return ResponseJson.responseAddJson("orgid为空", -256);
+		}
 		Page page = null;
 		List<SafeManageRules> safeManageRulesList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -94,7 +98,7 @@ public class ManageRuleController {
 		int statusCode = -1;
 
 		try {
-			if (pageIndex != null) {
+			if (pageIndex != null && pageIndex != "" ) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				safeManageRulesList = manageRuleService.safeManageRulesList(orgid, page.getStartPos(),
 						page.getPageSize());
@@ -103,23 +107,19 @@ public class ManageRuleController {
 				safeManageRulesList = manageRuleService.safeManageRulesList(orgid, page.getStartPos(),
 						page.getPageSize());
 			}
-			if (safeManageRulesList.size() > 0) {
-				for (SafeManageRules safeManageRules : safeManageRulesList) {
-
+				for (SafeManageRules safeManageRules : safeManageRulesList) {	
+					
 					Map<String, String> map2 = new HashMap<String, String>();
 					map2.put("SafeManageRulesID", safeManageRules.getSafeManageRulesID());
 					map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
-					map2.put("UploadTime", safeManageRules.getUploadTime());
-					map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesID());
-					map2.put("filePath", safeManageRules.getFilepath());
+					map2.put("UploadTime", DateUtils.formatToDateTime(safeManageRules.getUploadTime()));
+					map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesType());
+					map2.put("filepath", safeManageRules.getFilepath());
 					map2.put("orgid", safeManageRules.getOrgid());
 					lmList.add(map2);
 				}
 				statusCode = ConstValues.OK;
-
-			} else {
-				statusCode = ConstValues.OK;
-			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -195,7 +195,8 @@ public class ManageRuleController {
 	}
 
 	/**
-	 * 92.查询消防安全职责【**】【分页】  * @param reqBody  * @return  * @throws
+	 * 92.查询消防安全职责【**】【分页】  * 
+	 * @param reqBody  * @return  * @throws
 	 * JsonProcessingException:TODO  
 	 * @throws IOException 
 	 */
@@ -210,7 +211,6 @@ public class ManageRuleController {
 		Page page = null;
 		List<SafeDuty> safeDutyList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-
 		int totalCount = manageRuleService.searchSafeDutyCount(orgid);
 		int statusCode = -1;
 
@@ -218,34 +218,27 @@ public class ManageRuleController {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				safeDutyList = manageRuleService.searchSafeDuty(orgid, page.getStartPos(), page.getPageSize());
-
 			} else {
 				page = new Page(totalCount, 1);
 				safeDutyList = manageRuleService.searchSafeDuty(orgid, page.getStartPos(), page.getPageSize());
 			}
-			if (safeDutyList.size() > 0) {
 				for (SafeDuty safeDuty : safeDutyList) {
-
 					Map<String, String> map2 = new HashMap<String, String>();
 					map2.put("dutyname", safeDuty.getDutyname());
 					map2.put("SafeDutyID", safeDuty.getSafeDutyID());
 					map2.put("safedutytype", safeDuty.getSafedutytype());
 					map2.put("filepath", safeDuty.getFilepath());
-					map2.put("uploadtime", safeDuty.getUploadtime());
+					map2.put("uploadtime", DateUtils.formatToDateTime(safeDuty.getUploadtime()));
 					map2.put("orgid", safeDuty.getOrgid());
-					lmList.add(map2);
+					lmList.add(map2);	
 				}
 				statusCode = ConstValues.OK;
-
-			} else {
-				statusCode = ConstValues.OK;
-			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 

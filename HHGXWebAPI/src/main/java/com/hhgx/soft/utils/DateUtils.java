@@ -20,35 +20,28 @@ public class DateUtils {
 	public static final SimpleDateFormat FORMATER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static final SimpleDateFormat NOSFORMATER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-	public static long getDaySub(String endDateStr) 
+	public static long getTimeSub(Date submitTime_) 
 	{ 
 	
 	long hours=0;//小时
 		try 
-		{ //服务器时间格式
-			DateFormat format = new SimpleDateFormat("MMM dd,yyyy KK:mm:ss aa", Locale.ENGLISH);
-			SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		{    //服务器时间格式2017年 08月 30日 星期三 10:32:43 UTC
+			 //SimpleDateFormat format_ = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+			  DateFormat format = new SimpleDateFormat("MMM dd,yyyy KK:mm:ss aa", Locale.ENGLISH);
 			
-			 Date endDate= format1.parse(endDateStr); //将时间字符串parse转换成Data类型
-			 Date nowDate=format.parse(format.format(new Date()));//把当前时间format转换成String
+			 Date endDate=FORMATER.parse(FORMATER.format(submitTime_)); 
+			 Date nowDate=format.parse(format.format(new Date()));
+			 
 			 long temp=endDate.getTime()-nowDate.getTime();//截止时间的总微秒
-			// long day=temp/(24*60*60*1000); 
-			 hours = temp / 1000 / 3600;                //相差小时数
 			 //long mins = (temp % (1000 * 3600)) / 1000 / 60;  //相差分钟数
+			 hours = temp / 1000 / 3600;                //相差小时数
+			// long day=temp/(24*60*60*1000); //相差总天数
 		    } catch (ParseException e){ 
 			e.printStackTrace(); 
 			} 
-		return hours; //直至套餐结束，剩余多少小时
+		return hours;
 	}
 
-	/*public static void main(String [] args){
-		//2016-04-09 07:22:39至2016-05-08 23:59:59
-		String str = "2016-05-01 10:03:12至2016-05-30 23:59:59";
-		String str1=str.substring(20);//去掉网关流量:
-		System.out.println(str1);
-		long endTmie=getDaySub(str1);
-		System.out.println(endTmie);
-	}*/
 	
 	/**
 	 * 按照指定的格式返回日期字符串. 默认 "yyyy-MM-dd"
@@ -93,12 +86,17 @@ public class DateUtils {
 		formatDATE=d.replaceAll("-", "/");
 		return formatDATE;
 	}
-	public static String formatToDateTime(String date) 
-	{  String formatDATE ="";
-	if (date == null)
-		return "";
-	formatDATE=date.replaceAll("-", "/");
-	return formatDATE;
+
+	public static String formatToDateTime(String date) {
+		String formatDATE = "";
+		if (date == null)
+			return "";
+		formatDATE = date.replaceAll("-", "/");
+		// 2017/08/30 14:28:53.0
+		if (formatDATE.length() > 19) {
+			formatDATE = formatDATE.substring(0, 19);
+		}
+		return formatDATE;
 	}
 
 	/**

@@ -23,11 +23,11 @@ public void deleteTraining(String trainingID) {
 	facilityMapper.deleteTraining(trainingID);	
 }
 
-public List<Training> getTrainingList(String orgid, String startTime, String endTime, int startPos, int pageSize) {
+public List<Training> getTrainingList(String orgid, Timestamp startTime, Timestamp endTime, int startPos, int pageSize) {
 	return facilityMapper.getTrainingList(orgid, startTime,endTime, startPos,pageSize);
 }
 
-public int getTrainingListCount(String orgid, String startTime, String endTime) {
+public int getTrainingListCount(String orgid, Timestamp startTime, Timestamp endTime) {
 	return facilityMapper.getTrainingListCount(orgid, startTime, endTime);
 }
 

@@ -38,25 +38,21 @@
 
 	<select id="getPatrolRecordByOrg" resultMap="patrolRecordMap">
 		SELECT
-		ul.UserCheckId,
-		ul.UserCheckTime,
-		ul.OrgUserId OrgUser,
-		ul.OrgManagerId
-		OrgManager,
-		ul.SubmitTime,
-		ul.Remarks,
-		ul.SubmitStatet,
-		ui.UserCheckResult
+			ul.UserCheckId,
+			ul.UserCheckTime,
+			ul.OrgUserId orgUser,
+			ul.OrgManagerId orgManager,
+			ul.SubmitStatet,
+			ul.SubmitTime,
+			ul.Remarks
 		FROM
-		uerchecklist ul
-		INNER JOIN usercheckinfo ui ON
-		ul.userCheckId = ui.userCheckId
+			uerchecklist ul
+		INNER JOIN usercheckinfo ui ON ul.userCheckId = ui.userCheckId 
 		WHERE
 		ul.orgid = #{orgID} 
 		<if test="startDate !=null and startDate !='' and endTime!=null and endTime!=''">
 		and
-		ul.SubmitTime BETWEEN #{startDate} and
-		#{endTime}
+		ul.UserCheckTime BETWEEN #{startDate} and #{endTime}
 		</if>
 		limit
 		#{startPos},#{pageSize}
@@ -141,8 +137,9 @@
 	</insert>
 	<update id="updateUserCheckList">
 		UPDATE uerchecklist
-		SET UserCheckTime =
-		#{userCheckTime}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userCheckTime!=null and userCheckTime!=''"> UserCheckTime =#{userCheckTime},</if>
+		</trim>
 		WHERE
 		UserCheckId = #{userCheckId}
 	</update>
@@ -162,9 +159,10 @@
 		ul.UserCheckId = #{userCheckId}
 	</select>
 	<update id="updateSubmitState">
-		UPDATE uerchecklist q
-		SET q.SubmitStatet =
-		#{submitState}
+		UPDATE uerchecklist 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="submitState!=null and submitState!=''"> SubmitStatet = #{submitState},</if>
+		</trim>
 		WHERE
 		q.UserCheckId = #{userCheckId}
 	</update>
@@ -175,11 +173,13 @@
 		FROM
 		firesafetycheck
 		WHERE
-		orgid =#{orgid} and
+		orgid =#{orgid} 
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		and
 		CheckTime BETWEEN #{startTime}
-		and #{endTime};
+		and #{endTime}
+		</if>
 	</select>
-
 	<select id="getfireSafetyCheckByOrgid" resultMap="fireSafetyCheckMap">
 		SELECT
 		FireSafetyCheckID,
@@ -195,8 +195,11 @@
 		FROM
 		firesafetycheck
 		WHERE
-		orgid = #{orgid} and
+		orgid = #{orgid} 
+		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+		and
 		CheckTime BETWEEN #{startTime} and #{endTime}
+		</if>
 		LIMIT #{startPos},#{pageSize}
 	</select>
 
@@ -235,7 +238,6 @@
 	<update id="editFireSafetyCheck" parameterType="fireSafetyCheck">
 		update firesafetycheck
 		<trim prefix="set" suffixOverrides=",">
-			<if test="fireSafetyCheckID!=null and fireSafetyCheckID!=''">FireSafetyCheckID=#{fireSafetyCheckID},</if>
 			<if test="checkTime!=null and checkTime!=''">CheckTime=#{checkTime},</if>
 			<if test="checkposite!=null and checkposite!=''">checkposite=#{checkposite},</if>
 			<if test="department!=null and department!=''">Department=#{department},</if>
@@ -247,7 +249,9 @@
 			<if test="safetyMan!=null and safetyMan!=''">SafetyMan=#{safetyMan},</if>
 		</trim>
 		WHERE
-		orgid = #{orgid}
+		orgid = #{orgid} 
+		and
+		FireSafetyCheckID=#{fireSafetyCheckID}
 	</update>
 	<insert id="addFireSafetyCheck" parameterType="fireSafetyCheck">
 		INSERT INTO

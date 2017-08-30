@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
 	
@@ -141,10 +142,9 @@ public class PatrolController {
 		
 		Page page = null;
 		List<PatrolRecord> patrolRecordList = null;
-		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		List<Map<String, Object>> lmList = new ArrayList<Map<String, Object>>();
 		int totalCount = patrolService.gePatrolRecordByOrgCount(orgID,startTime,endTime);
 		int statusCode = -1;		
-		String submitFlag = null;
 
 		try {
 			if (pageIndex != null) {
@@ -157,27 +157,27 @@ public class PatrolController {
 				patrolRecordList = patrolService.getPatrolRecordByOrg(orgID, startTime,endTime, page.getStartPos(),
 						page.getPageSize());
 			}
-			statusCode = ConstValues.OK;
 			for (PatrolRecord patrolRecord : patrolRecordList) {
 				String submitStatet = patrolRecord.getSubmitStatet();
-				if (!StringUtils.isEmpty(submitStatet) && submitStatet.equals("已提交"))
-					submitFlag = "true";
-				else {
-					submitFlag = "false";
+				boolean isDelete=true;
+				Date submitTime_ = patrolRecord.getSubmitTime();
+				long time =DateUtils.getTimeSub(submitTime_);  
+				if(time>=24){
+					isDelete=false;
 				}
-
-				Map<String, String> map2 = new HashMap<String, String>();
+				Map<String, Object> map2 = new HashMap<String, Object>();
 				map2.put("UserCheckId", patrolRecord.getUserCheckId());
 				map2.put("UserCheckTime", DateUtils.formatDateTime(patrolRecord.getUserCheckTime()));
 				map2.put("OrgUser", patrolRecord.getOrgUser());
 				map2.put("OrgManager", patrolRecord.getOrgManager());
-				map2.put("SubmitTime", patrolRecord.getSubmitTime().toString());
+				map2.put("SubmitStatet", submitStatet);
+				map2.put("SubmitTime",  DateUtils.formatDateTime(submitTime_));
+				map2.put("IsDelete",isDelete );
 				map2.put("Remarks", patrolRecord.getRemarks());
-				map2.put("UserCheckResult", patrolRecord.getUserCheckResult());
-				map2.put("SubmitStatet", patrolRecord.getSubmitStatet());
-				map2.put("SubmitFlag", submitFlag);
 				lmList.add(map2);
 			}
+			statusCode = ConstValues.OK;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -185,10 +185,10 @@ public class PatrolController {
 		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
 
 	}
-/**
- * 13.按巡查记录编号查询巡查记录详情
- * @throws IOException 
- */
+	/**
+	 * 13.按巡查记录编号查询巡查记录详情
+	 * @throws IOException 
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/GetPatrolDetail", method = RequestMethod.POST)
 	public String getPatrolDetail(HttpServletRequest request) throws IOException {
@@ -494,10 +494,20 @@ public class PatrolController {
 
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "StartTime", "EndTime", "PageIndex");
 		String orgid = map.get("orgid");
-		String startTime = map.get("startTime");
-		String endTime = map.get("endTime");
+		String startDate = map.get("startTime");
+		String endDate = map.get("endTime");
 		String pageIndex = map.get("pageIndex");
+		Timestamp startTime= null;
+		Timestamp endTime = null;
+		
+		if(!StringUtils.isEmpty(startDate)){
+			startTime=DateUtils.stringToTimestamp(startDate," 00:00:00");
+		}
+		if(!StringUtils.isEmpty(endDate)){
+			endTime=DateUtils.stringToTimestamp(endDate," 23:59:59");
+		}
 
+		
 		Page page = null;
 		List<FireSafetyCheck> FireSafetyCheckList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -523,15 +533,19 @@ public class PatrolController {
 
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("FireSafetyCheckID", fireSafetyCheck.getFireSafetyCheckID());
-				map2.put("CheckTime	", fireSafetyCheck.getCheckTime().toString());
+				map2.put("CheckTime", DateUtils.formatToDateTime(fireSafetyCheck.getCheckTime()));
 				map2.put("checkposite", fireSafetyCheck.getCheckposite());
 				map2.put("Department", fireSafetyCheck.getDepartment());
 				map2.put("Problem", fireSafetyCheck.getProblem());
-				map2.put("handing ", fireSafetyCheck.getHanding());
-				map2.put("attendperson ", fireSafetyCheck.getAttendperson());
+				map2.put("handing", fireSafetyCheck.getHanding());
+				map2.put("attendperson", fireSafetyCheck.getAttendperson());
 				map2.put("CheckedDepartment", fireSafetyCheck.getCheckedDepartment());
 				map2.put("RecordMan", fireSafetyCheck.getRecordMan());
 				map2.put("SafetyMan", fireSafetyCheck.getSafetyMan());
+				map2.put("orgid", orgid);
+	
+				
+				
 				lmList.add(map2);
 			}
 		} catch (Exception e) {
@@ -546,12 +560,7 @@ public class PatrolController {
 	 * 115.防火检查记录详情【**】
 	 */
 
-	/**
-	 * @param reqBody
-	 * @return
-	 * @throws JsonProcessingException:TODO
-	 
-	 * @throws IOException */
+
 	@ResponseBody
 	@RequestMapping(value = "/FireSafetyCheckDetail", method = RequestMethod.POST)
 	public String fireSafetyCheckDetail(HttpServletRequest request) throws IOException {
@@ -590,7 +599,6 @@ public class PatrolController {
 	@RequestMapping(value = "/EditFireSafetyCheck", method = RequestMethod.POST)
 	public String editFireSafetyCheck(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "FireSafetyCheckID", "checkposite",
 				"Department", "Problem", "handing", "attendperson", "CheckedDepartment", "RecordMan", "SafetyMan");
 		String orgid = map.get("orgid");
@@ -604,10 +612,10 @@ public class PatrolController {
 		String checkedDepartment = map.get("checkedDepartment");
 		String recordMan = map.get("recordMan");
 		String safetyMan = map.get("safetyMan");
+		
 		FireSafetyCheck fireSafetyCheck = new FireSafetyCheck();
 		fireSafetyCheck.setOrgid(orgid);
 		fireSafetyCheck.setFireSafetyCheckID(fireSafetyCheckID);
-		System.out.println(checkTime);
 		fireSafetyCheck.setCheckTime(checkTime);
 		fireSafetyCheck.setCheckposite(checkposite);
 		fireSafetyCheck.setDepartment(department);
@@ -691,7 +699,6 @@ public class PatrolController {
 	@RequestMapping(value = "/DeleteFireSafetyCheck", method = RequestMethod.POST)
 	public String deleteFireSafetyCheck(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "FireSafetyCheckID");
 		String orgid = map.get("orgid");
 		String fireSafetyCheckID = map.get("fireSafetyCheckID");
@@ -712,7 +719,6 @@ public class PatrolController {
 			dataBag = "删除失败";
 			statusCode = ConstValues.FAILED;
 		}
-
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
 	
@@ -721,7 +727,83 @@ public class PatrolController {
 	 * 
 	 * {"tokenUUID":"6e2cda35-2a40-4c44-8b3a-d8d3817e9a6d",
 	 * "infoBag":{"UserCheckId":"f810d79a-ee81-4272-a1ea-f41ca7e6c9f4","siteid":"all"}}:
+	 *{
+  "DataBag": [
+    {
+      "UserCheckId": "e3bb759e-ffe5-477c-8720-786d8fb5a85e",
+      "UserCheckTime": "2017/8/18",
+      "OrgUserId": "henghua                             ",
+      "OrgManagerId": "BBBB                                ",
+      "siteList": []
+    }
+  ],
+  "StateMessage": 1000
+}
+	 * @throws IOException 
 	 */
-	
+	@RequestMapping(value="/GetCheckRecordBase", method = RequestMethod.POST)
+	@ResponseBody
+	public String GetCheckRecordBase(HttpServletRequest request) throws IOException{
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId","siteid");
+		String userCheckId = map.get("userCheckId");
+		String siteid = map.get("siteid");
+		//查询所有
+		if(siteid.equals("all")){
+			//patrolService.getCheckRecordBase(userCheckId);
+			
+		/*
+		 {
+  "DataBag": [
+    {
+      "siteid": "51010800000100000001",
+      "sitename": "融创汇",
+      "vSysContent": [
+        {
+          "tiSysType": 13,
+          "vSysdesc": "气体灭火系统",
+          "Content": [
+            {
+              "ProjectId": "1601",
+              "ProjectContent": "气体灭火控制器工作状态",
+              "UserCheckResult": "故障",
+              "FaultShow": "牛逼\n",
+              "YnHanding": "是",
+              "Handingimmediately": "cc",
+              "PicInfo": {
+                "PicProject": "气体灭火系统",
+                "PicContent": "气体灭火控制器工作状态",
+                "Picture": []
+              }
+            },
+            {
+              "ProjectId": "1602",
+              "ProjectContent": "储瓶间环境",
+              "UserCheckResult": "故障",
+              "FaultShow": "hhhhvb",
+              "YnHanding": "否",
+              "Handingimmediately": "",
+              "PicInfo": {
+                "PicProject": "气体灭火系统",
+                "PicContent": "储瓶间环境",
+                "Picture": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "StateMessage": 1000
+}
+		 */
+		}else{
+			
+			//patrolService.getCheckRecordBase(userCheckId,siteid);
+			
+		}
+		return null;
+		
+	}
 	
 }
