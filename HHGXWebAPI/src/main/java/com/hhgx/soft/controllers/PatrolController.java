@@ -167,7 +167,7 @@ public class PatrolController {
 				}
 				Map<String, Object> map2 = new HashMap<String, Object>();
 				map2.put("UserCheckId", patrolRecord.getUserCheckId());
-				map2.put("UserCheckTime", DateUtils.formatDateTime(patrolRecord.getUserCheckTime()));
+				map2.put("UserCheckTime", DateUtils.formatToDate(DateUtils.formatDateTime(patrolRecord.getUserCheckTime())));
 				map2.put("OrgUser", patrolRecord.getOrgUser());
 				map2.put("OrgManager", patrolRecord.getOrgManager());
 				map2.put("SubmitStatet", submitStatet);
