@@ -87,7 +87,7 @@
 	<update id="updateTraining" parameterType="training">
 		UPDATE training
 		<trim prefix="set" suffixOverrides=",">
-			<if test="trainingTimee!=null and trainingTime!=''"> TrainingTime = #{trainingTime},</if>
+			<if test="trainingTime!=null and trainingTime!=''"> TrainingTime = #{trainingTime},</if>
 			<if test="trainingAddress!=null and trainingAddress!=''"> TrainingAddress = #{trainingAddress},</if>
 			<if test="trainingType!=null and trainingType!=''"> TrainingType = #{trainingType},</if>
 			<if test="howmanyPeople!=null and howmanyPeople!=''"> HowmanyPeople = #{howmanyPeople},</if>
@@ -100,9 +100,10 @@
 			<if test="contentFile!=null and contentFile!=''"> ContentFile =#{contentFile},</if>
 			<if test="examfile!=null and examfile!=''"> examfile = #{examfile},</if>
 			<if test="signtable!=null and signtable!=''"> signtable=#{signtable},</if>
-			<if test="orgid!=null and orgid!=''"> orgid = #{orgid}</if>
 		</trim>
 		WHERE
+		orgid = #{orgid}
+		and
 		TrainingID = #{trainingID}
 	</update>
 	<insert id="addManoeuvre">

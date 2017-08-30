@@ -174,7 +174,7 @@ public class FacilityController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(map2, statusCode);
+		return ResponseJson.responseFindJsonArray(map2, statusCode);
 	}
 
 	/**

@@ -270,16 +270,24 @@ public class FormController {
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
 
-			String fName = contentFile.getOriginalFilename();
-			String fName1 = examfile.getOriginalFilename();
-			String fName2 = signtable.getOriginalFilename();
+			if (!StringUtils.isEmpty(contentFile)) {
+				String fName = contentFile.getOriginalFilename();
+				String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
+				training.setContentFile(contentFile1);
 
-			String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
-			String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
-			String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
-			training.setExamfile(examfile1);
-			training.setContentFile(contentFile1);
-			training.setSigntable(signtable1);
+			}
+			if (!StringUtils.isEmpty(examfile)) {
+				String fName1 = examfile.getOriginalFilename();
+				String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
+
+				training.setExamfile(examfile1);
+			}
+			if (!StringUtils.isEmpty(signtable)) {
+				String fName2 = signtable.getOriginalFilename();
+				String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
+				training.setSigntable(signtable1);
+
+			}
 			formService.updateTraining(training);
 
 			statusCode = ConstValues.OK;
