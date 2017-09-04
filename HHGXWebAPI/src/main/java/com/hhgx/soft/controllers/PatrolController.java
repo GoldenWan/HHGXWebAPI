@@ -375,7 +375,6 @@ public class PatrolController {
 			statusCode = ConstValues.FAILED;
 			dataBag = "刪除失败";
 		}
-		
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
@@ -693,7 +692,8 @@ public class PatrolController {
 
 	/**
 	 * 137.删除防火检查记录【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/DeleteFireSafetyCheck", method = RequestMethod.POST)

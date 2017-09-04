@@ -6,9 +6,9 @@
 		SELECT
 		count(*)
 		FROM
-		users u
+		users 
 		WHERE
-		account = #{username};
+		account = #{username}
 	</select>
 	<insert id="onlineorgRegister" parameterType="registerNew">
 		INSERT INTO
@@ -20,7 +20,7 @@
 		INSERT INTO
 		maintenance (MaintenanceId,AreaID, UnitName)
 		VALUES
-		(#{maintenanceId},#{areaID}, #{orgname});
+		(#{maintenanceId},#{areaID}, #{orgname})
 	</insert>
 	<insert id="usersRegisterMaintenance" parameterType="registerNew">
 		INSERT INTO users (
@@ -34,7 +34,7 @@
 		)
 		VALUES
 		(#{userID},#{username}, #{password},
-		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{maintenanceId});
+		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{maintenanceId})
 	</insert>
 	<insert id="usersRegisterOrg" parameterType="registerNew">
 		INSERT INTO users (
@@ -48,7 +48,7 @@
 		)
 		VALUES
 		(#{userID},#{username}, #{password},
-		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{orgid});
+		#{userBelongTo},#{usertypeID},#{isFirstEnroll},#{orgid})
 	</insert>
 
 
@@ -59,7 +59,7 @@
 		users u
 		WHERE
 		account =
-		#{username} and password=#{password};
+		#{username} and password=#{password}
 	</select>
 
 	<select id="getUserTypeName" resultType="string">
@@ -68,7 +68,7 @@
 		FROM
 			usertype
 		WHERE
-			UserTypeID =#{userTypeID};
+			UserTypeID =#{userTypeID}
 	</select>
 	<select id="findMaxBack6" resultType="string">
 		SELECT
@@ -76,7 +76,7 @@
 		FROM
 		onlineorg o
 		WHERE
-		LEFT (o.orgid, 6) = #{areaID};
+		LEFT (o.orgid, 6) = #{areaID}
 	</select>
 	<select id="getUserInfoByName" resultType="userInfo">
 	SELECT

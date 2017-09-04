@@ -217,8 +217,6 @@ public class UserManagerController {
 	@ResponseBody
 	@RequestMapping(value = "/LoginBy", method = { RequestMethod.GET })
 	public String loginBy(HttpServletRequest request) throws JsonProcessingException, UnsupportedEncodingException {
-		request.setCharacterEncoding("UTF-8");
-
 		String sessionCode = (String) request.getSession().getAttribute("certCode");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -293,7 +291,7 @@ public class UserManagerController {
 			index = r.nextInt(len);// 从字符流中输出下一个字符----产生一个字符
 			g.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
 			// 输出字体和大小
-			g.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));
+			g.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
 			// 写什么数字，在在图片的什么位子画
 			g.drawString("" + ch[index], (i * 15) + 3, 18);// 迭代器，位置x,位置y
 			sb.append(ch[index]);
@@ -304,13 +302,18 @@ public class UserManagerController {
 		gg.setFont(new Font("Arial", Font.ITALIC , 1));
 
 		// 绘制干扰线
-		for (int i = 0; i <2; i++) {
-			int x = r.nextInt(width);
-			int y = r.nextInt(height);
-			int x1 = r.nextInt(12);
-			int y1 = r.nextInt(12);
+	//	for (int i = 0; i <2; i++) {
+			int x = r.nextInt(width)+56;
+			int y = r.nextInt(height)+5;
+			int x1 = r.nextInt(1);
+			int y1 = r.nextInt(height);
 			gg.drawLine(x1, y1, x, y);
-		}
+	//	}
+		for (int i = 0; i <22; i++) {
+			int xx = r.nextInt(width);
+			int yy = r.nextInt(height);
+			g.drawOval(xx, yy, 1, 1);
+			}
 		//画出随机点
 
 		// 把图片内容存入Session中

@@ -32,7 +32,7 @@ public class OrginfoService {
 		return orginfoMapper.getOnlineOrg(orgID);
 	}
 
-	public BusinessLicence getBusinessLicence(String orgid) {
+	public List<BusinessLicence> getBusinessLicence(String orgid) {
 		return orginfoMapper.getBusinessLicence(orgid);
 	}
 
@@ -176,5 +176,18 @@ public class OrginfoService {
 	public List<Site> getSiteName(String orgid) {
 		return orginfoMapper.getSiteName(orgid);
 	}
+
+public List<Site> getSiteList(String orgid) {
+	return orginfoMapper.getSiteList(orgid);
+}
+
+public void addSite(Site site) {
+	 orginfoMapper.addSite(site);
+}
+
+public List<Site>  getMapPoint(String orgid) {
+	// TODO Auto-generated method stub
+	return  orginfoMapper.getMapPoint(orgid);
+}
 	
 }

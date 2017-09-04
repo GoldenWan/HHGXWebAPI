@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +50,8 @@ public class OrginfoController {
 	 * 8.防火单位消防系统查询【分页】
 	 *
 	 * orgid isDivid
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -99,7 +101,8 @@ public class OrginfoController {
 
 	/**
 	 * 18.根据防火单位获取建物简要列表
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -120,7 +123,8 @@ public class OrginfoController {
 
 	/**
 	 * 20.删除防火单位的系统
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -150,17 +154,17 @@ public class OrginfoController {
 
 	/**
 	 * 21.添加传输设备
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
-	@Transactional
 	@ResponseBody
 	@RequestMapping(value = "/AddGateway", method = RequestMethod.POST)
 	public String addGateway(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress","Manufacturer",
-				"Model","productdate","setupdate","ControlorManufacture","ControlorMode","memo");
+
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress", "Manufacturer", "Model",
+				"productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo");
 		String gatewayaddress = map.get("Gatewayaddress");
 		String manufacturer = map.get("Manufacturer");
 		String model = map.get("Model");
@@ -208,7 +212,8 @@ public class OrginfoController {
 
 	/**
 	 * 22.修改传输设备
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@Transactional
@@ -216,8 +221,8 @@ public class OrginfoController {
 	@RequestMapping(value = "/UpdateGateway", method = RequestMethod.POST)
 	public String updateGateway(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress","newGatewayaddress",
-				"Manufacturer","Model","productdate","setupdate","ControlorManufacture","ControlorMode","memo");
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress", "newGatewayaddress",
+				"Manufacturer", "Model", "productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo");
 
 		String gatewayaddress = map.get("Gatewayaddress");// 设备传输地址
 		String newGatewayaddress = map.get("newGatewayaddress");
@@ -275,7 +280,8 @@ public class OrginfoController {
 
 	/**
 	 * 23.查询传输设备
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -336,13 +342,13 @@ public class OrginfoController {
 
 	/**
 	 * 24.删除传输设备
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteGateway", method = RequestMethod.POST)
-	public String deleteGateway( HttpServletRequest request)
-			throws IOException {
+	public String deleteGateway(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "Gatewayaddress");
 		String gatewayaddress = map.get("gatewayaddress");
@@ -363,14 +369,15 @@ public class OrginfoController {
 
 	/**
 	 * 25.查询楼层平面图信息
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/GetflatpicList", method = RequestMethod.POST)
 	public String getflatpicList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> ret = RequestJson.reqFirstLowerJson(reqBody,"orgid", "siteid");
+		Map<String, String> ret = RequestJson.reqFirstLowerJson(reqBody, "orgid", "siteid");
 		String orgid = ret.get("orgid");
 		String siteid = ret.get("siteid");
 		List<Flatpic> flatpicList = null;
@@ -387,13 +394,13 @@ public class OrginfoController {
 
 	/**
 	 * 28.删除平面图
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteflatPic", method = RequestMethod.POST)
-	public String deleteflatPic(HttpServletRequest request)
-			throws IOException {
+	public String deleteflatPic(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "cFlatPic");
@@ -415,17 +422,17 @@ public class OrginfoController {
 
 	/**
 	 * 29.添加自动报警部件
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Transactional
 	@ResponseBody
 	@RequestMapping(value = "/AddDevices", method = RequestMethod.POST)
 	public String addDevices(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody,"Road", "Address",
-				"sysaddress", "gatewayaddress","vdesc", "fPositionX",
-				"fPositionY", "location","Manufacture", "Model",
-				"ProductDate", "expdate","AddTime", "memo","cFlatPic", "iDeviceType");
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Road", "Address", "sysaddress", "gatewayaddress",
+				"vdesc", "fPositionX", "fPositionY", "location", "Manufacture", "Model", "ProductDate", "expdate",
+				"AddTime", "memo", "cFlatPic", "iDeviceType");
 		String road = map.get("Road");
 		String address = map.get("Address");
 		String sysaddress = map.get("sysaddress");
@@ -463,9 +470,9 @@ public class OrginfoController {
 			devices.setLocation(location);
 			devices.setManufacture(manufacture);
 			devices.setModel(model);
-			devices.setProductDate(DateUtils.StringToDate(productDate,"yyyy/MM/dd"));
-			devices.setExpdate(DateUtils.StringToDate(expdate,"yyyy/MM/dd"));
-			devices.setAddTime(DateUtils.StringToDate(addTime,"yyyy/MM/dd"));
+			devices.setProductDate(DateUtils.StringToDate(productDate, "yyyy/MM/dd"));
+			devices.setExpdate(DateUtils.StringToDate(expdate, "yyyy/MM/dd"));
+			devices.setAddTime(DateUtils.StringToDate(addTime, "yyyy/MM/dd"));
 			devices.setMemo(memo);
 			devices.setcFlatPic(cFlatPic);
 			devices.setiDeviceType(iDeviceType);
@@ -485,7 +492,8 @@ public class OrginfoController {
 	/**
 	 * 30.修改自动报警部件  * @param maprq  * @return  * @throws
 	 * JsonProcessingException:TODO  
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@Transactional
@@ -493,9 +501,9 @@ public class OrginfoController {
 	@RequestMapping(value = "/UpdateDevices", method = RequestMethod.POST)
 	public String updateDevices(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody,"Road","Address","sysaddress","gatewayaddress","vdesc"
-				,"fPositionX","fPositionY","location","Manufacture","Model","ProductDate","expdate","AddTime","memo","cFlatPic"
-				,"iDeviceType","DeviceNo");
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Road", "Address", "sysaddress", "gatewayaddress",
+				"vdesc", "fPositionX", "fPositionY", "location", "Manufacture", "Model", "ProductDate", "expdate",
+				"AddTime", "memo", "cFlatPic", "iDeviceType", "DeviceNo");
 
 		String road = map.get("Road");
 		String address = map.get("Address");
@@ -532,9 +540,9 @@ public class OrginfoController {
 			devices.setLocation(location);
 			devices.setManufacture(manufacture);
 			devices.setModel(model);
-			devices.setProductDate(DateUtils.StringToDate(productDate,"yyyy/MM/dd"));
-			devices.setExpdate(DateUtils.StringToDate(expdate,"yyyy/MM/dd"));
-			devices.setAddTime(DateUtils.StringToDate(addTime,"yyyy/MM/dd"));
+			devices.setProductDate(DateUtils.StringToDate(productDate, "yyyy/MM/dd"));
+			devices.setExpdate(DateUtils.StringToDate(expdate, "yyyy/MM/dd"));
+			devices.setAddTime(DateUtils.StringToDate(addTime, "yyyy/MM/dd"));
 			devices.setMemo(memo);
 			devices.setcFlatPic(cFlatPic);
 			devices.setiDeviceType(iDeviceType);
@@ -554,15 +562,16 @@ public class OrginfoController {
 	/**
 	 * 31.删除自动报警部件  * @param reqBody  * @param request  * @return  * @throws
 	 * JsonProcessingException:TODO  
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/DeleteDevices", method = RequestMethod.POST)
-	public String deleteDevices(HttpServletRequest request)
-			throws IOException {
+	public String deleteDevices(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceaddress", "sysaddress", "gatewayaddress");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceaddress", "sysaddress",
+				"gatewayaddress");
 		String deviceaddress = map.get("deviceaddress");
 		String sysaddress = map.get("sysaddress");
 		String gatewayaddress = map.get("gatewayaddress");
@@ -582,20 +591,22 @@ public class OrginfoController {
 
 	/**
 	 * 32.查询自动报警部件列表
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/SelectDevicesList", method = RequestMethod.POST)
 	public String selectDevicesList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		
-		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "cFlatPic","iDeviceType","deviceaddress","PageIndex");
+
+		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "cFlatPic", "iDeviceType", "deviceaddress",
+				"PageIndex");
 		String cFlatPic = ret.get("cFlatPic");
 		String iDeviceType = ret.get("iDeviceType");// 若为0，忽略此条件
 		String deviceaddress = ret.get("deviceaddress");// 若为0，忽略此条件
 		String pageIndex = ret.get("PageIndex");
-		
+
 		Page page = null;
 		List<DeviceList> deviceLists = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -639,15 +650,16 @@ public class OrginfoController {
 
 	/**
 	 * 33.查询自动报警部件详情
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/SelectDeviceDetail", method = RequestMethod.POST)
 	public String selectDeviceDetail(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		
-		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "gatewayaddress","sysaddress","deviceaddress");
-		
+
+		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "gatewayaddress", "sysaddress", "deviceaddress");
+
 		String gatewayaddress = ret.get("gatewayaddress");
 		String sysaddress = ret.get("sysaddress");
 		String deviceaddress = ret.get("deviceaddress");
@@ -693,24 +705,22 @@ public class OrginfoController {
 	/**
 	 * 58.修改防火单位信息【**】  * @param map  * @return  * @throws
 	 * JsonProcessingException:TODO  
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateOnlineOrg", method = RequestMethod.POST)
 	public Object updateOnlineOrg(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> ret = RequestJson.reqOriginJson(reqBody
-				, "OrgID","orgcode","orgname","vAddress","OrganType"
-				, "vNamelegalperson","otherthings","YnImportant","SuperiorOrg","cZip"
-				, "vTel","fax","E-Mail","howmanypeople","souyouzhi"
-				, "SetupDate","realtymoney","ipersonnum","fAreanum","fBuildingarea"
-				, "gasType","howmanyexit","howmanystair","howmanylane","howmanyelevator"
-				, "lanelocation","vfireroomtel","escapefloor","escapebuildingarea","escapelocation"
-				, "AutoFireFacility","bFlatpic","dRecordDate","ApproveMan","AreaId"
-				, "ManagerOrgID","neareast","nearsouth","nearwest","nearnorth"
-				, "managegrade","NetworkStatus","NetworkTime","ApproveState","ApproveTime"
-				);
+		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID", "orgcode", "orgname", "vAddress",
+				"OrganType", "vNamelegalperson", "otherthings", "YnImportant", "SuperiorOrg", "cZip", "vTel", "fax",
+				"E-Mail", "howmanypeople", "souyouzhi", "SetupDate", "realtymoney", "ipersonnum", "fAreanum",
+				"fBuildingarea", "gasType", "howmanyexit", "howmanystair", "howmanylane", "howmanyelevator",
+				"lanelocation", "vfireroomtel", "escapefloor", "escapebuildingarea", "escapelocation",
+				"AutoFireFacility", "bFlatpic", "dRecordDate", "ApproveMan", "AreaId", "ManagerOrgID", "neareast",
+				"nearsouth", "nearwest", "nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "ApproveState",
+				"ApproveTime");
 		String autoFireFacility = ret.get("AutoFireFacility");
 		String bFlatpic = ret.get("bFlatpic");
 		String dRecordDate = ret.get("dRecordDate");
@@ -721,13 +731,13 @@ public class OrginfoController {
 		String nearsouth = ret.get("nearsouth");
 		String nearwest = ret.get("nearwest");
 		String nearnorth = ret.get("nearnorth");
-		
+
 		String managegrade = ret.get("managegrade");
 		String networkStatus = ret.get("NetworkStatus");
 		String networkTime = ret.get("NetworkTime");
 		String approveState = ret.get("ApproveState");
 		String approveTime = ret.get("ApproveTime");
-		
+
 		String realtymoney = ret.get("realtymoney");
 		String ipersonnum = ret.get("ipersonnum");
 		String fAreanum = ret.get("fAreanum");
@@ -743,8 +753,7 @@ public class OrginfoController {
 		String escapefloor = ret.get("escapefloor");
 		String escapebuildingarea = ret.get("escapebuildingarea");
 		String escapelocation = ret.get("escapelocation");
-		
-		
+
 		String orgID = ret.get("OrgID");
 		String orgcode = ret.get("orgcode");
 		String orgname = ret.get("orgname");
@@ -762,7 +771,6 @@ public class OrginfoController {
 		String souyouzhi = ret.get("souyouzhi");
 		String setupDate = ret.get("SetupDate");
 
-		
 		OnlineOrg onlineOrg = new OnlineOrg();
 		onlineOrg.setNeareast(neareast);
 		onlineOrg.setNearwest(nearwest);
@@ -770,9 +778,9 @@ public class OrginfoController {
 		onlineOrg.setNearnorth(nearnorth);
 		onlineOrg.setManagegrade(managegrade);
 		onlineOrg.setNetworkStatus(networkStatus);
-		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime,"yyyy/MM/dd"));
+		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime, "yyyy/MM/dd"));
 		onlineOrg.setApproveMan(approveMan);
-		onlineOrg.setApproveTime(DateUtils.StringToDate(approveTime,"yyyy/MM/dd"));
+		onlineOrg.setApproveTime(DateUtils.StringToDate(approveTime, "yyyy/MM/dd"));
 		onlineOrg.setOrgID(orgID);
 		onlineOrg.setOrgcode(orgcode);
 		onlineOrg.setOrgname(orgname);
@@ -781,7 +789,7 @@ public class OrginfoController {
 		onlineOrg.setOtherthings(otherthings);
 		onlineOrg.setYnImportant(ynImportant);
 		onlineOrg.setSuperiorOrg(superiorOrg);
-		onlineOrg.setSetupDate(DateUtils.StringToDate(setupDate,"yyyy/MM/dd"));
+		onlineOrg.setSetupDate(DateUtils.StringToDate(setupDate, "yyyy/MM/dd"));
 		onlineOrg.setvNamelegalperson(vNamelegalperson);
 		onlineOrg.setvTel(vTel);
 		onlineOrg.setFax(fax);
@@ -803,7 +811,7 @@ public class OrginfoController {
 		onlineOrg.setLanelocation(lanelocation);
 		onlineOrg.setHowmanypeople(howmanypeople);
 		onlineOrg.seteMail(eMail);
-		onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate,"yyyy/MM/dd"));
+		onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate, "yyyy/MM/dd"));
 		onlineOrg.setEscapefloor(escapefloor);
 		onlineOrg.setSouyouzhi(souyouzhi);
 		onlineOrg.setfAreanum(fAreanum);
@@ -830,13 +838,14 @@ public class OrginfoController {
 
 	/**
 	 * 84.获取防火单位信息【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/GetOnlineOrg", method = RequestMethod.POST)
 	public String getOnlineOrg(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		
+
 		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID");
 		String orgID = ret.get("OrgID");
 		Map<String, String> map2 = new HashMap<String, String>();
@@ -902,129 +911,291 @@ public class OrginfoController {
 	 * 
 	 * @throws IOException
 	 */
-	/**@ResponseBody
-	@RequestMapping(value = "/MarkPoint", method = RequestMethod.POST)
-	public String markPoint(HttpServletRequest request) throws IOException {
-		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceaddress", "sysaddress", "gatewayaddress",
-				"cFlatPic", "DeviceNo", "fPositionX", "fPositionY");
-		String deviceaddress = map.get("deviceaddress");
-		String sysaddress = map.get("sysaddress");
-		String gatewayaddress = map.get("gatewayaddress");
-		String cFlatPic = map.get("cFlatPic");
-		String deviceNo = map.get("deviceNo");
-		String fPositionX = map.get("fPositionX");
-		String fPositionY = map.get("fPositionY");
-		Map<String, String> map2 = new HashMap<String, String>();
-		int statusCode =-1;
-		try{
-		Devices devices=new Devices();
-		devices.setDeviceaddress(deviceaddress);
-		devices.setSysaddress(Integer.parseInt(sysaddress));
-		devices.setDeviceNo(Integer.parseInt(deviceNo));
-		devices.setGatewayaddress(gatewayaddress);
-		devices.setfPositionX(fPositionX);
-		devices.setfPositionY(fPositionY);
-		devices.setcFlatPic(cFlatPic);
-		
-		
-		Devices newDevices = orginfoService.markPoint(devices);
-		
-		if (!StringUtils.isEmpty(newDevices)) {
-
-			map2.put("deviceaddress", newDevices.getDeviceaddress());
-			map2.put("sysaddress", String.valueOf(newDevices.getSysaddress()));
-			map2.put("gatewayaddress", newDevices.getGatewayaddress());
-			map2.put("DeviceNo", String.valueOf(newDevices.getDeviceNo()));
-			map2.put("iDeviceType", newDevices.getiDeviceType());
-			map2.put("DeviceTypeName", newDevices.getDeviceTypeName());
-			
-			
-		} 
-			statusCode = ConstValues.OK;
-
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		statusCode = ConstValues.FAILED;
-	}
-	return ResponseJson.responseFindJson(map2, statusCode);
-}
-*/
-/**
- * 35.获取第一个自动报警部件
- */
-/**	@ResponseBody
-	@RequestMapping(value = "/GetFirstDevice", method = RequestMethod.POST)
-	public String getFirstDevice(HttpServletRequest request) throws IOException {
-		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "cFlatPic");
-		String cFlatPic = map.get("cFlatPic");
-	
-		Map<String, String> map2 = new HashMap<String, String>();
-		int statusCode =-1;
-		try{
-		
-		
-		Devices newDevices = orginfoService.getFirstDevice(cFlatPic);
-		
-		if (!StringUtils.isEmpty(newDevices)) {
-
-			map2.put("deviceaddress", newDevices.getDeviceaddress());
-			map2.put("sysaddress", String.valueOf(newDevices.getSysaddress()));
-			map2.put("gatewayaddress", newDevices.getGatewayaddress());
-			map2.put("DeviceNo", String.valueOf(newDevices.getDeviceNo()));
-			map2.put("iDeviceType", newDevices.getiDeviceType());
-			map2.put("DeviceTypeName", newDevices.getDeviceTypeName());
-		} 
-			statusCode = ConstValues.OK;
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		statusCode = ConstValues.FAILED;
-	}
-	return ResponseJson.responseFindJson(map2, statusCode);
-}*/	
+	/**
+	 * @ResponseBody
+	 * @RequestMapping(value = "/MarkPoint", method = RequestMethod.POST) public
+	 *                       String markPoint(HttpServletRequest request) throws
+	 *                       IOException { String reqBody =
+	 *                       GetRequestJsonUtils.getRequestPostStr(request);
+	 *                       Map<String, String> map =
+	 *                       RequestJson.reqFirstLowerJson(reqBody,
+	 *                       "deviceaddress", "sysaddress", "gatewayaddress",
+	 *                       "cFlatPic", "DeviceNo", "fPositionX",
+	 *                       "fPositionY"); String deviceaddress =
+	 *                       map.get("deviceaddress"); String sysaddress =
+	 *                       map.get("sysaddress"); String gatewayaddress =
+	 *                       map.get("gatewayaddress"); String cFlatPic =
+	 *                       map.get("cFlatPic"); String deviceNo =
+	 *                       map.get("deviceNo"); String fPositionX =
+	 *                       map.get("fPositionX"); String fPositionY =
+	 *                       map.get("fPositionY"); Map<String, String> map2 =
+	 *                       new HashMap<String, String>(); int statusCode =-1;
+	 *                       try{ Devices devices=new Devices();
+	 *                       devices.setDeviceaddress(deviceaddress);
+	 *                       devices.setSysaddress(Integer.parseInt(sysaddress))
+	 *                       ; devices.setDeviceNo(Integer.parseInt(deviceNo));
+	 *                       devices.setGatewayaddress(gatewayaddress);
+	 *                       devices.setfPositionX(fPositionX);
+	 *                       devices.setfPositionY(fPositionY);
+	 *                       devices.setcFlatPic(cFlatPic);
+	 * 
+	 * 
+	 *                       Devices newDevices =
+	 *                       orginfoService.markPoint(devices);
+	 * 
+	 *                       if (!StringUtils.isEmpty(newDevices)) {
+	 * 
+	 *                       map2.put("deviceaddress",
+	 *                       newDevices.getDeviceaddress());
+	 *                       map2.put("sysaddress",
+	 *                       String.valueOf(newDevices.getSysaddress()));
+	 *                       map2.put("gatewayaddress",
+	 *                       newDevices.getGatewayaddress());
+	 *                       map2.put("DeviceNo",
+	 *                       String.valueOf(newDevices.getDeviceNo()));
+	 *                       map2.put("iDeviceType",
+	 *                       newDevices.getiDeviceType());
+	 *                       map2.put("DeviceTypeName",
+	 *                       newDevices.getDeviceTypeName());
+	 * 
+	 * 
+	 *                       } statusCode = ConstValues.OK;
+	 * 
+	 * 
+	 *                       } catch (Exception e) { e.printStackTrace();
+	 *                       statusCode = ConstValues.FAILED; } return
+	 *                       ResponseJson.responseFindJson(map2, statusCode); }
+	 */
+	/**
+	 * 35.获取第一个自动报警部件
+	 */
+	/**
+	 * @ResponseBody
+	 * @RequestMapping(value = "/GetFirstDevice", method = RequestMethod.POST)
+	 *                       public String getFirstDevice(HttpServletRequest
+	 *                       request) throws IOException { String reqBody =
+	 *                       GetRequestJsonUtils.getRequestPostStr(request);
+	 *                       Map<String, String> map =
+	 *                       RequestJson.reqFirstLowerJson(reqBody, "cFlatPic");
+	 *                       String cFlatPic = map.get("cFlatPic");
+	 * 
+	 *                       Map<String, String> map2 = new HashMap<String,
+	 *                       String>(); int statusCode =-1; try{
+	 * 
+	 * 
+	 *                       Devices newDevices =
+	 *                       orginfoService.getFirstDevice(cFlatPic);
+	 * 
+	 *                       if (!StringUtils.isEmpty(newDevices)) {
+	 * 
+	 *                       map2.put("deviceaddress",
+	 *                       newDevices.getDeviceaddress());
+	 *                       map2.put("sysaddress",
+	 *                       String.valueOf(newDevices.getSysaddress()));
+	 *                       map2.put("gatewayaddress",
+	 *                       newDevices.getGatewayaddress());
+	 *                       map2.put("DeviceNo",
+	 *                       String.valueOf(newDevices.getDeviceNo()));
+	 *                       map2.put("iDeviceType",
+	 *                       newDevices.getiDeviceType());
+	 *                       map2.put("DeviceTypeName",
+	 *                       newDevices.getDeviceTypeName()); } statusCode =
+	 *                       ConstValues.OK;
+	 * 
+	 *                       } catch (Exception e) { e.printStackTrace();
+	 *                       statusCode = ConstValues.FAILED; } return
+	 *                       ResponseJson.responseFindJson(map2, statusCode); }
+	 */
 	/**
 	 * 36.获取某一个自动报警部件
 	 */
 	/**
-	@ResponseBody
-	@RequestMapping(value = "/GetOneDevice", method = RequestMethod.POST)
-	public String getOneDevice(HttpServletRequest request) throws IOException {
-		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, 
-				"cFlatPic", "DeviceNo");
-		
-		String cFlatPic = map.get("cFlatPic");
-		String deviceNo = map.get("deviceNo");
+	 * @ResponseBody
+	 * @RequestMapping(value = "/GetOneDevice", method = RequestMethod.POST)
+	 *                       public String getOneDevice(HttpServletRequest
+	 *                       request) throws IOException { String reqBody =
+	 *                       GetRequestJsonUtils.getRequestPostStr(request);
+	 *                       Map<String, String> map =
+	 *                       RequestJson.reqFirstLowerJson(reqBody, "cFlatPic",
+	 *                       "DeviceNo");
+	 * 
+	 *                       String cFlatPic = map.get("cFlatPic"); String
+	 *                       deviceNo = map.get("deviceNo");
+	 * 
+	 *                       Map<String, String> map2 = new HashMap<String,
+	 *                       String>(); int statusCode =-1; try{
+	 * 
+	 * 
+	 *                       Devices newDevices =
+	 *                       orginfoService.getOneDevice(cFlatPic,deviceNo );
+	 * 
+	 *                       if (!StringUtils.isEmpty(newDevices)) {
+	 *                       map2.put("deviceaddress",
+	 *                       newDevices.getDeviceaddress());
+	 *                       map2.put("sysaddress",
+	 *                       String.valueOf(newDevices.getSysaddress()));
+	 *                       map2.put("gatewayaddress",
+	 *                       newDevices.getGatewayaddress());
+	 *                       map2.put("DeviceNo",
+	 *                       String.valueOf(newDevices.getDeviceNo())); }
+	 *                       statusCode = ConstValues.OK;
+	 * 
+	 *                       } catch (Exception e) { e.printStackTrace();
+	 *                       statusCode = ConstValues.FAILED; } return
+	 *                       ResponseJson.responseFindJson(map2, statusCode); }
+	 */
 
-		Map<String, String> map2 = new HashMap<String, String>();
-		int statusCode =-1;
-		try{
-	
-		
-		Devices newDevices = orginfoService.getOneDevice(cFlatPic,deviceNo );
-		
-		if (!StringUtils.isEmpty(newDevices)) {
-			map2.put("deviceaddress", newDevices.getDeviceaddress());
-			map2.put("sysaddress", String.valueOf(newDevices.getSysaddress()));
-			map2.put("gatewayaddress", newDevices.getGatewayaddress());
-			map2.put("DeviceNo", String.valueOf(newDevices.getDeviceNo()));
-		} 
+	/**
+	 * 59. 根据防火单位获取建筑物列表信息（P）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetSiteList", method = RequestMethod.POST)
+	public String getSiteList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		int statusCode = -1;
+		List<Map<String, String>> list = new ArrayList<>();
+		try {
+			List<Site> sites = orginfoService.getSiteList(orgid);
+			for (Site site : sites) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("siteid", site.getSiteid());
+				map2.put("sitename", site.getSitename());
+				map2.put("buildingaddress", site.getBuildingaddress());
+				map2.put("useproperty", site.getUseproperty());
+				map2.put("DSCS", site.getdSCS());
+				map2.put("JZGD", site.getjZGD());
+				map2.put("DSJZMJ", site.getdSJZMJ());
+				map2.put("NHDJ", site.getnHDJ());
+				map2.put("JGLX", site.getnHDJ());
+				map2.put("DXCS", site.getdXCS());
+				map2.put("DXJZMJ", site.getdXJZMJ());
+				map2.put("SDQK", site.getsDQK());
+				map2.put("ZYCCW", site.getzYCCW());
+				map2.put("RLRS", site.getrLRS());
+				map2.put("QLJZ", site.getqLJZ());
+				map2.put("east", site.getEast());
+				map2.put("west", site.getWest());
+				map2.put("south", site.getSouth());
+				map2.put("north", site.getNorth());
+				map2.put("xx", site.getXx());
+				map2.put("yy", site.getYy());
+				map2.put("sitetypename", site.getSitetypename());
+				map2.put("holdthings", site.getHoldthings());
+				map2.put("holdthingsnum", site.getHoldthingsnum());
+				map2.put("annalTime", site.getAnnalTime());
+				map2.put("fLongitude", site.getfLongitude());
+				map2.put("fLatitude", site.getfLatitude());
+				map2.put("orgid", site.getOrgid());
+				list.add(map2);
+			}
 			statusCode = ConstValues.OK;
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		statusCode = ConstValues.FAILED;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
-	return ResponseJson.responseFindJson(map2, statusCode);
-}	
-	*/
+	/**
+	 * 63.	添加建筑物信息（P）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/addSite", method = RequestMethod.POST)
+	public String addSite(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody,
+				"sitename", "buildingaddress", "useproperty",
+				"DSCS", "JZGD", "DSJZMJ","NHDJ", "JGLX", "DXCS",
+				"DXJZMJ", "SDQK", "ZYCCW","RLRS", "QLJZ", "east", 
+				"west", "south", "north", "sitetypename", 
+				"holdthings", "holdthingsnum", "fLongitude", 
+				"fLatitude", "orgid");
+		String sitename = map.get("sitename");
+		String buildingaddress = map.get("buildingaddress");
+		String useproperty = map.get("useproperty");
+		String dSCS = map.get("DSCS");
+		String jZGD = map.get("JZGD");
+		String dSJZMJ = map.get("DSJZMJ");
+		String nHDJ = map.get("NHDJ");
+		String jGLX = map.get("JGLX");
+		String dXCS = map.get("DXCS");
+		String dXJZMJ = map.get("DXJZMJ");
+		String sDQK = map.get("SDQK");
+		String zYCCW = map.get("ZYCCW");
+		String rLRS= map.get("RLRS");
+		String qLJZ= map.get("QLJZ");
+		String east= map.get("east");
+		String west= map.get("west");
+		String south= map.get("south");
+		String north= map.get("north");
+	//	String xx= map.get("xx");
+	//	String yy= map.get("yy");
+		String sitetypename= map.get("sitetypename");
+		String holdthings= map.get("holdthings");
+		String holdthingsnum= map.get("holdthingsnum");
+		String annalTime= map.get("annalTime");
+		String fLongitude= map.get("fLongitude");
+		String fLatitude= map.get("fLatitude");
+		String orgid = map.get("orgid");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Site site = new Site();
+			//siteid
+			site.setSiteid(String.valueOf(new Random().nextInt(1000000)));
+			site.setSitename(sitename);
+			site.setBuildingaddress(buildingaddress);
+			site.setUseproperty(useproperty);
+			site.setdSCS(dSCS);
+			site.setjZGD(jZGD);
+			site.setdSCS(dSCS);
+			site.setnHDJ(nHDJ);
+			site.setdSJZMJ(dSJZMJ);
+			site.setjGLX(jGLX);
+			site.setdXCS(dXCS);
+			site.setdXJZMJ(dXJZMJ);
+			site.setsDQK(sDQK);
+			site.setzYCCW(zYCCW);
+			site.setrLRS(rLRS);
+			site.setqLJZ(qLJZ);
+			site.setEast(east);
+			site.setWest(west);
+			site.setSouth(south);
+			site.setNorth(north);
+			
+			//site.setXx(xx);
+			//site.setYy(yy);
+			
+			site.setHoldthings(holdthings);
+			site.setSitetypename(sitetypename);
+			site.setHoldthingsnum(holdthingsnum);
+			
+			//site.setAnnalTime(annalTime);
+			site.setAnnalTime(DateUtils.timesstampToString());
+			
+			site.setfLongitude(fLongitude);
+			site.setfLatitude(fLatitude);
+			site.setOrgid(orgid);
+			   
+			orginfoService.addSite(site);
+			statusCode = ConstValues.OK;
+			dataBag = "插入成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "插入失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+
 	
 	/**
 	 * 85.查询营业执照【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -1033,86 +1204,111 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
 		String orgid = map.get("orgid");
-
+		List<Map<String, String>> list = new ArrayList<>();
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
-			BusinessLicence businessLicence = orginfoService.getBusinessLicence(orgid);
-			if (!StringUtils.isEmpty(businessLicence)) {
-
+			List<BusinessLicence> businessLicences = orginfoService.getBusinessLicence(orgid);
+				//有可能是get(0)
+			for(BusinessLicence businessLicence:businessLicences){
 				map2.put("LicenceCode", businessLicence.getLicenceCode());
 				map2.put("ConpanyName", businessLicence.getConpanyName());
 				map2.put("CompanyType", businessLicence.getCompanyType());
 				map2.put("CompanyAddress", businessLicence.getCompanyAddress());
 				map2.put("CompanyRegister", businessLicence.getCompanyRegister());
 				map2.put("RegistMoney", businessLicence.getRegistMoney());
-				map2.put("BuildTime", DateUtils.formatDateTime(businessLicence.getBuildTime()));
-				map2.put("BusinessEndTime", DateUtils.formatDateTime(businessLicence.getBusinessEndTime()));
+				map2.put("BuildTime", DateUtils.formatToDate(DateUtils.formatDateTime(businessLicence.getBuildTime())));
+				map2.put("BusinessEndTime", DateUtils.formatToDate(DateUtils.formatDateTime(businessLicence.getBusinessEndTime())));
 				map2.put("BusinessScope", businessLicence.getBusinessScope());
 				map2.put("AuditingDepartment", businessLicence.getAuditingDepartment());
-				map2.put("RegistTime", DateUtils.formatDateTime(businessLicence.getRegistTime()));
+				map2.put("RegistTime", DateUtils.formatToDate(DateUtils.formatDateTime(businessLicence.getRegistTime())));
 				map2.put("PictureUrl", businessLicence.getPictureUrl());
 				map2.put("orgid", businessLicence.getOrgid());
-			} 
-				statusCode = ConstValues.OK;
+				list.add(map2);
+				}
+			statusCode = ConstValues.OK;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	/**
+	 * 105.	获取地理位置（Z）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetMapPoint", method = RequestMethod.POST)
+	public String getMapPoint(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<Map<String, String>> list = new ArrayList<>();
+		Map<String, String> map2 = new HashMap<String, String>();
+		int statusCode = -1;
+		try {
+			List<Site> sites = orginfoService.getMapPoint(orgid);
+			//有可能是get(0)
+			for(Site site : sites){	
+				map2.put("fLongitude", site.getfLongitude());
+				map2.put("fLatitude", site.getfLatitude());
+				list.add(map2);
+			}
+				statusCode = ConstValues.OK;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(map2, statusCode);
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
 	
-	/**
-	 * 125根据防火单位获取建筑物名称列表
-	 * @param request
-	 * @return
-	 * @throws IOException:TODO
-	 
-	 */
 	
+	/**
+	 * 125根据防火单位获取建筑物名称列表  * @param request  * @return  * @throws
+	 * IOException:TODO  
+	 */
+
 	@ResponseBody
 	@RequestMapping(value = "/GetSiteName", method = RequestMethod.POST)
 	public String getSiteName(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody,"orgid");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
 		String orgid = map.get("orgid");
 		List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
-		int statusCode =-1;
-		try{
-	
-		
-		List<Site> sites= orginfoService.getSiteName(orgid);
-		
-		for(Site site: sites){
-			Map<String, String> map2 = new HashMap<String, String>();
-			map2.put("siteid", site.getSiteid());
-			map2.put("sitename", site.getSitename());
-			lists.add(map2);
-		} 
+		int statusCode = -1;
+		try {
+
+			List<Site> sites = orginfoService.getSiteName(orgid);
+
+			for (Site site : sites) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("siteid", site.getSiteid());
+				map2.put("sitename", site.getSitename());
+				lists.add(map2);
+			}
 			statusCode = ConstValues.OK;
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		statusCode = ConstValues.FAILED;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(lists, statusCode);
 	}
-	return ResponseJson.responseFindJsonArray(lists, statusCode);
-}	
 	/*
 	 * 
 	 * 122.文件下载
 	 */
 
-    @RequestMapping("/DownFile")
-    public void downloadFile(@RequestParam("filepath") String filepath,
-            HttpServletRequest request, HttpServletResponse response) {
-        if (filepath != null) {
-        	String realName = UploadUtil.getFileName(filepath);
-        	String storeName =UploadUtil.getStoreName(filepath);
-        	String contentType="application/force-download";
-        	UploadUtil.download(request, response, storeName, contentType, realName);
-        	
-         }
-    }
+	@RequestMapping("/DownFile")
+	public void downloadFile(@RequestParam("filepath") String filepath, HttpServletRequest request,
+			HttpServletResponse response) {
+		if (filepath != null) {
+			String realName = UploadUtil.getFileName(filepath);
+			String storeName = UploadUtil.getStoreName(filepath);
+			String contentType = "application/force-download";
+			UploadUtil.download(request, response, storeName, contentType, realName);
+
+		}
+	}
 }

@@ -24,7 +24,7 @@ public interface OrginfoMapper {
 
 	OnlineOrg getOnlineOrg(@Param("orgID")String orgID);
 
-	BusinessLicence getBusinessLicence(@Param("orgid")String orgid);
+	List<BusinessLicence> getBusinessLicence(@Param("orgid")String orgid);
 
 	List<FireSystem> getFireSystemList(@Param("orgid")String orgid);
 
@@ -80,6 +80,12 @@ public interface OrginfoMapper {
 			@Param("deviceaddress") String deviceaddress);
 
 	List<Site> getSiteName(String orgid);
+
+	List<Site> getSiteList(String orgid);
+
+	void addSite(Site site);
+
+	List<Site>  getMapPoint(String orgid);
 
 	
 	/**

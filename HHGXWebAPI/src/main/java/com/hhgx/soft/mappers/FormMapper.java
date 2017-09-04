@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
@@ -48,6 +49,12 @@ public interface FormMapper {
 	void addBusinessLicence(BusinessLicence businessLicence);
 
 	void updateFireSystemList(UpdateFireSystem updateFireSystem);
+
+	void addflatPic(Flatpic flatpic);
+
+	int eixstLicenceCode(String licenceCode);
+
+	void updateBusinessLicence(BusinessLicence businessLicence);
 
 	
 	

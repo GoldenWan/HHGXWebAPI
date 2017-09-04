@@ -156,7 +156,41 @@
 		WHERE
 		s.orgid = #{orgid}
 	</select>
-
+	<select id="getSiteList" resultType="site">
+		SELECT
+			siteid,
+			sitename,
+			buildingaddress,
+			useproperty,
+			DSCS,
+			JZGD,
+			DSJZMJ,
+			NHDJ,
+			JGLX,
+			DXCS,
+			DXJZMJ,
+			SDQK,
+			ZYCCW,
+			RLRS,
+			QLJZ,
+			east,
+			west,
+			south,
+			north,
+			xx,
+			yy,
+			sitetypename,
+			holdthings,
+			holdthingsnum,
+			annalTime,
+			fLongitude,
+			fLatitude,
+			orgid
+		FROM
+			site s
+		WHERE
+		s.orgid = #{orgid}
+	</select>
 	<select id="getSiteName" resultType="site">
 	SELECT
 		siteid,
@@ -206,7 +240,15 @@
 		site s
 		WHERE
 		s.orgid = #{orgid}
-
+	</select>
+	<select id="getMapPoint" resultType="site">
+	SELECT
+		s.fLongitude,
+		s.fLatitude
+	FROM
+		site s
+	WHERE
+		s.orgid = #{orgid}
 	</select>
 	<delete id="deleteorgSys">
 		DELETE
@@ -277,18 +319,80 @@
 	</resultMap>
 
 	<select id="selectVgateway" resultType="gatewaySystemInfo">
-		SELECT
+	SELECT
 		siteid,
 		sitename,
 		tiSysType,
 		vSysdesc,
 		Sysaddress
-		FROM
+	FROM
 		v_Gateway
-		WHERE
+	WHERE
 		gatewayaddress =
 		#{gatewayaddress}
 	</select>
+	<insert id="addSite">
+	INSERT INTO site (
+		siteid,
+		sitename,
+		buildingaddress,
+		useproperty,
+		DSCS,
+		JZGD,
+		DSJZMJ,
+		NHDJ,
+		JGLX,
+		DXCS,
+		DXJZMJ,
+		SDQK,
+		ZYCCW,
+		RLRS,
+		QLJZ,
+		east,
+		west,
+		south,
+		north,
+		xx,
+		yy,
+		sitetypename,
+		holdthings,
+		holdthingsnum,
+		annalTime,
+		fLongitude,
+		fLatitude,
+		orgid
+	)
+VALUES
+	(   #{siteid},
+		#{sitename},
+		#{buildingaddress},
+		#{useproperty},
+		#{dSCS},
+		#{jZGD},
+		#{dSJZMJ},
+		#{nHDJ},
+		#{jGLX},
+		#{dXCS},
+		#{dXJZMJ},
+		#{sDQK},
+		#{zYCCW},
+		#{rLRS},
+		#{qLJZ},
+		#{east},
+		#{west},
+		#{south},
+		#{north},
+		#{xx},
+		#{yy},
+		#{sitetypename},
+		#{holdthings},
+		#{holdthingsnum},
+		#{annalTime},
+		#{fLongitude},
+		#{fLatitude},
+		#{orgid}
+	)
+	</insert>
 	<insert id="addGatewaySysInfo">
 		INSERT INTO gatewaysysteminfo (
 		Sysaddress,

@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
@@ -46,7 +47,7 @@ public class FormController {
 	@RequestMapping(value = "/UpdateFireSystemList", method = { RequestMethod.POST })
 	public String updateFireSystemList(HttpServletRequest request,
 			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic)
-					throws JsonProcessingException {
+					 {
 
 		String siteid = request.getParameter("siteid");
 		String tisystype = request.getParameter("tisystype");
@@ -83,15 +84,54 @@ public class FormController {
 	}
 
 	/**
+	 * 26. 添加平面图
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/AddflatPic", method = { RequestMethod.POST })
+	public String addflatPic(HttpServletRequest request,
+			@RequestParam(value = "imFlatPic", required = false) MultipartFile imFlatPic) {
+		String siteid = request.getParameter("siteid");
+		String floornum = request.getParameter("floornum");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Flatpic flatpic = new Flatpic();
+			//cFlatPic id
+			flatpic.setcFlatPic(String.valueOf(new Random().nextInt(1000000)));
+			flatpic.setSiteid(siteid);
+			flatpic.setFloornum(floornum);
+
+			if (!StringUtils.isEmpty(imFlatPic)) {
+
+				String ext = UploadUtil.getExtention(imFlatPic.getOriginalFilename());
+				String imFlatPic1 = UploadUtil.uploadOneFile(request, imFlatPic, UUIDGenerator.getUUID() + "." + ext,
+						UUIDGenerator.getUUID() + "/Flatpic");
+				flatpic.setImFlatPic(imFlatPic1);
+				formService.addflatPic(flatpic);
+			}
+			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}	
+	
+	/**
 	 * 129.巡查记录填写【**】
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
+	 * @
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = { RequestMethod.POST })
-	public String addOrUpdateCheckRecord(HttpServletRequest request) throws JsonProcessingException {
+	public String addOrUpdateCheckRecord(HttpServletRequest request)  {
 
 		String userCheckId = request.getParameter("UserCheckId");
 		String projectId = request.getParameter("ProjectId");
@@ -169,7 +209,7 @@ public class FormController {
 			@RequestParam(value = "ContentFile", required = false) MultipartFile contentFile,
 			@RequestParam(value = "examfile", required = false) MultipartFile examfile,
 			@RequestParam(value = "signtable", required = false) MultipartFile signtable)
-					throws JsonProcessingException {
+					 {
 		String trainingTime = request.getParameter("TrainingTime");
 		String trainingAddress = request.getParameter("TrainingAddress");
 		String trainingType = request.getParameter("TrainingType");
@@ -240,7 +280,7 @@ public class FormController {
 			@RequestParam(value = "ContentFile", required = false) MultipartFile contentFile,
 			@RequestParam(value = "examfile", required = false) MultipartFile examfile,
 			@RequestParam(value = "signtable", required = false) MultipartFile signtable)
-					throws JsonProcessingException {
+					 {
 		String trainingID = request.getParameter("TrainingID");
 		String trainingTime = request.getParameter("TrainingTime");
 		String trainingAddress = request.getParameter("TrainingAddress");
@@ -311,7 +351,7 @@ public class FormController {
 			@RequestParam(value = "schemafile", required = false) MultipartFile schemafile,
 			@RequestParam(value = "attendpersonfile", required = false) MultipartFile attendpersonfile,
 			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile)
-					throws JsonProcessingException {
+					 {
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
 		String address = request.getParameter("address");
@@ -381,7 +421,7 @@ public class FormController {
 			@RequestParam(value = "schemafile", required = false) MultipartFile schemafile,
 			@RequestParam(value = "attendpersonfile", required = false) MultipartFile attendpersonfile,
 			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile)
-					throws JsonProcessingException {
+					 {
 		String manoeuvreID = request.getParameter("manoeuvreID");
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
@@ -445,12 +485,11 @@ public class FormController {
 	 * 46.添加消防安全管理制度【**】
 	 * 
 	 */
-
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST)
 	public String updateManoeuvre(HttpServletRequest request,
 			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile)
-					throws JsonProcessingException {
+					 {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
 		String safeManageRulesType = request.getParameter("SafeManageRulesType");
@@ -488,13 +527,13 @@ public class FormController {
 	 * @param request
 	 * @param safeRuleFile
 	 * @return
-	 * @throws JsonProcessingException
+	 * @
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST)
 	public String updateSafeManageRules(HttpServletRequest request,
 			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile)
-					throws JsonProcessingException {
+					 {
 		String safeManageRulesID = request.getParameter("SafeManageRulesID");
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
@@ -531,15 +570,16 @@ public class FormController {
 	}
 
 	/**
-	 * 50.添加消防安全职责【**】  * @param request  * @param safeDutyFile  * @return
-	 *  * @throws JsonProcessingException:TODO  
+	 * 50.添加消防安全职责【**】  * 
+	 * @param request  * @param safeDutyFile  * @return
+	 *  * @:TODO  
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST)
 	public String addSafeDuty(HttpServletRequest request,
 			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile)
-					throws JsonProcessingException {
+					 {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("orgid");
@@ -575,14 +615,14 @@ public class FormController {
 
 	/**
 	 * 51.修改消防安全职责【**】  * @param request  * @param safeDutyFile  * @return
-	 *  * @throws JsonProcessingException:TODO  
+	 *  * @:TODO  
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST)
 	public String updateSafeDuty(HttpServletRequest request,
 			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile)
-					throws JsonProcessingException {
+					 {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("Orgid");
@@ -624,12 +664,10 @@ public class FormController {
 	/**
 	 * 86.修改和添加营业执照【**】
 	 */
-
 	@ResponseBody
 	@RequestMapping(value = "/AddBusinessLicence", method = RequestMethod.POST)
 	public String addBusinessLicence(HttpServletRequest request,
-			@RequestParam(value = "PictureUrl", required = false) MultipartFile pictureUrl)
-					throws JsonProcessingException {
+			@RequestParam(value = "PictureUrl", required = false) MultipartFile pictureUrl) {
 		String licenceCode = request.getParameter("LicenceCode");
 		String conpanyName = request.getParameter("ConpanyName");
 		String companyType = request.getParameter("CompanyType");
@@ -660,11 +698,17 @@ public class FormController {
 			businessLicence.setCompanyType(companyType);
 			businessLicence.setOrgid(orgid);
 			businessLicence.setRegistTime(DateUtils.StringToDate(registTime, "yyyy/MM/dd"));
-			String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
-			String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
-					orgid + "/BusinessLicence");
-			businessLicence.setPictureUrl(pictureUrl1);
-			formService.addBusinessLicence(businessLicence);
+			if (!StringUtils.isEmpty(pictureUrl)) {
+				String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
+				String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
+						orgid + "/BusinessLicence");
+				businessLicence.setPictureUrl(pictureUrl1);
+			}
+			if(formService.eixstLicenceCode(licenceCode)){
+				formService.updateBusinessLicence(businessLicence);
+			}else{
+			    formService.addBusinessLicence(businessLicence);
+			}
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
 		} catch (Exception e) {

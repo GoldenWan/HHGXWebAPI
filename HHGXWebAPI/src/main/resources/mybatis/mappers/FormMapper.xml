@@ -33,6 +33,16 @@
 		WHERE
 		PicID = #{picID}
 	</delete>
+	<insert id="addflatPic">
+		INSERT INTO flatPic (
+		cFlatPic,
+		siteid,
+		floornum,
+		imFlatPic
+		)
+		VALUES
+		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic})
+	</insert>
 	<insert id="addUserCheckPic">
 		INSERT INTO usercheckpic (
 		PicID,
@@ -242,6 +252,7 @@
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</update>
+	
 	<select id="findSafeDutyFilePath" resultType="string">
 		SELECT
 		filepath
@@ -250,6 +261,57 @@
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</select>
+	<select id="eixstLicenceCode" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		businesslicence
+		WHERE
+		LicenceCode = #{licenceCode}
+	</select>
+	<update id="updateBusinessLicence">
+		UPDATE businesslicence
+		<trim prefix="set" suffixOverrides=",">
+		<if test="conpanyName!=null and conpanyName!=''">
+			ConpanyName = #{conpanyName},
+		</if>
+		<if test="companyType!=null and companyType!=''">
+			CompanyType =#{companyType},
+		</if>
+		<if test="companyAddress !=null and companyAddress!=''">
+			CompanyAddress = #{companyAddress},
+		</if>
+		<if test="companyRegister!=null and companyRegister!=''">
+			CompanyRegister = #{companyRegister},
+		</if>
+		<if test="registMoney!=null and registMoney!=''">
+			RegistMoney = #{registMoney},
+		</if>
+		<if test="buildTime!=null and buildTime!=''">
+			BuildTime = #{buildTime},
+		</if>
+		<if test="businessEndTime!=null and businessEndTime!=''">
+			BusinessEndTime = #{businessEndTime},
+		</if>
+		<if test="businessScope!=null and businessScope!=''">
+			BusinessScope = #{businessScope},
+		</if>
+		<if test="auditingDepartment!=null and auditingDepartment!=''">
+			AuditingDepartment = #{auditingDepartment},
+		</if>
+		<if test="registTime!=null and registTime!=''">
+			RegistTime = #{registTime},
+		</if>
+		<if test="pictureUrl!=null and pictureUrl!=''">
+			PictureUrl = #{pictureUrl},
+		</if>
+		<if test="orgid!=null and orgid!=''">
+			orgid = #{orgid},
+		</if>
+		</trim>
+		WHERE
+		LicenceCode = #{licenceCode}
+	</update>
 	<insert id="addBusinessLicence">
 		INSERT INTO businesslicence (
 		LicenceCode,

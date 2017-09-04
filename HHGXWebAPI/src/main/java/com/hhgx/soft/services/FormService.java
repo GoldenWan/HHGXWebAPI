@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
@@ -84,6 +85,18 @@ public class FormService {
 
 	public void updateFireSystemList(UpdateFireSystem updateFireSystem) {
 		formMapper.updateFireSystemList(updateFireSystem);
+	}
+
+	public void addflatPic(Flatpic flatpic) {
+		formMapper.addflatPic(flatpic);
+	}
+
+	public boolean eixstLicenceCode(String licenceCode) {
+		return formMapper.eixstLicenceCode(licenceCode)>0?true:false;
+	}
+
+	public void updateBusinessLicence(BusinessLicence businessLicence) {
+		formMapper.updateBusinessLicence(businessLicence);
 	}
 	
 }
