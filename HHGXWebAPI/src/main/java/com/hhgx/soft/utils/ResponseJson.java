@@ -61,16 +61,8 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
-/*	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount){
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("pageCount", pageCount);
-		jsonObject.put("PageDatas", JSONArray.fromObject(dataBag));
-		jsonObject.put(ConstValues.RESPCODE, statusCode);
-		
-		return jsonObject.toString();
-		
-	}*/
-	public static String responseFindPageJsonArray1(Object dataBag, int statusCode, int pageCount){
+
+	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount){
 
 		JSONObject jsonO = new JSONObject();
 		JSONObject jsonObject = new JSONObject();

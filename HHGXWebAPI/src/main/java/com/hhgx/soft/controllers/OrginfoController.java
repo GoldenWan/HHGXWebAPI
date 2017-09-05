@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
@@ -702,6 +703,31 @@ public class OrginfoController {
 	 * 34.标注一个自动报警部件在平面图上的位置
 	 */
 
+	
+	/**
+	 * 38.删除外观图
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeleteAppearance", method = RequestMethod.POST)
+	public String deleteAppearance(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "iphotoID");
+		String iphotoID = map.get("iphotoID");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			orginfoService.deleteAppearance(iphotoID);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
 	/**
 	 * 58.修改防火单位信息【**】  * @param map  * @return  * @throws
 	 * JsonProcessingException:TODO  
@@ -1131,7 +1157,7 @@ public class OrginfoController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray1(list, statusCode, pageCount);
+		return ResponseJson.responseFindPageJsonArray(list, statusCode, pageCount);
 	}
 	/**
 	 * 60.获取建筑物信息（P）
@@ -1372,7 +1398,6 @@ public class OrginfoController {
 			site.setfLongitude(fLongitude);
 			site.setfLatitude(fLatitude);
 			site.setOrgid(orgid);
-			   
 			orginfoService.addSite(site);
 			statusCode = ConstValues.OK;
 			dataBag = "插入成功";
@@ -1382,9 +1407,42 @@ public class OrginfoController {
 			dataBag = "插入失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-
 	}
+/**
+ * 64.获取外观图列表信息（P）
+ */
+	@ResponseBody
+	@RequestMapping(value = "/GetAppearancepicList", method = RequestMethod.POST)
+	public String getAppearancepicList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid");
+	
+		String siteid = map.get("siteid");
+		List<Map<String, String>> list = new ArrayList<>();
+		Map<String, String> map2 = new HashMap<String, String>();
+		int statusCode = -1;
+		try {
+			List<Appearancepic> appearancepics = orginfoService.getAppearancepic(siteid);
+				//有可能是get(0)
+			for(Appearancepic appearancepic : appearancepics){
+				map2.put("iphotoID"	, appearancepic.getIphotoID());
+				map2.put("vPhotoname", appearancepic.getvPhotoname());
+				map2.put("dRecordDate", DateUtils.formatToDate(appearancepic.getdRecordDate()));
+				map2.put("Picpath", appearancepic.getPicpath());
+				map2.put("ExteriorInfo", appearancepic.getExteriorInfo());
+				map2.put("siteid", appearancepic.getSiteid());
+				list.add(map2);
+			}
+			statusCode = ConstValues.OK;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	
+	
 	
 	/**
 	 * 85.查询营业执照【**】
@@ -1428,7 +1486,37 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
+
 	/**
+	 * 104.提交地理位置（Z）
+	 * {"orgid":"510108000001","fLongitude":"104.114623","fLatitude":"30.661593"}
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SetMapPoint", method = RequestMethod.POST)
+	public String setMapPoint(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody,
+				"fLatitude", "fLongitude",  "orgid");
+		String fLatitude = map.get("fLatitude");
+		String fLongitude = map.get("fLongitude");
+		String orgid = map.get("orgid");
+		
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+		
+			orginfoService.setMapPoint(orgid,fLatitude,fLongitude);
+			statusCode = ConstValues.OK;
+			dataBag = "保存成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "保存失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+		/**
 	 * 105.	获取地理位置（Z）
 	 */
 	@ResponseBody
@@ -1457,6 +1545,31 @@ public class OrginfoController {
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
 	
+	/**
+	 * 106.获取总平图（Z）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetTotalFlatPic", method = RequestMethod.POST)
+	public String getTotalFlatPic(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<String> list = new ArrayList<>();
+		int statusCode = -1;
+		try {
+			List<OnlineOrg> orgs = orginfoService.getTotalFlatPic(orgid);
+			//有可能是get(0)
+			for(OnlineOrg onlineOrg : orgs){	
+				list.add(onlineOrg.getbFlatpic());
+			}
+				statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
 	
 	/**
 	 * 125根据防火单位获取建筑物名称列表  * @param request  * @return  * @throws

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
@@ -46,8 +47,7 @@ public class FormController {
 	@ResponseBody
 	@RequestMapping(value = "/UpdateFireSystemList", method = { RequestMethod.POST })
 	public String updateFireSystemList(HttpServletRequest request,
-			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic)
-					 {
+			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic) {
 
 		String siteid = request.getParameter("siteid");
 		String tisystype = request.getParameter("tisystype");
@@ -107,8 +107,8 @@ public class FormController {
 				String imFlatPic1 = UploadUtil.uploadOneFile(request, imFlatPic, UUIDGenerator.getUUID() + "." + ext,
 						UUIDGenerator.getUUID() + "/Flatpic");
 				flatpic.setImFlatPic(imFlatPic1);
-				formService.addflatPic(flatpic);
 			}
+			formService.addflatPic(flatpic);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
 			dataBag = "添加成功";
@@ -117,9 +117,83 @@ public class FormController {
 			statusCode = ConstValues.FAILED;
 			dataBag = "添加失败";
 		}
-
 		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}	
+	/**
+	 * 65.添加外观图（P）
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/AddAppearance", method = { RequestMethod.POST })
+	public String addAppearance(HttpServletRequest request,
+			@RequestParam(value = "Picpath", required = false) MultipartFile picpath) {
+		String siteid = request.getParameter("siteid");
+		//String iphotoID = request.getParameter("iphotoID");
+		String vPhotoname = request.getParameter("vPhotoname");
+		String exteriorInfo = request.getParameter("ExteriorInfo");
+		
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Appearancepic appearancepic = new Appearancepic();
+			String random = String.valueOf(new Random().nextInt(99)+1);
+			appearancepic.setIphotoID(System.currentTimeMillis()+random);
+			appearancepic.setdRecordDate(DateUtils.timesstampToString());
+			appearancepic.setvPhotoname(vPhotoname);
+			appearancepic.setExteriorInfo(exteriorInfo);
+			appearancepic.setSiteid(siteid);
+			if (!StringUtils.isEmpty(picpath)) {
 
+				String ext = UploadUtil.getExtention(picpath.getOriginalFilename());
+				String picpath1 = UploadUtil.uploadOneFile(request, picpath, UUIDGenerator.getUUID() + "." + ext,
+						UUIDGenerator.getUUID() + "/AppearancePic");
+				appearancepic.setPicpath(picpath1);;
+			}
+			formService.addAppearance(appearancepic);
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}	
+	
+	/**
+	 * 107.提交总平图（Z）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SubmitTotalFlatPic", method = { RequestMethod.POST })
+	public String submitTotalFlatPic(HttpServletRequest request,
+			@RequestParam(value = "Flatpic", required = false) MultipartFile flatpic) {
+		String orgid = request.getParameter("orgid");
+		String userdefinedFile = request.getParameter("userdefinedFile");
+		System.err.println(userdefinedFile+"userdefinedFile");
+		String dataBag = null;
+		int statusCode = -1;
+		String bflatpic=null;
+		try {
+			
+			if (!StringUtils.isEmpty(flatpic)) {
+				//删除文件
+				//String filepathBefore = formService.findFilePath(userdefinedFile);
+			    //String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+				// 先删除文件
+				//UploadUtil.deleteFile(filedir);
+				String ext = UploadUtil.getExtention(flatpic.getOriginalFilename());
+				bflatpic = UploadUtil.uploadOneFile(request, flatpic, UUIDGenerator.getUUID()+"."+ext ,
+						UUIDGenerator.getUUID() + "/Flatpic");
+			}
+			formService.submitTotalFlatPic(bflatpic,orgid);
+			statusCode = ConstValues.OK;
+			dataBag = "提交总平图成功！";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "提交总平图失败！";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}	
 	
 	/**

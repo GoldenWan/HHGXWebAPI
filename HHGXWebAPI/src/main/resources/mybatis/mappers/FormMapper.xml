@@ -33,6 +33,13 @@
 		WHERE
 		PicID = #{picID}
 	</delete>
+	<delete id="deleteAppearance">
+		DELETE
+		FROM
+		appearancepic
+		WHERE
+		iphotoID = #{iphotoID}
+	</delete>
 	<insert id="addflatPic">
 		INSERT INTO flatPic (
 		cFlatPic,
@@ -228,6 +235,30 @@
 		#{safedutytype},#{filepath},#{orgid}
 		)
 	</insert>
+	<insert id="addAppearance">
+		INSERT INTO appearancepic (
+			iphotoID,
+			vPhotoname,
+			dRecordDate,
+			Picpath,
+			ExteriorInfo,
+			siteid
+		)
+		VALUES
+		(
+		#{iphotoID},#{vPhotoname},#{dRecordDate},#{picpath},#{exteriorInfo},#{siteid}
+		)
+	</insert>
+	<update id="submitTotalFlatPic">
+		UPDATE onlineorg
+		<trim prefix="set" suffixOverrides=",">
+		<if test="bFlatpic!=null and bFlatpic!=''">
+			bFlatpic = #{bFlatpic},
+		</if>
+		</trim>
+		WHERE
+			orgid = #{orgid}
+	</update>
 
 
 	<update id="updateSafeDuty">
@@ -336,4 +367,5 @@
 		#{auditingDepartment},#{registTime},#{pictureUrl},#{orgid}
 		)
 	</insert>
+	
 </mapper>

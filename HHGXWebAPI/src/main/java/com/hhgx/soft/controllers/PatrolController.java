@@ -104,7 +104,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 	
@@ -182,7 +182,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 	/**
@@ -551,7 +551,7 @@ public class PatrolController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 
@@ -746,7 +746,7 @@ public class PatrolController {
 	public String GetCheckRecordBase(HttpServletRequest request) throws IOException{
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId","siteid");
-		String userCheckId = map.get("userCheckId");
+		//String userCheckId = map.get("userCheckId");
 		String siteid = map.get("siteid");
 		//查询所有
 		if(siteid.equals("all")){

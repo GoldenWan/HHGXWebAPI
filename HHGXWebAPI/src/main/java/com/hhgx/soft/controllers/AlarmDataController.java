@@ -104,7 +104,7 @@ public class AlarmDataController {
 			statusCode = ConstValues.FAILED;
 		}
 		
-		return ResponseJson.responseFindPageJsonArray1(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 		
 	}
 	/**

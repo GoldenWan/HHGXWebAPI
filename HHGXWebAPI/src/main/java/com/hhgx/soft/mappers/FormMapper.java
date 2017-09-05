@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
@@ -55,6 +56,10 @@ public interface FormMapper {
 	int eixstLicenceCode(String licenceCode);
 
 	void updateBusinessLicence(BusinessLicence businessLicence);
+
+	void addAppearance(Appearancepic appearancepic);
+
+	void submitTotalFlatPic(@Param("bFlatpic")String bFlatpic, @Param("orgid")String orgid);
 
 	
 	

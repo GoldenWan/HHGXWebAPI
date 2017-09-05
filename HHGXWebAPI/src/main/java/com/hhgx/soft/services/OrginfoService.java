@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
@@ -209,6 +210,23 @@ public Site getSite(String siteid) {
 
 public void updateSite(Site site) {
 	 orginfoMapper.updateSite(site);
+}
+
+public List<Appearancepic> getAppearancepic(String siteid) {
+	return  orginfoMapper.getAppearancepic(siteid);
+}
+
+public void deleteAppearance(String iphotoID) {
+	orginfoMapper.deleteAppearance(iphotoID);
+}
+
+public void setMapPoint(String orgid, String fLatitude, String fLongitude) {
+	orginfoMapper.setMapPoint(orgid,  fLatitude,  fLongitude);
+	
+}
+
+public List<OnlineOrg> getTotalFlatPic(String orgid) {
+	return orginfoMapper.getTotalFlatPic(orgid);
 }
 	
 }

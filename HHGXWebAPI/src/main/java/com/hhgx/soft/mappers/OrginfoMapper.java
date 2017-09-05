@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
@@ -95,6 +96,14 @@ public interface OrginfoMapper {
 	Site getSite(String siteid);
 
 	void updateSite(Site site);
+
+	List<Appearancepic> getAppearancepic(String siteid);
+
+	void deleteAppearance(String iphotoID);
+
+	void setMapPoint(@Param("orgid")String orgid, @Param("fLatitude")String fLatitude, @Param("fLongitude")String fLongitude);
+
+	List<OnlineOrg> getTotalFlatPic(String orgid);
 
 	
 	/**

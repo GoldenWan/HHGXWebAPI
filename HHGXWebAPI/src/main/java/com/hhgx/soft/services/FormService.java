@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
@@ -97,6 +98,15 @@ public class FormService {
 
 	public void updateBusinessLicence(BusinessLicence businessLicence) {
 		formMapper.updateBusinessLicence(businessLicence);
+	}
+
+	public void addAppearance(Appearancepic appearancepic) {
+		formMapper.addAppearance(appearancepic);
+	}
+
+	public void submitTotalFlatPic(String bflatpic, String orgid) {
+		formMapper.submitTotalFlatPic( bflatpic,  orgid);
+		
 	}
 	
 }

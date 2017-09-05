@@ -103,6 +103,14 @@
 		WHERE
 		OrgID = #{orgID}
 	</update>
+	<update id="setMapPoint">
+		UPDATE onlineorg
+		SET 
+		fLatitude = #{fLatitude} ,
+		fLongitude = #{fLongitude} 
+		WHERE
+		orgid = #{orgid}
+	</update>
 	<select id="getBusinessLicence" resultType="businessLicence">
 		SELECT
 		LicenceCode,
@@ -278,12 +286,12 @@
 	</select>
 	<select id="getMapPoint" resultType="site">
 	SELECT
-		s.fLongitude,
-		s.fLatitude
+		fLongitude,
+		fLatitude
 	FROM
-		site s
+		onlineorg
 	WHERE
-		s.orgid = #{orgid}
+		orgid = #{orgid}
 	</select>
 	<delete id="deleteorgSys">
 		DELETE
@@ -320,6 +328,14 @@
 		WHERE
 		v.orgid = #{orgid}
 
+	</select>
+	<select id="getTotalFlatPic" resultType="onlineOrg">
+	SELECT
+		bFlatpic
+	FROM
+		onlineorg
+	WHERE
+		orgid = #{orgid}
 	</select>
 
 	<select id="selectGateway" resultMap="gatewayMap">
@@ -529,6 +545,19 @@ VALUES
 		gateway
 		WHERE
 		Gatewayaddress = #{gatewayaddress}
+	</select>
+	<select id="getAppearancepic" resultType="appearancepic">
+		SELECT
+			iphotoID,
+			vPhotoname,
+			dRecordDate,
+			Picpath,
+			ExteriorInfo,
+			siteid
+		FROM
+			appearancepic
+		WHERE
+			siteid = #{siteid}
 	</select>
 
 	<update id="updateGatewaySame">
