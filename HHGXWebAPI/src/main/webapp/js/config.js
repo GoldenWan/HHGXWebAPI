@@ -4,7 +4,7 @@ var CssUrl = BaseUrl+"/css";
 var JsUrl = BaseUrl+"/js";
 
 var ApiUrl = BaseUrl+"/HHGXWebAPI";
-var ImgUrl = BaseUrl;
+var ImgUrl = BaseUrl+"/HHGXWebAPI";
 
 var people = {
     "消防控制室操作人员":{

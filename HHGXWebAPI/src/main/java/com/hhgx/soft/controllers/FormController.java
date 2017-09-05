@@ -96,8 +96,8 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			Flatpic flatpic = new Flatpic();
-			//cFlatPic id
-			flatpic.setcFlatPic(String.valueOf(new Random().nextInt(1000000)));
+			String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
+			flatpic.setcFlatPic(System.currentTimeMillis()+cFlatPic);
 			flatpic.setSiteid(siteid);
 			flatpic.setFloornum(floornum);
 

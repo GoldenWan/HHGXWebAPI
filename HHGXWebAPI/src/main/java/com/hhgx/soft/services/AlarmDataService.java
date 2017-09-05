@@ -24,9 +24,9 @@ public class AlarmDataService {
 	public List<FireAlarm> findFireAlarm(String orgid, String cAlarmtype, int startPos, int pageSize) {
 		return alarmDataMapper.findFireAlarm(orgid, cAlarmtype, startPos,  pageSize);
 	}
-/*
+
 	public Map<String, String> findRecentAlarmInfo(String orgid, String cAlarmtype) {
 		return alarmDataMapper.findRecentAlarmInfo(orgid,cAlarmtype);
-	} */
+	} 
 	
 }

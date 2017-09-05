@@ -17,7 +17,7 @@ public interface AlarmDataMapper {
 	List<FireAlarm> findFireAlarm(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype, 
 			@Param("startPos")int startPos, @Param("pageSize")int pageSize);
 	
-	//Map<String, String> findRecentAlarmInfo(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype);
+	Map<String, String> findRecentAlarmInfo(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype);
 
 	
 }

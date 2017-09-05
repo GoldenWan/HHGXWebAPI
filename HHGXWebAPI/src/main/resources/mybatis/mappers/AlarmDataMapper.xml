@@ -38,22 +38,47 @@
 		e.cAlarmtype = #{cAlarmtype}
 		AND v.orgid = #{orgid}
 	</select>
-	<!-- <select id="findRecentAlarmInfo" resultType="map">
-		SELECT
-		e.Firealarmid,
-		e.cAlarmtype,
-		v.imFlatpi
-		FROM
-		eventinfos e,
-		v_FireAlarm v
-		WHERE
-		e.cAlarmtype = #{cAlarmtype}
-		AND v.orgid = #{orgid}
-		select
-A.* from
-A left join B on a.product_type_id = B.type_id
-group by B.type_id
-order by A.id desc limit 1
+   <select id="findRecentAlarmInfo" resultType="map">
+   SELECT
+	`e`.`Firealarmid` AS `Firealarmid`,
+	`e`.`dRecentAlarmtime` AS `dRecentAlarmtime`,
+	`f`.`imFlatPic` AS `imFlatPic`,
+	`d`.`DeviceNo` AS `DeviceNo`,
+	`d`.`deviceaddress` AS `deviceaddress`,
+	`d`.`Gatewayaddress` AS `Gatewayaddress`,
+	`d`.`fPositionX` AS `fPositionX`,
+	`d`.`fPositionY` AS `fPositionY`,
+	`d`.`iDeviceType` AS `iDeviceType`,
+	`t`.`DeviceTypeName` AS `DeviceTypeName`,
+	`f`.`cFlatPic` AS `cFlatPic`,
+  `e`.`sysaddress` AS `sysaddress`,
+  `e`.`cAlarmtype` AS `cAlarmtype`
+FROM
+	(
+		(
+			(
+				`eventinfos` `e`
+				JOIN `devices` `d`
+			)
+			JOIN `flatpic` `f`
+		)
+		JOIN `devicetype` `t`
+	)
+WHERE
+	(
+		(
+			`e`.`sysaddress` = `d`.`Sysaddress`
+		)
+		AND (
+			`e`.`Gatewayaddress` = `d`.`Gatewayaddress`
+		)
+		AND (
+			`d`.`cFlatPic` = `f`.`cFlatPic`
+		)
+		AND (
+			`d`.`iDeviceType` = `t`.`iDeviceType`
+		)
+	)
 	</select>
- -->
+
 </mapper>

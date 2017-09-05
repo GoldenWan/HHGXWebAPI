@@ -139,7 +139,7 @@ public class AlarmDataController {
 	 * @return
 	 * @throws IOException
 	 */
-	/*@ResponseBody
+	@ResponseBody
 	@RequestMapping(value = "/RecentAlarmInfo", method = {
 			RequestMethod.POST })
 	public String recentAlarmInfo(HttpServletRequest request) throws IOException {
@@ -163,6 +163,14 @@ public class AlarmDataController {
 				map2.put("Firealarmid",recentAlarmInfo.get("Firealarmid"));
 				map2.put("dRecentAlarmtime",recentAlarmInfo.get("dRecentAlarmtime"));
 				map2.put("imFlatpic",recentAlarmInfo.get("imFlatpic"));
+				map2.put("DeviceNo",recentAlarmInfo.get("imFlatpic"));
+				map2.put("deviceaddress",recentAlarmInfo.get("imFlatpic"));
+				map2.put("Gatewayaddress",recentAlarmInfo.get("imFlatpic"));
+				map2.put("fPositionX",recentAlarmInfo.get("imFlatpic"));
+				map2.put("fPositionY",recentAlarmInfo.get("imFlatpic"));
+				map2.put("iDeviceType",recentAlarmInfo.get("imFlatpic"));
+				map2.put("DeviceTypeName",recentAlarmInfo.get("imFlatpic"));
+			   
 				lmList.add(map2);
 			}
 			statusCode = ConstValues.OK;
@@ -174,7 +182,7 @@ public class AlarmDataController {
 		
 		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 		
-	}*/
+	}
 	
 	
 }

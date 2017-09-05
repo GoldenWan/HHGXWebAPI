@@ -177,8 +177,8 @@ public class OrginfoService {
 		return orginfoMapper.getSiteName(orgid);
 	}
 
-public List<Site> getSiteList(String orgid) {
-	return orginfoMapper.getSiteList(orgid);
+public List<Site> getSiteList(String orgid, int startPos, int pageSize) {
+	return orginfoMapper.getSiteList(orgid, startPos, pageSize);
 }
 
 public void addSite(Site site) {
@@ -188,6 +188,27 @@ public void addSite(Site site) {
 public List<Site>  getMapPoint(String orgid) {
 	// TODO Auto-generated method stub
 	return  orginfoMapper.getMapPoint(orgid);
+}
+
+public String findMaxBack8(String orgid) {
+	return orginfoMapper.findMaxBack8(orgid);
+}
+
+public int getSiteTotalCount(String orgid) {
+	return orginfoMapper.getSiteTotalCount(orgid);
+}
+
+public void deleteSite(String siteid) {
+	 orginfoMapper.deleteSite(siteid);
+}
+
+public Site getSite(String siteid) {
+	// TODO Auto-generated method stub
+	return  orginfoMapper.getSite(siteid);
+}
+
+public void updateSite(Site site) {
+	 orginfoMapper.updateSite(site);
 }
 	
 }

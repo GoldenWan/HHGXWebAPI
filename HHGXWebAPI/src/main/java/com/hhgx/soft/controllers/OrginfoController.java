@@ -2,10 +2,10 @@ package com.hhgx.soft.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -712,20 +712,33 @@ public class OrginfoController {
 	@RequestMapping(value = "/UpdateOnlineOrg", method = RequestMethod.POST)
 	public Object updateOnlineOrg(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-
-		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID", "orgcode", "orgname", "vAddress",
-				"OrganType", "vNamelegalperson", "otherthings", "YnImportant", "SuperiorOrg", "cZip", "vTel", "fax",
-				"E-Mail", "howmanypeople", "souyouzhi", "SetupDate", "realtymoney", "ipersonnum", "fAreanum",
-				"fBuildingarea", "gasType", "howmanyexit", "howmanystair", "howmanylane", "howmanyelevator",
-				"lanelocation", "vfireroomtel", "escapefloor", "escapebuildingarea", "escapelocation",
-				"AutoFireFacility", "bFlatpic", "dRecordDate", "ApproveMan", "AreaId", "ManagerOrgID", "neareast",
-				"nearsouth", "nearwest", "nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "ApproveState",
-				"ApproveTime");
+		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID", "orgcode", "orgname", "souyouzhi",
+				"OrganType", "otherthings", "YnImportant", "SuperiorOrg", "cZip", "vTel", "fax",
+				"E_Mail", "howmanypeople", "realtymoney", "ipersonnum", "fAreanum",
+				"fBuildingarea", "GasType", "howmanyexit", "howmanystair", "howmanylane", "howmanyelevator",
+				"lanelocation", "vfireroomtel", "escapefloor", "escapebuildingarea",
+				"AutoFireFacility", "ManagerOrgID", "neareast",
+				"nearsouth", "nearwest", "nearnorth", "managegrade", "NetworkStatus", "NetworkTime","howmanyfireman"
+				);
+		
+		///managegrade 和GasType
+		
+		String orgID = ret.get("OrgID");
+		String orgcode = ret.get("orgcode");
+		String orgname = ret.get("orgname");
+		String souyouzhi = ret.get("souyouzhi");
+		String organType = ret.get("OrganType");
+		String otherthings = ret.get("otherthings");
+		String ynImportant = ret.get("YnImportant");
+		String superiorOrg = ret.get("SuperiorOrg");
+		
+		String cZip = ret.get("cZip");
+		String vTel = ret.get("vTel");
+		String fax = ret.get("fax");
+		String eMail = ret.get("E_Mail");
+		String howmanypeople = ret.get("howmanypeople");
 		String autoFireFacility = ret.get("AutoFireFacility");
-		String bFlatpic = ret.get("bFlatpic");
-		String dRecordDate = ret.get("dRecordDate");
-		String approveMan = ret.get("ApproveMan");
-		String areaId = ret.get("AreaId");
+		//String dRecordDate = ret.get("dRecordDate");
 		String managerOrgID = ret.get("ManagerOrgID");
 		String neareast = ret.get("neareast");
 		String nearsouth = ret.get("nearsouth");
@@ -735,9 +748,6 @@ public class OrginfoController {
 		String managegrade = ret.get("managegrade");
 		String networkStatus = ret.get("NetworkStatus");
 		String networkTime = ret.get("NetworkTime");
-		String approveState = ret.get("ApproveState");
-		String approveTime = ret.get("ApproveTime");
-
 		String realtymoney = ret.get("realtymoney");
 		String ipersonnum = ret.get("ipersonnum");
 		String fAreanum = ret.get("fAreanum");
@@ -752,24 +762,10 @@ public class OrginfoController {
 		String vfireroomtel = ret.get("vfireroomtel");
 		String escapefloor = ret.get("escapefloor");
 		String escapebuildingarea = ret.get("escapebuildingarea");
-		String escapelocation = ret.get("escapelocation");
+		
 
-		String orgID = ret.get("OrgID");
-		String orgcode = ret.get("orgcode");
-		String orgname = ret.get("orgname");
-		String vAddress = ret.get("vAddress");
-		String organType = ret.get("OrganType");
-		String vNamelegalperson = ret.get("vNamelegalperson");
-		String otherthings = ret.get("otherthings");
-		String ynImportant = ret.get("YnImportant");
-		String superiorOrg = ret.get("SuperiorOrg");
-		String cZip = ret.get("cZip");
-		String vTel = ret.get("vTel");
-		String fax = ret.get("fax");
-		String eMail = ret.get("E-Mail");
-		String howmanypeople = ret.get("howmanypeople");
-		String souyouzhi = ret.get("souyouzhi");
-		String setupDate = ret.get("SetupDate");
+		
+		//String setupDate = ret.get("SetupDate");
 
 		OnlineOrg onlineOrg = new OnlineOrg();
 		onlineOrg.setNeareast(neareast);
@@ -778,48 +774,41 @@ public class OrginfoController {
 		onlineOrg.setNearnorth(nearnorth);
 		onlineOrg.setManagegrade(managegrade);
 		onlineOrg.setNetworkStatus(networkStatus);
-		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime, "yyyy/MM/dd"));
-		onlineOrg.setApproveMan(approveMan);
-		onlineOrg.setApproveTime(DateUtils.StringToDate(approveTime, "yyyy/MM/dd"));
+		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime, "yyyy-MM-dd"));
 		onlineOrg.setOrgID(orgID);
 		onlineOrg.setOrgcode(orgcode);
 		onlineOrg.setOrgname(orgname);
 		onlineOrg.setOrganType(organType);
-		onlineOrg.setvAddress(vAddress);
+		onlineOrg.setSouyouzhi(souyouzhi);
 		onlineOrg.setOtherthings(otherthings);
 		onlineOrg.setYnImportant(ynImportant);
 		onlineOrg.setSuperiorOrg(superiorOrg);
-		onlineOrg.setSetupDate(DateUtils.StringToDate(setupDate, "yyyy/MM/dd"));
-		onlineOrg.setvNamelegalperson(vNamelegalperson);
+		onlineOrg.setSetupDate(new Date());
 		onlineOrg.setvTel(vTel);
 		onlineOrg.setFax(fax);
-		onlineOrg.setApproveMan(approveMan);
 		onlineOrg.setIpersonnum(ipersonnum);
 		onlineOrg.setAutoFireFacility(autoFireFacility);
-		onlineOrg.setbFlatpic(bFlatpic);
 		onlineOrg.setcZip(cZip);
 		onlineOrg.setEscapebuildingarea(escapebuildingarea);
 		onlineOrg.setRealtymoney(realtymoney);
-		onlineOrg.setEscapelocation(escapelocation);
 		onlineOrg.setVfireroomtel(vfireroomtel);
 		onlineOrg.setGasType(gasType);
 		onlineOrg.setHowmanyfireman(howmanyfireman);
-		onlineOrg.setApproveState(approveState);
-		onlineOrg.setAreaId(areaId);
 		onlineOrg.setHowmanystair(howmanystair);
 		onlineOrg.setHowmanylane(howmanylane);
 		onlineOrg.setLanelocation(lanelocation);
 		onlineOrg.setHowmanypeople(howmanypeople);
 		onlineOrg.seteMail(eMail);
-		onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate, "yyyy/MM/dd"));
+		//onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate, "yyyy/MM/dd"));
 		onlineOrg.setEscapefloor(escapefloor);
-		onlineOrg.setSouyouzhi(souyouzhi);
 		onlineOrg.setfAreanum(fAreanum);
 		onlineOrg.setfBuildingarea(fBuildingarea);
 		onlineOrg.setGasType(gasType);
 		onlineOrg.setHowmanyelevator(howmanyelevator);
 		onlineOrg.setHowmanyexit(howmanyexit);
-		onlineOrg.setManagerOrgID(managerOrgID);
+		if(!StringUtils.isEmpty(managerOrgID) && managerOrgID!="null"){
+			onlineOrg.setManagerOrgID(managerOrgID);
+		}
 		String dataBag = null;
 		int statusCode = -1;
 		try {
@@ -835,7 +824,32 @@ public class OrginfoController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
+	/**
+	 * 62.删除建筑物信息（P）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeleteSite", method = RequestMethod.POST)
+	public String deleteSite(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid");
+		String siteid = map.get("siteid");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			
+			orginfoService.deleteSite(siteid);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 
+	}
+
+	
 	/**
 	 * 84.获取防火单位信息【**】
 	 * 
@@ -844,14 +858,16 @@ public class OrginfoController {
 	@ResponseBody
 	@RequestMapping(value = "/GetOnlineOrg", method = RequestMethod.POST)
 	public String getOnlineOrg(HttpServletRequest request) throws IOException {
+		
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-
 		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID");
 		String orgID = ret.get("OrgID");
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
 			OnlineOrg onlineOrg = orginfoService.getOnlineOrg(orgID);
+				   
+			
 			if (!StringUtils.isEmpty(onlineOrg)) {
 				map2.put("orgcode", onlineOrg.getOrgcode());
 				map2.put("orgname", onlineOrg.getOrgname());
@@ -864,10 +880,10 @@ public class OrginfoController {
 				map2.put("cZip", onlineOrg.getcZip());
 				map2.put("vTel", onlineOrg.getvTel());
 				map2.put("fax", onlineOrg.getFax());
-				map2.put("E-Mail", onlineOrg.geteMail());
+				map2.put("E_Mail", onlineOrg.geteMail());
 				map2.put("howmanypeople", onlineOrg.getHowmanypeople());
 				map2.put("souyouzhi", onlineOrg.getSouyouzhi());
-				map2.put("SetupDate", DateUtils.formatDate(onlineOrg.getSetupDate(), "yyyy-MM-dd"));
+				map2.put("SetupDate", DateUtils.formatToDate(DateUtils.formatDateTime(onlineOrg.getSetupDate())));
 				map2.put("realtymoney", onlineOrg.getRealtymoney());
 				map2.put("ipersonnum", onlineOrg.getIpersonnum());
 				map2.put("fAreanum", onlineOrg.getfAreanum());
@@ -888,6 +904,9 @@ public class OrginfoController {
 				map2.put("nearwest", onlineOrg.getNearwest());
 				map2.put("nearnorth", onlineOrg.getNearnorth());
 				map2.put("AutoFireFacility", onlineOrg.getAutoFireFacility());
+				map2.put("fLongitude", onlineOrg.getfLongitude() );
+				map2.put("fLatitude", onlineOrg.getfLatitude());
+				
 				map2.put("bFlatpic", onlineOrg.getbFlatpic());
 				map2.put("dRecordDate", DateUtils.formatDate(onlineOrg.getdRecordDate(), null));
 				map2.put("managegrade", onlineOrg.getManagegrade());
@@ -898,12 +917,13 @@ public class OrginfoController {
 				map2.put("ApproveMan", onlineOrg.getApproveMan());
 				map2.put("AreaId", onlineOrg.getAreaId());
 				map2.put("ManagerOrgID", onlineOrg.getManagerOrgID());
+				map2.put("orgid", orgID);
 			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(map2, statusCode);
+		return ResponseJson.responseFindJsonArray(map2, statusCode);
 	}
 
 	/**
@@ -1052,12 +1072,27 @@ public class OrginfoController {
 	@RequestMapping(value = "/GetSiteList", method = RequestMethod.POST)
 	public String getSiteList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","PageIndex");
 		String orgid = map.get("orgid");
-		int statusCode = -1;
+		String pageIndex = map.get("pageIndex");
+		
+		Page page = null;
 		List<Map<String, String>> list = new ArrayList<>();
+		int statusCode = -1;
+		List<Site> sites =null;
+		int pageCount = orginfoService.getSiteTotalCount(orgid);
 		try {
-			List<Site> sites = orginfoService.getSiteList(orgid);
+			
+			if (pageIndex != null) {
+				page = new Page(pageCount, Integer.parseInt(pageIndex));
+				 sites = orginfoService.getSiteList(orgid, page.getStartPos(),page.getPageSize());
+
+			} else {
+				page = new Page(pageCount, 1);
+				 sites = orginfoService.getSiteList(orgid, page.getStartPos(),page.getPageSize());
+			}
+			
+			
 			for (Site site : sites) {
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("siteid", site.getSiteid());
@@ -1084,7 +1119,61 @@ public class OrginfoController {
 				map2.put("sitetypename", site.getSitetypename());
 				map2.put("holdthings", site.getHoldthings());
 				map2.put("holdthingsnum", site.getHoldthingsnum());
-				map2.put("annalTime", site.getAnnalTime());
+				map2.put("annalTime", DateUtils.formatToDate(site.getAnnalTime()));
+				map2.put("fLongitude", site.getfLongitude());
+				map2.put("fLatitude", site.getfLatitude());
+				map2.put("orgid", site.getOrgid());
+				list.add(map2);
+			}
+			statusCode = ConstValues.OK;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray1(list, statusCode, pageCount);
+	}
+	/**
+	 * 60.获取建筑物信息（P）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetSite", method = RequestMethod.POST)
+	public String getSite(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid");
+		String siteid = map.get("siteid");
+		List<Map<String, String>> list = new ArrayList<>();
+		int statusCode = -1;
+		try {
+			
+			Site site = orginfoService.getSite(siteid);
+			if(!StringUtils.isEmpty(site)){ 
+				Map<String, String> map2 = new HashMap<String, String>();
+				map2.put("siteid", siteid);
+				map2.put("sitename", site.getSitename());
+				map2.put("buildingaddress", site.getBuildingaddress());
+				map2.put("useproperty", site.getUseproperty());
+				map2.put("DSCS", site.getdSCS());
+				map2.put("JZGD", site.getjZGD());
+				map2.put("DSJZMJ", site.getdSJZMJ());
+				map2.put("NHDJ", site.getnHDJ());
+				map2.put("JGLX", site.getjGLX());
+				map2.put("DXCS", site.getdXCS());
+				map2.put("DXJZMJ", site.getdXJZMJ());
+				map2.put("SDQK", site.getsDQK());
+				map2.put("ZYCCW", site.getzYCCW());
+				map2.put("RLRS", site.getrLRS());
+				map2.put("QLJZ", site.getqLJZ());
+				map2.put("east", site.getEast());
+				map2.put("west", site.getWest());
+				map2.put("south", site.getSouth());
+				map2.put("north", site.getNorth());
+				map2.put("xx", site.getXx());
+				map2.put("yy", site.getYy());
+				map2.put("sitetypename", site.getSitetypename());
+				map2.put("holdthings", site.getHoldthings());
+				map2.put("holdthingsnum", site.getHoldthingsnum());
+				map2.put("annalTime", DateUtils.formatToDate(site.getAnnalTime()));
 				map2.put("fLongitude", site.getfLongitude());
 				map2.put("fLatitude", site.getfLatitude());
 				map2.put("orgid", site.getOrgid());
@@ -1098,6 +1187,99 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
+	/**
+	 * 61.修改建筑物信息（P）
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/UpdateSite", method = RequestMethod.POST)
+	public String updateSite(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody,
+				"sitename", "buildingaddress", "useproperty",
+				"DSCS", "JZGD", "DSJZMJ","NHDJ", "JGLX", "DXCS",
+				"DXJZMJ", "SDQK", "ZYCCW","RLRS", "QLJZ", "east", 
+				"west", "south", "north", "sitetypename", 
+				"holdthings", "holdthingsnum", "fLongitude", 
+				"fLatitude", "orgid","annalTime","siteid");
+		String annalTime = map.get("annalTime");
+		String siteid = map.get("siteid");
+		String sitename = map.get("sitename");
+		String buildingaddress = map.get("buildingaddress");
+		String useproperty = map.get("useproperty");
+		String dSCS = map.get("DSCS");
+		String jZGD = map.get("JZGD");
+		String dSJZMJ = map.get("DSJZMJ");
+		String nHDJ = map.get("NHDJ");
+		String jGLX = map.get("JGLX");
+		String dXCS = map.get("DXCS");
+		String dXJZMJ = map.get("DXJZMJ");
+		String sDQK = map.get("SDQK");
+		String zYCCW = map.get("ZYCCW");
+		String rLRS= map.get("RLRS");
+		String qLJZ= map.get("QLJZ");
+		String east= map.get("east");
+		String west= map.get("west");
+		String south= map.get("south");
+		String north= map.get("north");
+	//	String xx= map.get("xx");
+	//	String yy= map.get("yy");
+		String sitetypename= map.get("sitetypename");
+		String holdthings= map.get("holdthings");
+		String holdthingsnum= map.get("holdthingsnum");
+		//String annalTime= map.get("annalTime");
+		String fLongitude= map.get("fLongitude");
+		String fLatitude= map.get("fLatitude");
+		String orgid = map.get("orgid");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Site site = new Site();
+			site.setSiteid(siteid);
+			site.setSitename(sitename);
+			site.setBuildingaddress(buildingaddress);
+			site.setUseproperty(useproperty);
+			site.setdSCS(dSCS);
+			site.setjZGD(jZGD);
+			site.setdSCS(dSCS);
+			site.setnHDJ(nHDJ);
+			site.setdSJZMJ(dSJZMJ);
+			site.setjGLX(jGLX);
+			site.setdXCS(dXCS);
+			site.setdXJZMJ(dXJZMJ);
+			site.setsDQK(sDQK);
+			site.setzYCCW(zYCCW);
+			site.setrLRS(rLRS);
+			site.setqLJZ(qLJZ);
+			site.setEast(east);
+			site.setWest(west);
+			site.setSouth(south);
+			site.setNorth(north);
+			
+			//site.setXx(xx);
+			//site.setYy(yy);
+			
+			site.setHoldthings(holdthings);
+			site.setSitetypename(sitetypename);
+			site.setHoldthingsnum(holdthingsnum);
+			
+			site.setAnnalTime(annalTime);
+			site.setAnnalTime(DateUtils.timesstampToString());
+			
+			site.setfLongitude(fLongitude);
+			site.setfLatitude(fLatitude);
+			site.setOrgid(orgid);
+			   
+			orginfoService.updateSite(site);
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
 	/**
 	 * 63.	添加建筑物信息（P）
 	 */
@@ -1135,7 +1317,7 @@ public class OrginfoController {
 		String sitetypename= map.get("sitetypename");
 		String holdthings= map.get("holdthings");
 		String holdthingsnum= map.get("holdthingsnum");
-		String annalTime= map.get("annalTime");
+		//String annalTime= map.get("annalTime");
 		String fLongitude= map.get("fLongitude");
 		String fLatitude= map.get("fLatitude");
 		String orgid = map.get("orgid");
@@ -1143,8 +1325,20 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			Site site = new Site();
-			//siteid
-			site.setSiteid(String.valueOf(new Random().nextInt(1000000)));
+			String siteid =null;
+			//siteid orgid+ 00000001
+			String newSiteid = null;
+			newSiteid = orginfoService.findMaxBack8(orgid);
+			if (StringUtils.isEmpty(newSiteid)) {
+				siteid = orgid + "00000001";
+			} else {
+				StringBuilder sBuilder = new StringBuilder(Integer.parseInt(newSiteid) + 1);
+				for(int len =sBuilder.length();len<8;len++){
+					sBuilder.insert( 0 , "0" ); 
+				}
+				siteid = orgid + sBuilder.toString();
+			}
+			site.setSiteid(siteid);
 			site.setSitename(sitename);
 			site.setBuildingaddress(buildingaddress);
 			site.setUseproperty(useproperty);
@@ -1223,7 +1417,7 @@ public class OrginfoController {
 				map2.put("AuditingDepartment", businessLicence.getAuditingDepartment());
 				map2.put("RegistTime", DateUtils.formatToDate(DateUtils.formatDateTime(businessLicence.getRegistTime())));
 				map2.put("PictureUrl", businessLicence.getPictureUrl());
-				map2.put("orgid", businessLicence.getOrgid());
+				map2.put("orgid", orgid);
 				list.add(map2);
 				}
 			statusCode = ConstValues.OK;

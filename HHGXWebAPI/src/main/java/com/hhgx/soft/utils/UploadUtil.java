@@ -43,7 +43,7 @@ public class UploadUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "Uploading/" + paperFileName + "/" + fName; // 新生成的图片路径名称
+			return "/Uploading/" + paperFileName + "/" + fName; // 新生成的图片路径名称
 		}
 		return null;
 	}
@@ -59,10 +59,10 @@ public class UploadUtil {
 	}
 	// 获取文件目录
 	public static String getStoreName(String filepath) {
-		return  filepath.substring( filepath.indexOf("/")+1,filepath.lastIndexOf("/")+1);
+		return  filepath.substring( filepath.indexOf("/")+10,filepath.lastIndexOf("/")+1);//+1
 	
 	}	
-
+	
 
 	/**
 	 * 根据真实文件名 生成uuidname

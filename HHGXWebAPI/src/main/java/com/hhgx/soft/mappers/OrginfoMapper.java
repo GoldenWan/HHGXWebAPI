@@ -50,7 +50,6 @@ public interface OrginfoMapper {
 
 	void addGateway(Gateway gateway);
 
-	/*no application*/
 	
 	void updateGateway(Gateway gateway);
 
@@ -81,11 +80,21 @@ public interface OrginfoMapper {
 
 	List<Site> getSiteName(String orgid);
 
-	List<Site> getSiteList(String orgid);
+	List<Site> getSiteList(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
 	void addSite(Site site);
 
 	List<Site>  getMapPoint(String orgid);
+
+	String findMaxBack8(String orgid);
+
+	int getSiteTotalCount(String orgid);
+
+	void deleteSite(String siteid);
+
+	Site getSite(String siteid);
+
+	void updateSite(Site site);
 
 	
 	/**

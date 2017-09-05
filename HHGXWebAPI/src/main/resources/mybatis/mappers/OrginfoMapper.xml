@@ -4,7 +4,7 @@
 <mapper namespace="com.hhgx.soft.mappers.OrginfoMapper">
 
 	<select id="getOnlineOrg" resultType="onlineOrg">
-		SELECT
+	SELECT
 		orgcode,
 		orgname,
 		vAddress,
@@ -40,6 +40,8 @@
 		nearwest,
 		nearnorth,
 		AutoFireFacility,
+		fLongitude,
+		fLatitude,
 		bFlatpic,
 		dRecordDate,
 		managegrade,
@@ -50,72 +52,53 @@
 		ApproveMan,
 		AreaId,
 		ManagerOrgID
-		FROM
+	FROM
 		onlineorg
-		WHERE
-		OrgID = #{orgID}
+	WHERE
+		OrgID =  #{orgID}
 	</select>
 
 	<update id="updateOnlineOrg">
 		UPDATE onlineorg
-		SET orgcode = #{orgcode} ,
-		orgname =
-		#{orgname} ,
-		vAddress = #{vAddress} ,
+		SET 
+		orgcode = #{orgcode} ,
+		orgname = #{orgname} ,
+		souyouzhi = #{souyouzhi} ,
 		OrganType = #{organType} ,
 		vNamelegalperson = #{vNamelegalperson} ,
 		otherthings = #{otherthings} ,
 		YnImportant = #{ynImportant} ,
 		SuperiorOrg = #{superiorOrg} ,
-		cZip =
-		#{cZip} ,
+		cZip = #{cZip} ,
 		vTel = #{vTel} ,
 		fax = #{fax} ,
 		`E-Mail` = #{eMail} ,
 		howmanypeople = #{howmanypeople} ,
-		souyouzhi = #{souyouzhi} ,
-		SetupDate
-		= #{setupDate} ,
-		realtymoney = #{realtymoney} ,
-		ipersonnum =
-		#{ipersonnum} ,
-		fAreanum = #{fAreanum} ,
-		fBuildingarea =
-		#{fBuildingarea} ,
+		SetupDate= #{setupDate} ,
+    	realtymoney = #{realtymoney} ,
+		ipersonnum = #{ipersonnum} ,
+		fAreanum =  #{fAreanum} ,
+		fBuildingarea = #{fBuildingarea} ,
 		GasType = #{gasType} ,
-		howmanyfireman =
-		#{howmanyfireman} ,
+		howmanyfireman = #{howmanyfireman} ,
 		howmanyexit = #{howmanyexit} ,
-		howmanystair =
-		#{howmanystair} ,
+		howmanystair = #{howmanystair} ,
 		howmanylane = #{howmanylane} ,
-		howmanyelevator =
-		#{howmanyelevator} ,
+		howmanyelevator = #{howmanyelevator} ,
 		lanelocation = #{lanelocation} ,
-		vfireroomtel =
-		#{vfireroomtel} ,
+		vfireroomtel = #{vfireroomtel} ,
 		escapefloor = #{escapefloor} ,
-		escapebuildingarea =
-		#{escapebuildingarea} ,
-		escapelocation = #{escapelocation} ,
-		neareast =
-		#{neareast} ,
+		escapebuildingarea = #{escapebuildingarea} ,
+		neareast = #{neareast} ,
 		nearsouth = #{nearsouth} ,
 		nearwest = #{nearwest} ,
 		nearnorth = #{nearnorth} ,
 		AutoFireFacility = #{autoFireFacility} ,
-		bFlatpic = #{bFlatpic} ,
 		dRecordDate = #{dRecordDate} ,
-		managegrade =
-		#{managegrade} ,
+		managegrade = #{managegrade} ,
 		NetworkStatus = #{networkStatus},
-		NetworkTime =
-		#{networkTime},
+		NetworkTime = #{networkTime},
 		ApproveState = #{approveState},
-		ApproveTime =
-		#{approveTime},
-		ApproveMan = #{approveMan},
-		AreaId = #{areaId},
 		ManagerOrgID = #{managerOrgID}
 		WHERE
 		OrgID = #{orgID}
@@ -138,7 +121,7 @@
 		FROM
 		businesslicence
 		WHERE
-		orgid = #{orgid}
+		orgid = #{orgid} order by RegistTime
 	</select>
 
 	<select id="getFireSystemList" resultType="fireSystem">
@@ -190,6 +173,43 @@
 			site s
 		WHERE
 		s.orgid = #{orgid}
+		limit
+		#{startPos},#{pageSize}
+	</select>
+	<select id="getSite" resultType="site">
+		SELECT
+			sitename,
+			buildingaddress,
+			useproperty,
+			DSCS,
+			JZGD,
+			DSJZMJ,
+			NHDJ,
+			JGLX,
+			DXCS,
+			DXJZMJ,
+			SDQK,
+			ZYCCW,
+			RLRS,
+			QLJZ,
+			east,
+			west,
+			south,
+			north,
+			xx,
+			yy,
+			sitetypename,
+			holdthings,
+			holdthingsnum,
+			annalTime,
+			fLongitude,
+			fLatitude,
+			orgid
+		FROM
+			site s
+		WHERE
+		s.siteid = #{siteid}
+		
 	</select>
 	<select id="getSiteName" resultType="site">
 	SELECT
@@ -200,6 +220,21 @@
 	WHERE
 		orgid = #{orgid}
 	</select>
+	<select id="getSiteTotalCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		site
+	WHERE
+		orgid = #{orgid}
+	</select>
+	<delete id="deleteSite">
+		DELETE
+		FROM
+		site
+		WHERE
+		siteid  = #{siteid}
+	</delete>
 
 	<select id="getFireSystemListCount" resultType="int">
 		SELECT
@@ -393,6 +428,37 @@ VALUES
 		#{orgid}
 	)
 	</insert>
+	<update id="updateSite">
+	  UPDATE site
+		<trim prefix="set" suffixOverrides=",">
+			<if test="sitename!=null and sitename!=''"> sitename =#{sitename},</if>
+			<if test="buildingaddress!=null and buildingaddress!=''"> buildingaddress =#{buildingaddress},</if>
+			<if test="useproperty!=null and useproperty!=''"> useproperty=#{useproperty},</if>
+			<if test="dSCS!=null and dSCS!=''"> DSCS=#{dSCS},</if>
+			<if test="jZGD!=null and jZGD!=''"> JZGD=#{jZGD},</if>
+			<if test="dSJZMJ!=null and dSJZMJ!=''"> DSJZMJ=#{dSJZMJ},</if>
+			<if test="nHDJ!=null and nHDJ!=''"> NHDJ=#{nHDJ},</if>
+			<if test="jGLX!=null and jGLX!=''"> JGLX=#{jGLX},</if>
+			<if test="dXCS!=null and dXCS!=''"> DXCS=#{dXCS},</if>
+			<if test="dXJZMJ!=null and dXJZMJ!=''"> DXJZMJ=#{dXJZMJ},</if>
+			<if test="sDQK!=null and sDQK!=''"> SDQK=#{sDQK},</if>
+			<if test="zYCCW!=null and zYCCW!=''"> ZYCCW=#{zYCCW},</if>
+			<if test="rLRS!=null and rLRS!=''"> RLRS=#{rLRS},</if>
+			<if test="qLJZ!=null and qLJZ!=''"> QLJZ=#{qLJZ},</if>
+			<if test="east!=null and east!=''"> east=#{east},</if>
+			<if test="west!=null and west!=''"> west=#{west},</if>
+			<if test="south!=null and south!=''"> south=#{south},</if>
+			<if test="north!=null and north!=''"> north=#{north},</if>
+			<if test="sitetypename!=null and sitetypename!=''"> sitetypename=#{sitetypename},</if>
+			<if test="holdthings!=null and holdthings!=''"> holdthings=#{holdthings},</if>
+			<if test="holdthingsnum!=null and holdthingsnum!=''"> holdthingsnum=#{holdthingsnum},</if>
+			<if test="annalTime!=null and annalTime!=''"> annalTime=#{annalTime},</if>
+			<if test="fLongitude!=null and fLongitude!=''"> fLongitude=#{fLongitude},</if>
+			<if test="fLatitude!=null and fLatitude!=''"> fLatitude=#{fLatitude},</if>
+	</trim>
+		WHERE
+		siteid = #{siteid} and orgid =#{orgid}
+	</update>
 	<insert id="addGatewaySysInfo">
 		INSERT INTO gatewaysysteminfo (
 		Sysaddress,
@@ -485,7 +551,6 @@ VALUES
 		(siteid,tiSysType,Gatewayaddress,Sysaddress)
 		values
 		(#{siteid},#{tiSysType},#{gatewayaddress}, #{sysaddress} )
-
 	</insert>
 
 	<select id="getflatpicList" resultType="flatpic">
@@ -559,10 +624,9 @@ VALUES
 		#{deviceNo} ,
 		#{deviceaddress} ,
 		#{road} ,
-		#{address}
-		,
-		#{sysaddress} ,
-		#{gatewayaddress} ,
+		#{address},
+		#{sysaddress},
+		#{gatewayaddress},
 		#{vdesc} ,
 		#{fPositionX} ,
 		#{fPositionY} ,
@@ -753,7 +817,16 @@ VALUES
 		c.cFlatPic = #{cFlatPic}
 	AND c.DeviceNo = #{deviceNo}
 	</select> -->
+	<select id="findMaxBack8" resultType="string">
+	SELECT
 	
+	max(CONVERT (RIGHT(s.siteid, 8), SIGNED)) maxsiteid
+	
+	FROM
+		site s
+	WHERE
+		s.orgid =  #{orgid}
+	</select>
 	
 
 </mapper>

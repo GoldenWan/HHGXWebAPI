@@ -92,7 +92,7 @@ public class FormService {
 	}
 
 	public boolean eixstLicenceCode(String licenceCode) {
-		return formMapper.eixstLicenceCode(licenceCode)>0?true:false;
+		return formMapper.eixstLicenceCode(licenceCode)>0 ? true:false;
 	}
 
 	public void updateBusinessLicence(BusinessLicence businessLicence) {

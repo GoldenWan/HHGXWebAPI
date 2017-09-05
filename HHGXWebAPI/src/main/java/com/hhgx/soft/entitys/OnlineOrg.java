@@ -51,10 +51,23 @@ public class OnlineOrg {
 	private String areaId;                    //区域编号
 	private String managerOrgID;              //管理机构编号
 	
-	
+	private String fLongitude;
+	private String fLatitude;
 
 	
 	
+	public String getfLongitude() {
+		return fLongitude;
+	}
+	public void setfLongitude(String fLongitude) {
+		this.fLongitude = fLongitude;
+	}
+	public String getfLatitude() {
+		return fLatitude;
+	}
+	public void setfLatitude(String fLatitude) {
+		this.fLatitude = fLatitude;
+	}
 	public Date getdRecordDate() {
 		return dRecordDate;
 	}

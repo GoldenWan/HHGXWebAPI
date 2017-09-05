@@ -99,7 +99,12 @@ public class UserManagerController {
 
 		} else {
 			neworgid_ = Integer.parseInt(neworgid) + 1;
-			orgid = areaID + String.valueOf(neworgid_);
+			StringBuilder sBuilder = new StringBuilder(neworgid_);
+			for(int len =sBuilder.length();len<6;len++){
+				sBuilder.insert( 0 , "0" ); 
+			}
+			
+			orgid = areaID + sBuilder.toString();
 		}
 		registerNew.setOrgid(orgid);
 		String number = (String) request.getSession().getAttribute("number");
@@ -301,15 +306,16 @@ public class UserManagerController {
 		gg.setColor(new Color(r.nextInt(66), r.nextInt(155), r.nextInt(255)));
 		gg.setFont(new Font("Arial", Font.ITALIC , 1));
 
-		// 绘制干扰线
+		/*
+	// 绘制干扰线
 	//	for (int i = 0; i <2; i++) {
 			int x = r.nextInt(width)+56;
 			int y = r.nextInt(height)+5;
 			int x1 = r.nextInt(1);
 			int y1 = r.nextInt(height);
 			gg.drawLine(x1, y1, x, y);
-	//	}
-		for (int i = 0; i <22; i++) {
+	//}*/
+		for (int i = 0; i <35; i++) {
 			int xx = r.nextInt(width);
 			int yy = r.nextInt(height);
 			g.drawOval(xx, yy, 1, 1);
