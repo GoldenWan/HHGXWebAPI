@@ -1,6 +1,7 @@
 package com.hhgx.soft.mappers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,6 +12,7 @@ import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
+import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
@@ -31,7 +33,7 @@ public interface OrginfoMapper {
 
 	int getFireSystemListCount(@Param("orgid")String orgid);
 
-	List<FireSystem> getFireSystemListByPage(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
+	List<Map<String, Object>> getFireSystemListByPage(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
 	List<Site> briefsiteList(@Param("orgid") String orgid);
 
@@ -81,11 +83,12 @@ public interface OrginfoMapper {
 
 	List<Site> getSiteName(String orgid);
 
+
 	List<Site> getSiteList(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
 	void addSite(Site site);
 
-	List<Site>  getMapPoint(String orgid);
+	List<OnlineOrg>  getMapPoint(String orgid);
 
 	String findMaxBack8(String orgid);
 
@@ -104,6 +107,17 @@ public interface OrginfoMapper {
 	void setMapPoint(@Param("orgid")String orgid, @Param("fLatitude")String fLatitude, @Param("fLongitude")String fLongitude);
 
 	List<OnlineOrg> getTotalFlatPic(String orgid);
+
+	int getflatpicCount(@Param("orgid")String orgid, @Param("siteid")String siteid);
+
+	List<Flatpic> getflatpicListPage(@Param("orgid")String orgid, @Param("siteid")String siteid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
+
+	List<Site> orgSiteSys(String orgid);
+	Firesystype findSystypeById(String tiSysType);
+
+	int dataMonitorCount(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType);
+
+	List<Map<String, Object>> dataMonitor(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
 	
 	/**

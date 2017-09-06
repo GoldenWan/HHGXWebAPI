@@ -338,6 +338,53 @@
 		WHERE
 		UserCheckId = #{userCheckId}
 	</select>
+	<select id="getCheckRecordBase" resultMap="checkRecordMap">
+		SELECT
+			UserCheckId,
+	      	UserCheckTime,
+	      	OrgUserId,
+	      	OrgManagerId,
+	      	orgid
+		FROM
+			uerchecklist 
+		WHERE
+			UserCheckId = #{userCheckId}
+	</select>
+	<resultMap type="userCheckList" id="checkRecordMap">
+		<id column="siteid" property="siteid" />
+		<result column="sitename" property="sitename" />
+		<collection property="sites" column="orgid"
+			select="com.hhgx.soft.mappers.OrginfoMapper.getSiteName" />
+	</resultMap>
+	<select id="getCheckRecord" resultType="map">
+	SELECT
+		s.siteid,
+		s.sitename,
+		f.tiSysType,
+		f.vSysdesc,
+		ui.ProjectId,
+		u.ProjectContent,
+		ui.UserCheckResult,
+		ui.FaultShow,
+		ui.YnHanding,
+		ui.Handingimmediately,
+		up.PicID,
+		up.PicPath
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+	INNER JOIN uerchecklist ul ON s.orgid = ul.orgid
+	LEFT JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
+	LEFT JOIN usercheckprojectcontent u ON ui.ProjectId = u.ProjectId
+	LEFT JOIN usercheckpic up ON ui.ProjectId = up.ProjectId
+	AND ui.UserCheckId = up.UserCheckId
+	WHERE
+		ul.UserCheckId = '341c87a85533499a88413a95f0268524'
+	<if test="siteid !='all'.toString() and siteid!=null and siteid !=''">
+	AND s.siteid =#{siteid}
+	</if>
+	</select>
 	<select id="getPatrolProject" resultMap="patrolProjectMap">
 		SELECT
 		f.tiSysType,

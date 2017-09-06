@@ -2,6 +2,7 @@ package com.hhgx.soft.services;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckInfo;
+import com.hhgx.soft.entitys.UserCheckList;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.mappers.PatrolMapper;
 
@@ -156,6 +158,14 @@ public class PatrolService {
 
 	public void addorgSys(OnlineFiresystem onlineFiresystem) {
 		 patrolMapper.addorgSys(onlineFiresystem);		
+	}
+
+	public List<UserCheckList> getCheckRecordBase(String userCheckId) {
+		return patrolMapper.getCheckRecordBase(userCheckId);
+	}
+
+	public List<Map<String, Object>> getCheckRecord(String userCheckId, String siteid) {
+		return patrolMapper.getCheckRecord(userCheckId, siteid);
 	}
 
 

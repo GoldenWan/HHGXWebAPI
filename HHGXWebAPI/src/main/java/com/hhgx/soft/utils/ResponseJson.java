@@ -51,7 +51,7 @@ public class ResponseJson {
 		return jsonObject.toString();
 		
 	}
-
+/**
 	public static String responseFindPageJson(Object dataBag, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("pageCount", pageCount);
@@ -60,7 +60,7 @@ public class ResponseJson {
 		
 		return jsonObject.toString();
 		
-	}
+	}*/
 
 	public static String responseFindPageJsonArray(Object dataBag, int statusCode, int pageCount){
 

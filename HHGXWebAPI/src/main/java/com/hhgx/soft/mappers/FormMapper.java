@@ -61,6 +61,10 @@ public interface FormMapper {
 
 	void submitTotalFlatPic(@Param("bFlatpic")String bFlatpic, @Param("orgid")String orgid);
 
+	String findCflatPic(String cFlatPic);
+
+	void updateflatPic(Flatpic flatpic);
+
 	
 	
 }

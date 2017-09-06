@@ -1,6 +1,7 @@
 package com.hhgx.soft.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class OrginfoService {
 		return orginfoMapper.getFireSystemListCount(orgid);
 	}
 
-	public List<FireSystem> getFireSystemListByPage(String orgid, int startPos, int pageSize) {
+	public List<Map<String, Object>> getFireSystemListByPage(String orgid, int startPos, int pageSize) {
 		return orginfoMapper.getFireSystemListByPage(orgid, startPos,pageSize);
 	}
 
@@ -92,9 +93,6 @@ public class OrginfoService {
 		
 	}
 
-	public List<Flatpic> getflatpicList(String orgid, String siteid) {
-		return orginfoMapper.getflatpicList(orgid, siteid) ;
-	}
 
 	public void deleteflatPic(String cFlatPic) {
 		orginfoMapper.deleteflatPic(cFlatPic);		
@@ -186,7 +184,7 @@ public void addSite(Site site) {
 	 orginfoMapper.addSite(site);
 }
 
-public List<Site>  getMapPoint(String orgid) {
+public List<OnlineOrg>  getMapPoint(String orgid) {
 	// TODO Auto-generated method stub
 	return  orginfoMapper.getMapPoint(orgid);
 }
@@ -227,6 +225,26 @@ public void setMapPoint(String orgid, String fLatitude, String fLongitude) {
 
 public List<OnlineOrg> getTotalFlatPic(String orgid) {
 	return orginfoMapper.getTotalFlatPic(orgid);
+}
+
+public int getflatpicCount(String orgid, String siteid) {
+	return orginfoMapper.getflatpicCount(orgid, siteid);
+}
+
+public List<Flatpic> getflatpicListPage(String orgid, String siteid, int startPos, int pageSize) {
+	return orginfoMapper.getflatpicListPage(orgid, siteid, startPos, pageSize);
+}
+
+public List<Site> orgSiteSys(String orgid) {
+	return orginfoMapper.orgSiteSys(orgid);
+}
+
+public int dataMonitorCount(String siteid, String tiSysType) {
+	return orginfoMapper.dataMonitorCount(siteid, tiSysType);
+}
+
+public List<Map<String, Object>> dataMonitor(String siteid, String tiSysType, int startPos, int pageSize) {
+	return orginfoMapper.dataMonitor(siteid, tiSysType, startPos, pageSize);
 }
 	
 }

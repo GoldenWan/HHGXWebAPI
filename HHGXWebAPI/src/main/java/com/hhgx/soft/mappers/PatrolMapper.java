@@ -2,6 +2,7 @@ package com.hhgx.soft.mappers;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
@@ -14,6 +15,7 @@ import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
 import com.hhgx.soft.entitys.UserCheckInfo;
+import com.hhgx.soft.entitys.UserCheckList;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.entitys.UserCheckProjectContent;
 
@@ -78,5 +80,9 @@ public interface PatrolMapper {
 	List<UserCheckProjectContent> selectUserCheckProjectContentById(@Param("tiSysType")String tiSysType);
 
 	void addorgSys(OnlineFiresystem onlineFiresystem);
+
+	List<UserCheckList> getCheckRecordBase(String userCheckId);
+
+	List<Map<String, Object>> getCheckRecord(@Param("userCheckId")String userCheckId, @Param("siteid")String siteid);
 
 }

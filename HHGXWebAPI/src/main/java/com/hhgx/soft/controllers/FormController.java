@@ -1,5 +1,7 @@
 package com.hhgx.soft.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -96,8 +98,10 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			Flatpic flatpic = new Flatpic();
-			String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
-			flatpic.setcFlatPic(System.currentTimeMillis()+cFlatPic);
+			//String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String str = sdf.format(new Date());
+			flatpic.setcFlatPic(str);
 			flatpic.setSiteid(siteid);
 			flatpic.setFloornum(floornum);
 
@@ -111,11 +115,57 @@ public class FormController {
 			formService.addflatPic(flatpic);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
-			dataBag = "添加成功";
+			dataBag = "添加平面图成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "添加失败";
+			dataBag = "添加平面图失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}	
+	/**
+	 * 
+	 * @param request
+	 * @param imFlatPic
+	 * @return:TODO
+	 
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/UpdateflatPic", method = { RequestMethod.POST })
+	public String updateflatPic(HttpServletRequest request,
+			@RequestParam(value = "imFlatPic", required = false) MultipartFile imFlatPic) {
+		String siteid = request.getParameter("siteid");
+		String cFlatPic = request.getParameter("cFlatPic");
+		String floornum = request.getParameter("floornum");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			Flatpic flatpic = new Flatpic();
+			flatpic.setcFlatPic(cFlatPic);
+			flatpic.setSiteid(siteid);
+			flatpic.setFloornum(floornum);
+			
+			
+			if (!StringUtils.isEmpty(imFlatPic)) {
+				
+				//删除文件
+				String filepathBefore = formService.findCflatPic(cFlatPic);
+				String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+				// 先删除文件
+				UploadUtil.deleteFile(filedir);
+				String ext = UploadUtil.getExtention(imFlatPic.getOriginalFilename());
+				String imFlatPic1 = UploadUtil.uploadOneFile(request, imFlatPic, UUIDGenerator.getUUID() + "." + ext,
+						UUIDGenerator.getUUID() + "/Flatpic");
+				flatpic.setImFlatPic(imFlatPic1);
+			}
+			formService.updateflatPic(flatpic);
+			statusCode = ConstValues.OK;
+			dataBag = "数据修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "数据修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}	

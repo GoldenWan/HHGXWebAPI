@@ -4,7 +4,7 @@
 <mapper namespace="com.hhgx.soft.mappers.OrginfoMapper">
 
 	<select id="getOnlineOrg" resultType="onlineOrg">
-	SELECT
+		SELECT
 		orgcode,
 		orgname,
 		vAddress,
@@ -52,15 +52,15 @@
 		ApproveMan,
 		AreaId,
 		ManagerOrgID
-	FROM
+		FROM
 		onlineorg
-	WHERE
-		OrgID =  #{orgID}
+		WHERE
+		OrgID = #{orgID}
 	</select>
 
 	<update id="updateOnlineOrg">
 		UPDATE onlineorg
-		SET 
+		SET
 		orgcode = #{orgcode} ,
 		orgname = #{orgname} ,
 		souyouzhi = #{souyouzhi} ,
@@ -71,13 +71,15 @@
 		SuperiorOrg = #{superiorOrg} ,
 		cZip = #{cZip} ,
 		vTel = #{vTel} ,
-		fax = #{fax} ,
+		fax =
+		#{fax} ,
 		`E-Mail` = #{eMail} ,
 		howmanypeople = #{howmanypeople} ,
 		SetupDate= #{setupDate} ,
-    	realtymoney = #{realtymoney} ,
+		realtymoney = #{realtymoney} ,
 		ipersonnum = #{ipersonnum} ,
-		fAreanum =  #{fAreanum} ,
+		fAreanum = #{fAreanum}
+		,
 		fBuildingarea = #{fBuildingarea} ,
 		GasType = #{gasType} ,
 		howmanyfireman = #{howmanyfireman} ,
@@ -92,22 +94,26 @@
 		neareast = #{neareast} ,
 		nearsouth = #{nearsouth} ,
 		nearwest = #{nearwest} ,
-		nearnorth = #{nearnorth} ,
+		nearnorth =
+		#{nearnorth} ,
 		AutoFireFacility = #{autoFireFacility} ,
-		dRecordDate = #{dRecordDate} ,
+		dRecordDate =
+		#{dRecordDate} ,
 		managegrade = #{managegrade} ,
-		NetworkStatus = #{networkStatus},
+		NetworkStatus =
+		#{networkStatus},
 		NetworkTime = #{networkTime},
-		ApproveState = #{approveState},
+		ApproveState =
+		#{approveState},
 		ManagerOrgID = #{managerOrgID}
 		WHERE
 		OrgID = #{orgID}
 	</update>
 	<update id="setMapPoint">
 		UPDATE onlineorg
-		SET 
+		SET
 		fLatitude = #{fLatitude} ,
-		fLongitude = #{fLongitude} 
+		fLongitude = #{fLongitude}
 		WHERE
 		orgid = #{orgid}
 	</update>
@@ -129,7 +135,36 @@
 		FROM
 		businesslicence
 		WHERE
-		orgid = #{orgid} order by RegistTime
+		orgid = #{orgid}
+		order by RegistTime
+	</select>
+
+	<select id="orgSiteSys" resultMap="siteSysMap">
+		SELECT
+		s.siteid,
+		s.sitename,
+		o.tiSysType
+		FROM
+		site s
+		INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+		WHERE
+		orgid = #{orgid}
+	</select>
+	<resultMap type="site" id="siteSysMap">
+		<id column="siteid" property="siteid" />
+		<result column="sitename" property="sitename" />
+		<collection property="firesystypes" column="tiSysType"
+			select="findSystypeById" />
+	</resultMap>
+
+	<select id="findSystypeById" resultType="firesystype">
+		SELECT
+		tiSysType,
+		vSysdesc
+		FROM
+		firesystype
+		WHERE
+		tiSysType =#{tiSysType}
 	</select>
 
 	<select id="getFireSystemList" resultType="fireSystem">
@@ -149,36 +184,36 @@
 	</select>
 	<select id="getSiteList" resultType="site">
 		SELECT
-			siteid,
-			sitename,
-			buildingaddress,
-			useproperty,
-			DSCS,
-			JZGD,
-			DSJZMJ,
-			NHDJ,
-			JGLX,
-			DXCS,
-			DXJZMJ,
-			SDQK,
-			ZYCCW,
-			RLRS,
-			QLJZ,
-			east,
-			west,
-			south,
-			north,
-			xx,
-			yy,
-			sitetypename,
-			holdthings,
-			holdthingsnum,
-			annalTime,
-			fLongitude,
-			fLatitude,
-			orgid
+		siteid,
+		sitename,
+		buildingaddress,
+		useproperty,
+		DSCS,
+		JZGD,
+		DSJZMJ,
+		NHDJ,
+		JGLX,
+		DXCS,
+		DXJZMJ,
+		SDQK,
+		ZYCCW,
+		RLRS,
+		QLJZ,
+		east,
+		west,
+		south,
+		north,
+		xx,
+		yy,
+		sitetypename,
+		holdthings,
+		holdthingsnum,
+		annalTime,
+		fLongitude,
+		fLatitude,
+		orgid
 		FROM
-			site s
+		site s
 		WHERE
 		s.orgid = #{orgid}
 		limit
@@ -186,91 +221,148 @@
 	</select>
 	<select id="getSite" resultType="site">
 		SELECT
-			sitename,
-			buildingaddress,
-			useproperty,
-			DSCS,
-			JZGD,
-			DSJZMJ,
-			NHDJ,
-			JGLX,
-			DXCS,
-			DXJZMJ,
-			SDQK,
-			ZYCCW,
-			RLRS,
-			QLJZ,
-			east,
-			west,
-			south,
-			north,
-			xx,
-			yy,
-			sitetypename,
-			holdthings,
-			holdthingsnum,
-			annalTime,
-			fLongitude,
-			fLatitude,
-			orgid
+		sitename,
+		buildingaddress,
+		useproperty,
+		DSCS,
+		JZGD,
+		DSJZMJ,
+		NHDJ,
+		JGLX,
+		DXCS,
+		DXJZMJ,
+		SDQK,
+		ZYCCW,
+		RLRS,
+		QLJZ,
+		east,
+		west,
+		south,
+		north,
+		xx,
+		yy,
+		sitetypename,
+		holdthings,
+		holdthingsnum,
+		annalTime,
+		fLongitude,
+		fLatitude,
+		orgid
 		FROM
-			site s
+		site s
 		WHERE
 		s.siteid = #{siteid}
-		
 	</select>
+
 	<select id="getSiteName" resultType="site">
-	SELECT
+		SELECT
 		siteid,
 		sitename
-	FROM
+		FROM
 		site
-	WHERE
+		WHERE
 		orgid = #{orgid}
 	</select>
 	<select id="getSiteTotalCount" resultType="int">
-	SELECT
+		SELECT
 		count(*)
-	FROM
+		FROM
 		site
-	WHERE
+		WHERE
 		orgid = #{orgid}
+	</select>
+	<select id="dataMonitorCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+			onlinefiresystem o
+		inner JOIN site s ON o.siteid = s.siteid
+		inner JOIN firesystype f ON o.tiSysType = f.tiSysType
+		inner JOIN devicetype t ON f.tiSysType = t.tiSysType
+		inner JOIN devices d ON t.iDeviceType = d.iDeviceType	
+		WHERE
+		o.siteid=#{siteid} 
+		<if  test="tiSysType!=null and tiSysType!=''">
+		and 
+		o.tiSysType=#{tiSysType}
+		</if>
+	</select>
+	<select id="getflatpicCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		flatpic, site s
+		WHERE
+		s.orgid = #{orgid}
+		<if test="siteid!='0'.toString() and siteid!=null">
+			and s.siteid=#{siteid}
+		</if>
 	</select>
 	<delete id="deleteSite">
 		DELETE
 		FROM
 		site
 		WHERE
-		siteid  = #{siteid}
+		siteid = #{siteid}
 	</delete>
 
 	<select id="getFireSystemListCount" resultType="int">
 		SELECT
-		count(*)
+			count(*)
 		FROM
-		site s
+			site s
 		INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-		INNER
-		JOIN firesystype f ON o.tiSysType = f.tiSysType
+		INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
 		s.orgid = #{orgid}
 
 	</select>
 
-	<select id="getFireSystemListByPage" resultType="fireSystem">
-		SELECT
+	<select id="getFireSystemListByPage" resultType="map">
+	SELECT
+		f.tiSysType,
+		f.vSysdesc,
 		s.siteid,
 		s.sitename,
-		o.tiSysType,
-		f.vSysdesc
-		FROM
+		o.states,
+		o.YnOnline,
+		o.Remarks,
+		o.SysFlatpic
+	FROM
 		site s
-		INNER JOIN onlinefiresystem
-		o ON s.siteid = o.siteid
-		INNER JOIN firesystype f ON o.tiSysType =
-		f.tiSysType
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
 		s.orgid = #{orgid}
+		limit
+		#{startPos},#{pageSize}
+	</select>
+	<select id="dataMonitor" resultType="map">
+		SELECT
+			t.iDeviceType,
+			t.DeviceTypeName,
+			f.tiSysType,
+			f.vSysdesc,
+			o.siteid,
+			s.sitename,
+			d.deviceaddress,
+			d.Gatewayaddress,
+			d.Sysaddress,
+			d.location,
+			d.dRecorddate,
+			d.StateValue
+		FROM
+			onlinefiresystem o
+		inner JOIN site s ON o.siteid = s.siteid
+		inner JOIN firesystype f ON o.tiSysType = f.tiSysType
+		inner JOIN devicetype t ON f.tiSysType = t.tiSysType
+		inner JOIN devices d ON t.iDeviceType = d.iDeviceType
+		where 	
+		o.siteid=#{siteid} 
+		<if  test="tiSysType!=null and tiSysType!=''">
+		and 
+		o.tiSysType=#{tiSysType}
+		</if>
 		limit
 		#{startPos},#{pageSize}
 	</select>
@@ -284,13 +376,13 @@
 		WHERE
 		s.orgid = #{orgid}
 	</select>
-	<select id="getMapPoint" resultType="site">
-	SELECT
+	<select id="getMapPoint" resultType="onlineOrg">
+		SELECT
 		fLongitude,
 		fLatitude
-	FROM
+		FROM
 		onlineorg
-	WHERE
+		WHERE
 		orgid = #{orgid}
 	</select>
 	<delete id="deleteorgSys">
@@ -330,11 +422,11 @@
 
 	</select>
 	<select id="getTotalFlatPic" resultType="onlineOrg">
-	SELECT
+		SELECT
 		bFlatpic
-	FROM
+		FROM
 		onlineorg
-	WHERE
+		WHERE
 		orgid = #{orgid}
 	</select>
 
@@ -370,20 +462,20 @@
 	</resultMap>
 
 	<select id="selectVgateway" resultType="gatewaySystemInfo">
-	SELECT
+		SELECT
 		siteid,
 		sitename,
 		tiSysType,
 		vSysdesc,
 		Sysaddress
-	FROM
+		FROM
 		v_Gateway
-	WHERE
+		WHERE
 		gatewayaddress =
 		#{gatewayaddress}
 	</select>
 	<insert id="addSite">
-	INSERT INTO site (
+		INSERT INTO site (
 		siteid,
 		sitename,
 		buildingaddress,
@@ -412,9 +504,9 @@
 		fLongitude,
 		fLatitude,
 		orgid
-	)
-VALUES
-	(   #{siteid},
+		)
+		VALUES
+		( #{siteid},
 		#{sitename},
 		#{buildingaddress},
 		#{useproperty},
@@ -442,10 +534,10 @@ VALUES
 		#{fLongitude},
 		#{fLatitude},
 		#{orgid}
-	)
+		)
 	</insert>
 	<update id="updateSite">
-	  UPDATE site
+		UPDATE site
 		<trim prefix="set" suffixOverrides=",">
 			<if test="sitename!=null and sitename!=''"> sitename =#{sitename},</if>
 			<if test="buildingaddress!=null and buildingaddress!=''"> buildingaddress =#{buildingaddress},</if>
@@ -471,7 +563,7 @@ VALUES
 			<if test="annalTime!=null and annalTime!=''"> annalTime=#{annalTime},</if>
 			<if test="fLongitude!=null and fLongitude!=''"> fLongitude=#{fLongitude},</if>
 			<if test="fLatitude!=null and fLatitude!=''"> fLatitude=#{fLatitude},</if>
-	</trim>
+		</trim>
 		WHERE
 		siteid = #{siteid} and orgid =#{orgid}
 	</update>
@@ -548,16 +640,16 @@ VALUES
 	</select>
 	<select id="getAppearancepic" resultType="appearancepic">
 		SELECT
-			iphotoID,
-			vPhotoname,
-			dRecordDate,
-			Picpath,
-			ExteriorInfo,
-			siteid
+		iphotoID,
+		vPhotoname,
+		dRecordDate,
+		Picpath,
+		ExteriorInfo,
+		siteid
 		FROM
-			appearancepic
+		appearancepic
 		WHERE
-			siteid = #{siteid}
+		siteid = #{siteid}
 	</select>
 
 	<update id="updateGatewaySame">
@@ -582,12 +674,13 @@ VALUES
 		(#{siteid},#{tiSysType},#{gatewayaddress}, #{sysaddress} )
 	</insert>
 
-	<select id="getflatpicList" resultType="flatpic">
+	<select id="getflatpicListPage" resultType="flatpic">
 		SELECT
 		s.siteid siteid,
 		sitename sitename,
 		cFlatPic cFlatPic,
-		floornum floornum,
+		floornum
+		floornum,
 		dRecordSet
 		dRecordSet,
 		imFlatPic imFlatPic
@@ -595,9 +688,14 @@ VALUES
 		site s,
 		flatpic f
 		WHERE
-		s.siteid =
-		#{siteid}
-		AND orgid = #{orgid}
+		s.orgid = #{orgid}
+		<if test="siteid!='0'.toString() and siteid!=null">
+			AND
+			s.siteid =#{siteid}
+		</if>
+		limit
+		#{startPos},#{pageSize}
+
 	</select>
 
 	<delete id="deleteflatPic">
@@ -725,18 +823,22 @@ VALUES
 		c.sysaddress sysaddress,
 		c.gatewayaddress gatewayaddress,
 		c.fPositionX fPositionX,
-		c.fPositionY fPositionY,
+		c.fPositionY
+		fPositionY,
 		c.location location,
 		c.DeviceNo deviceNo,
-		c.iDeviceType iDeviceType,
+		c.iDeviceType
+		iDeviceType,
 		f.imFlatPic imFlatPic,
 		d.DeviceTypeName deviceTypeName
 		FROM
 		devices c
 		INNER JOIN flatpic f ON c.cFlatPic = f.cFlatPic
-		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+		INNER JOIN
+		devicetype d ON c.iDeviceType = d.iDeviceType
 		WHERE
-		c.cFlatPic = #{cFlatPic}
+		c.cFlatPic =
+		#{cFlatPic}
 		<if test="iDeviceType!='0'.toString()">
 			AND
 			c.iDeviceType = #{iDeviceType}
@@ -758,7 +860,8 @@ VALUES
 		Manufacture manufacture,
 		Model model,
 		ProductDate productDate,
-		expdate expdate,
+		expdate
+		expdate,
 		AddTime addTime,
 		memo memo,
 		DeviceNo deviceNo,
@@ -769,93 +872,40 @@ VALUES
 		d.DeviceTypeName deviceTypeName
 		FROM
 		devices c
-		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+		INNER JOIN devicetype d ON
+		c.iDeviceType = d.iDeviceType
 		WHERE
 		c.Gatewayaddress = #{gatewayaddress}
 		AND c.Sysaddress = #{sysaddress}
 		AND c.deviceaddress = #{deviceaddress}
 
 	</select>
-	<!-- <update id="updateMarkPoint">
-	UPDATE devices
-	SET 
-	fPositionX = #{fPositionX},
-	 fPositionY = #{fPositionY}
-	WHERE
-		deviceaddress = #{deviceaddress}
-	AND sysaddress = #{sysaddress}
-	AND gatewayaddress = #{gatewayaddress}
-	</update>
-	<select id="returnMarkPoint" resultType="devices">
-	SELECT
-		c.deviceaddress,
-		c.sysaddress,
-		c.gatewayaddress,
-		c.DeviceNo,
-		d.iDeviceType iDeviceType,
-		d.DeviceTypeName
-	FROM
-		devices c,
-		devicetype d
-	WHERE
-		c.cFlatPic = #{cFlatPic}
-	AND c.DeviceNo = #{deviceNo}
-	
-	</select>
-	<select id="findMarkPoint" resultType="devices">
-	SELECT
-		c.deviceaddress,
-		c.sysaddress,
-		c.gatewayaddress,
-		c.DeviceNo,
-		d.iDeviceType iDeviceType,
-		d.DeviceTypeName
-	FROM
-		devices c,
-		devicetype d
-	WHERE
-		deviceaddress = #{deviceaddress}
-	AND sysaddress = #{sysaddress}
-	AND gatewayaddress = #{gatewayaddress}
-	
-	
-	</select>
-	<select id="getFirstDevice" resultType="devices">
-	SELECT
-		c.deviceaddress,
-		c.sysaddress,
-		c.gatewayaddress,
-		c.DeviceNo,
-		c.iDeviceType,
-		d.DeviceTypeName
-	FROM
-		devices c,
-		devicetype d
-	WHERE
-		c.cFlatPic = #{cFlatPic}
-	</select>
-	<select id="getOneDevice" resultType="devices">
-	SELECT
-		c.deviceaddress,
-		c.sysaddress,
-		c.gatewayaddress,
-		c.DeviceNo
-	FROM
-		devices c
-	WHERE
-		c.cFlatPic = #{cFlatPic}
-	AND c.DeviceNo = #{deviceNo}
-	</select> -->
+	<!-- <update id="updateMarkPoint"> UPDATE devices SET fPositionX = #{fPositionX}, 
+		fPositionY = #{fPositionY} WHERE deviceaddress = #{deviceaddress} AND sysaddress 
+		= #{sysaddress} AND gatewayaddress = #{gatewayaddress} </update> <select 
+		id="returnMarkPoint" resultType="devices"> SELECT c.deviceaddress, c.sysaddress, 
+		c.gatewayaddress, c.DeviceNo, d.iDeviceType iDeviceType, d.DeviceTypeName 
+		FROM devices c, devicetype d WHERE c.cFlatPic = #{cFlatPic} AND c.DeviceNo 
+		= #{deviceNo} </select> <select id="findMarkPoint" resultType="devices"> 
+		SELECT c.deviceaddress, c.sysaddress, c.gatewayaddress, c.DeviceNo, d.iDeviceType 
+		iDeviceType, d.DeviceTypeName FROM devices c, devicetype d WHERE deviceaddress 
+		= #{deviceaddress} AND sysaddress = #{sysaddress} AND gatewayaddress = #{gatewayaddress} 
+		</select> <select id="getFirstDevice" resultType="devices"> SELECT c.deviceaddress, 
+		c.sysaddress, c.gatewayaddress, c.DeviceNo, c.iDeviceType, d.DeviceTypeName 
+		FROM devices c, devicetype d WHERE c.cFlatPic = #{cFlatPic} </select> <select 
+		id="getOneDevice" resultType="devices"> SELECT c.deviceaddress, c.sysaddress, 
+		c.gatewayaddress, c.DeviceNo FROM devices c WHERE c.cFlatPic = #{cFlatPic} 
+		AND c.DeviceNo = #{deviceNo} </select> -->
 	<select id="findMaxBack8" resultType="string">
-	SELECT
-	
-	max(CONVERT (RIGHT(s.siteid, 8), SIGNED)) maxsiteid
-	
-	FROM
+		SELECT
+
+		max(CONVERT (RIGHT(s.siteid, 8), SIGNED)) maxsiteid
+
+		FROM
 		site s
-	WHERE
-		s.orgid =  #{orgid}
+		WHERE
+		s.orgid = #{orgid}
 	</select>
-	
+
 
 </mapper>

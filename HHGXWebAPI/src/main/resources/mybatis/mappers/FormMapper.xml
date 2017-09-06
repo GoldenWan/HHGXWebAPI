@@ -12,6 +12,14 @@
 		WHERE
 		PicID = #{picID}
 	</select>
+	<select id="findCflatPic" resultType="string">
+	SELECT
+		imFlatPic
+	FROM
+		flatpic
+	WHERE
+		cFlatPic =  #{cFlatPic}
+	</select>
 	<update id="updateFireSystemList">
 		UPDATE onlinefiresystem
 		<trim prefix="set" suffixOverrides=",">
@@ -41,7 +49,7 @@
 		iphotoID = #{iphotoID}
 	</delete>
 	<insert id="addflatPic">
-		INSERT INTO flatPic (
+		INSERT INTO flatpic (
 		cFlatPic,
 		siteid,
 		floornum,
@@ -50,6 +58,16 @@
 		VALUES
 		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic})
 	</insert>
+	<update id="updateflatPic">
+		update  flatpic 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="siteid!=null and siteid!=''"> siteid = #{siteid},</if>
+			<if test="floornum!=null and floornum!=''"> floornum = #{floornum},</if>
+			<if test="imFlatPic!=null and imFlatPic!=''"> imFlatPic = #{imFlatPic},</if>
+		</trim>
+		where 
+		cFlatPic=#{cFlatPic}
+	</update>
 	<insert id="addUserCheckPic">
 		INSERT INTO usercheckpic (
 		PicID,

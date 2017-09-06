@@ -1,5 +1,7 @@
 package com.hhgx.soft.entitys;
 
+import java.util.List;
+
 public class Site {
 
 	private String siteid; // 建筑物编号
@@ -30,6 +32,15 @@ public class Site {
 	private String fLongitude; // 经度
 	private String fLatitude; // 纬度
 	private String orgid; // 防火单位编号
+	List<Firesystype> firesystypes ;
+	
+	
+	public List<Firesystype> getFiresystypes() {
+		return firesystypes;
+	}
+	public void setFiresystypes(List<Firesystype> firesystypes) {
+		this.firesystypes = firesystypes;
+	}
 	public String getSiteid() {
 		return siteid;
 	}

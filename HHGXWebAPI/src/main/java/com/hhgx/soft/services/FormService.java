@@ -108,5 +108,13 @@ public class FormService {
 		formMapper.submitTotalFlatPic( bflatpic,  orgid);
 		
 	}
+
+	public String findCflatPic(String cFlatPic) {
+		return formMapper.findCflatPic(cFlatPic);
+	}
+
+	public void updateflatPic(Flatpic flatpic) {
+		formMapper.updateflatPic(flatpic);	
+	}
 	
 }

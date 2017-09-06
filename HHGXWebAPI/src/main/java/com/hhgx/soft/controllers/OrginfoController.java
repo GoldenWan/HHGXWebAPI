@@ -23,7 +23,6 @@ import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
-import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
@@ -60,45 +59,36 @@ public class OrginfoController {
 	public String getFireSystemList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "isDivid", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex");
 		String orgid = map.get("orgid");
-		String isDivid = map.get("isDivid");
+		//String isDivid = map.get("isDivid");
 		String pageIndex = map.get("pageIndex");
 		int statusCode = -1;
 		Page page = null;
-		List<FireSystem> list = null;
 
-		if (isDivid.equals("No")) {
-			try {
-				list = orginfoService.getFireSystemList(orgid);
-				statusCode = ConstValues.OK;
-			} catch (Exception e) {
-				e.printStackTrace();
-				statusCode = ConstValues.FAILED;
-			}
-			return ResponseJson.responseFindJson(list, statusCode);
-
-		} else {
+		List<Map<String, Object>> lmList =null;
+	
+	
 			int totalCount = orginfoService.getFireSystemListCount(orgid);
 			try {
 				if (pageIndex != null) {
 					page = new Page(totalCount, Integer.parseInt(pageIndex));
-					list = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
+					lmList = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
 
 				} else {
 					page = new Page(totalCount, 1);
-					list = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
+					lmList = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
 				}
+				
 				statusCode = ConstValues.OK;
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
-			return ResponseJson.responseFindPageJson(list, statusCode, totalCount);
+			return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 		}
 
-	}
 
 	/**
 	 * 18.根据防火单位获取建物简要列表
@@ -338,7 +328,7 @@ public class OrginfoController {
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 	}
 
 	/**
@@ -378,19 +368,31 @@ public class OrginfoController {
 	@RequestMapping(value = "/GetflatpicList", method = RequestMethod.POST)
 	public String getflatpicList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> ret = RequestJson.reqFirstLowerJson(reqBody, "orgid", "siteid");
+		Map<String, String> ret = RequestJson.reqFirstLowerJson(reqBody, "orgid", "siteid", "PageIndex");
 		String orgid = ret.get("orgid");
 		String siteid = ret.get("siteid");
+		String pageIndex = ret.get("pageIndex");
+		
+		Page page = null;
 		List<Flatpic> flatpicList = null;
 		int statusCode = -1;
+
+		int totalCount = orginfoService.getflatpicCount(orgid,siteid);
 		try {
-			flatpicList = orginfoService.getflatpicList(orgid, siteid);
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				flatpicList = orginfoService.getflatpicListPage(orgid, siteid, page.getStartPos(), page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				flatpicList = orginfoService.getflatpicListPage(orgid, siteid, page.getStartPos(), page.getPageSize());
+			}
+		
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
-			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJsonArray(flatpicList, statusCode);
+		return ResponseJson.responseFindPageJsonArray(flatpicList, statusCode, totalCount);
 	}
 
 	/**
@@ -412,11 +414,11 @@ public class OrginfoController {
 			orginfoService.deleteDevicesBycflatPic(cFlatPic);
 			orginfoService.deleteflatPic(cFlatPic);
 			statusCode = ConstValues.OK;
-			dataBag = "刪除成功";
+			dataBag = "删除数据成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = "删除数据失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -645,7 +647,7 @@ public class OrginfoController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJson(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
 
@@ -1529,11 +1531,11 @@ public class OrginfoController {
 		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
-			List<Site> sites = orginfoService.getMapPoint(orgid);
+			List<OnlineOrg> orgs = orginfoService.getMapPoint(orgid);
 			//有可能是get(0)
-			for(Site site : sites){	
-				map2.put("fLongitude", site.getfLongitude());
-				map2.put("fLatitude", site.getfLatitude());
+			for(OnlineOrg org : orgs){	
+				map2.put("fLongitude", org.getfLongitude());
+				map2.put("fLatitude", org.getfLatitude());
 				list.add(map2);
 			}
 				statusCode = ConstValues.OK;
@@ -1602,7 +1604,7 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(lists, statusCode);
 	}
-	/*
+	/**
 	 * 
 	 * 122.文件下载
 	 */
@@ -1618,4 +1620,78 @@ public class OrginfoController {
 
 		}
 	}
+	/**
+	 * 178.防火单位下的建筑物及对应系统
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/OrgSiteSys", method = RequestMethod.POST)
+	public String orgSiteSys(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<Map<String, Object>> list = new ArrayList<>();
+		int statusCode = -1;
+		try {
+			List<Site> sites = orginfoService.orgSiteSys(orgid);
+				//有可能是get(0)
+			for(Site site : sites){
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("siteid", site.getSiteid());
+				map2.put("sitename", site.getSitename());
+				map2.put("Sys", site.getFiresystypes());
+				list.add(map2);
+				}
+			statusCode = ConstValues.OK;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	/**
+	 * 179.防火单位实时数据监控
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DataMonitor", method = RequestMethod.POST)
+	public String dataMonitor(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid","PageIndex","tiSysType");
+		String siteid = map.get("siteid");
+		String tiSysType = map.get("tiSysType");
+		String pageIndex = map.get("pageIndex");
+		int statusCode = -1;
+		Page page = null;
+		List<Map<String, Object>> lmList =null;
+		List<Map<String, Object>> list = new ArrayList<>();
+					
+		int totalCount = orginfoService.dataMonitorCount(siteid, tiSysType);
+		
+			try {
+				if (pageIndex != null) {
+					page = new Page(totalCount, Integer.parseInt(pageIndex));
+					lmList = orginfoService.dataMonitor(siteid, tiSysType, page.getStartPos(), page.getPageSize());
+
+				} else {
+					page = new Page(totalCount, 1);
+					lmList = orginfoService.dataMonitor(siteid, tiSysType, page.getStartPos(), page.getPageSize());
+				}
+				for(Map<String, Object> m:lmList){
+					m.put("dRecorddate", DateUtils.formatToDateTime(m.get("dRecorddate").toString()));
+					list.add(m);
+					
+				}
+				
+				statusCode = ConstValues.OK;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			return ResponseJson.responseFindPageJsonArray(list, statusCode, totalCount);
+		
+
+	}
+	
+	
 }

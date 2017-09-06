@@ -25,6 +25,8 @@ import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
+import com.hhgx.soft.entitys.Site;
+import com.hhgx.soft.entitys.UserCheckList;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.entitys.UserCheckProjectContent;
 import com.hhgx.soft.services.PatrolService;
@@ -36,6 +38,7 @@ import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -722,87 +725,109 @@ public class PatrolController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
 	
+
+	@RequestMapping(value="/GetCheckRecordBase", method = RequestMethod.POST)
+	@ResponseBody
+	public String getCheckRecordBase(HttpServletRequest request) throws IOException{
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId");
+		List<Map<String, Object>> lmList = new ArrayList<Map<String, Object>>();
+
+		String userCheckId = map.get("userCheckId");
+		int statusCode = -1;
+		try{
+		List<UserCheckList>  userCheckLists= patrolService.getCheckRecordBase(userCheckId);
+		for(UserCheckList userCheckList : userCheckLists){
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("UserCheckTime",userCheckList.getUserCheckTime() );
+			map2.put("OrgUserId" ,userCheckList.getOrgUserId() );
+			map2.put("OrgManagerId", userCheckList.getOrgManagerId());
+			map2.put("UserCheckId", userCheckList.getUserCheckId());
+			map2.put("siteList", userCheckList.getSites());
+			
+			lmList.add(map2);
+		}
+		
+		statusCode = ConstValues.OK;
+	} catch (Exception e) {
+		statusCode = ConstValues.FAILED;
+	}
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+		
+	}
 	/**
 	 * 114.每日巡查记录表查询
 	 * 
-	 * {"tokenUUID":"6e2cda35-2a40-4c44-8b3a-d8d3817e9a6d",
-	 * "infoBag":{"UserCheckId":"f810d79a-ee81-4272-a1ea-f41ca7e6c9f4","siteid":"all"}}:
-	 *{
-  "DataBag": [
-    {
-      "UserCheckId": "e3bb759e-ffe5-477c-8720-786d8fb5a85e",
-      "UserCheckTime": "2017/8/18",
-      "OrgUserId": "henghua                             ",
-      "OrgManagerId": "BBBB                                ",
-      "siteList": []
-    }
-  ],
-  "StateMessage": 1000
-}
 	 * @throws IOException 
 	 */
-	@RequestMapping(value="/GetCheckRecordBase", method = RequestMethod.POST)
+	@RequestMapping(value="/GetCheckRecord", method = RequestMethod.POST)
 	@ResponseBody
-	public String GetCheckRecordBase(HttpServletRequest request) throws IOException{
+	public String getCheckRecord(HttpServletRequest request) throws IOException{
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserCheckId","siteid");
-		//String userCheckId = map.get("userCheckId");
+		
+		String userCheckId = map.get("userCheckId");
+		//"siteid":"all" 查所有建筑物巡查记录列表
 		String siteid = map.get("siteid");
-		//查询所有
-		if(siteid.equals("all")){
-			//patrolService.getCheckRecordBase(userCheckId);
+		
+		List<Map<String, Object>> lmList =null;
+		int statusCode = -1;
+		try{
+		
 			
-		/*
-		 {
-  "DataBag": [
-    {
-      "siteid": "51010800000100000001",
-      "sitename": "融创汇",
-      "vSysContent": [
+		lmList = patrolService.getCheckRecord(userCheckId, siteid);
+			
+		/*	
+			for(UserCheckList userCheckList : userCheckLists){
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("UserCheckTime",userCheckList.getUserCheckTime() );
+				map2.put("OrgUserId" ,userCheckList.getOrgUserId() );
+				map2.put("OrgManagerId", userCheckList.getOrgManagerId());
+				map2.put("UserCheckId", userCheckList.getUserCheckId());
+				map2.put("siteList", userCheckList.getSites());
+				
+				lmList.add(map2);
+			}
+			
+			{
+    "StateMessage": 1000,
+    "DataBag": [
         {
-          "tiSysType": 13,
-          "vSysdesc": "气体灭火系统",
-          "Content": [
-            {
-              "ProjectId": "1601",
-              "ProjectContent": "气体灭火控制器工作状态",
-              "UserCheckResult": "故障",
-              "FaultShow": "牛逼\n",
-              "YnHanding": "是",
-              "Handingimmediately": "cc",
-              "PicInfo": {
-                "PicProject": "气体灭火系统",
-                "PicContent": "气体灭火控制器工作状态",
-                "Picture": []
-              }
-            },
-            {
-              "ProjectId": "1602",
-              "ProjectContent": "储瓶间环境",
-              "UserCheckResult": "故障",
-              "FaultShow": "hhhhvb",
-              "YnHanding": "否",
-              "Handingimmediately": "",
-              "PicInfo": {
-                "PicProject": "气体灭火系统",
-                "PicContent": "储瓶间环境",
-                "Picture": []
-              }
-            }
-          ]
+            "tiSysType": 1,
+            "sitename": "建筑物名称",
+            "PicPath": "1",
+            "vSysdesc": "火灾探测报警系统",
+            "YnHanding": "1",
+            "Handingimmediately": "1",
+            "siteid": "11010100000100000003",
+            "ProjectContent": "消防电源工作状态",
+            "PicID": "1",
+            "UserCheckResult": "未提交",
+            "ProjectId": "1001",
+            "FaultShow": "1"
+        },
+        {
+            "tiSysType": 1,
+            "sitename": "建筑物名称",
+            "PicPath": "2",
+            "vSysdesc": "火灾探测报警系统",
+            "YnHanding": "w",
+            "Handingimmediately": "w",
+            "siteid": "11010100000100000003",
+            "ProjectContent": "消防配电房、发电机房环境",
+            "PicID": "2",
+            "UserCheckResult": "w",
+            "ProjectId": "1003",
+            "FaultShow": "w"
         }
-      ]
-    }
-  ],
-  "StateMessage": 1000
+    ]
 }
-		 */
-		}else{
-			
-			//patrolService.getCheckRecordBase(userCheckId,siteid);
-			
+			*/
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
 		}
-		return null;
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 		
 	}
 	
