@@ -48,6 +48,25 @@
 		WHERE
 		iphotoID = #{iphotoID}
 	</delete>
+	<insert id="addorgSys">
+	INSERT INTO `onlinefiresystem` (
+		`tiSysType`,
+		`siteid`,
+		`states`,
+		`YnOnline`,
+		`Remarks`,
+		`SysFlatpic`
+	)
+	VALUES
+		(
+			#{tiSysType},
+			#{siteid},
+			#{states},
+			#{ynOnline},
+			#{remarks},
+			#{sysFlatpic}
+		)
+	</insert>
 	<insert id="addflatPic">
 		INSERT INTO flatpic (
 		cFlatPic,

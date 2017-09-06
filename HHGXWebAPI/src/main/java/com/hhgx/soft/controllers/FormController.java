@@ -1,8 +1,10 @@
 package com.hhgx.soft.controllers;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
@@ -31,6 +34,8 @@ import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.GetRequestJsonUtils;
+import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;
@@ -61,16 +66,23 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			UpdateFireSystem updateFireSystem = new UpdateFireSystem();
+			if(newTisystype.equals("all")){
+				newTisystype="0";
+			}
 			updateFireSystem.setNewTisystype(newTisystype);
 			updateFireSystem.setRemarks(remarks);
 			updateFireSystem.setSiteid(siteid);
 			updateFireSystem.setStates(states);
 			updateFireSystem.setTisystype(tisystype);
 			updateFireSystem.setYnOnline(ynOnline);
-			String fName = sysFlatpic.getOriginalFilename();
-			String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, fName,
+			if(!StringUtils.isEmpty(sysFlatpic)){
+				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
+
+			//String fName = sysFlatpic.getOriginalFilename();
+			String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID()+"."+ext,
 					"SysFlatpic/" + UUIDGenerator.getUUID());
 			updateFireSystem.setSysFlatpic(sysFlatpic1);
+			}
 			formService.updateFireSystemList(updateFireSystem);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
@@ -83,6 +95,54 @@ public class FormController {
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
+	}
+	/**
+	 * 
+	 * 19.添加防火单位的系统
+	 * @throws IOException 
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/AddorgSys", method = {
+			RequestMethod.POST })
+	public String addorgSys(HttpServletRequest request,
+			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic) throws IOException {
+
+
+		String siteid = request.getParameter("siteid");
+		String tiSysType = request.getParameter("tiSysType");
+		String states = request.getParameter("states");
+		String ynOnline =request.getParameter("ynOnline");
+		String remarks = request.getParameter("remarks");
+
+		int statusCode = -1;
+		String dataBag =null;
+		try{
+			OnlineFiresystem onlineFiresystem = new OnlineFiresystem();
+			onlineFiresystem.setStates(states);
+			onlineFiresystem.setYnOnline(ynOnline);
+			onlineFiresystem.setRemarks(remarks);
+			onlineFiresystem.setSiteid(siteid);
+			onlineFiresystem.setTiSysType(tiSysType);
+			if(!StringUtils.isEmpty(sysFlatpic)){
+			   String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
+			   //String fName = sysFlatpic.getOriginalFilename();
+			   String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID()+"."+ext,
+					"SysFlatpic/" + UUIDGenerator.getUUID());
+			onlineFiresystem.setSysFlatpic(sysFlatpic1);
+			}
+			
+			formService.addorgSys(onlineFiresystem);
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+			
+		
 	}
 
 	/**

@@ -337,6 +337,25 @@
 		limit
 		#{startPos},#{pageSize}
 	</select>
+	<select id="getOnlineFireSystem" resultType="map">
+	SELECT
+		o.tiSysType,
+		f.vSysdesc,
+		s.siteid,
+		s.sitename,
+		o.states,
+		o.YnOnline,
+		o.Remarks,
+		o.SysFlatpic
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+		WHERE
+		o.siteid = #{siteid}
+		and
+		o.tisystype=#{tisystype}
+	</select>
 	<select id="dataMonitor" resultType="map">
 		SELECT
 			t.iDeviceType,

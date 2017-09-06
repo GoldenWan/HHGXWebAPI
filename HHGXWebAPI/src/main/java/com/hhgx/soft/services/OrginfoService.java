@@ -246,5 +246,9 @@ public int dataMonitorCount(String siteid, String tiSysType) {
 public List<Map<String, Object>> dataMonitor(String siteid, String tiSysType, int startPos, int pageSize) {
 	return orginfoMapper.dataMonitor(siteid, tiSysType, startPos, pageSize);
 }
+
+public List<Map<String, String>> getOnlineFireSystem(String siteid, String tisystype) {
+	return orginfoMapper.getOnlineFireSystem(siteid, tisystype);
+}
 	
 }

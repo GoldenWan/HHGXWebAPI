@@ -8,6 +8,7 @@ import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.SafeDuty;
 import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
@@ -31,6 +32,9 @@ public class FormService {
 		formMapper.addOrUpdateCheckRecord(userCheckInfo);		
 	}
 
+	public void addorgSys(OnlineFiresystem onlineFiresystem) {
+		formMapper.addorgSys(onlineFiresystem);		
+	}
 	public void deletePicByID(String ID) {
 		formMapper.deletePicByID(ID);
 		

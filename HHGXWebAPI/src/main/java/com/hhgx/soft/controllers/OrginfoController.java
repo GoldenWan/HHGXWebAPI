@@ -106,6 +106,7 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			siteList = orginfoService.briefsiteList(orgid);
+			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
 		}
@@ -1547,6 +1548,9 @@ public class OrginfoController {
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
 	
+	
+	
+	
 	/**
 	 * 106.获取总平图（Z）
 	 */
@@ -1572,6 +1576,31 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
+	/**
+	 * 109.获取防火单位系统详情
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetOnlineFireSystem", method = RequestMethod.POST)
+	public String getOnlineFireSystem(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid", "tisystype");
+		String siteid = map.get("siteid");
+		String tisystype = map.get("tisystype");
+		List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
+		int statusCode = -1;
+		try {
+
+			lists= orginfoService.getOnlineFireSystem(siteid,tisystype);
+			statusCode = ConstValues.OK;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(lists, statusCode);
+	}
+	
+	
 	
 	/**
 	 * 125根据防火单位获取建筑物名称列表  * @param request  * @return  * @throws

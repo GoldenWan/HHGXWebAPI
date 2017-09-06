@@ -8,6 +8,13 @@ public class OnlineFiresystem {
 	private String ynOnline;     //是否具有联网功能
 	private String remarks;      //备注
 	private String maintenanceId;
+	private String sysFlatpic;
+	public String getSysFlatpic() {
+		return sysFlatpic;
+	}
+	public void setSysFlatpic(String sysFlatpic) {
+		this.sysFlatpic = sysFlatpic;
+	}
 	public String getTiSysType() {
 		return tiSysType;
 	}

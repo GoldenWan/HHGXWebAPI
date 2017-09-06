@@ -119,6 +119,8 @@ public interface OrginfoMapper {
 
 	List<Map<String, Object>> dataMonitor(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
+	List<Map<String, String>> getOnlineFireSystem(@Param("siteid")String siteid, @Param("tisystype")String tisystype);
+
 	
 	/**
 	void updateMarkPoint(Devices devices);
