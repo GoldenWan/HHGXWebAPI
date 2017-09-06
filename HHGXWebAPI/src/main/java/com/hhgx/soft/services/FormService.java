@@ -120,5 +120,10 @@ public class FormService {
 	public void updateflatPic(Flatpic flatpic) {
 		formMapper.updateflatPic(flatpic);	
 	}
+
+	public boolean existOrgSys(String siteid, String tiSysType) {
+		// TODO Auto-generated method stub
+		return formMapper.existOrgSys(siteid, tiSysType) > 0?true:false;
+	}
 	
 }

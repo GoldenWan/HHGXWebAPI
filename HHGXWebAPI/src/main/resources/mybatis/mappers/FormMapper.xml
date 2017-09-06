@@ -337,6 +337,16 @@
 		WHERE
 		LicenceCode = #{licenceCode}
 	</select>
+	<select id="existOrgSys" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		onlinefiresystem
+		WHERE
+		siteid = #{siteid} and
+		tiSysType=#{tiSysType}
+		
+	</select>
 	<update id="updateBusinessLicence">
 		UPDATE businesslicence
 		<trim prefix="set" suffixOverrides=",">

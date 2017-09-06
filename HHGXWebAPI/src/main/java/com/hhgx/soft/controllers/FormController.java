@@ -117,6 +117,14 @@ public class FormController {
 
 		int statusCode = -1;
 		String dataBag =null;
+		
+		if(formService.existOrgSys(siteid,tiSysType)){
+			
+		 statusCode = -2;
+		 dataBag="对不起，不能添加已存在的数据";
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+		}
 		try{
 			OnlineFiresystem onlineFiresystem = new OnlineFiresystem();
 			onlineFiresystem.setStates(states);

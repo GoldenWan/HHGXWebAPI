@@ -320,9 +320,9 @@
 
 	<select id="getFireSystemListByPage" resultType="map">
 	SELECT
-		f.tiSysType,
+		o.tiSysType,
 		f.vSysdesc,
-		s.siteid,
+		o.siteid,
 		s.sitename,
 		o.states,
 		o.YnOnline,

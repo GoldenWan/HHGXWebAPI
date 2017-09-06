@@ -68,6 +68,8 @@ public interface FormMapper {
 
 	void addorgSys(OnlineFiresystem onlineFiresystem);
 
+	int existOrgSys(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType);
+
 	
 	
 }

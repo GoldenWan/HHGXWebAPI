@@ -130,6 +130,8 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
+			// Cannot delete or update a parent row: a foreign key constraint fails (`hhnew`.`gatewaysysteminfo`, CONSTRAINT `RefonlineFiresystem142` FOREIGN KEY (`tiSysType`, `siteid`) REFERENCES `onlinefiresystem` (`tiSysType`, `siteid`))
+			//at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 			orginfoService.deleteorgSys(siteid, tiSysType);
 
 			statusCode = ConstValues.OK;
