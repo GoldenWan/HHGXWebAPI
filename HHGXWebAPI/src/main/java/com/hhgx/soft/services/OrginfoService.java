@@ -121,9 +121,8 @@ public class OrginfoService {
 	}
 
 	public boolean findGatewayaddressExist(String newGatewayaddress) {
-		int temp =-1;
-		temp =orginfoMapper.findGatewayaddressExist(newGatewayaddress);
-		return temp > 0 ? true : false ;
+
+		return orginfoMapper.findGatewayaddressExist(newGatewayaddress) > 0 ? true : false ;
 	}
 
 	public void deleteDevicesBycflatPic(String cFlatPic) {
@@ -250,5 +249,11 @@ public List<Map<String, Object>> dataMonitor(String siteid, String tiSysType, in
 public List<Map<String, String>> getOnlineFireSystem(String siteid, String tisystype) {
 	return orginfoMapper.getOnlineFireSystem(siteid, tisystype);
 }
+
+public List<Gateway> gatewayInfo(String orgid, String gatewayaddress) {
+	return orginfoMapper.gatewayInfo(orgid,  gatewayaddress);
+}
+
+
 	
 }

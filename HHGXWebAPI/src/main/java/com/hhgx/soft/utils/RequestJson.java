@@ -3,7 +3,6 @@ package com.hhgx.soft.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 
 /**
@@ -22,14 +21,33 @@ public class RequestJson {
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		Map<String, String> map = new HashMap<String, String>();
 		try {
-
+			String string = jObject.getString(ConstValues.REQDATA);
 			for (int i = 0; i < args.length; i++) {
-				Object o = JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]);
-				if (o instanceof JSONNull)
-					map.put(toLowerCaseFirstOne(args[i]), "");
-				else {
+				if (string.indexOf(args[i]) > 0)
 					map.put(toLowerCaseFirstOne(args[i]),
 							JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]));
+				else {
+					map.put(toLowerCaseFirstOne(args[i]), "");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+
+	public static Map<String, String> reqFirstLowerJsonDeviceNo(String reqBody, String... args) {
+		JSONObject jObject = JSONObject.fromObject(reqBody);
+
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			String string = jObject.getString(ConstValues.REQDATA);
+			for (int i = 0; i < args.length; i++) {
+				if (string.indexOf(args[i]) > 0)
+					map.put(toLowerCaseFirstOne(args[i]),
+							JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]));
+				else {
+					map.put(toLowerCaseFirstOne(args[i]), "");
 				}
 			}
 		} catch (Exception e) {
@@ -41,22 +59,19 @@ public class RequestJson {
 	/**
 	 * 将前端传递json 按照原来格式放进map
 	 * 
-	 *  * @param reqBody 
-	 *  * @param args 
-	 *  * @return:TODO  
+	 *  * @param reqBody  * @param args  * @return:TODO  
 	 */
 	public static Map<String, String> reqOriginJson(String reqBody, String... args) {
 		JSONObject jObject = JSONObject.fromObject(reqBody);
 		Map<String, String> map = new HashMap<String, String>();
 		try {
+			String string = jObject.getString(ConstValues.REQDATA);
 			for (int i = 0; i < args.length; i++) {
-				Object o = JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]);
-				if (o instanceof JSONNull)
-					map.put(args[i], "");
+				if (string.indexOf(args[i]) > 0)
+					map.put(args[i],JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]));
 				else {
-					map.put(args[i], JSONObject.fromObject(jObject.getString(ConstValues.REQDATA)).getString(args[i]));
+					map.put(args[i], "");
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,6 +79,7 @@ public class RequestJson {
 		return map;
 
 	}
+
 
 	// 首字母转小写方法
 	public static String toLowerCaseFirstOne(String s) {

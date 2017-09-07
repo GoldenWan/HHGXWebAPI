@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hhgx.soft.entitys.FireDevice;
 import com.hhgx.soft.entitys.Firesystype;
+import com.hhgx.soft.entitys.Gateway;
+import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Training;
@@ -26,6 +29,9 @@ import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -59,6 +65,264 @@ public class FacilityController {
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
+	
+	/**
+	 *    
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/AddFireDevice", method = RequestMethod.POST)
+	public String addFireDevice(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "devicename",
+				"Manufacture", "model", "productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType","memo");
+		String devicename = map.get("devicename");
+		String manufacture = map.get("Manufacture");
+		String model = map.get("model");
+		String productDate = map.get("productDate");
+		String validate = map.get("validate");
+		String setupDate = map.get("SetupDate");
+		String setLocation = map.get("SetLocation");
+		String siteid = map.get("siteid");
+		String iDeviceType = map.get("iDeviceType");
+		String memo = map.get("memo");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			FireDevice fireDevice = new FireDevice();
+			//1101010000 0100000003
+			//数据库字段30-》34yyyyMMddHHmmss
+			fireDevice.setDeviceNo(siteid+DateUtils.formatDateToString("yyyyMMddHHmmss"));
+			fireDevice.setDevicename(devicename);
+			
+			fireDevice.setiDeviceType(iDeviceType);
+			fireDevice.setManufacture(manufacture);
+			fireDevice.setMemo(memo);
+			fireDevice.setModel(model);
+			fireDevice.setProductDate(productDate);
+			fireDevice.setSetLocation(setLocation);
+			fireDevice.setSetupDate(setupDate);
+			fireDevice.setSiteid(siteid);
+			fireDevice.setValidate(validate);
+			facilityService.addFireDevice(fireDevice);
+			
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	/**
+	 * 74.删除消防设备信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeleteFireDeviceList", method = RequestMethod.POST)
+	public String deleteFireDeviceList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceNo");
+		String deviceNo = map.get("deviceNo");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			facilityService.delFireDeviceChangeRecord(deviceNo);
+			facilityService.deleteFireDeviceList(deviceNo);
+			statusCode = ConstValues.OK;
+			dataBag = "刪除成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "刪除失败";
+		}
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	/**40.修改消防设备信息
+	 * 
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/UpdateFireDevice", method = RequestMethod.POST)
+	public String updateFireDevice(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "deviceNo", "devicename",
+				"Manufacture", "model", "productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType","memo");
+		String deviceNo = map.get("deviceNo");// 设备传输地址
+		String devicename = map.get("devicename");
+		String manufacture = map.get("Manufacture");
+		String model = map.get("model");
+		String productDate = map.get("productDate");
+		String validate = map.get("validate");
+		String setupDate = map.get("SetupDate");
+		String setLocation = map.get("SetLocation");
+		String siteid = map.get("siteid");
+		String iDeviceType = map.get("iDeviceType");
+		String memo = map.get("memo");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			FireDevice fireDevice = new FireDevice();
+			fireDevice.setDevicename(devicename);
+			fireDevice.setDeviceNo(deviceNo);
+			fireDevice.setiDeviceType(iDeviceType);
+			fireDevice.setManufacture(manufacture);
+			fireDevice.setMemo(memo);
+			fireDevice.setModel(model);
+			fireDevice.setProductDate(productDate);
+			fireDevice.setSetLocation(setLocation);
+			fireDevice.setSetupDate(setupDate);
+			fireDevice.setSiteid(siteid);
+			fireDevice.setValidate(validate);
+			
+			facilityService.updateFireDevice(fireDevice);
+			
+			statusCode = ConstValues.OK;
+			dataBag = "修改成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
+	
+	
+	
+	/**
+	 * 75.获取设备列表信息【分页】
+	 * 
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetFireDeviceList", method = RequestMethod.POST)
+	public String getFireDeviceList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "conditionName", "conditionValue",
+				"PageIndex");
+		String orgid = map.get("orgid");
+		String conditionName = map.get("conditionName");
+		String conditionValue = map.get("conditionValue");// 为空查所有
+		String pageIndex = map.get("pageIndex");
+
+		Page page = null;
+		List<Map<String, Object>> list =null;
+		List<Map<String, Object>> lists = new ArrayList<>();
+		int statusCode = -1;
+
+		if (conditionName.equals("vSysdesc")) {
+			int pageCount = facilityService.getFireDeviceBySysCount(orgid, conditionValue);
+			try {
+
+				if (pageIndex != null) {
+					page = new Page(pageCount, Integer.parseInt(pageIndex));
+					list = facilityService.getFireDeviceListBySys(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+
+				} else {
+					page = new Page(pageCount, 1);
+					list = facilityService.getFireDeviceListBySys(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+				}
+				for(Map<String, Object> m:list){
+					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+					lists.add(m);
+					
+				}
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			
+			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
+
+		} else if (conditionName.equals("deviceNo")) {
+			int pageCount = facilityService.getFireDeviceByDeviceCount(orgid, conditionValue);
+
+			try {
+				if (pageIndex != null) {
+					page = new Page(pageCount, Integer.parseInt(pageIndex));
+					list = facilityService.getFireDeviceListByDevice(orgid, conditionValue,page.getStartPos(), page.getPageSize());
+
+				} else {
+					page = new Page(pageCount, 1);
+					list = facilityService.getFireDeviceListByDevice(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+				}
+				
+				for(Map<String, Object> m:list){
+					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+					lists.add(m);
+					
+				}
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
+
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 110.获取部件类型
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetFireDevice", method = RequestMethod.POST)
+	public String getFireDevice(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceNo");
+		String deviceNo = map.get("deviceNo");
+		
+		List<Map<String, Object>> list =null;
+		List<Map<String, Object>> lists = new ArrayList<>();
+		int statusCode = -1;
+	  try{
+			list = facilityService.getFireDeviceListByDeviceNo(deviceNo);
+				
+				for(Map<String, Object> m:list){
+					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+					lists.add(m);
+					
+				}
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			
+			return ResponseJson.responseFindJsonArray(lists, statusCode);
+	}
+	/**
+	 * 111.获取消防设备信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GetDeviceType", method = RequestMethod.POST)
+	public String getDeviceType() throws IOException {
+		List<Map<String, String>> list =null;
+		int statusCode = -1;
+		try {
+			list = facilityService.getDeviceType();
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+
+	}
+
+	
 
 	/**
 	 * 160.获取消防安全培训情况【**】

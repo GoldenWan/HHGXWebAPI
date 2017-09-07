@@ -2,11 +2,13 @@ package com.hhgx.soft.services;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hhgx.soft.entitys.FireDevice;
 import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Training;
@@ -52,6 +54,50 @@ public Training getTraingingDetail(String trainingID) {
 
 public List<Firesystype> getAllSys() {
 	return facilityMapper.getAllSys();
+}
+
+public List<Map<String, String>> getDeviceType() {
+	return facilityMapper.getDeviceType();
+}
+
+
+public int getFireDeviceBySysCount(String orgid, String vSysdesc) {
+	return facilityMapper.getFireDeviceBySysCount(orgid, vSysdesc) ;
+}
+
+public List<Map<String, Object>> getFireDeviceListBySys(String orgid, String vSysdesc, int startPos,
+		int pageSize) {
+	return facilityMapper.getFireDeviceListBySys(orgid, vSysdesc, startPos,pageSize);
+}
+
+public int getFireDeviceByDeviceCount(String orgid, String deviceNo) {
+	return facilityMapper.getFireDeviceByDeviceCount(orgid, deviceNo);
+}
+
+public List<Map<String, Object>> getFireDeviceListByDevice(String orgid, String deviceNo, int startPos,
+		int pageSize) {
+	return facilityMapper.getFireDeviceListByDevice(orgid, deviceNo, startPos, pageSize);
+}
+
+public List<Map<String, Object>> getFireDeviceListByDeviceNo(String deviceNo) {
+	return facilityMapper.getFireDeviceListByDeviceNo(deviceNo);
+}
+
+public void updateFireDevice(FireDevice fireDevice) {
+	facilityMapper.updateFireDevice(fireDevice);
+}
+
+public void addFireDevice(FireDevice fireDevice) {
+	facilityMapper.addFireDevice(fireDevice);
+}
+
+public void deleteFireDeviceList(String deviceNo) {
+	facilityMapper.deleteFireDeviceList(deviceNo);
+}
+
+public void delFireDeviceChangeRecord(String deviceNo) {
+	facilityMapper.delFireDeviceChangeRecord(deviceNo);
+	
 } 
 	
 }

@@ -121,6 +121,9 @@ public interface OrginfoMapper {
 
 	List<Map<String, String>> getOnlineFireSystem(@Param("siteid")String siteid, @Param("tisystype")String tisystype);
 
+	List<Gateway> gatewayInfo(@Param("orgid")String orgid, @Param("gatewayaddress")String gatewayaddress);
+
+
 	
 	/**
 	void updateMarkPoint(Devices devices);

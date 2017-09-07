@@ -6,8 +6,6 @@ public class GatewaySystemInfo {
     private String memo              ;
     private String tiSysType         ;
     private String siteid;
-    
-    
     private String vSysdesc;
     private String sitename;
 	public String getSysaddress() {

@@ -45,10 +45,11 @@ public class DateUtils {
 	
 	/**
 	 * 按照指定的格式返回日期字符串. 默认 "yyyy-MM-dd"
-	 * 
+	 * yyyy-MM-dd HH:mm:ss
+	 * yyyyMMddHHmmss
 	 * @param String
 	 */
-	public static String formatDate(String pattern) {
+	public static String formatDateToString(String pattern) {
 		
 		Date d = new Date();
 		if (pattern == null)
@@ -56,7 +57,10 @@ public class DateUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		return (sdf.format(d));
 	}
-
+	
+	public static String formatDateTime(Date date) {
+		return (formatDate(date, "yyyy-MM-dd HH:mm:ss"));
+	}
 	/**
 	 * 按照指定的格式返回日期字符串. 默认 "yyyy-MM-dd"
 	 * 
@@ -86,7 +90,12 @@ public class DateUtils {
 		formatDATE=d.replaceAll("-", "/");
 		return formatDATE;
 	}
-
+/**按照指定的格式返回日期字符串. 默认 "yyyy/MM/dd HH:mm:ss"
+ * 
+ * @param date
+ * @return:TODO
+ 
+ */
 	public static String formatToDateTime(String date) {
 		String formatDATE = "";
 		if (date == null)
@@ -99,49 +108,10 @@ public class DateUtils {
 		return formatDATE;
 	}
 
-	/**
-	 * yyyy-MM-dd HH:mm:ss
-	 * 
-	 * @param date
-	 * @return
-	 */
-	public static String formatDateTime(Date date) {
-		return (formatDate(date, "yyyy-MM-dd HH:mm:ss"));
-	}
-
-
-
-	public static String turnFormat(String date, DateFormat format, DateFormat toFomrat) {
-		String toString = date;
-		try {
-			toString = toFomrat.format(format.parse(date));
-		} catch (Exception e) {
-			// do nothing
-		}
-		return toString;
-	}
-
-	public static long getTime(String str) {
-		long time = 0l;
-		if (str == null)
-			return time;
-		try {
-			time = FORMATER.parse(str).getTime();
-		} catch (Exception e) {
-			// do nothing
-		}
-		if (time == 0)
-			try {
-				time = NOSFORMATER.parse(str).getTime();
-			} catch (Exception e) {
-				// do nothing
-			}
-		return time;
-	}
-
+	
 	/**
 	 * 时间字符串转化为timestamp
-	 * 
+	 * 2017/08/30  00:00:00
 	 * @param times
 	 * @return
 	 */
@@ -172,27 +142,7 @@ public class DateUtils {
 		}
 		return tsStr;
 	}
-
-	public static String getDayDate() {
-		String s = null;
-		Date d = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		s = sdf.format(d);
-		return s;
-	}
-
-	/**
-	 * 获取年月
-	 * 
-	 * @param date
-	 * @param dateformat
-	 * @return
-	 */
-	public static String getYearMonth(Date date, String dateformat) {
-		SimpleDateFormat dd = new SimpleDateFormat(dateformat);
-		return dd.format(date);
-	}
-
+	
 	/**
 	 * 字符串转日期
 	 * 
@@ -210,41 +160,8 @@ public class DateUtils {
 		return date;
 	}
 
-	/**
-	 * get time(one hour,one day,one week)
-	 * 
-	 * @param n
-	 * @return
-	 */
-	public static String getPastTime(int n) {
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		String dt = df.format(date);
-		date = new Date(System.currentTimeMillis() - n * 60 * 60 * 1000);
-		dt = df.format(date);
-		return dt;
-	}
 
-	public static String getPastTime(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-		String dt = df.format(date);
-		return dt;
-	}
 
-	/**
-	 * get time(one hour,one day,one week)
-	 * 
-	 * @param n
-	 * @return
-	 */
-	public static String getPastTimeByDay(int n) {
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-		String dt = df.format(date);
-		date = new Date(System.currentTimeMillis() - n * 60 * 60 * 1000);
-		dt = df.format(date);
-		return dt;
-	}
 
 	/**
 	 * function get the days of one year
@@ -261,82 +178,7 @@ public class DateUtils {
 			tag = true;
 		return tag;
 	}
-
-	/**
-	 * function get days's date
-	 * 
-	 * @param date
-	 * @param days
-	 * @return
-	 */
-	public static String decDays(int days) {
-		String dateStr = null;
-		Date date = new Date();
-		Date dt = add(date, days, Calendar.DATE);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		dateStr = df.format(dt);
-		return dateStr;
-	}
-
-	/**
-	 * function get pastyear date
-	 * 
-	 * @return date
-	 */
-	public static String getPastYearDate() {
-		String dateStr = null;
-		if (getLeapYear()) {
-			dateStr = decDays(-366);
-		} else {
-			dateStr = decDays(-365);
-		}
-		return dateStr;
-	}
-
-	/**
-	 * 给时间加上或减去指定毫秒，秒，分，时，天、月或年等，返回变动后的时间
-	 *
-	 * @param date
-	 *            要加减前的时间，如果不传，则为当前日期
-	 * @param field
-	 *            时间域，有Calendar.MILLISECOND,Calendar.SECOND,Calendar.MINUTE,<br>
-	 *            Calendar.HOUR,Calendar.DATE, Calendar.MONTH,Calendar.YEAR
-	 * @param amount
-	 *            按指定时间域加减的时间数量，正数为加，负数为减。
-	 * @return 变动后的时间
-	 */
-	public static Date add(Date date, int amount, int field) {
-		if (date == null) {
-			date = new Date();
-		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(field, amount);
-		return calendar.getTime();
-	}
-
 	
-	
-	/**
-	 * function format time
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public static String getFormatDate(String str) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = null;
-		String dateStr = null;
-		try {
-			date = sdf.parse(str);
-			dateStr = sdf.format(date).replaceAll("-", "");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return dateStr;
-	}
-
 	/**
 	 * function format time
 	 * 
@@ -357,61 +199,5 @@ public class DateUtils {
 		return dateStr;
 	}
 
-	/**
-	 * 得到某年某月的第一天
-	 * 
-	 * @param year
-	 * @param month
-	 * @return
-	 */
-	public static String getFirstDayOfMonth(int year, int month) {
-
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, month - 1);
-		cal.set(Calendar.DAY_OF_MONTH, cal.getMinimum(Calendar.DATE));
-		return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
-	}
-
-	/**
-	 * 得到某年某月的最后一天
-	 * 
-	 * @param year
-	 * @param month
-	 * @return
-	 */
-	public static String getLastDayOfMonth(int year, int month) {
-
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, month - 1);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		int value = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		cal.set(Calendar.DAY_OF_MONTH, value);
-		return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
-
-	}
-
-	/**
-	 * 获取年月
-	 * 
-	 * @return
-	 */
-	public static String getYearMonth(String datestr) {
-		Date date = StringToDate(datestr, "yyy-MM-dd");
-		return getYearMonth(date, "yyyy-MM");
-	}
-
-	public static Date addDay(Date date, int amount) {
-		return add(date, amount, Calendar.DATE);
-	}
-
-	public static Date addMonth(Date date, int amount) {
-		return add(date, amount, Calendar.MONTH);
-	}
-
-	public static Date addYear(Date date, int amount) {
-		return add(date, amount, Calendar.YEAR);
-	}
 
 }

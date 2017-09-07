@@ -2,13 +2,91 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.FacilityMapper">
+	<update id="updateFireDevice">
+		UPDATE firedevice
+		<trim prefix="set" suffixOverrides=",">
+			<if test="devicename!=null and devicename!=''"> devicename = #{devicename},</if>
+			<if test="manufacture!=null and manufacture!=''"> manufacture = #{manufacture},</if>
+			<if test="model!=null and model!=''"> model = #{model},</if>
+			<if test="productDate!=null and productDate!=''"> productDate = #{productDate},</if>
+			<if test="validate!=null and validate!=''"> validate = #{validate},</if>
+			<if test="setupDate!=null and setupDate!=''"> setupDate = #{setupDate},</if>
+			<if test="setLocation!=null and setLocation!=''"> setLocation = #{setLocation},</if>
+			<if test="siteid!=null and siteid!=''"> siteid = #{siteid},</if>
+			<if test="iDeviceType!=null and iDeviceType!=''"> iDeviceType = #{iDeviceType},</if>
+			<if test="memo!=null and memo!=''"> memo = #{memo},</if>
+		</trim>
+		WHERE
+		deviceNo = #{deviceNo}
+	</update>
+
+	<insert id="addFireDevice">
+		INSERT INTO `firedevice` (
+		`deviceNo`,
+		`devicename`,
+		`Manufacture`,
+		`model`,
+		`productDate`,
+		`validate`,
+		`setupDate`,
+		`SetLocation`,
+		`siteid`,
+		`iDeviceType`,
+		`memo`
+		)
+		VALUES
+		(
+		#{deviceNo},
+		#{devicename},
+		#{manufacture},
+		#{model},
+		#{productDate},
+		#{validate},
+		#{setupDate},
+		#{setLocation},
+		#{siteid},
+		#{iDeviceType},
+		#{memo}
+		)
+	</insert>
+	<delete id="delFireDeviceChangeRecord">
+		DELETE
+		FROM
+		firedevicechangerecord
+		WHERE
+		deviceNo = #{deviceNo}
+	</delete>
+	<delete id="deleteFireDeviceList">
+		DELETE
+		FROM
+		firedevice
+		WHERE
+		deviceNo = #{deviceNo}
+	</delete>
+	<insert id="addflatPic">
+		INSERT INTO flatpic (
+		cFlatPic,
+		siteid,
+		floornum,
+		imFlatPic
+		)
+		VALUES
+		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic})
+	</insert>
 	<select id="getAllSys" resultType="firesystype">
-	SELECT
+		SELECT
 		tiSysType,
 		vSysdesc,
 		OrderNo
-	FROM
+		FROM
 		firesystype
+	</select>
+	<select id="getDeviceType" resultType="map">
+		SELECT
+		iDeviceType,
+		DeviceTypeName
+		FROM
+		devicetype
 	</select>
 	<select id="getTrainingListCount" resultType="int">
 		SELECT
@@ -17,14 +95,141 @@
 		training
 		WHERE
 		orgid = #{orgid}
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		 and
-		TrainingTime BETWEEN #{startTime} and #{endTime}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			TrainingTime BETWEEN #{startTime} and #{endTime}
 		</if>
+	</select>
+	<select id="getFireDeviceByDeviceCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		site s
+		INNER JOIN firedevice f ON s.siteid = f.siteid
+		INNER JOIN devicetype t ON t.iDeviceType = f.iDeviceType
+		INNER JOIN
+		firesystype ff ON t.tiSysType = ff.tiSysType
+		WHERE
+		s.orgid =
+		#{orgid}
+		<if test="deviceNo !=null and deviceNo !=''">
+			and
+			d.deviceNo = #{deviceNo}
+		</if>
+	</select>
+	<select id="getFireDeviceBySysCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		site s
+		INNER JOIN firedevice f ON s.siteid = f.siteid
+		INNER JOIN devicetype t ON t.iDeviceType = f.iDeviceType
+		INNER JOIN
+		firesystype ff ON t.tiSysType = ff.tiSysType
+		WHERE
+		s.orgid =#{orgid}
+		<if test="vSysdesc !=null and vSysdesc !=''">
+			and
+			ff.vSysdesc LIKE CONCAT('%',#{vSysdesc}, '%')
+		</if>
+	</select>
+	<select id="getFireDeviceListBySys" resultType="map">
+		SELECT
+		fd.SetupDate,
+		fd.SetLocation,
+		s.siteid,
+		s.sitename,
+		fd.deviceNo,
+		fd.devicename,
+		fd.Manufacture,
+		fd.model,
+		fd.productDate,
+		fd.validate,
+		fd.memo,
+		t.iDeviceType,
+		t.DeviceTypeName,
+		ff.vSysdesc
+		FROM
+		site s
+		INNER JOIN
+		firedevice fd ON s.siteid = fd.siteid
+		INNER JOIN devicetype t ON
+		t.iDeviceType = fd.iDeviceType
+		INNER JOIN firesystype ff ON t.tiSysType
+		= ff.tiSysType
+		WHERE
+		orgid =#{orgid}
+		<if test="vSysdesc !=null and vSysdesc !=''">
+			and
+			ff.vSysdesc LIKE CONCAT('%',#{vSysdesc}, '%')
+		</if>
+		LIMIT #{startPos},#{pageSize}
+	</select>
+	<select id="getFireDeviceListByDeviceNo" resultType="map">
+		SELECT
+		fd.SetupDate,
+		fd.SetLocation,
+		s.siteid,
+		s.sitename,
+		fd.deviceNo,
+		fd.devicename,
+		fd.Manufacture,
+		fd.model,
+		fd.productDate,
+		fd.validate,
+		fd.memo,
+		t.iDeviceType,
+		t.DeviceTypeName,
+		ff.vSysdesc
+		FROM
+		site s
+		INNER JOIN
+		firedevice fd ON s.siteid = fd.siteid
+		INNER JOIN devicetype t ON
+		t.iDeviceType = fd.iDeviceType
+		INNER JOIN firesystype ff ON t.tiSysType
+		= ff.tiSysType
+		WHERE
+		fd.deviceNo =#{deviceNo}
+
+	</select>
+
+	<select id="getFireDeviceListByDevice" resultType="map">
+		SELECT
+		fd.SetupDate,
+		fd.SetLocation,
+		s.siteid,
+		s.sitename,
+		fd.deviceNo,
+		fd.devicename,
+		fd.Manufacture,
+		fd.model,
+		fd.productDate,
+		fd.validate,
+		fd.memo,
+		t.iDeviceType,
+		t.DeviceTypeName,
+		ff.vSysdesc
+		FROM
+		site s
+		INNER JOIN
+		firedevice fd ON s.siteid = fd.siteid
+		INNER JOIN devicetype t ON
+		t.iDeviceType = fd.iDeviceType
+		INNER JOIN firesystype ff ON t.tiSysType
+		= ff.tiSysType
+		WHERE
+		s.orgid =#{orgid}
+		<if test="deviceNo !=null and deviceNo !=''">
+			and
+			fd.deviceNo = #{deviceNo}
+		</if>
+		LIMIT #{startPos},#{pageSize}
 	</select>
 
 	<select id="getTrainingList" resultType="training">
-	SELECT
+		SELECT
 		TrainingID,
 		TrainingTime,
 		TrainingAddress,
@@ -33,13 +238,14 @@
 		TrainingType,
 		Lecturer,
 		HowmanyPeople
-	FROM
+		FROM
 		training
-	WHERE
+		WHERE
 		orgid = #{orgid}
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		 and
-		TrainingTime BETWEEN #{startTime} and #{endTime}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			TrainingTime BETWEEN #{startTime} and #{endTime}
 		</if>
 		LIMIT #{startPos},#{pageSize}
 	</select>
@@ -51,40 +257,42 @@
 		WHERE
 		TrainingID = #{trainingID}
 	</delete>
-	
+
 	<select id="getManoeuvreCount" resultType="int">
-	SELECT
+		SELECT
 		count(*)
-	FROM
+		FROM
 		manoeuvre
-	WHERE
+		WHERE
 		orgid =#{orgid}
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		manoeuvretime BETWEEN #{startTime} and #{endTime}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			manoeuvretime BETWEEN #{startTime} and #{endTime}
 		</if>
-		
+
 	</select>
 	<select id="getManoeuvreByOrgid" resultType="manoeuvre">
-	SELECT
+		SELECT
 		manoeuvreID,
 		manoeuvretime,
 		address,
 		Department,
 		manager,
 		content
-	FROM
+		FROM
 		manoeuvre
-	WHERE
-		orgid = #{orgid} 
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		manoeuvretime BETWEEN #{startTime} and 	#{endTime}
+		WHERE
+		orgid = #{orgid}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			manoeuvretime BETWEEN #{startTime} and #{endTime}
 		</if>
-	LIMIT #{startPos},#{pageSize}
+		LIMIT #{startPos},#{pageSize}
 	</select>
 	<select id="getManoeuvreDetail" resultType="manoeuvre">
-	SELECT
+		SELECT
 		orgid,
 		manoeuvreID,
 		manoeuvretime,
@@ -100,10 +308,11 @@
 		schemafile,
 		attendpersonfile,
 		implementationfile
-	FROM
+		FROM
 		manoeuvre
-	WHERE
-		manoeuvreID = #{manoeuvreID} 
+		WHERE
+		manoeuvreID =
+		#{manoeuvreID}
 	</select>
 	<delete id="deleteManoeuvre">
 		DELETE
@@ -113,7 +322,7 @@
 		manoeuvreID = #{manoeuvreID}
 	</delete>
 	<select id="getTraingingDetail" resultType="training">
-	SELECT
+		SELECT
 		TrainingID,
 		TrainingTime,
 		TrainingAddress,
@@ -129,9 +338,9 @@
 		examfile,
 		signtable,
 		orgid
-	FROM
+		FROM
 		training
-	WHERE
-		TrainingID = #{trainingID} 
+		WHERE
+		TrainingID = #{trainingID}
 	</select>
 </mapper>

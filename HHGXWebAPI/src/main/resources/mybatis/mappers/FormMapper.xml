@@ -13,12 +13,12 @@
 		PicID = #{picID}
 	</select>
 	<select id="findCflatPic" resultType="string">
-	SELECT
+		SELECT
 		imFlatPic
-	FROM
+		FROM
 		flatpic
-	WHERE
-		cFlatPic =  #{cFlatPic}
+		WHERE
+		cFlatPic = #{cFlatPic}
 	</select>
 	<update id="updateFireSystemList">
 		UPDATE onlinefiresystem
@@ -31,7 +31,7 @@
 		</trim>
 		WHERE
 		tisystype = #{tisystype}
-		AND 
+		AND
 		siteid = #{siteid}
 	</update>
 	<delete id="deletePicByID">
@@ -49,22 +49,22 @@
 		iphotoID = #{iphotoID}
 	</delete>
 	<insert id="addorgSys">
-	INSERT INTO `onlinefiresystem` (
+		INSERT INTO `onlinefiresystem` (
 		`tiSysType`,
 		`siteid`,
 		`states`,
 		`YnOnline`,
 		`Remarks`,
 		`SysFlatpic`
-	)
-	VALUES
+		)
+		VALUES
 		(
-			#{tiSysType},
-			#{siteid},
-			#{states},
-			#{ynOnline},
-			#{remarks},
-			#{sysFlatpic}
+		#{tiSysType},
+		#{siteid},
+		#{states},
+		#{ynOnline},
+		#{remarks},
+		#{sysFlatpic}
 		)
 	</insert>
 	<insert id="addflatPic">
@@ -78,13 +78,13 @@
 		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic})
 	</insert>
 	<update id="updateflatPic">
-		update  flatpic 
+		update flatpic
 		<trim prefix="set" suffixOverrides=",">
 			<if test="siteid!=null and siteid!=''"> siteid = #{siteid},</if>
 			<if test="floornum!=null and floornum!=''"> floornum = #{floornum},</if>
 			<if test="imFlatPic!=null and imFlatPic!=''"> imFlatPic = #{imFlatPic},</if>
 		</trim>
-		where 
+		where
 		cFlatPic=#{cFlatPic}
 	</update>
 	<insert id="addUserCheckPic">
@@ -192,29 +192,32 @@
 		UPDATE manoeuvre
 		SET
 		manoeuvretime =#{manoeuvretime},
-		Address = #{address},
+		Address =
+		#{address},
 		Department = #{department},
 		Manager = #{manager},
-		Content = #{content},
+		Content =
+		#{content},
 		Scheme = #{scheme},
 		attendperson = #{attendperson},
 		implementation = #{implementation},
 		Summary = #{summary},
 		<if test="schemafile!= null and schemafile!=''">
-		schemafile =#{schemafile},
+			schemafile =#{schemafile},
 		</if>
-	    <if test="attendpersonfile!= null and attendpersonfile!=''">
-		attendpersonfile = #{attendpersonfile},
+		<if test="attendpersonfile!= null and attendpersonfile!=''">
+			attendpersonfile = #{attendpersonfile},
 		</if>
 		<if test="implementationfile!= null and implementationfile!=''">
-		implementationfile = #{implementationfile},
+			implementationfile = #{implementationfile},
 		</if>
 		suggestion = #{suggestion}
 		WHERE
 		manoeuvreID =#{manoeuvreID}
 		and
-		Orgid = #{orgid}
-		
+		Orgid =
+		#{orgid}
+
 	</update>
 
 	<insert id="addSafeManageRules">
@@ -236,16 +239,20 @@
 		UPDATE safemanagerules
 		<trim prefix="set" suffixOverrides=",">
 			<if test="safeManageRulesName!=null and safeManageRulesName!=''">
-			SafeManageRulesName =#{safeManageRulesName},</if>
+				SafeManageRulesName =#{safeManageRulesName},
+			</if>
 			<if test="uploadTime!=null and uploadTime!=''">
-			UploadTime = #{uploadTime},</if>
+				UploadTime = #{uploadTime},
+			</if>
 			<if test="safeManageRulesType !=null and safeManageRulesType!=''">
-			SafeManageRulesType= #{safeManageRulesType},</if>
+				SafeManageRulesType= #{safeManageRulesType},
+			</if>
 			<if test="filepath!=null and filepath!=''">
-			filepath = #{filepath},</if>
+				filepath = #{filepath},
+			</if>
 		</trim>
 		WHERE
-		orgid = #{orgid} 
+		orgid = #{orgid}
 		and
 		SafeManageRulesID = #{safeManageRulesID}
 	</update>
@@ -274,12 +281,12 @@
 	</insert>
 	<insert id="addAppearance">
 		INSERT INTO appearancepic (
-			iphotoID,
-			vPhotoname,
-			dRecordDate,
-			Picpath,
-			ExteriorInfo,
-			siteid
+		iphotoID,
+		vPhotoname,
+		dRecordDate,
+		Picpath,
+		ExteriorInfo,
+		siteid
 		)
 		VALUES
 		(
@@ -289,38 +296,38 @@
 	<update id="submitTotalFlatPic">
 		UPDATE onlineorg
 		<trim prefix="set" suffixOverrides=",">
-		<if test="bFlatpic!=null and bFlatpic!=''">
-			bFlatpic = #{bFlatpic},
-		</if>
+			<if test="bFlatpic!=null and bFlatpic!=''">
+				bFlatpic = #{bFlatpic},
+			</if>
 		</trim>
 		WHERE
-			orgid = #{orgid}
+		orgid = #{orgid}
 	</update>
 
 
 	<update id="updateSafeDuty">
 		UPDATE safeduty
 		<trim prefix="set" suffixOverrides=",">
-		<if test="dutyname!=null and dutyname!=''">
-			dutyname = #{dutyname},
-		</if>
-		<if test="uploadtime!=null and uploadtime!=''">
-			uploadtime =#{uploadtime},
-		</if>
-		<if test="safedutytype !=null and safedutytype!=''">
-			safedutytype = #{safedutytype},
-		</if>
-		<if test="filepath!=null and filepath!=''">
-			filepath = #{filepath},
-		</if>
-		<if test="orgid!=null and orgid!=''">
-			orgid = #{orgid},
-		</if>
+			<if test="dutyname!=null and dutyname!=''">
+				dutyname = #{dutyname},
+			</if>
+			<if test="uploadtime!=null and uploadtime!=''">
+				uploadtime =#{uploadtime},
+			</if>
+			<if test="safedutytype !=null and safedutytype!=''">
+				safedutytype = #{safedutytype},
+			</if>
+			<if test="filepath!=null and filepath!=''">
+				filepath = #{filepath},
+			</if>
+			<if test="orgid!=null and orgid!=''">
+				orgid = #{orgid},
+			</if>
 		</trim>
 		WHERE
 		SafeDutyID = #{safeDutyID}
 	</update>
-	
+
 	<select id="findSafeDutyFilePath" resultType="string">
 		SELECT
 		filepath
@@ -345,47 +352,47 @@
 		WHERE
 		siteid = #{siteid} and
 		tiSysType=#{tiSysType}
-		
+
 	</select>
 	<update id="updateBusinessLicence">
 		UPDATE businesslicence
 		<trim prefix="set" suffixOverrides=",">
-		<if test="conpanyName!=null and conpanyName!=''">
-			ConpanyName = #{conpanyName},
-		</if>
-		<if test="companyType!=null and companyType!=''">
-			CompanyType =#{companyType},
-		</if>
-		<if test="companyAddress !=null and companyAddress!=''">
-			CompanyAddress = #{companyAddress},
-		</if>
-		<if test="companyRegister!=null and companyRegister!=''">
-			CompanyRegister = #{companyRegister},
-		</if>
-		<if test="registMoney!=null and registMoney!=''">
-			RegistMoney = #{registMoney},
-		</if>
-		<if test="buildTime!=null and buildTime!=''">
-			BuildTime = #{buildTime},
-		</if>
-		<if test="businessEndTime!=null and businessEndTime!=''">
-			BusinessEndTime = #{businessEndTime},
-		</if>
-		<if test="businessScope!=null and businessScope!=''">
-			BusinessScope = #{businessScope},
-		</if>
-		<if test="auditingDepartment!=null and auditingDepartment!=''">
-			AuditingDepartment = #{auditingDepartment},
-		</if>
-		<if test="registTime!=null and registTime!=''">
-			RegistTime = #{registTime},
-		</if>
-		<if test="pictureUrl!=null and pictureUrl!=''">
-			PictureUrl = #{pictureUrl},
-		</if>
-		<if test="orgid!=null and orgid!=''">
-			orgid = #{orgid},
-		</if>
+			<if test="conpanyName!=null and conpanyName!=''">
+				ConpanyName = #{conpanyName},
+			</if>
+			<if test="companyType!=null and companyType!=''">
+				CompanyType =#{companyType},
+			</if>
+			<if test="companyAddress !=null and companyAddress!=''">
+				CompanyAddress = #{companyAddress},
+			</if>
+			<if test="companyRegister!=null and companyRegister!=''">
+				CompanyRegister = #{companyRegister},
+			</if>
+			<if test="registMoney!=null and registMoney!=''">
+				RegistMoney = #{registMoney},
+			</if>
+			<if test="buildTime!=null and buildTime!=''">
+				BuildTime = #{buildTime},
+			</if>
+			<if test="businessEndTime!=null and businessEndTime!=''">
+				BusinessEndTime = #{businessEndTime},
+			</if>
+			<if test="businessScope!=null and businessScope!=''">
+				BusinessScope = #{businessScope},
+			</if>
+			<if test="auditingDepartment!=null and auditingDepartment!=''">
+				AuditingDepartment = #{auditingDepartment},
+			</if>
+			<if test="registTime!=null and registTime!=''">
+				RegistTime = #{registTime},
+			</if>
+			<if test="pictureUrl!=null and pictureUrl!=''">
+				PictureUrl = #{pictureUrl},
+			</if>
+			<if test="orgid!=null and orgid!=''">
+				orgid = #{orgid},
+			</if>
 		</trim>
 		WHERE
 		LicenceCode = #{licenceCode}
@@ -414,5 +421,5 @@
 		#{auditingDepartment},#{registTime},#{pictureUrl},#{orgid}
 		)
 	</insert>
-	
+
 </mapper>

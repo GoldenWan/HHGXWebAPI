@@ -305,6 +305,13 @@
 		WHERE
 		siteid = #{siteid}
 	</delete>
+	<delete id="deleteAppearance">
+		DELETE
+		FROM
+		appearancepic
+		WHERE
+		iphotoID = #{iphotoID}
+	</delete>
 
 	<select id="getFireSystemListCount" resultType="int">
 		SELECT
@@ -451,31 +458,53 @@
 
 	<select id="selectGateway" resultMap="gatewayMap">
 		SELECT
-		g.Gatewayaddress
-		Gatewayaddress,
-		Manufacturer,
-		Model,
-		productdate,
-		setupdate,
-		ControlorManufacture,
-		ControlorMode,
-		memo,
-		ynonline,
-		onlinetime
+			Gatewayaddress,
+			Manufacturer,
+			Model,
+			productdate,
+			setupdate,
+			ControlorManufacture,
+			ControlorMode,
+			memo,
+			ynonline,
+			onlinetime
 		FROM
-		gateway g
-		INNER JOIN v_Gateway v ON g.Gatewayaddress = v.Gatewayaddress
+			v_gatewayInfo
 		WHERE
-		v.orgid = #{orgid}
+		orgid = #{orgid}
 		limit
 		#{startPos},#{pageSize}
 	</select>
+
+	<select id="gatewayInfo" resultMap="gatewayMap">
+		SELECT
+			Gatewayaddress,
+			Manufacturer,
+			Model,
+			productdate,
+			setupdate,
+			ControlorManufacture,
+			ControlorMode,
+			memo,
+			ynonline,
+			onlinetime
+		FROM
+			v_gatewayInfo
+		WHERE
+		orgid = #{orgid}
+		and 
+		Gatewayaddress=#{gatewayaddress}
+		
+	</select>
 	<resultMap type="gateway" id="gatewayMap">
-		<id column="siteid" property="siteid" />
-		<result column="sitename" property="sitename" />
-		<result column="tiSysType" property="tiSysType" />
-		<result column="vSysdesc" property="vSysdesc" />
-		<result column="Sysaddress" property="Sysaddress" />
+		<id column="Gatewayaddress" property="gatewayaddress" />
+		<result column="Manufacturer" property="manufacturer" />
+		<result column="Model" property="model" />
+		<result column="ControlorManufacture" property="controlorManufacture" />
+		<result column="ControlorMode" property="controlorMode" />
+		<result column="memo" property="memo" />
+		<result column="ynonline" property="ynonline" />
+		<result column="onlinetime" property="onlinetime" />
 		<collection property="gatewaySystemInfoList" column="Gatewayaddress"
 			select="selectVgateway" />
 	</resultMap>
@@ -624,7 +653,6 @@
 		#{memo}
 		)
 	</insert>
-
 	<insert id="updateGateway">
 		INSERT INTO gateway (
 		Manufacturer,
@@ -648,7 +676,6 @@
 		#{memo}
 		)
 	</insert>
-
 	<select id="findGatewayaddressExist" resultType="int">
 		SELECT
 		count(*)
@@ -670,20 +697,31 @@
 		WHERE
 		siteid = #{siteid}
 	</select>
-
 	<update id="updateGatewaySame">
 		UPDATE gateway
-		SET Manufacturer = #{manufacturer},
+		SET 
+		<if test="manufacturer!=null and manufacturer!=''">
+		Manufacturer = #{manufacturer},
+		</if>
+		<if test="model!=null and model!=''">
 		Model = #{model} ,
+		</if>
+		<if test="productdate!=null and productdate!=''">
 		productdate = #{productdate} ,
-		setupdate =
-		#{setupdate} ,
+		</if>
+		<if test="setupdate!=null and setupdate!=''">
+		setupdate =#{setupdate} ,</if>
+		<if test="controlorManufacture!=null and controlorManufacture!=''">
 		ControlorManufacture = #{controlorManufacture} ,
+		</if>
+		<if test="controlorMode!=null and controlorMode!=''">
 		ControlorMode = #{controlorMode} ,
+		</if>
+		<if test="memo!=null and memo!=''">
 		memo = #{memo}
+		</if>
 		WHERE
-		Gatewayaddress =
-		#{gatewayaddress}
+		Gatewayaddress =#{gatewayaddress}
 	</update>
 	<insert id="updateGatewaySysInfo">
 		INSERT INTO

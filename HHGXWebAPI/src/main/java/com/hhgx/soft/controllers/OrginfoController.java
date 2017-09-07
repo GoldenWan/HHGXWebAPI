@@ -23,6 +23,7 @@ import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
+import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
@@ -59,18 +60,28 @@ public class OrginfoController {
 	public String getFireSystemList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","isDivid", "PageIndex");
 		String orgid = map.get("orgid");
-		//String isDivid = map.get("isDivid");
+		String isDivid = map.get("isDivid");
 		String pageIndex = map.get("pageIndex");
 		int statusCode = -1;
 		Page page = null;
+		List<FireSystem> list = null;
 
-		List<Map<String, Object>> lmList =null;
-	
-	
-			int totalCount = orginfoService.getFireSystemListCount(orgid);
+		if (!StringUtils.isEmpty(isDivid) && isDivid.equals("No")) {
 			try {
+				list = orginfoService.getFireSystemList(orgid);
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}
+			return ResponseJson.responseFindJsonArray(list, statusCode);
+
+		}
+		List<Map<String, Object>> lmList =null;
+		int totalCount = orginfoService.getFireSystemListCount(orgid);
+		try {
 				if (pageIndex != null) {
 					page = new Page(totalCount, Integer.parseInt(pageIndex));
 					lmList = orginfoService.getFireSystemListByPage(orgid, page.getStartPos(), page.getPageSize());
@@ -133,6 +144,7 @@ public class OrginfoController {
 			// Cannot delete or update a parent row: a foreign key constraint fails (`hhnew`.`gatewaysysteminfo`, CONSTRAINT `RefonlineFiresystem142` FOREIGN KEY (`tiSysType`, `siteid`) REFERENCES `onlinefiresystem` (`tiSysType`, `siteid`))
 			//at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 			orginfoService.deleteorgSys(siteid, tiSysType);
+			
 
 			statusCode = ConstValues.OK;
 			dataBag = "刪除成功";
@@ -158,7 +170,7 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 
 		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress", "Manufacturer", "Model",
-				"productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo");
+				"productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo","FireSysList");
 		String gatewayaddress = map.get("Gatewayaddress");
 		String manufacturer = map.get("Manufacturer");
 		String model = map.get("Model");
@@ -169,6 +181,11 @@ public class OrginfoController {
 		String memo = map.get("memo");
 		String dataBag = null;
 		int statusCode = -1;
+		
+		if(orginfoService.findGatewayaddressExist(gatewayaddress)){
+			statusCode=-256;
+			return ResponseJson.responseAddJson("传输设备地址:"+gatewayaddress+"已存在", statusCode);
+		}
 		try {
 			Gateway gateway = new Gateway();
 			gateway.setGatewayaddress(gatewayaddress);
@@ -180,7 +197,7 @@ public class OrginfoController {
 			gateway.setControlorMode(controlorMode);
 			gateway.setMemo(memo);
 			orginfoService.addGateway(gateway);
-
+			
 			JSONArray json = JSONArray.fromObject(map.get("FireSysList"));
 			if (json.length() > 0) {
 				for (int i = 0; i < json.length(); i++) {
@@ -210,13 +227,13 @@ public class OrginfoController {
 	 * @throws IOException
 	 */
 
-	@Transactional
+
 	@ResponseBody
 	@RequestMapping(value = "/UpdateGateway", method = RequestMethod.POST)
 	public String updateGateway(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "Gatewayaddress", "newGatewayaddress",
-				"Manufacturer", "Model", "productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo");
+				"Manufacturer", "Model", "productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo","FireSysList");
 
 		String gatewayaddress = map.get("Gatewayaddress");// 设备传输地址
 		String newGatewayaddress = map.get("newGatewayaddress");
@@ -229,6 +246,11 @@ public class OrginfoController {
 		String memo = map.get("memo");
 		String dataBag = null;
 		int statusCode = -1;
+		if(StringUtils.isEmpty(gatewayaddress)){
+			statusCode=-256;
+			dataBag = "修改失败，gatewayaddress为空";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
 		try {
 			Gateway gateway = new Gateway();
 			gateway.setGatewayaddress(newGatewayaddress);
@@ -240,7 +262,7 @@ public class OrginfoController {
 			gateway.setControlorMode(controlorMode);
 			gateway.setMemo(memo);
 			// GatewaySystemInfo删除Gatewayaddress相关的所有数据
-			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+			//orginfoService.deleteGatewaySysInfo(gatewayaddress);
 
 			if (orginfoService.findGatewayaddressExist(newGatewayaddress)) {
 				orginfoService.updateGatewayExist(gateway);
@@ -308,27 +330,30 @@ public class OrginfoController {
 				map3.put("Gatewayaddress", gateway.getGatewayaddress());
 				map3.put("Manufacturer", gateway.getManufacturer());
 				map3.put("Model", gateway.getModel());
-				map3.put("productdate", gateway.getProductdate());
-				map3.put("setupdate", gateway.getSetupdate());
+				map3.put("productdate", DateUtils.formatToDateTime(gateway.getProductdate()));
+				map3.put("setupdate", DateUtils.formatToDateTime(gateway.getSetupdate()));
 				map3.put("ControlorManufacture", gateway.getControlorManufacture());
 				map3.put("ControlorMode", gateway.getControlorMode());
 				map3.put("memo", gateway.getMemo());
 				map3.put("ynonline", gateway.getYnonline());
-				map3.put("onlinetime", gateway.getOnlinetime());
-
+				map3.put("onlinetime", DateUtils.formatToDateTime(gateway.getOnlinetime()));
+				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 				for (GatewaySystemInfo gatewaysyinfo : gateway.getGatewaySystemInfoList()) {
-					Map<String, String> map2 = new HashMap<String, String>();
+					Map<String, Object> map2 = new HashMap<String, Object>();
 					map2.put("siteid", gatewaysyinfo.getSiteid());
 					map2.put("sitename", gatewaysyinfo.getSitename());
 					map2.put("tiSysType", gatewaysyinfo.getTiSysType());
 					map2.put("vSysdesc", gatewaysyinfo.getvSysdesc());
 					map2.put("Sysaddress", gatewaysyinfo.getSysaddress());
-					map3.put("FireSysList", map2);
+					list.add(map2);
+					
 				}
+				map3.put("FireSysList", list);
 				lmList.add(map3);
 			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
@@ -496,7 +521,8 @@ public class OrginfoController {
 	}
 
 	/**
-	 * 30.修改自动报警部件  * @param maprq  * @return  * @throws
+	 * 30.修改自动报警部件  * 
+	 * @param maprq  * @return  * @throws
 	 * JsonProcessingException:TODO  
 	 * 
 	 * @throws IOException
@@ -566,7 +592,8 @@ public class OrginfoController {
 	}
 
 	/**
-	 * 31.删除自动报警部件  * @param reqBody  * @param request  * @return  * @throws
+	 * 31.删除自动报警部件  * 
+	 * @param reqBody  * @param request  * @return  * @throws
 	 * JsonProcessingException:TODO  
 	 * 
 	 * @throws IOException
@@ -730,7 +757,6 @@ public class OrginfoController {
 			dataBag = "刪除失败";
 		}
 			return ResponseJson.responseAddJson(dataBag, statusCode);
-
 	}
 	
 	/**
@@ -1680,6 +1706,58 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
+	
+	/**
+	 * 133.传输设备信息
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/GatewayInfo", method = RequestMethod.POST)
+	public String gatewayInfo(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","Gatewayaddress");
+		String orgid = map.get("orgid");
+		String gatewayaddress = map.get("gatewayaddress");
+		List<Map<String, Object>> lmList = new ArrayList<>();
+		int statusCode = -1;
+		try {
+			List<Gateway> gatewayList = orginfoService.gatewayInfo(orgid,gatewayaddress);
+			for (Gateway gateway : gatewayList) {
+				Map<String, Object> map3 = new HashMap<String, Object>();
+
+				map3.put("Gatewayaddress", gateway.getGatewayaddress());
+				map3.put("Manufacturer", gateway.getManufacturer());
+				map3.put("Model", gateway.getModel());
+				map3.put("productdate", DateUtils.formatToDateTime(gateway.getProductdate()));
+				map3.put("setupdate", DateUtils.formatToDateTime(gateway.getSetupdate()));
+				map3.put("ControlorManufacture", gateway.getControlorManufacture());
+				map3.put("ControlorMode", gateway.getControlorMode());
+				map3.put("memo", gateway.getMemo());
+				map3.put("ynonline", gateway.getYnonline());
+				map3.put("onlinetime", DateUtils.formatToDateTime(gateway.getOnlinetime()));
+				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+				for (GatewaySystemInfo gatewaysyinfo : gateway.getGatewaySystemInfoList()) {
+						Map<String, Object> map2 = new HashMap<String, Object>();
+						map2.put("siteid", gatewaysyinfo.getSiteid());
+						map2.put("sitename", gatewaysyinfo.getSitename());
+						map2.put("tiSysType", gatewaysyinfo.getTiSysType());
+						map2.put("vSysdesc", gatewaysyinfo.getvSysdesc());
+						map2.put("Sysaddress", gatewaysyinfo.getSysaddress());
+						list.add(map2);
+						
+					}
+					map3.put("FireSysList", list);
+				lmList.add(map3);
+			}
+			statusCode = ConstValues.OK;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+	}
+	
+	
 	/**
 	 * 179.防火单位实时数据监控
 	 */
