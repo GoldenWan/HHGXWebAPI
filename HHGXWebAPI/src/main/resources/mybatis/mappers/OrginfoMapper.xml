@@ -62,14 +62,16 @@
 		UPDATE onlineorg
 		SET
 		orgcode = #{orgcode} ,
-		orgname = #{orgname} ,
+		orgname =
+		#{orgname} ,
 		souyouzhi = #{souyouzhi} ,
 		OrganType = #{organType} ,
 		vNamelegalperson = #{vNamelegalperson} ,
 		otherthings = #{otherthings} ,
 		YnImportant = #{ynImportant} ,
 		SuperiorOrg = #{superiorOrg} ,
-		cZip = #{cZip} ,
+		cZip =
+		#{cZip} ,
 		vTel = #{vTel} ,
 		fax =
 		#{fax} ,
@@ -78,7 +80,8 @@
 		SetupDate= #{setupDate} ,
 		realtymoney = #{realtymoney} ,
 		ipersonnum = #{ipersonnum} ,
-		fAreanum = #{fAreanum}
+		fAreanum =
+		#{fAreanum}
 		,
 		fBuildingarea = #{fBuildingarea} ,
 		GasType = #{gasType} ,
@@ -146,7 +149,8 @@
 		o.tiSysType
 		FROM
 		site s
-		INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+		INNER JOIN onlinefiresystem o ON s.siteid =
+		o.siteid
 		WHERE
 		orgid = #{orgid}
 	</select>
@@ -213,7 +217,8 @@
 		fLatitude,
 		orgid
 		FROM
-		site s
+		site
+		s
 		WHERE
 		s.orgid = #{orgid}
 		limit
@@ -275,16 +280,21 @@
 		SELECT
 		count(*)
 		FROM
-			onlinefiresystem o
-		inner JOIN site s ON o.siteid = s.siteid
-		inner JOIN firesystype f ON o.tiSysType = f.tiSysType
-		inner JOIN devicetype t ON f.tiSysType = t.tiSysType
-		inner JOIN devices d ON t.iDeviceType = d.iDeviceType	
+		onlinefiresystem o
+		inner JOIN site s ON o.siteid =
+		s.siteid
+		inner JOIN firesystype f ON
+		o.tiSysType = f.tiSysType
+		inner JOIN
+		devicetype t ON f.tiSysType =
+		t.tiSysType
+		inner JOIN devices d ON
+		t.iDeviceType = d.iDeviceType
 		WHERE
-		o.siteid=#{siteid} 
-		<if  test="tiSysType!=null and tiSysType!=''">
-		and 
-		o.tiSysType=#{tiSysType}
+		o.siteid=#{siteid}
+		<if test="tiSysType!=null and tiSysType!=''">
+			and
+			o.tiSysType=#{tiSysType}
 		</if>
 	</select>
 	<select id="getflatpicCount" resultType="int">
@@ -315,18 +325,20 @@
 
 	<select id="getFireSystemListCount" resultType="int">
 		SELECT
-			count(*)
+		count(*)
 		FROM
-			site s
+		site s
 		INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-		INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+		INNER
+		JOIN
+		firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
 		s.orgid = #{orgid}
 
 	</select>
 
 	<select id="getFireSystemListByPage" resultType="map">
-	SELECT
+		SELECT
 		o.tiSysType,
 		f.vSysdesc,
 		o.siteid,
@@ -335,17 +347,20 @@
 		o.YnOnline,
 		o.Remarks,
 		o.SysFlatpic
-	FROM
+		FROM
 		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+		INNER JOIN onlinefiresystem o ON
+		s.siteid = o.siteid
+		INNER JOIN firesystype f ON o.tiSysType =
+		f.tiSysType
 		WHERE
-		s.orgid = #{orgid}
+		s.orgid =
+		#{orgid}
 		limit
 		#{startPos},#{pageSize}
 	</select>
 	<select id="getOnlineFireSystem" resultType="map">
-	SELECT
+		SELECT
 		o.tiSysType,
 		f.vSysdesc,
 		s.siteid,
@@ -354,40 +369,47 @@
 		o.YnOnline,
 		o.Remarks,
 		o.SysFlatpic
-	FROM
+		FROM
 		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+		INNER JOIN onlinefiresystem o ON s.siteid =
+		o.siteid
+		INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
-		o.siteid = #{siteid}
+		o.siteid =
+		#{siteid}
 		and
 		o.tisystype=#{tisystype}
 	</select>
 	<select id="dataMonitor" resultType="map">
 		SELECT
-			t.iDeviceType,
-			t.DeviceTypeName,
-			f.tiSysType,
-			f.vSysdesc,
-			o.siteid,
-			s.sitename,
-			d.deviceaddress,
-			d.Gatewayaddress,
-			d.Sysaddress,
-			d.location,
-			d.dRecorddate,
-			d.StateValue
+		t.iDeviceType,
+		t.DeviceTypeName,
+		f.tiSysType,
+		f.vSysdesc,
+		o.siteid,
+		s.sitename,
+		d.deviceaddress,
+		d.Gatewayaddress,
+		d.Sysaddress,
+		d.location,
+		d.dRecorddate,
+		d.StateValue
 		FROM
-			onlinefiresystem o
-		inner JOIN site s ON o.siteid = s.siteid
-		inner JOIN firesystype f ON o.tiSysType = f.tiSysType
-		inner JOIN devicetype t ON f.tiSysType = t.tiSysType
-		inner JOIN devices d ON t.iDeviceType = d.iDeviceType
-		where 	
-		o.siteid=#{siteid} 
-		<if  test="tiSysType!=null and tiSysType!=''">
-		and 
-		o.tiSysType=#{tiSysType}
+		onlinefiresystem o
+		inner JOIN site s ON
+		o.siteid = s.siteid
+		inner JOIN firesystype f ON
+		o.tiSysType =
+		f.tiSysType
+		inner JOIN devicetype t ON f.tiSysType =
+		t.tiSysType
+		inner
+		JOIN devices d ON t.iDeviceType = d.iDeviceType
+		where
+		o.siteid=#{siteid}
+		<if test="tiSysType!=null and tiSysType!=''">
+			and
+			o.tiSysType=#{tiSysType}
 		</if>
 		limit
 		#{startPos},#{pageSize}
@@ -436,6 +458,39 @@
 		Gatewayaddress =
 		#{gatewayaddress}
 	</delete>
+	<select id="findGatewaySysInfoByType" resultType="map">
+		SELECT
+		Sysaddress,
+		Gatewayaddress
+		FROM
+		gatewaysysteminfo
+		WHERE
+		tiSysType =#{tiSysType}
+	</select>
+	<select id="findGatewaySysInfoByAddr" resultType="map">
+		SELECT
+		Sysaddress,
+		Gatewayaddress
+		FROM
+		gatewaysysteminfo
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+	</select>
+	<select id="findDevicesByGateway" resultType="map">
+		SELECT
+		deviceaddress,
+		Sysaddress,
+		Gatewayaddress
+		FROM
+		devices
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+		and
+		Sysaddress =
+		#{sysaddress}
+	</select>
 	<select id="gePatrolRecordByOrgCount" resultType="int">
 		SELECT
 		count(*)
@@ -445,7 +500,6 @@
 		v.Gatewayaddress
 		WHERE
 		v.orgid = #{orgid}
-
 	</select>
 	<select id="getTotalFlatPic" resultType="onlineOrg">
 		SELECT
@@ -458,43 +512,45 @@
 
 	<select id="selectGateway" resultMap="gatewayMap">
 		SELECT
-			Gatewayaddress,
-			Manufacturer,
-			Model,
-			productdate,
-			setupdate,
-			ControlorManufacture,
-			ControlorMode,
-			memo,
-			ynonline,
-			onlinetime
+		Gatewayaddress,
+		Manufacturer,
+		Model,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo,
+		ynonline,
+		onlinetime
 		FROM
-			v_gatewayInfo
+		v_gatewayInfo
 		WHERE
-		orgid = #{orgid}
+		orgid =
+		#{orgid}
 		limit
 		#{startPos},#{pageSize}
 	</select>
 
 	<select id="gatewayInfo" resultMap="gatewayMap">
 		SELECT
-			Gatewayaddress,
-			Manufacturer,
-			Model,
-			productdate,
-			setupdate,
-			ControlorManufacture,
-			ControlorMode,
-			memo,
-			ynonline,
-			onlinetime
+		Gatewayaddress,
+		Manufacturer,
+		Model,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo,
+		ynonline,
+		onlinetime
 		FROM
-			v_gatewayInfo
+		v_gatewayInfo
 		WHERE
-		orgid = #{orgid}
-		and 
+		orgid =
+		#{orgid}
+		and
 		Gatewayaddress=#{gatewayaddress}
-		
+
 	</select>
 	<resultMap type="gateway" id="gatewayMap">
 		<id column="Gatewayaddress" property="gatewayaddress" />
@@ -699,30 +755,35 @@
 	</select>
 	<update id="updateGatewaySame">
 		UPDATE gateway
-		SET 
+		SET
 		<if test="manufacturer!=null and manufacturer!=''">
-		Manufacturer = #{manufacturer},
+			Manufacturer = #{manufacturer},
 		</if>
 		<if test="model!=null and model!=''">
-		Model = #{model} ,
+			Model = #{model} ,
 		</if>
 		<if test="productdate!=null and productdate!=''">
-		productdate = #{productdate} ,
+			productdate = #{productdate} ,
 		</if>
 		<if test="setupdate!=null and setupdate!=''">
-		setupdate =#{setupdate} ,</if>
+			setupdate =#{setupdate} ,
+		</if>
 		<if test="controlorManufacture!=null and controlorManufacture!=''">
-		ControlorManufacture = #{controlorManufacture} ,
+			ControlorManufacture = #{controlorManufacture} ,
 		</if>
 		<if test="controlorMode!=null and controlorMode!=''">
-		ControlorMode = #{controlorMode} ,
+			ControlorMode = #{controlorMode} ,
 		</if>
 		<if test="memo!=null and memo!=''">
-		memo = #{memo}
+			memo = #{memo}
 		</if>
 		WHERE
 		Gatewayaddress =#{gatewayaddress}
 	</update>
+
+
+
+
 	<insert id="updateGatewaySysInfo">
 		INSERT INTO
 		gatewaysysteminfo
@@ -773,6 +834,31 @@
 		Gatewayaddress =
 		#{gatewayaddress}
 	</delete>
+	<delete id="deleteDevices1">
+		DELETE
+		FROM
+		devices
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+		and
+		Sysaddress =
+		#{sysaddress}
+	</delete>
+	<delete id="deleteAnlogAlarmSettings">
+		DELETE
+		FROM
+		anlogalarmsettings
+		WHERE
+		Gatewayaddress =
+		#{gatewayaddress}
+		and
+		Sysaddress =
+		#{sysaddress}
+		and
+		deviceaddress =
+		#{deviceaddress}
+	</delete>
 	<select id="findMaxDeviceNo" resultType="string">
 		SELECT
 		max(DeviceNo)
@@ -780,6 +866,13 @@
 		devices
 		WHERE
 		cFlatPic = #{cFlatPic}
+	</select>
+	<select id="deviceTypeList" resultType="map">
+		SELECT
+		iDeviceType,
+		DeviceTypeName
+		FROM
+		devicetype
 	</select>
 
 	<insert id="addDevices">
@@ -858,6 +951,68 @@
 		WHERE
 		cFlatPic = #{cFlatPic}
 	</delete>
+	<select id="siteDevicesCount" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		(
+		SELECT
+		s.orgid,
+		s.siteid,
+		s.sitename,
+		f.floornum,
+		f.cFlatPic,
+		f.imFlatPic
+		FROM
+		site s
+		INNER JOIN flatpic f ON s.siteid =
+		f.siteid
+		) a
+		INNER JOIN (
+		SELECT
+		count(*) deviceCount
+		FROM
+		flatpic f
+		INNER
+		JOIN devices d ON f.cFlatPic = d.cFlatPic
+		) b
+		WHERE
+		orgid= #{orgid}
+		<if test="siteid!=''and siteid!=null">
+			and siteid=#{siteid}
+		</if>
+
+	</select>
+	<select id="siteDevices" resultType="map">
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		s.orgid,
+		s.siteid,
+		s.sitename,
+		f.floornum,
+		f.cFlatPic,
+		f.imFlatPic
+		FROM
+		site s
+		INNER JOIN flatpic f ON s.siteid = f.siteid
+		) a
+		INNER JOIN (
+		SELECT
+		count(*) deviceCount
+		FROM
+		flatpic f
+		INNER JOIN devices
+		d ON f.cFlatPic = d.cFlatPic
+		) b
+		where
+		orgid= #{orgid}
+		<if test="siteid!=''and siteid!=null">
+			and siteid=#{siteid}
+		</if>
+	</select>
 	<select id="selectDevicesListCount" resultType="int">
 		SELECT
 		count(*)
@@ -874,28 +1029,27 @@
 			deviceaddress = #{deviceaddress}
 		</if>
 	</select>
-	<select id="selectDevicesLists" resultType="deviceList">
+	<select id="selectDevicesLists" resultType="map">
 		SELECT
-		c.deviceaddress deviceaddress,
-		c.sysaddress sysaddress,
-		c.gatewayaddress gatewayaddress,
-		c.fPositionX fPositionX,
-		c.fPositionY
-		fPositionY,
-		c.location location,
-		c.DeviceNo deviceNo,
-		c.iDeviceType
+		c.deviceaddress AS deviceaddress,
+		c.sysaddress AS Sysaddress,
+		c.gatewayaddress AS
+		Gatewayaddress,
+		c.fPositionX AS fPositionX,
+		c.fPositionY AS fPositionY,
+		c.location AS location,
+		c.DeviceNo AS DeviceNo,
+		c.iDeviceType AS
 		iDeviceType,
-		f.imFlatPic imFlatPic,
-		d.DeviceTypeName deviceTypeName
+		f.imFlatPic AS imFlatPic,
+		d.DeviceTypeName AS
+		DeviceTypeName
 		FROM
 		devices c
 		INNER JOIN flatpic f ON c.cFlatPic = f.cFlatPic
-		INNER JOIN
-		devicetype d ON c.iDeviceType = d.iDeviceType
+		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
 		WHERE
-		c.cFlatPic =
-		#{cFlatPic}
+		c.cFlatPic =#{cFlatPic}
 		<if test="iDeviceType!='0'.toString()">
 			AND
 			c.iDeviceType = #{iDeviceType}
@@ -905,32 +1059,22 @@
 			c.deviceaddress = #{deviceaddress}
 		</if>
 	</select>
-	<select id="selectDeviceDetail" resultType="devices">
+	<select id="selectDeviceDetail" resultType="map">
 		SELECT
-		deviceaddress,
-		sysaddress,
-		gatewayaddress,
-		vdesc,
-		fPositionX,
-		fPositionY,
-		location,
-		Manufacture manufacture,
-		Model model,
-		ProductDate productDate,
-		expdate
-		expdate,
-		AddTime addTime,
-		memo memo,
-		DeviceNo deviceNo,
-		cFlatPic cFlatPic,
-		c.iDeviceType iDeviceType,
-		StateValue stateValue,
-		StateTime stateTime,
-		d.DeviceTypeName deviceTypeName
+		c.deviceaddress,
+		c.Sysaddress,
+		c.Gatewayaddress,
+		c.fPositionX,
+		c.fPositionY,
+		c.location,
+		c.DeviceNo,
+		c.iDeviceType,
+		f.imFlatPic,
+		d.DeviceTypeName
 		FROM
-		devices c
-		INNER JOIN devicetype d ON
-		c.iDeviceType = d.iDeviceType
+		flatpic f
+		INNER JOIN devices c ON c.cFlatPic = f.cFlatPic
+		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
 		WHERE
 		c.Gatewayaddress = #{gatewayaddress}
 		AND c.Sysaddress = #{sysaddress}
@@ -956,12 +1100,14 @@
 	<select id="findMaxBack8" resultType="string">
 		SELECT
 
-		max(CONVERT (RIGHT(s.siteid, 8), SIGNED)) maxsiteid
+		max(CONVERT
+		(RIGHT(s.siteid, 8), SIGNED)) maxsiteid
 
 		FROM
 		site s
 		WHERE
-		s.orgid = #{orgid}
+		s.orgid =
+		#{orgid}
 	</select>
 
 

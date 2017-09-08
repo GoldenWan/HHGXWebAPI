@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +33,6 @@ import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
-import com.hhgx.soft.utils.GetRequestJsonUtils;
-import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;

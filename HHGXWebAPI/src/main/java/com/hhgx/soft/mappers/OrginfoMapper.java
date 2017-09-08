@@ -76,9 +76,9 @@ public interface OrginfoMapper {
 
 	void deleteDevicesBycflatPic(String cFlatPic);
 	int selectDevicesListCount(@Param("cFlatPic")String cFlatPic, @Param("iDeviceType")String iDeviceType, @Param("deviceaddress")String deviceaddress);
-	List<DeviceList> selectDevicesLists(@Param("cFlatPic")String cFlatPic, @Param("iDeviceType")String iDeviceType, @Param("deviceaddress")String deviceaddress, @Param("startPos")int startPos,
+	List<Map<String, String>> selectDevicesLists(@Param("cFlatPic")String cFlatPic, @Param("iDeviceType")String iDeviceType, @Param("deviceaddress")String deviceaddress, @Param("startPos")int startPos,
 			@Param("pageSize")int pageSize);
-	Devices selectDeviceDetail(@Param("gatewayaddress") String gatewayaddress, @Param("sysaddress") String sysaddress,
+	List<Map<String, String>> selectDeviceDetail(@Param("gatewayaddress") String gatewayaddress, @Param("sysaddress") String sysaddress,
 			@Param("deviceaddress") String deviceaddress);
 
 	List<Site> getSiteName(String orgid);
@@ -122,6 +122,24 @@ public interface OrginfoMapper {
 	List<Map<String, String>> getOnlineFireSystem(@Param("siteid")String siteid, @Param("tisystype")String tisystype);
 
 	List<Gateway> gatewayInfo(@Param("orgid")String orgid, @Param("gatewayaddress")String gatewayaddress);
+
+
+
+	int siteDevicesCount(@Param("orgid")String orgid, @Param("siteid")String siteid);
+
+	List<Map<String, Object>> siteDevices(@Param("orgid")String orgid,  @Param("siteid")String siteid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
+
+	List<Map<String, Object>> deviceTypeList();
+
+	List<Map<String, Object>> findGatewaySysInfoByType(@Param("tiSysType")String tiSysType);
+	List<Map<String, Object>> findGatewaySysInfoByAddr(@Param("gatewayaddress")String gatewayaddress);
+
+	List<Map<String, Object>> findDevicesByGateway(@Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
+
+	void deleteAnlogAlarmSettings(@Param("deviceaddress")Object deviceaddress, @Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
+
+	void deleteDevices1(@Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
+
 
 
 	

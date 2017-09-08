@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
-import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.Flatpic;
@@ -141,11 +140,18 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			// Cannot delete or update a parent row: a foreign key constraint fails (`hhnew`.`gatewaysysteminfo`, CONSTRAINT `RefonlineFiresystem142` FOREIGN KEY (`tiSysType`, `siteid`) REFERENCES `onlinefiresystem` (`tiSysType`, `siteid`))
-			//at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-			orginfoService.deleteorgSys(siteid, tiSysType);
-			
+			List<Map<String, Object>> keys=orginfoService.findGatewaySysInfoByType(tiSysType);
+			for(Map<String, Object> m: keys){
+				List<Map<String, Object>> keys1=orginfoService.findDevicesByGateway(m.get("Sysaddress"),m.get("Gatewayaddress"));
 
+				for(Map<String, Object> m1: keys1){
+					
+					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"),m1.get("Sysaddress"),m1.get("Gatewayaddress"));
+				}
+				orginfoService.deleteDevices1(m.get("Sysaddress"),m.get("Gatewayaddress"));
+			}
+			orginfoService.deleteGatewaySysInfo(tiSysType);
+			orginfoService.deleteorgSys(siteid, tiSysType);
 			statusCode = ConstValues.OK;
 			dataBag = "刪除成功";
 		} catch (Exception e) {
@@ -183,8 +189,21 @@ public class OrginfoController {
 		int statusCode = -1;
 		
 		if(orginfoService.findGatewayaddressExist(gatewayaddress)){
-			statusCode=-256;
-			return ResponseJson.responseAddJson("传输设备地址:"+gatewayaddress+"已存在", statusCode);
+			List<Map<String, Object>> keys=orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
+			for(Map<String, Object> m: keys){
+				List<Map<String, Object>> keys1=orginfoService.findDevicesByGateway(m.get("Sysaddress"),m.get("Gatewayaddress"));
+
+				for(Map<String, Object> m1: keys1){
+					
+					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"),m1.get("Sysaddress"),m1.get("Gatewayaddress"));
+				}
+				orginfoService.deleteDevices1(m.get("Sysaddress"),m.get("Gatewayaddress"));
+			}
+		
+			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+			orginfoService.deleteGateway(gatewayaddress);
+			//statusCode=-256;
+			//return ResponseJson.responseAddJson("传输设备地址:"+gatewayaddress+"已存在", statusCode);
 		}
 		try {
 			Gateway gateway = new Gateway();
@@ -261,8 +280,18 @@ public class OrginfoController {
 			gateway.setControlorManufacture(controlorManufacture);
 			gateway.setControlorMode(controlorMode);
 			gateway.setMemo(memo);
-			// GatewaySystemInfo删除Gatewayaddress相关的所有数据
-			//orginfoService.deleteGatewaySysInfo(gatewayaddress);
+			List<Map<String, Object>> keys=orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
+			for(Map<String, Object> m: keys){
+				List<Map<String, Object>> keys1=orginfoService.findDevicesByGateway(m.get("Sysaddress"),m.get("Gatewayaddress"));
+
+				for(Map<String, Object> m1: keys1){
+					
+					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"),m1.get("Sysaddress"),m1.get("Gatewayaddress"));
+				}
+				orginfoService.deleteDevices1(m.get("Sysaddress"),m.get("Gatewayaddress"));
+			}
+			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+			orginfoService.deleteGateway(gatewayaddress);
 
 			if (orginfoService.findGatewayaddressExist(newGatewayaddress)) {
 				orginfoService.updateGatewayExist(gateway);
@@ -374,6 +403,16 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
+			List<Map<String, Object>> keys=orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
+			for(Map<String, Object> m: keys){
+				List<Map<String, Object>> keys1=orginfoService.findDevicesByGateway(m.get("Sysaddress"),m.get("Gatewayaddress"));
+
+				for(Map<String, Object> m1: keys1){
+					
+					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"),m1.get("Sysaddress"),m1.get("Gatewayaddress"));
+				}
+				orginfoService.deleteDevices1(m.get("Sysaddress"),m.get("Gatewayaddress"));
+			}
 			orginfoService.deleteGatewaySysInfo(gatewayaddress);
 			orginfoService.deleteGateway(gatewayaddress);
 			statusCode = ConstValues.OK;
@@ -487,8 +526,8 @@ public class OrginfoController {
 			Devices devices = new Devices();
 			// 插入数据时DeviceNo：根据cFlatPic查找，若没有数据DeviceNo=1，若有数据则取最大数据+1
 
-			int deviceNo = 1;
-			deviceNo = orginfoService.findMaxDeviceNo(cFlatPic) + 1;
+			int deviceNo = orginfoService.findMaxDeviceNo(cFlatPic) + 1;
+			
 			devices.setDeviceaddress(road + "." + address);
 			devices.setRoad(road);
 			devices.setAddress(gatewayaddress);
@@ -641,37 +680,22 @@ public class OrginfoController {
 		String pageIndex = ret.get("PageIndex");
 
 		Page page = null;
-		List<DeviceList> deviceLists = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = orginfoService.selectDevicesListCount(cFlatPic, iDeviceType, deviceaddress);
 		int statusCode = -1;
 
+		int totalCount = orginfoService.selectDevicesListCount(cFlatPic, iDeviceType, deviceaddress);
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
-				deviceLists = orginfoService.selectDevicesLists(cFlatPic, iDeviceType, deviceaddress,
+				lmList = orginfoService.selectDevicesLists(cFlatPic, iDeviceType, deviceaddress,
 						page.getStartPos(), page.getPageSize());
 
 			} else {
 				page = new Page(totalCount, 1);
-				deviceLists = orginfoService.selectDevicesLists(cFlatPic, iDeviceType, deviceaddress,
+				lmList = orginfoService.selectDevicesLists(cFlatPic, iDeviceType, deviceaddress,
 						page.getStartPos(), page.getPageSize());
 			}
-			for (DeviceList deviceList : deviceLists) {
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("deviceaddress", deviceList.getDeviceaddress());
-				map2.put("sysaddress", deviceList.getSysaddress());
-				map2.put("gatewayaddress", deviceList.getGatewayaddress());
-				map2.put("fPositionX", deviceList.getfPositionX());
-				map2.put("fPositionY", deviceList.getfPositionY());
-				map2.put("location", deviceList.getLocation());
-				map2.put("DeviceNo", deviceList.getDeviceNo());
-				map2.put("iDeviceType", deviceList.getiDeviceType());
-				map2.put("imFlatPic", deviceList.getImFlatPic());
-				map2.put("DeviceTypeName", deviceList.getDeviceTypeName());
-
-				lmList.add(map2);
-			}
+			
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -696,39 +720,34 @@ public class OrginfoController {
 		String gatewayaddress = ret.get("gatewayaddress");
 		String sysaddress = ret.get("sysaddress");
 		String deviceaddress = ret.get("deviceaddress");
-		Map<String, String> map2 = new HashMap<String, String>();
+	
 		int statusCode = -1;
-		Devices devices = new Devices();
+		List<Map<String, String>> list = new ArrayList<>();
 		try {
-			devices = orginfoService.selectDeviceDetail(gatewayaddress, sysaddress, deviceaddress);
-			if (!StringUtils.isEmpty(devices)) {
+			
+			List<Map<String, String>>  devices = orginfoService.selectDeviceDetail(gatewayaddress, sysaddress, deviceaddress);
+			for(Map<String, String> m : devices){
+				if(!StringUtils.isEmpty(m.get("expdate")))
+					m.put("expdate", DateUtils.formatToDateTime(m.get("expdate").toString()));
+				if(!StringUtils.isEmpty(m.get("dRecorddate")))
+				m.put("dRecorddate", DateUtils.formatToDateTime(m.get("dRecorddate").toString()));
+				if(!StringUtils.isEmpty(m.get("stateTime")))
+				m.put("stateTime", DateUtils.formatToDateTime(m.get("stateTime").toString()));
+				if(!StringUtils.isEmpty(m.get("productDate")))
 
-				map2.put("deviceaddress", devices.getDeviceaddress());
-				map2.put("sysaddress", String.valueOf(devices.getSysaddress()));
-				map2.put("gatewayaddress", devices.getGatewayaddress());
-				map2.put("vdesc", devices.getVdesc());
-				map2.put("fPositionX", devices.getfPositionX());
-				map2.put("fPositionY", devices.getfPositionY());
-				map2.put("location", devices.getLocation());
-				map2.put("Manufacture", devices.getManufacture());
-				map2.put("Model", devices.getModel());
-				map2.put("ProductDate", DateUtils.formatDateTime(devices.getProductDate()));
-				map2.put("expdate", DateUtils.formatDateTime(devices.getExpdate()));
-				map2.put("AddTime", devices.getDeviceaddress());
-				map2.put("memo", devices.getMemo());
-				map2.put("DeviceNo", String.valueOf(devices.getDeviceNo()));
-				map2.put("cFlatPic", devices.getcFlatPic());
-				map2.put("iDeviceType", devices.getiDeviceType());
-				map2.put("StateValue", devices.getStateValue());
-				map2.put("StateTime", DateUtils.formatDateTime(devices.getStateTime()));
-				map2.put("DeviceTypeName", devices.getDeviceTypeName());
+				m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+				if(!StringUtils.isEmpty(m.get("addTime")))
+
+				m.put("addTime", DateUtils.formatToDateTime(m.get("addTime").toString()));
+				list.add(m);
+				
 			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJson(map2, statusCode);
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
 	/**
@@ -1706,6 +1725,44 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
+	/**
+	 * 132.建筑物对应的部件数量信息
+	 * 
+	 * 接口方法	SiteDevices
+	 * {"infoBag":{"siteid":"","orgid":"510108000001","PageIndex":1}}:
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/SiteDevices", method = RequestMethod.POST)
+	public String siteDevices(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid","siteid","PageIndex");
+		String orgid = map.get("orgid");
+		String siteid = map.get("siteid");
+		String pageIndex = map.get("pageIndex");
+		List<Map<String, Object>> lmList = new ArrayList<>();
+		int statusCode = -1;
+		Page page = null;
+					
+		int totalCount = orginfoService.siteDevicesCount(orgid, siteid);
+		
+			try {
+				if (pageIndex != null) {
+					page = new Page(totalCount, Integer.parseInt(pageIndex));
+					lmList = orginfoService.siteDevices(orgid, siteid, page.getStartPos(), page.getPageSize());
+
+				} else {
+					page = new Page(totalCount, 1);
+					lmList = orginfoService.siteDevices(orgid, siteid, page.getStartPos(), page.getPageSize());
+				}	
+			statusCode = ConstValues.OK;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+	}
 	
 	/**
 	 * 133.传输设备信息
@@ -1756,6 +1813,25 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 	}
+	/**
+	 * 134.查询部件类型列表
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/DeviceTypeList", method = RequestMethod.POST)
+	public String deviceTypeList() throws IOException {
+		List<Map<String, Object>> lmList =null;
+		int statusCode = -1;
+		try {
+			lmList = orginfoService.deviceTypeList();
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+	}
+/**
+ * 156.根据建筑物编号获取传输设备地址和系统地址
+ */
 	
 	
 	/**
@@ -1786,6 +1862,7 @@ public class OrginfoController {
 					lmList = orginfoService.dataMonitor(siteid, tiSysType, page.getStartPos(), page.getPageSize());
 				}
 				for(Map<String, Object> m:lmList){
+					if(!StringUtils.isEmpty(m.get("dRecorddate")))
 					m.put("dRecorddate", DateUtils.formatToDateTime(m.get("dRecorddate").toString()));
 					list.add(m);
 					

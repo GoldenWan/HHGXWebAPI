@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hhgx.soft.entitys.FireDevice;
 import com.hhgx.soft.entitys.Firesystype;
-import com.hhgx.soft.entitys.Gateway;
-import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Training;
@@ -29,9 +27,6 @@ import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * 
@@ -45,15 +40,16 @@ public class FacilityController {
 
 	@Autowired
 	private FacilityService facilityService;
-	
+
 	/**
 	 * 15.获取所有的消防系统
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/GetAllSys", method = RequestMethod.POST)
 	public String getAllSys() throws IOException {
-		List<Firesystype> list =null;
+		List<Firesystype> list = null;
 		int statusCode = -1;
 		try {
 			list = facilityService.getAllSys();
@@ -65,7 +61,7 @@ public class FacilityController {
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
-	
+
 	/**
 	 *    
 	 */
@@ -73,8 +69,8 @@ public class FacilityController {
 	@RequestMapping(value = "/AddFireDevice", method = RequestMethod.POST)
 	public String addFireDevice(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "devicename",
-				"Manufacture", "model", "productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType","memo");
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "devicename", "Manufacture", "model",
+				"productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType", "memo");
 		String devicename = map.get("devicename");
 		String manufacture = map.get("Manufacture");
 		String model = map.get("model");
@@ -89,11 +85,11 @@ public class FacilityController {
 		int statusCode = -1;
 		try {
 			FireDevice fireDevice = new FireDevice();
-			//1101010000 0100000003
-			//数据库字段30-》34yyyyMMddHHmmss
-			fireDevice.setDeviceNo(siteid+DateUtils.formatDateToString("yyyyMMddHHmmss"));
+			// 1101010000 0100000003
+			// 数据库字段30-》34yyyyMMddHHmmss
+			fireDevice.setDeviceNo(siteid + DateUtils.formatDateToString("yyyyMMddHHmmss"));
 			fireDevice.setDevicename(devicename);
-			
+
 			fireDevice.setiDeviceType(iDeviceType);
 			fireDevice.setManufacture(manufacture);
 			fireDevice.setMemo(memo);
@@ -104,7 +100,7 @@ public class FacilityController {
 			fireDevice.setSiteid(siteid);
 			fireDevice.setValidate(validate);
 			facilityService.addFireDevice(fireDevice);
-			
+
 			statusCode = ConstValues.OK;
 			dataBag = "添加成功";
 		} catch (Exception e) {
@@ -115,6 +111,7 @@ public class FacilityController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
+
 	/**
 	 * 74.删除消防设备信息
 	 */
@@ -136,11 +133,12 @@ public class FacilityController {
 			statusCode = ConstValues.FAILED;
 			dataBag = "刪除失败";
 		}
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
-	
-	/**40.修改消防设备信息
+
+	/**
+	 * 40.修改消防设备信息
 	 * 
 	 */
 
@@ -148,8 +146,8 @@ public class FacilityController {
 	@RequestMapping(value = "/UpdateFireDevice", method = RequestMethod.POST)
 	public String updateFireDevice(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "deviceNo", "devicename",
-				"Manufacture", "model", "productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType","memo");
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "deviceNo", "devicename", "Manufacture", "model",
+				"productDate", "validate", "SetupDate", "SetLocation", "siteid", "iDeviceType", "memo");
 		String deviceNo = map.get("deviceNo");// 设备传输地址
 		String devicename = map.get("devicename");
 		String manufacture = map.get("Manufacture");
@@ -176,9 +174,9 @@ public class FacilityController {
 			fireDevice.setSetupDate(setupDate);
 			fireDevice.setSiteid(siteid);
 			fireDevice.setValidate(validate);
-			
+
 			facilityService.updateFireDevice(fireDevice);
-			
+
 			statusCode = ConstValues.OK;
 			dataBag = "修改成功";
 		} catch (Exception e) {
@@ -189,9 +187,7 @@ public class FacilityController {
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
-	
-	
-	
+
 	/**
 	 * 75.获取设备列表信息【分页】
 	 * 
@@ -209,7 +205,7 @@ public class FacilityController {
 		String pageIndex = map.get("pageIndex");
 
 		Page page = null;
-		List<Map<String, Object>> list =null;
+		List<Map<String, Object>> list = null;
 		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
 
@@ -219,25 +215,33 @@ public class FacilityController {
 
 				if (pageIndex != null) {
 					page = new Page(pageCount, Integer.parseInt(pageIndex));
-					list = facilityService.getFireDeviceListBySys(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+					list = facilityService.getFireDeviceListBySys(orgid, conditionValue, page.getStartPos(),
+							page.getPageSize());
 
 				} else {
 					page = new Page(pageCount, 1);
-					list = facilityService.getFireDeviceListBySys(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+					list = facilityService.getFireDeviceListBySys(orgid, conditionValue, page.getStartPos(),
+							page.getPageSize());
 				}
-				for(Map<String, Object> m:list){
-					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
-					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
-					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+				for (Map<String, Object> m : list) {
+					if (!StringUtils.isEmpty(m.get("productDate")))
+
+						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					if (!StringUtils.isEmpty(m.get("validate")))
+
+						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					if (!StringUtils.isEmpty(m.get("SetupDate")))
+
+						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
 					lists.add(m);
-					
+
 				}
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
-			
+
 			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
 
 		} else if (conditionName.equals("deviceNo")) {
@@ -246,19 +250,23 @@ public class FacilityController {
 			try {
 				if (pageIndex != null) {
 					page = new Page(pageCount, Integer.parseInt(pageIndex));
-					list = facilityService.getFireDeviceListByDevice(orgid, conditionValue,page.getStartPos(), page.getPageSize());
+					list = facilityService.getFireDeviceListByDevice(orgid, conditionValue, page.getStartPos(),
+							page.getPageSize());
 
 				} else {
 					page = new Page(pageCount, 1);
-					list = facilityService.getFireDeviceListByDevice(orgid,conditionValue, page.getStartPos(), page.getPageSize());
+					list = facilityService.getFireDeviceListByDevice(orgid, conditionValue, page.getStartPos(),
+							page.getPageSize());
 				}
-				
-				for(Map<String, Object> m:list){
-					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
-					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
-					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+
+				for (Map<String, Object> m : list) {
+					if (!StringUtils.isEmpty(m.get("productDate")))
+						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					if (!StringUtils.isEmpty(m.get("validate")))
+						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					if (!StringUtils.isEmpty(m.get("SetupDate")))
+						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
 					lists.add(m);
-					
 				}
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
@@ -270,8 +278,7 @@ public class FacilityController {
 		}
 		return null;
 	}
-	
-	
+
 	/**
 	 * 110.获取部件类型
 	 */
@@ -281,35 +288,39 @@ public class FacilityController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "deviceNo");
 		String deviceNo = map.get("deviceNo");
-		
-		List<Map<String, Object>> list =null;
+
+		List<Map<String, Object>> list = null;
 		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
-	  try{
+		try {
 			list = facilityService.getFireDeviceListByDeviceNo(deviceNo);
-				
-				for(Map<String, Object> m:list){
+
+			for (Map<String, Object> m : list) {
+				if (!StringUtils.isEmpty(m.get("productDate")))
 					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+				if (!StringUtils.isEmpty(m.get("validate")))
 					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+				if (!StringUtils.isEmpty(m.get("SetupDate")))
 					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
-					lists.add(m);
-					
-				}
-				statusCode = ConstValues.OK;
-			} catch (Exception e) {
-				e.printStackTrace();
-				statusCode = ConstValues.FAILED;
+				lists.add(m);
+
 			}
-			
-			return ResponseJson.responseFindJsonArray(lists, statusCode);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+
+		return ResponseJson.responseFindJsonArray(lists, statusCode);
 	}
+
 	/**
 	 * 111.获取消防设备信息
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/GetDeviceType", method = RequestMethod.POST)
 	public String getDeviceType() throws IOException {
-		List<Map<String, String>> list =null;
+		List<Map<String, String>> list = null;
 		int statusCode = -1;
 		try {
 			list = facilityService.getDeviceType();
@@ -322,14 +333,12 @@ public class FacilityController {
 
 	}
 
-	
-
 	/**
 	 * 160.获取消防安全培训情况【**】
 	 * 
 	 * @param reqBody
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getTrainingList", method = RequestMethod.POST)
@@ -341,17 +350,16 @@ public class FacilityController {
 		String startDate = map.get("startTime");
 		String endDate = map.get("endTime");
 		String pageIndex = map.get("pageIndex");
-		Timestamp startTime= null;
+		Timestamp startTime = null;
 		Timestamp endTime = null;
-		
-		if(!StringUtils.isEmpty(startDate)){
-			startTime=DateUtils.stringToTimestamp(startDate," 00:00:00");
+
+		if (!StringUtils.isEmpty(startDate)) {
+			startTime = DateUtils.stringToTimestamp(startDate, " 00:00:00");
 		}
-		if(!StringUtils.isEmpty(endDate)){
-			endTime=DateUtils.stringToTimestamp(endDate," 23:59:59");
+		if (!StringUtils.isEmpty(endDate)) {
+			endTime = DateUtils.stringToTimestamp(endDate, " 23:59:59");
 		}
 
-		
 		Page page = null;
 		List<Training> trainingList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
@@ -370,10 +378,10 @@ public class FacilityController {
 						page.getPageSize());
 			}
 
-			for (Training training : trainingList) {				
+			for (Training training : trainingList) {
 				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("TrainingID",training.getTrainingID());
-				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(),null));
+				map2.put("TrainingID", training.getTrainingID());
+				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(), null));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
@@ -381,7 +389,7 @@ public class FacilityController {
 				map2.put("Lecturer", training.getLecturer());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
 				lmList.add(map2);
-			}	
+			}
 			statusCode = ConstValues.OK;
 
 		} catch (Exception e) {
@@ -394,7 +402,8 @@ public class FacilityController {
 
 	/**
 	 * 163.获取消防安全培训详情【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -404,7 +413,7 @@ public class FacilityController {
 
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "TrainingID");
 		String trainingID = map.get("trainingID");
-		if(StringUtils.isEmpty(trainingID)){
+		if (StringUtils.isEmpty(trainingID)) {
 			return ResponseJson.responseAddJson("TrainingID 为空", -256);
 		}
 		Map<String, String> map2 = new HashMap<String, String>();
@@ -412,9 +421,10 @@ public class FacilityController {
 		try {
 			Training training = facilityService.getTraingingDetail(trainingID);
 			if (!StringUtils.isEmpty(training)) {
-				
+
 				map2.put("TrainingID", training.getTrainingID());
-				map2.put("TrainingTime", DateUtils.formatToDate(DateUtils.formatDate(training.getTrainingTime(),null)));
+				map2.put("TrainingTime",
+						DateUtils.formatToDate(DateUtils.formatDate(training.getTrainingTime(), null)));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingType", training.getTrainingType());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
@@ -443,7 +453,8 @@ public class FacilityController {
 
 	/**
 	 * 166.删除消防安全培训【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 * 
 	 */
 
@@ -486,25 +497,25 @@ public class FacilityController {
 	@RequestMapping(value = "/GetManoeuvreList", method = { RequestMethod.POST })
 	public String getManoeuvreList(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex","startTime","endTime");
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "PageIndex", "startTime", "endTime");
 		String orgid = map.get("orgid");
 		String pageIndex = map.get("pageIndex");
 		String startTime_ = map.get("startTime");
 		String endTime_ = map.get("endTime");
-		Timestamp startTime= null;
+		Timestamp startTime = null;
 		Timestamp endTime = null;
-		
-		if(!StringUtils.isEmpty(startTime_)){
-			startTime=DateUtils.stringToTimestamp(startTime_," 00:00:00");
+
+		if (!StringUtils.isEmpty(startTime_)) {
+			startTime = DateUtils.stringToTimestamp(startTime_, " 00:00:00");
 		}
-		if(!StringUtils.isEmpty(endTime_)){
-			endTime=DateUtils.stringToTimestamp(endTime_," 23:59:59");
+		if (!StringUtils.isEmpty(endTime_)) {
+			endTime = DateUtils.stringToTimestamp(endTime_, " 23:59:59");
 		}
 
 		Page page = null;
 		List<Manoeuvre> manoeuvreList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = facilityService.getManoeuvreCount(orgid,startTime,endTime);
+		int totalCount = facilityService.getManoeuvreCount(orgid, startTime, endTime);
 		int statusCode = -1;
 		if (StringUtils.isEmpty(orgid) || orgid.equals("null")) {
 			return ResponseJson.responseAddJson("orgid 为空", statusCode);
@@ -513,11 +524,13 @@ public class FacilityController {
 		try {
 			if (pageIndex != null) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
-				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid,startTime,endTime, page.getStartPos(), page.getPageSize());
+				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid, startTime, endTime, page.getStartPos(),
+						page.getPageSize());
 
 			} else {
 				page = new Page(totalCount, 1);
-				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid,startTime,endTime, page.getStartPos(), page.getPageSize());
+				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid, startTime, endTime, page.getStartPos(),
+						page.getPageSize());
 			}
 
 			for (Manoeuvre manoeuvre : manoeuvreList) {
@@ -543,7 +556,8 @@ public class FacilityController {
 
 	/**
 	 * 169.获取灭火应急演练详情【**】
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 
 	@ResponseBody
@@ -586,5 +600,4 @@ public class FacilityController {
 		return ResponseJson.responseFindJson(map2, statusCode);
 	}
 
-	
 }

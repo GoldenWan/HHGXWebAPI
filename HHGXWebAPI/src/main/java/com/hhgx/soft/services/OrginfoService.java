@@ -134,12 +134,12 @@ public class OrginfoService {
 		return orginfoMapper.selectDevicesListCount( cFlatPic,  iDeviceType, deviceaddress);
 	}
 
-	public List<DeviceList> selectDevicesLists(String cFlatPic, String iDeviceType, String deviceaddress, int startPos,
+	public List<Map<String, String>> selectDevicesLists(String cFlatPic, String iDeviceType, String deviceaddress, int startPos,
 			int pageSize) {
 		return orginfoMapper.selectDevicesLists(cFlatPic,iDeviceType, deviceaddress,  startPos, pageSize);
 	}
 
-	public Devices selectDeviceDetail(String gatewayaddress, String sysaddress, String deviceaddress) {
+	public List<Map<String, String>> selectDeviceDetail(String gatewayaddress, String sysaddress, String deviceaddress) {
 		return  orginfoMapper.selectDeviceDetail( gatewayaddress,  sysaddress,  deviceaddress);
 	}
 /**
@@ -254,6 +254,42 @@ public List<Gateway> gatewayInfo(String orgid, String gatewayaddress) {
 	return orginfoMapper.gatewayInfo(orgid,  gatewayaddress);
 }
 
+
+
+public int siteDevicesCount(String orgid, String siteid) {
+	return orginfoMapper.siteDevicesCount(orgid, siteid);
+}
+
+public List<Map<String, Object>> siteDevices(String orgid, String siteid, int startPos, int pageSize) {
+	return orginfoMapper.siteDevices( orgid,  siteid, startPos, pageSize);
+}
+
+public List<Map<String, Object>> deviceTypeList() {
+	return  orginfoMapper.deviceTypeList();
+}
+
+public List<Map<String, Object>> findGatewaySysInfoByAddr(String gatewayaddress) {
+	return orginfoMapper.findGatewaySysInfoByAddr(gatewayaddress);
+}
+
+public List<Map<String, Object>> findDevicesByGateway(Object sysaddress, Object gatewayaddress) {
+	return orginfoMapper.findDevicesByGateway(sysaddress,gatewayaddress);
+}
+
+public void deleteAnlogAlarmSettings(Object deviceaddress, Object sysaddress, Object gatewayaddress) {
+	orginfoMapper.deleteAnlogAlarmSettings(deviceaddress, sysaddress,gatewayaddress);
+	
+}
+
+public void deleteDevices1(Object sysaddress, Object gatewayaddress) {
+	orginfoMapper.deleteDevices1(sysaddress,gatewayaddress);
+
+	
+}
+
+public List<Map<String, Object>> findGatewaySysInfoByType(String tiSysType) {
+	return orginfoMapper.findGatewaySysInfoByType(tiSysType);
+}
 
 	
 }
