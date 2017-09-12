@@ -1,8 +1,13 @@
 package com.hhgx.soft.utils;
 
+import java.util.regex.Pattern;
+
 public class CommonMethod {
 
-	
+	public static boolean isNumeric(String str){  
+		Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$"); 
+	    return pattern.matcher(str).matches();     
+	}  
 	public static int getRandNum(int min, int max) {
 	    int randNum = min + (int)(Math.random() * ((max - min) + 1));
 	    return randNum;
@@ -19,4 +24,5 @@ public class CommonMethod {
 	public static void main(String[] args) {
 		System.out.println(getTimeString());
 	}
+	
 }

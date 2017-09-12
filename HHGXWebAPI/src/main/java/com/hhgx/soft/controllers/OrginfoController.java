@@ -31,6 +31,7 @@ import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Site;
 import com.hhgx.soft.services.OrginfoService;
+import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
@@ -615,6 +616,9 @@ public class OrginfoController {
 		String iDeviceType = map.get("iDeviceType");
 		String deviceNo = map.get("DeviceNo");
 
+		if (!CommonMethod.isNumeric(deviceNo)||!CommonMethod.isNumeric(sysaddress)) {
+			return ResponseJson.responseAddJson("回路和系统地址都必须是整数", -256);
+		}
 		if (StringUtils.isEmpty(road) || StringUtils.isEmpty(address)) {
 			return ResponseJson.responseAddJson("回路和地址不能为空", -256);
 		}
