@@ -99,7 +99,7 @@ public class UserManagerController {
 
 		} else {
 			neworgid_ = Integer.parseInt(neworgid) + 1;
-			StringBuilder sBuilder = new StringBuilder(neworgid_);
+			StringBuilder sBuilder = new StringBuilder(String.valueOf(neworgid_));
 			for(int len =sBuilder.length();len<6;len++){
 				sBuilder.insert( 0 , "0" ); 
 			}
@@ -151,7 +151,7 @@ public class UserManagerController {
 		} else {
 			
 			if (userManagerService.registerNew(registerNew, userBelongTo)) {
-				dataBag = "插入成功";
+				dataBag = ConstValues.SUCCESS;
 				statusCode = ConstValues.OK;
 				return ResponseJson.responseRegistJson(code, dataBag, statusCode);
 			} else {

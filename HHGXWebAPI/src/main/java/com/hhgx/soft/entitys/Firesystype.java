@@ -4,6 +4,15 @@ public class Firesystype {
 	private String  tiSysType;
     private String  vSysdesc ;
     private String orderNO  ;
+    
+    private String sysaddress;
+    
+	public String getSysaddress() {
+		return sysaddress;
+	}
+	public void setSysaddress(String sysaddress) {
+		this.sysaddress = sysaddress;
+	}
 	public String getTiSysType() {
 		return tiSysType;
 	}
@@ -23,13 +32,5 @@ public class Firesystype {
 		this.orderNO = orderNO;
 	}
   
-  
-  
-  
-  
-
-
-	
-	
 	
 }

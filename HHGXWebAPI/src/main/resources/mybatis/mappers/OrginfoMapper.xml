@@ -3,6 +3,64 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.OrginfoMapper">
 
+	<update id="updateMarkPoint">
+	 UPDATE 
+	 devices 
+		<trim prefix="set" suffixOverrides=",">
+		<if test="fPositionX!=null and fPositionX!=''">
+	    fPositionX = #{fPositionX},</if>
+	    <if test="fPositionY!=null and fPositionY!=''">
+		fPositionY = #{fPositionY}, </if>
+		</trim>
+	WHERE 
+		deviceaddress = #{deviceaddress} 
+		AND
+		Sysaddress= #{sysaddress} 
+		AND 
+		Gatewayaddress = #{gatewayaddress}
+	</update>
+	<select id="getDeviceNosByFlatpic" resultType="int"> 
+	SELECT
+		DeviceNo
+	FROM
+		devices
+	WHERE
+		cFlatPic = #{cFlatPic}
+	ORDER BY
+		DeviceNo ASC
+	</select>
+	<select id="returnMarkPoint" resultType="devices"> 
+	SELECT
+		c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress,
+		c.DeviceNo,
+		c.iDeviceType,
+		d.DeviceTypeName
+	FROM
+		devices c,
+		devicetype d
+	WHERE
+		c.cFlatPic = #{cFlatPic} 
+	AND c.DeviceNo = #{deviceNo}
+	</select>
+
+	<select id="getFirstDevice" resultType="devices"> SELECT c.deviceaddress,
+		c.sysaddress, c.gatewayaddress, c.DeviceNo, c.iDeviceType,
+		d.DeviceTypeName
+		FROM devices c, devicetype d WHERE c.cFlatPic = #{cFlatPic}
+	</select>
+	<select id="getOneDevice" resultType="devices"> 
+	SELECT c.deviceaddress,
+		c.sysaddress,
+		c.gatewayaddress, c.DeviceNo 
+		FROM devices c 
+		WHERE c.cFlatPic = #{cFlatPic}
+		AND c.DeviceNo = #{deviceNo}
+	</select>
+	
+	
+
 	<select id="getOnlineOrg" resultType="onlineOrg">
 		SELECT
 		orgcode,
@@ -60,63 +118,59 @@
 
 	<update id="updateOnlineOrg">
 		UPDATE onlineorg
-		SET
-		orgcode = #{orgcode} ,
-		orgname =
-		#{orgname} ,
-		souyouzhi = #{souyouzhi} ,
-		OrganType = #{organType} ,
-		vNamelegalperson = #{vNamelegalperson} ,
-		otherthings = #{otherthings} ,
-		YnImportant = #{ynImportant} ,
-		SuperiorOrg = #{superiorOrg} ,
-		cZip =
-		#{cZip} ,
-		vTel = #{vTel} ,
-		fax =
-		#{fax} ,
-		`E-Mail` = #{eMail} ,
-		howmanypeople = #{howmanypeople} ,
-		SetupDate= #{setupDate} ,
-		realtymoney = #{realtymoney} ,
-		ipersonnum = #{ipersonnum} ,
-		fAreanum =
-		#{fAreanum}
-		,
-		fBuildingarea = #{fBuildingarea} ,
-		GasType = #{gasType} ,
-		howmanyfireman = #{howmanyfireman} ,
-		howmanyexit = #{howmanyexit} ,
-		howmanystair = #{howmanystair} ,
-		howmanylane = #{howmanylane} ,
-		howmanyelevator = #{howmanyelevator} ,
-		lanelocation = #{lanelocation} ,
-		vfireroomtel = #{vfireroomtel} ,
-		escapefloor = #{escapefloor} ,
-		escapebuildingarea = #{escapebuildingarea} ,
-		neareast = #{neareast} ,
-		nearsouth = #{nearsouth} ,
-		nearwest = #{nearwest} ,
-		nearnorth =
-		#{nearnorth} ,
-		AutoFireFacility = #{autoFireFacility} ,
-		dRecordDate =
-		#{dRecordDate} ,
-		managegrade = #{managegrade} ,
-		NetworkStatus =
-		#{networkStatus},
-		NetworkTime = #{networkTime},
-		ApproveState =
-		#{approveState},
-		ManagerOrgID = #{managerOrgID}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="orgcode!=null and orgcode!=''">orgcode = #{orgcode} ,</if>
+			<if test="orgname!=null and orgname!=''">orgname =#{orgname} , </if>
+			<if test="souyouzhi!=null and souyouzhi!=''">souyouzhi = #{souyouzhi} , </if>
+			<if test="organType!=null and organType!=''">OrganType = #{organType} , </if>
+			<if test="vNamelegalperson!=null and vNamelegalperson!=''">vNamelegalperson = #{vNamelegalperson} , </if>
+			<if test="otherthings!=null and otherthings!=''">otherthings = #{otherthings} , </if>
+			<if test="ynImportant!=null and ynImportant!=''">YnImportant = #{ynImportant} , </if>
+			<if test="superiorOrg!=null and superiorOrg!=''">SuperiorOrg = #{superiorOrg} , </if>
+			<if test="cZip !=null and cZip !=''">cZip =#{cZip} , </if>
+			<if test="vTel !=null and vTel!=''">vTel = #{vTel} , </if>
+			<if test="fax !=null and fax !=''">fax =#{fax} , </if>
+			<if test="eMail !=null and eMail !=''">`E-Mail` = #{eMail} , </if>
+			<if test="howmanypeople !=null and howmanypeople !=''">howmanypeople = #{howmanypeople} , </if>
+			<if test="setupDate !=null and setupDate !=''">SetupDate= #{setupDate} , </if>
+			<if test="realtymoney !=null and realtymoney !=''">realtymoney = #{realtymoney} , </if>
+			<if test="ipersonnum !=null and ipersonnum !=''">ipersonnum = #{ipersonnum} , </if>
+			<if test="fAreanum !=null and fAreanum !=''">fAreanum =#{fAreanum}, </if>
+			<if test="fBuildingarea !=null and fBuildingarea !=''">fBuildingarea = #{fBuildingarea} , </if>
+			<if test="gasType !=null and gasType !=''">GasType = #{gasType} , </if>
+			<if test="howmanyfireman !=null and howmanyfireman !=''">howmanyfireman = #{howmanyfireman} , </if>
+			<if test="howmanyexit !=null and howmanyexit !=''">howmanyexit = #{howmanyexit} , </if>
+			<if test="howmanystair !=null and howmanystair !=''">howmanystair = #{howmanystair} , </if>
+			<if test="howmanylane !=null and howmanylane !=''">howmanylane = #{howmanylane} , </if>
+			<if test="howmanyelevator !=null and howmanyelevator !=''">howmanyelevator = #{howmanyelevator} , </if>
+			<if test="lanelocation !=null and lanelocation !=''">lanelocation = #{lanelocation} , </if>
+			<if test="vfireroomtel !=null and vfireroomtel !=''">vfireroomtel = #{vfireroomtel} , </if>
+			<if test="escapefloor !=null and escapefloor !=''">escapefloor = #{escapefloor} , </if>
+			<if test="escapebuildingarea !=null and escapebuildingarea !=''">escapebuildingarea = #{escapebuildingarea} , </if>
+			<if test="neareast !=null and neareast !=''">neareast = #{neareast} , </if>
+			<if test="nearsouth !=null and nearsouth !=''">nearsouth = #{nearsouth} , </if>
+			<if test="nearwest !=null and nearwest !=''">nearwest = #{nearwest} , </if>
+			<if test="nearnorth !=null and nearnorth !=''">nearnorth =#{nearnorth} , </if>
+			<if test="autoFireFacility !=null and autoFireFacility !=''">AutoFireFacility = #{autoFireFacility} , </if>
+			<if test="dRecordDate !=null and dRecordDate !=''">dRecordDate =#{dRecordDate} , </if>
+			<if test="managegrade !=null and managegrade !=''">managegrade = #{managegrade} , </if>
+			<if test="networkStatus !=null and networkStatus !=''">NetworkStatus =#{networkStatus}, </if>
+			<if test="networkTime!=null and networkTime!=''">NetworkTime = #{networkTime}, </if>
+			<if test="approveState!=null and approveState!=''"> ApproveState =#{approveState}, </if>
+			<if test="managerOrgID!=null and managerOrgID!=''">ManagerOrgID = #{managerOrgID}, </if>
+		</trim>
 		WHERE
 		OrgID = #{orgID}
 	</update>
 	<update id="setMapPoint">
 		UPDATE onlineorg
-		SET
-		fLatitude = #{fLatitude} ,
-		fLongitude = #{fLongitude}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="fLatitude!=null and fLatitude!=''">
+				fLatitude = #{fLatitude} ,</if>
+			<if test="fLongitude!=null and fLongitude!=''">
+				fLongitude = #{fLongitude}
+			</if>
+		</trim>
 		WHERE
 		orgid = #{orgid}
 	</update>
@@ -142,6 +196,14 @@
 		order by RegistTime
 	</select>
 
+	<select id="findDevicesTypeByName" resultType="string">
+		SELECT
+		iDeviceType
+		FROM
+		devicetype
+		WHERE
+		DeviceTypeName = #{deviceTypeName}
+	</select>
 	<select id="orgSiteSys" resultMap="siteSysMap">
 		SELECT
 		s.siteid,
@@ -258,6 +320,36 @@
 		WHERE
 		s.siteid = #{siteid}
 	</select>
+	<select id="getSiteNeedAddress" resultMap="siteTypeMap">
+		SELECT
+		Gatewayaddress
+		FROM
+		gatewaysysteminfo
+		WHERE
+		siteid = #{siteid}
+	</select>
+	<resultMap type="gatewaySystemInfo" id="siteTypeMap">
+		<result column="Gatewayaddress" property="gatewayaddress" />
+		<collection property="firesystypes" column="Gatewayaddress"
+			select="selectSystemInfo" />
+	</resultMap>
+
+	<select id="selectSystemInfo" resultType="firesystype">
+		SELECT
+		g.tiSysType,
+		vSysdesc,
+		Sysaddress
+		FROM
+		gatewaysysteminfo g
+		INNER JOIN firesystype f ON
+		g.tiSysType = f.tiSysType
+		WHERE
+		g.Gatewayaddress
+		=
+		#{gatewayaddress}
+	</select>
+
+
 
 	<select id="getSiteName" resultType="site">
 		SELECT
@@ -392,6 +484,7 @@
 		d.Gatewayaddress,
 		d.Sysaddress,
 		d.location,
+		DATE_FORMAT(d.dRecorddate, '%Y/%m/%d') dRecorddate,
 		d.dRecorddate,
 		d.StateValue
 		FROM
@@ -465,7 +558,8 @@
 		FROM
 		gatewaysysteminfo
 		WHERE
-		tiSysType =#{tiSysType}
+		tiSysType
+		=#{tiSysType}
 	</select>
 	<select id="findGatewaySysInfoByAddr" resultType="map">
 		SELECT
@@ -485,7 +579,8 @@
 		FROM
 		devices
 		WHERE
-		Gatewayaddress =
+		Gatewayaddress
+		=
 		#{gatewayaddress}
 		and
 		Sysaddress =
@@ -575,7 +670,7 @@
 		FROM
 		v_Gateway
 		WHERE
-		gatewayaddress =
+		Gatewayaddress =
 		#{gatewayaddress}
 	</select>
 	<insert id="addSite">
@@ -755,28 +850,29 @@
 	</select>
 	<update id="updateGatewaySame">
 		UPDATE gateway
-		SET
-		<if test="manufacturer!=null and manufacturer!=''">
-			Manufacturer = #{manufacturer},
-		</if>
-		<if test="model!=null and model!=''">
-			Model = #{model} ,
-		</if>
-		<if test="productdate!=null and productdate!=''">
-			productdate = #{productdate} ,
-		</if>
-		<if test="setupdate!=null and setupdate!=''">
-			setupdate =#{setupdate} ,
-		</if>
-		<if test="controlorManufacture!=null and controlorManufacture!=''">
-			ControlorManufacture = #{controlorManufacture} ,
-		</if>
-		<if test="controlorMode!=null and controlorMode!=''">
-			ControlorMode = #{controlorMode} ,
-		</if>
-		<if test="memo!=null and memo!=''">
-			memo = #{memo}
-		</if>
+		<trim prefix="set" suffixOverrides=",">
+			<if test="manufacturer!=null and manufacturer!=''">
+				Manufacturer = #{manufacturer},
+			</if>
+			<if test="model!=null and model!=''">
+				Model = #{model} ,
+			</if>
+			<if test="productdate!=null and productdate!=''">
+				productdate = #{productdate} ,
+			</if>
+			<if test="setupdate!=null and setupdate!=''">
+				setupdate =#{setupdate} ,
+			</if>
+			<if test="controlorManufacture!=null and controlorManufacture!=''">
+				ControlorManufacture = #{controlorManufacture} ,
+			</if>
+			<if test="controlorMode!=null and controlorMode!=''">
+				ControlorMode = #{controlorMode} ,
+			</if>
+			<if test="memo!=null and memo!=''">
+				memo = #{memo},
+			</if>
+		</trim>
 		WHERE
 		Gatewayaddress =#{gatewayaddress}
 	</update>
@@ -874,6 +970,22 @@
 		FROM
 		devicetype
 	</select>
+	<select id="getLabelledDevice" resultType="map">
+	SELECT
+		d.DeviceNo,
+		d.deviceaddress,
+		d.fPositionX,
+		d.fPositionY,
+		d.iDeviceType,
+		d.Sysaddress,
+		d.Gatewayaddress,
+		t.DeviceTypeName
+	FROM
+		devices d
+	INNER JOIN devicetype t ON d.iDeviceType = t.iDeviceType
+	where 
+	d.cFlatPic = #{cFlatPic}
+	</select>
 
 	<insert id="addDevices">
 		INSERT INTO devices (
@@ -920,28 +1032,55 @@
 	</insert>
 	<update id="updateDevices">
 		UPDATE devices
-		SET DeviceNo = #{deviceNo} ,
-		Road =
-		#{road} ,
-		Address = #{address} ,
-		vdesc = #{vdesc} ,
-		fPositionX =
-		#{fPositionX} ,
-		fPositionY = #{fPositionY} ,
-		location = #{location} ,
-		Manufacture = #{manufacture} ,
-		Model = #{model} ,
-		ProductDate =
-		#{productDate} ,
-		expdate = #{expdate} ,
-		AddTime = #{addTime} ,
-		memo =
-		#{memo } ,
-		cFlatPic = #{cFlatPic} ,
-		iDeviceType = #{iDeviceType}
+		<trim prefix="set" suffixOverrides=",">
+			<if test="deviceNo!=null and deviceNo!=''">
+				DeviceNo = #{deviceNo} ,
+			</if>
+			<if test="road!=null and road!=''">
+				Road =#{road} ,
+			</if>
+			<if test="address!=null and address!=''">
+				Address = #{address} ,</if>
+			<if test="vdesc!=null and vdesc!=''">
+				vdesc = #{vdesc} ,</if>
+			<if test="fPositionX!=null and fPositionX!=''">
+				fPositionX =#{fPositionX} ,
+			</if>
+			<if test="fPositionY!=null and fPositionY!=''">
+				fPositionY = #{fPositionY} ,
+			</if>
+			<if test="location!=null and location!=''">
+				location = #{location} ,
+			</if>
+			<if test="manufacture!=null and manufacture!=''">
+				Manufacture = #{manufacture} ,
+			</if>
+			<if test="model!=null and model!=''">
+				Model = #{model} ,
+			</if>
+			<if test="productDate!=null and productDate!=''">
+				ProductDate =#{productDate} ,
+			</if>
+			<if test="expdate!=null and expdate!=''">
+				expdate = #{expdate} ,
+			</if>
+			<if test="addTime!=null and addTime!=''">
+				AddTime = #{addTime} ,
+			</if>
+			<if test="memo!=null and memo!=''">
+				memo =#{memo} ,
+			</if>
+			<if test="cFlatPic!=null and cFlatPic!=''">
+				cFlatPic = #{cFlatPic} ,
+			</if>
+			<if test="iDeviceType!=null and iDeviceType!=''">
+				iDeviceType = #{iDeviceType},
+			</if>
+		</trim>
 		WHERE
 		deviceaddress = #{deviceaddress} and
-		Sysaddress = #{sysaddress} and
+		Sysaddress = #{sysaddress}
+		and
 		Gatewayaddress = #{gatewayaddress}
 	</update>
 	<delete id="deleteDevicesBycflatPic">
@@ -983,6 +1122,19 @@
 		</if>
 
 	</select>
+	<select id="findDevicesByKey" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		devices
+		WHERE
+		deviceaddress = #{deviceAddr} and
+		Sysaddress =
+		#{sysaddress}
+		and
+		Gatewayaddress = #{gatewayaddress}
+
+	</select>
 	<select id="siteDevices" resultType="map">
 		SELECT
 		*
@@ -1017,53 +1169,29 @@
 		SELECT
 		count(*)
 		FROM
-		devices
-		where
-		cFlatPic = #{cFlatPic}
-		<if test="iDeviceType!='0'.toString()">
-			AND
-			iDeviceType = #{iDeviceType}
-		</if>
-		<if test="deviceaddress!='0'.toString() ">
-			AND
-			deviceaddress = #{deviceaddress}
-		</if>
-	</select>
-	<select id="selectDevicesLists" resultType="map">
-		SELECT
-		c.deviceaddress AS deviceaddress,
-		c.sysaddress AS Sysaddress,
-		c.gatewayaddress AS
-		Gatewayaddress,
-		c.fPositionX AS fPositionX,
-		c.fPositionY AS fPositionY,
-		c.location AS location,
-		c.DeviceNo AS DeviceNo,
-		c.iDeviceType AS
-		iDeviceType,
-		f.imFlatPic AS imFlatPic,
-		d.DeviceTypeName AS
-		DeviceTypeName
-		FROM
 		devices c
-		INNER JOIN flatpic f ON c.cFlatPic = f.cFlatPic
-		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
-		WHERE
-		c.cFlatPic =#{cFlatPic}
+		INNER JOIN flatpic f ON
+		c.cFlatPic =
+		f.cFlatPic
+		INNER JOIN devicetype d ON c.iDeviceType =
+		d.iDeviceType
+		where
+		c.cFlatPic = #{cFlatPic}
 		<if test="iDeviceType!='0'.toString()">
 			AND
 			c.iDeviceType = #{iDeviceType}
 		</if>
 		<if test="deviceaddress!='0'.toString() ">
 			AND
-			c.deviceaddress = #{deviceaddress}
+			c.deviceaddress like concat('%', #{deviceaddress}, '%')
 		</if>
 	</select>
-	<select id="selectDeviceDetail" resultType="map">
+	<select id="selectDevicesLists" resultType="map">
 		SELECT
 		c.deviceaddress,
-		c.Sysaddress,
-		c.Gatewayaddress,
+		c.sysaddress Sysaddress,
+		c.gatewayaddress
+		Gatewayaddress,
 		c.fPositionX,
 		c.fPositionY,
 		c.location,
@@ -1072,31 +1200,56 @@
 		f.imFlatPic,
 		d.DeviceTypeName
 		FROM
-		flatpic f
-		INNER JOIN devices c ON c.cFlatPic = f.cFlatPic
-		INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+		devices c
+		INNER JOIN
+		flatpic f ON
+		c.cFlatPic = f.cFlatPic
+		INNER JOIN devicetype d ON
+		c.iDeviceType =
+		d.iDeviceType
 		WHERE
+		c.cFlatPic =#{cFlatPic}
+		<if test="iDeviceType!='0'.toString()">
+			AND
+			c.iDeviceType = #{iDeviceType}
+		</if>
+		<if test="deviceaddress!='0'.toString() ">
+			AND
+			c.deviceaddress like concat('%', #{deviceaddress}, '%')
+		</if>
+	</select>
+	<select id="selectDeviceDetail" resultType="map">
+	SELECT
+	c.deviceaddress,
+	c.Sysaddress,
+	c.Gatewayaddress,
+	c.vdesc,
+	c.fPositionX,
+	c.fPositionY,
+	c.location,
+	c.Manufacture,
+	c.Model,
+	DATE_FORMAT(c.ProductDate, '%Y/%m/%d') ProductDate,
+	DATE_FORMAT(c.expdate, '%Y/%m/%d') expdate,
+	DATE_FORMAT(c.AddTime, '%Y/%m/%d') AddTime,
+	c.memo,
+	c.DeviceNo,
+	c.cFlatPic,
+	c.iDeviceType,
+	c.StateValue,
+	DATE_FORMAT(c.StateTime, '%Y/%m/%d') StateTime,
+	d.DeviceTypeName
+FROM
+	flatpic f
+INNER JOIN devices c ON c.cFlatPic = f.cFlatPic
+INNER JOIN devicetype d ON c.iDeviceType = d.iDeviceType
+	WHERE
 		c.Gatewayaddress = #{gatewayaddress}
-		AND c.Sysaddress = #{sysaddress}
-		AND c.deviceaddress = #{deviceaddress}
+	AND c.Sysaddress = #{sysaddress}
+	AND c.deviceaddress = #{deviceaddress}
 
 	</select>
-	<!-- <update id="updateMarkPoint"> UPDATE devices SET fPositionX = #{fPositionX}, 
-		fPositionY = #{fPositionY} WHERE deviceaddress = #{deviceaddress} AND sysaddress 
-		= #{sysaddress} AND gatewayaddress = #{gatewayaddress} </update> <select 
-		id="returnMarkPoint" resultType="devices"> SELECT c.deviceaddress, c.sysaddress, 
-		c.gatewayaddress, c.DeviceNo, d.iDeviceType iDeviceType, d.DeviceTypeName 
-		FROM devices c, devicetype d WHERE c.cFlatPic = #{cFlatPic} AND c.DeviceNo 
-		= #{deviceNo} </select> <select id="findMarkPoint" resultType="devices"> 
-		SELECT c.deviceaddress, c.sysaddress, c.gatewayaddress, c.DeviceNo, d.iDeviceType 
-		iDeviceType, d.DeviceTypeName FROM devices c, devicetype d WHERE deviceaddress 
-		= #{deviceaddress} AND sysaddress = #{sysaddress} AND gatewayaddress = #{gatewayaddress} 
-		</select> <select id="getFirstDevice" resultType="devices"> SELECT c.deviceaddress, 
-		c.sysaddress, c.gatewayaddress, c.DeviceNo, c.iDeviceType, d.DeviceTypeName 
-		FROM devices c, devicetype d WHERE c.cFlatPic = #{cFlatPic} </select> <select 
-		id="getOneDevice" resultType="devices"> SELECT c.deviceaddress, c.sysaddress, 
-		c.gatewayaddress, c.DeviceNo FROM devices c WHERE c.cFlatPic = #{cFlatPic} 
-		AND c.DeviceNo = #{deviceNo} </select> -->
+
 	<select id="findMaxBack8" resultType="string">
 		SELECT
 

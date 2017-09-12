@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
+import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Manoeuvre;
 import com.hhgx.soft.entitys.OnlineFiresystem;
@@ -31,8 +33,10 @@ import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.services.FormService;
+import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
+import com.hhgx.soft.utils.ReadExcel;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
 import com.hhgx.soft.utils.UploadUtil;
@@ -42,6 +46,8 @@ import com.hhgx.soft.utils.UploadUtil;
 public class FormController {
 	@Autowired
 	private FormService formService;
+	@Autowired
+	private OrginfoService orginfoService;
 
 	/**
 	 * 9.修改防火单位的系统
@@ -63,8 +69,8 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			UpdateFireSystem updateFireSystem = new UpdateFireSystem();
-			if(newTisystype.equals("all")){
-				newTisystype="0";
+			if (newTisystype.equals("all")) {
+				newTisystype = "0";
 			}
 			updateFireSystem.setNewTisystype(newTisystype);
 			updateFireSystem.setRemarks(remarks);
@@ -72,82 +78,81 @@ public class FormController {
 			updateFireSystem.setStates(states);
 			updateFireSystem.setTisystype(tisystype);
 			updateFireSystem.setYnOnline(ynOnline);
-			if(!StringUtils.isEmpty(sysFlatpic)){
+			if (!StringUtils.isEmpty(sysFlatpic)) {
 				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
 
-			//String fName = sysFlatpic.getOriginalFilename();
-			String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID()+"."+ext,
-					"SysFlatpic/" + UUIDGenerator.getUUID());
-			updateFireSystem.setSysFlatpic(sysFlatpic1);
+				// String fName = sysFlatpic.getOriginalFilename();
+				String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
+						"SysFlatpic/" + UUIDGenerator.getUUID());
+				updateFireSystem.setSysFlatpic(sysFlatpic1);
 			}
 			formService.updateFireSystemList(updateFireSystem);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
+
 	/**
 	 * 
 	 * 19.添加防火单位的系统
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
-	
+
 	@ResponseBody
-	@RequestMapping(value = "/AddorgSys", method = {
-			RequestMethod.POST })
+	@RequestMapping(value = "/AddorgSys", method = { RequestMethod.POST })
 	public String addorgSys(HttpServletRequest request,
 			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic) throws IOException {
-
 
 		String siteid = request.getParameter("siteid");
 		String tiSysType = request.getParameter("tiSysType");
 		String states = request.getParameter("states");
-		String ynOnline =request.getParameter("ynOnline");
+		String ynOnline = request.getParameter("ynOnline");
 		String remarks = request.getParameter("remarks");
 
 		int statusCode = -1;
-		String dataBag =null;
-		
-		if(formService.existOrgSys(siteid,tiSysType)){
-			
-		 statusCode = -2;
-		 dataBag="对不起，不能添加已存在的数据";
-		return ResponseJson.responseAddJson(dataBag, statusCode);
+		String dataBag = null;
+
+		if (formService.existOrgSys(siteid, tiSysType)) {
+
+			statusCode = -2;
+			dataBag = "对不起，不能添加已存在的数据";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 		}
-		try{
+		try {
 			OnlineFiresystem onlineFiresystem = new OnlineFiresystem();
 			onlineFiresystem.setStates(states);
 			onlineFiresystem.setYnOnline(ynOnline);
 			onlineFiresystem.setRemarks(remarks);
 			onlineFiresystem.setSiteid(siteid);
 			onlineFiresystem.setTiSysType(tiSysType);
-			if(!StringUtils.isEmpty(sysFlatpic)){
-			   String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
-			   //String fName = sysFlatpic.getOriginalFilename();
-			   String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID()+"."+ext,
-					"SysFlatpic/" + UUIDGenerator.getUUID());
-			onlineFiresystem.setSysFlatpic(sysFlatpic1);
+			if (!StringUtils.isEmpty(sysFlatpic)) {
+				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
+				// String fName = sysFlatpic.getOriginalFilename();
+				String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
+						"SysFlatpic/" + UUIDGenerator.getUUID());
+				onlineFiresystem.setSysFlatpic(sysFlatpic1);
 			}
-			
+
 			formService.addorgSys(onlineFiresystem);
 			statusCode = ConstValues.OK;
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 		}
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-			
-		
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
 	}
 
 	/**
@@ -163,7 +168,7 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			Flatpic flatpic = new Flatpic();
-			//String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
+			// String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			String str = sdf.format(new Date());
 			flatpic.setcFlatPic(str);
@@ -187,15 +192,13 @@ public class FormController {
 			dataBag = "添加平面图失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-	}	
+	}
+
 	/**
 	 * 
-	 * @param request
-	 * @param imFlatPic
-	 * @return:TODO
-	 
+	 *  * @param request  * @param imFlatPic  * @return:TODO  
 	 */
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/UpdateflatPic", method = { RequestMethod.POST })
 	public String updateflatPic(HttpServletRequest request,
@@ -210,11 +213,10 @@ public class FormController {
 			flatpic.setcFlatPic(cFlatPic);
 			flatpic.setSiteid(siteid);
 			flatpic.setFloornum(floornum);
-			
-			
+
 			if (!StringUtils.isEmpty(imFlatPic)) {
-				
-				//删除文件
+
+				// 删除文件
 				String filepathBefore = formService.findCflatPic(cFlatPic);
 				String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
 				// 先删除文件
@@ -233,7 +235,8 @@ public class FormController {
 			dataBag = "数据修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-	}	
+	}
+
 	/**
 	 * 65.添加外观图（P）
 	 * 
@@ -243,16 +246,16 @@ public class FormController {
 	public String addAppearance(HttpServletRequest request,
 			@RequestParam(value = "Picpath", required = false) MultipartFile picpath) {
 		String siteid = request.getParameter("siteid");
-		//String iphotoID = request.getParameter("iphotoID");
+		// String iphotoID = request.getParameter("iphotoID");
 		String vPhotoname = request.getParameter("vPhotoname");
 		String exteriorInfo = request.getParameter("ExteriorInfo");
-		
+
 		String dataBag = null;
 		int statusCode = -1;
 		try {
 			Appearancepic appearancepic = new Appearancepic();
-			String random = String.valueOf(new Random().nextInt(99)+1);
-			appearancepic.setIphotoID(System.currentTimeMillis()+random);
+			String random = String.valueOf(new Random().nextInt(99) + 1);
+			appearancepic.setIphotoID(System.currentTimeMillis() + random);
 			appearancepic.setdRecordDate(DateUtils.timesstampToString());
 			appearancepic.setvPhotoname(vPhotoname);
 			appearancepic.setExteriorInfo(exteriorInfo);
@@ -262,19 +265,20 @@ public class FormController {
 				String ext = UploadUtil.getExtention(picpath.getOriginalFilename());
 				String picpath1 = UploadUtil.uploadOneFile(request, picpath, UUIDGenerator.getUUID() + "." + ext,
 						UUIDGenerator.getUUID() + "/AppearancePic");
-				appearancepic.setPicpath(picpath1);;
+				appearancepic.setPicpath(picpath1);
+
 			}
 			formService.addAppearance(appearancepic);
 			statusCode = ConstValues.OK;
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-	}	
-	
+	}
+
 	/**
 	 * 107.提交总平图（Z）
 	 */
@@ -284,23 +288,26 @@ public class FormController {
 			@RequestParam(value = "Flatpic", required = false) MultipartFile flatpic) {
 		String orgid = request.getParameter("orgid");
 		String userdefinedFile = request.getParameter("userdefinedFile");
-		System.err.println(userdefinedFile+"userdefinedFile");
+		System.err.println(userdefinedFile + "userdefinedFile");
 		String dataBag = null;
 		int statusCode = -1;
-		String bflatpic=null;
+		String bflatpic = null;
 		try {
-			
+
 			if (!StringUtils.isEmpty(flatpic)) {
-				//删除文件
-				//String filepathBefore = formService.findFilePath(userdefinedFile);
-			    //String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+				// 删除文件
+				// String filepathBefore =
+				// formService.findFilePath(userdefinedFile);
+				// String filedir =
+				// request.getSession().getServletContext().getRealPath("/") +
+				// filepathBefore;
 				// 先删除文件
-				//UploadUtil.deleteFile(filedir);
+				// UploadUtil.deleteFile(filedir);
 				String ext = UploadUtil.getExtention(flatpic.getOriginalFilename());
-				bflatpic = UploadUtil.uploadOneFile(request, flatpic, UUIDGenerator.getUUID()+"."+ext ,
+				bflatpic = UploadUtil.uploadOneFile(request, flatpic, UUIDGenerator.getUUID() + "." + ext,
 						UUIDGenerator.getUUID() + "/Flatpic");
 			}
-			formService.submitTotalFlatPic(bflatpic,orgid);
+			formService.submitTotalFlatPic(bflatpic, orgid);
 			statusCode = ConstValues.OK;
 			dataBag = "提交总平图成功！";
 		} catch (Exception e) {
@@ -309,18 +316,17 @@ public class FormController {
 			dataBag = "提交总平图失败！";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
-	}	
-	
+	}
+
 	/**
 	 * 129.巡查记录填写【**】
 	 * 
-	 * @return
-	 * @
+	 * @return @
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/AddOrUpdateCheckRecord", method = { RequestMethod.POST })
-	public String addOrUpdateCheckRecord(HttpServletRequest request)  {
+	public String addOrUpdateCheckRecord(HttpServletRequest request) {
 
 		String userCheckId = request.getParameter("UserCheckId");
 		String projectId = request.getParameter("ProjectId");
@@ -378,11 +384,11 @@ public class FormController {
 				}
 			}
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag =ConstValues.FIALURE;
 		}
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -397,8 +403,7 @@ public class FormController {
 	public String addTraining(HttpServletRequest request,
 			@RequestParam(value = "ContentFile", required = false) MultipartFile contentFile,
 			@RequestParam(value = "examfile", required = false) MultipartFile examfile,
-			@RequestParam(value = "signtable", required = false) MultipartFile signtable)
-					 {
+			@RequestParam(value = "signtable", required = false) MultipartFile signtable) {
 		String trainingTime = request.getParameter("TrainingTime");
 		String trainingAddress = request.getParameter("TrainingAddress");
 		String trainingType = request.getParameter("TrainingType");
@@ -450,11 +455,11 @@ public class FormController {
 			}
 			formService.addTraining(training);
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -468,8 +473,7 @@ public class FormController {
 	public String updateTraining(HttpServletRequest request,
 			@RequestParam(value = "ContentFile", required = false) MultipartFile contentFile,
 			@RequestParam(value = "examfile", required = false) MultipartFile examfile,
-			@RequestParam(value = "signtable", required = false) MultipartFile signtable)
-					 {
+			@RequestParam(value = "signtable", required = false) MultipartFile signtable) {
 		String trainingID = request.getParameter("TrainingID");
 		String trainingTime = request.getParameter("TrainingTime");
 		String trainingAddress = request.getParameter("TrainingAddress");
@@ -520,11 +524,11 @@ public class FormController {
 			formService.updateTraining(training);
 
 			statusCode = ConstValues.OK;
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -539,8 +543,7 @@ public class FormController {
 	public String addManoeuvre(HttpServletRequest request,
 			@RequestParam(value = "schemafile", required = false) MultipartFile schemafile,
 			@RequestParam(value = "attendpersonfile", required = false) MultipartFile attendpersonfile,
-			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile)
-					 {
+			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile) {
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
 		String address = request.getParameter("address");
@@ -591,11 +594,11 @@ public class FormController {
 
 			formService.addManoeuvre(manoeuvre);
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -609,8 +612,7 @@ public class FormController {
 	public String updateManoeuvre(HttpServletRequest request,
 			@RequestParam(value = "schemafile", required = false) MultipartFile schemafile,
 			@RequestParam(value = "attendpersonfile", required = false) MultipartFile attendpersonfile,
-			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile)
-					 {
+			@RequestParam(value = "implementationfile", required = false) MultipartFile implementationfile) {
 		String manoeuvreID = request.getParameter("manoeuvreID");
 		String orgid = request.getParameter("orgid");
 		String manoeuvretime = request.getParameter("manoeuvretime");
@@ -659,11 +661,11 @@ public class FormController {
 
 			formService.updateManoeuvre(manoeuvre);
 			statusCode = ConstValues.OK;
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -677,8 +679,7 @@ public class FormController {
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeManageRules", method = RequestMethod.POST)
 	public String updateManoeuvre(HttpServletRequest request,
-			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile)
-					 {
+			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile) {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
 		String safeManageRulesType = request.getParameter("SafeManageRulesType");
@@ -700,11 +701,11 @@ public class FormController {
 			}
 			formService.addSafeManageRules(safeManageRules);
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -715,14 +716,12 @@ public class FormController {
 	 * 
 	 * @param request
 	 * @param safeRuleFile
-	 * @return
-	 * @
+	 * @return @
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeManageRules", method = RequestMethod.POST)
 	public String updateSafeManageRules(HttpServletRequest request,
-			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile)
-					 {
+			@RequestParam(value = "SafeRuleFile", required = false) MultipartFile safeRuleFile) {
 		String safeManageRulesID = request.getParameter("SafeManageRulesID");
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
@@ -749,7 +748,7 @@ public class FormController {
 			}
 			formService.updateSafeManageRules(safeManageRules);
 			statusCode = ConstValues.OK;
-			dataBag = "修改数据成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
@@ -759,16 +758,16 @@ public class FormController {
 	}
 
 	/**
-	 * 50.添加消防安全职责【**】  * 
-	 * @param request  * @param safeDutyFile  * @return
-	 *  * @:TODO  
+	 * 50.添加消防安全职责【**】  *
+	 * 
+	 * @param request
+	 *             * @param safeDutyFile  * @return  * @:TODO  
 	 */
 
 	@ResponseBody
 	@RequestMapping(value = "/AddSafeDuty", method = RequestMethod.POST)
 	public String addSafeDuty(HttpServletRequest request,
-			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile)
-					 {
+			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile) {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("orgid");
@@ -784,19 +783,20 @@ public class FormController {
 			safeDuty.setUploadtime(DateUtils.timesstampToString());
 			safeDuty.setOrgid(orgid);
 			safeDuty.setSafedutytype(safedutytype);
-
-			String filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
-					"SafeDuty/" + safeDutyID);
-
-			safeDuty.setFilepath(filepath);
+			if (!StringUtils.isEmpty(safeDutyFile)) {
+				String filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
+						"SafeDuty/" + safeDutyID);
+				safeDuty.setFilepath(filepath);
+				
+			}
 
 			formService.addSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -810,8 +810,7 @@ public class FormController {
 	@ResponseBody
 	@RequestMapping(value = "/UpdateSafeDuty", method = RequestMethod.POST)
 	public String updateSafeDuty(HttpServletRequest request,
-			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile)
-					 {
+			@RequestParam(value = "SafeDutyFile", required = false) MultipartFile safeDutyFile) {
 		String dutyname = request.getParameter("dutyname");
 		String safedutytype = request.getParameter("safedutytype");
 		String orgid = request.getParameter("Orgid");
@@ -840,11 +839,11 @@ public class FormController {
 
 			formService.updateSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -893,20 +892,61 @@ public class FormController {
 						orgid + "/BusinessLicence");
 				businessLicence.setPictureUrl(pictureUrl1);
 			}
-			if(formService.eixstLicenceCode(licenceCode)){
+			if (formService.eixstLicenceCode(licenceCode)) {
 				formService.updateBusinessLicence(businessLicence);
-			}else{
-			    formService.addBusinessLicence(businessLicence);
+			} else {
+				formService.addBusinessLicence(businessLicence);
 			}
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
+	/**
+	 * 135. 导入Excel到数据库 测试结果 接口地址 /Form/ExcelToDataBase 接口方法 ExcelToDataBase
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ExcelToDataBase", method = RequestMethod.POST)
+	public String excelToDataBase(HttpServletRequest request,
+			@RequestParam(value = "excelFile", required = false) MultipartFile excelFile) {
+		String cFlatpic = request.getParameter("cFlatpic");
+
+		String dataBag = null;
+		int statusCode = -1;
+		if (StringUtils.isEmpty(excelFile)) {
+			return ResponseJson.responseAddJson("没有传递excel文件", -256);
+		}
+		try {
+			ReadExcel readExcel = new ReadExcel();
+			List<Devices> devicesLists = readExcel.getExcelInfo(excelFile);
+			for (Devices devices : devicesLists) {
+				devices.setcFlatPic(cFlatpic);
+				if(!StringUtils.isEmpty(devices.getiDeviceType())){
+					String iDeviceType = orginfoService.findDevicesTypeByName(devices.getiDeviceType().trim());
+					if(!StringUtils.isEmpty(iDeviceType))
+						devices.setiDeviceType(iDeviceType);}
+				
+				if (orginfoService.findDevicesByKey(devices.getDeviceaddress(), String.valueOf(devices.getSysaddress()), devices.getGatewayaddress()))
+					orginfoService.updateDevices(devices);
+				else {
+					orginfoService.addDevices(devices);
+				}
+			}
+			statusCode = ConstValues.OK;
+			dataBag = "导入成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "导入失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+
+	}
 }

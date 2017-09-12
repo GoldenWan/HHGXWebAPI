@@ -74,11 +74,11 @@ public class OnDutyRecordController {
 		String dataBag = null;
 		try {
 			onDutyRecordService.addOnDutyRecord(onDutyRecord);
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALUREDEL;
 			statusCode = ConstValues.FAILED;
 		}
 
@@ -131,11 +131,11 @@ public class OnDutyRecordController {
 		String dataBag = null;
 		try {
 			onDutyRecordService.editOnDutyRecordInfo(onDutyRecord);
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 			statusCode = ConstValues.FAILED;
 		}
 

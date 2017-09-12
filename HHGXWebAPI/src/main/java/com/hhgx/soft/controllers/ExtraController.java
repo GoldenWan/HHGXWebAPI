@@ -37,11 +37,11 @@ public class ExtraController {
 		try {
 			extraService.deleteManoeuvre(manoeuvreID);
 			statusCode = ConstValues.OK;
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 		}
 	   return ResponseJson.responseAddJson(dataBag, statusCode);
 		

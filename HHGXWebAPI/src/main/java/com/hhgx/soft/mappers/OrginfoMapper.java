@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
-import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.Firesystype;
@@ -140,18 +139,26 @@ public interface OrginfoMapper {
 
 	void deleteDevices1(@Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
 
+	List<GatewaySystemInfo> getSiteNeedAddress(String siteid);
+
+	int findDevicesByKey(@Param("deviceAddr")String deviceAddr, @Param("sysaddress")String sysaddress, @Param("gatewayaddress")String gatewayaddress);
+
+	String findDevicesTypeByName(@Param("deviceTypeName")String name);
+
 
 
 	
-	/**
 	void updateMarkPoint(Devices devices);
 
-	List<Devices> returnMarkPoint(Devices devices);
+	List<Devices> returnMarkPoint(@Param("cFlatPic")String getcFlatPic, @Param("deviceNo")int nextDevicesNo);
 
 	Devices getFirstDevice(String cFlatPic);
 
 	Devices getOneDevice(@Param("cFlatPic")String cFlatPic, @Param("deviceNo")String deviceNo);
 
-	Devices findMarkPoint(Devices devices);
-*/
+
+	List<Map<String, Object>> getLabelledDevice(String cFlatPic);
+
+	Object[] getDeviceNosByFlatpic(String getcFlatPic);
+
 }

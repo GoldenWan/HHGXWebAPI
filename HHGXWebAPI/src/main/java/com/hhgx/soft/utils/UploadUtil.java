@@ -16,18 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-
 public class UploadUtil {
 
 	/**
 	 * 上传单个文件
 	 * 
 	 * @param f
-	 *          MultipartFile  文件
+	 *            MultipartFile 文件
 	 * @param fName
 	 *            保存文件名称
 	 * @param paperFileName
-	 *          Uploading下的文件目录
+	 *            Uploading下的文件目录
 	 * @return
 	 */
 	public final static String uploadOneFile(HttpServletRequest request, MultipartFile f, String fName,
@@ -51,18 +50,23 @@ public class UploadUtil {
 	// 获取文件后缀
 	public static String getExtention(String fileName) {
 		int pos = fileName.lastIndexOf(".");
-		return fileName.substring(pos+1);
+		return fileName.substring(pos + 1);
 	}
+
 	// 获取文件名称
 	public static String getFileName(String filepath) {
-		return filepath.substring( filepath.lastIndexOf("/")+1);
+		return filepath.substring(filepath.lastIndexOf("/") + 1);
 	}
+
 	// 获取文件目录
 	public static String getStoreName(String filepath) {
-		return  filepath.substring( filepath.indexOf("/")+10,filepath.lastIndexOf("/")+1);//+1
-	
-	}	
-	
+		if (filepath.indexOf("/") == filepath.lastIndexOf("/"))
+			return null;
+		else {
+			return filepath.substring(filepath.indexOf("/") + 10, filepath.lastIndexOf("/") + 1);// +1
+		}
+
+	}
 
 	/**
 	 * 根据真实文件名 生成uuidname
@@ -77,20 +81,19 @@ public class UploadUtil {
 
 		return uuid + ext;
 	}
-	
-	//复制文件
+
+	// 复制文件
 	private static void copyFile(MultipartFile imgFile, File dst) throws IOException {
 		imgFile.transferTo(dst); // 保存上传的文件
 	}
 
-		
-		/**
-		 * 删除单个文件
-		 * 
-		 * @param fileName
-		 *            被删除文件的文件名
-		 * @return 单个文件删除成功返回true,否则返回false
-		 */
+	/**
+	 * 删除单个文件
+	 * 
+	 * @param fileName
+	 *            被删除文件的文件名
+	 * @return 单个文件删除成功返回true,否则返回false
+	 */
 	public static boolean deleteFile(String fileName) {
 		File file = new File(fileName);
 		if (file.isFile() && file.exists()) {
@@ -99,6 +102,7 @@ public class UploadUtil {
 		} // "删除单个文件"+name+"失败！"
 		return false;
 	}
+
 	/********************************** 解析上传文件后缀 **********/
 
 	public static boolean setmsgext(String list, String ext) {
@@ -116,9 +120,6 @@ public class UploadUtil {
 		return flag;
 	}
 
-	
-	
-	
 	public void upload(File f, String fileName) {
 		try {
 			// 创建读取流
@@ -150,10 +151,6 @@ public class UploadUtil {
 
 	}
 
-
-
-
-
 	/******************************************************************************************************************/
 	/**
 	 * 删除文件CheckRecord
@@ -164,7 +161,8 @@ public class UploadUtil {
 	 *            文件夹名称
 	 * @return
 	 */
-	public final static boolean deleteOneFileOrDirectory(HttpServletRequest request, String fName, String paperFileName) {
+	public final static boolean deleteOneFileOrDirectory(HttpServletRequest request, String fName,
+			String paperFileName) {
 		// 文件路径
 		String filedir = request.getSession().getServletContext().getRealPath("/") + "Uploading/" + paperFileName + "/"
 				+ fName;
@@ -187,7 +185,6 @@ public class UploadUtil {
 			}
 		}
 	}
-
 
 	/**
 	 * 删除目录（文件夹）以及目录下的文件
@@ -285,9 +282,6 @@ public class UploadUtil {
 		return flag;
 	}
 
-
-
-
 	/**
 	 * 递归列出某文件夹下的最深层的空文件夹绝对路径，储存至list
 	 * 
@@ -361,24 +355,22 @@ public class UploadUtil {
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 		try {
-			String downLoadPath =null;
+			String downLoadPath = null;
 			String ctxPath = request.getSession().getServletContext().getRealPath("/") + "Uploading/";
-			if(StringUtils.isEmpty(storeName)){
-			  downLoadPath = ctxPath;
-			}else {
-				 downLoadPath = ctxPath + storeName + "/" ;
+			if (StringUtils.isEmpty(storeName)) {
+				downLoadPath = ctxPath;
+			} else {
+				downLoadPath = ctxPath + storeName + "/";
 			}
-			
-		
-			
-			File file = new File(downLoadPath,realName);
+
+			File file = new File(downLoadPath, realName);
 			if (file.exists()) {
 				response.setContentType(contentType);// response.setContentType("application/force-download");//
 				response.setHeader("Content-disposition",
 						"attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO-8859-1"));
 				response.setHeader("Content-Length", String.valueOf(file.length()));
 
-				bis = new BufferedInputStream(new FileInputStream(downLoadPath+realName));
+				bis = new BufferedInputStream(new FileInputStream(downLoadPath + realName));
 				bos = new BufferedOutputStream(response.getOutputStream());
 				byte[] buff = new byte[2048];
 				int bytesRead;

@@ -1,5 +1,7 @@
 package com.hhgx.soft.entitys;
 
+import java.util.List;
+
 public class GatewaySystemInfo {
 	private String sysaddress        ;
     private String gatewayaddress    ;
@@ -8,6 +10,14 @@ public class GatewaySystemInfo {
     private String siteid;
     private String vSysdesc;
     private String sitename;
+    private List<Firesystype> firesystypes;
+    
+	public List<Firesystype> getFiresystypes() {
+		return firesystypes;
+	}
+	public void setFiresystypes(List<Firesystype> firesystypes) {
+		this.firesystypes = firesystypes;
+	}
 	public String getSysaddress() {
 		return sysaddress;
 	}

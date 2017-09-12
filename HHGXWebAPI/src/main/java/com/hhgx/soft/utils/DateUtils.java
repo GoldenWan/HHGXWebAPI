@@ -129,6 +129,19 @@ public class DateUtils {
 	}
 	
 
+	public static String timesstampToString(String s) {
+		String tsStr = "";
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			// 方法一
+			tsStr = sdf.format(s);
+		    tsStr = tsStr.substring(0,10).replaceAll("-", "/");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tsStr;
+	}
+	
 	public static String timesstampToString() {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		String tsStr = "";

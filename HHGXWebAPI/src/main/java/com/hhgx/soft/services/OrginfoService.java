@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
-import com.hhgx.soft.entitys.DeviceList;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
 import com.hhgx.soft.entitys.Flatpic;
@@ -142,21 +141,30 @@ public class OrginfoService {
 	public List<Map<String, String>> selectDeviceDetail(String gatewayaddress, String sysaddress, String deviceaddress) {
 		return  orginfoMapper.selectDeviceDetail( gatewayaddress,  sysaddress,  deviceaddress);
 	}
-/**
+
 	public Devices markPoint(Devices devices) {
 		//据联合主键修改部件的fPositionX,fPositionY,
 		orginfoMapper.updateMarkPoint(devices);
 		//然后根据cFlatPic和DeviceNo,返回下一个节点信息，下一个节点是大于当前节点的最小节点
-		List<Devices> devicesList = orginfoMapper.returnMarkPoint(devices);
-		Devices devices2 = orginfoMapper.findMarkPoint(devices);
-		int currentiDeviceType = Integer.parseInt(devices2.getiDeviceType());
-		for(int i= 0;i<devicesList.size();i++){
-			if(Integer.parseInt(devicesList.get(i).getiDeviceType())>currentiDeviceType ){
+		Object [] deviceNos = orginfoMapper.getDeviceNosByFlatpic(devices.getcFlatPic());
+		int currentNo =devices.getDeviceNo();
+		int nextDevicesNo =currentNo;
+		for(Object no :deviceNos){
+			if(Integer.parseInt(no.toString())>currentNo){
+				nextDevicesNo=Integer.parseInt(no.toString());
+				break;
+			}
 		}
-
+		// "不存在下一个节点",
+		if(nextDevicesNo==currentNo)
+			return null;
+		else {
+			return orginfoMapper.returnMarkPoint(devices.getcFlatPic(),nextDevicesNo).get(0);
 		}
 		
-		return devices;
+
+		
+		
 	}
 
 
@@ -169,7 +177,7 @@ public class OrginfoService {
 		return orginfoMapper.getFirstDevice(cFlatPic);
 	}
 	
-	*/
+
 
 	public List<Site> getSiteName(String orgid) {
 		return orginfoMapper.getSiteName(orgid);
@@ -289,6 +297,22 @@ public void deleteDevices1(Object sysaddress, Object gatewayaddress) {
 
 public List<Map<String, Object>> findGatewaySysInfoByType(String tiSysType) {
 	return orginfoMapper.findGatewaySysInfoByType(tiSysType);
+}
+
+public List<GatewaySystemInfo> getSiteNeedAddress(String siteid) {
+	return orginfoMapper.getSiteNeedAddress(siteid);
+}
+
+public boolean findDevicesByKey(String deviceAddr, String sysaddress, String gatewayaddress) {
+	return orginfoMapper.findDevicesByKey(deviceAddr, sysaddress, gatewayaddress)>0 ? true :false;
+}
+
+public String findDevicesTypeByName(String name) {
+	return orginfoMapper.findDevicesTypeByName(name);
+}
+
+public List<Map<String, Object>> getLabelledDevice(String cFlatPic) {
+	return  orginfoMapper.getLabelledDevice(cFlatPic);
 }
 
 	

@@ -64,12 +64,12 @@ public class ManageRuleController {
 			UploadUtil.deleteFile(filedir);
 			manageRuleService.deleteSafeManageRules(safeManageRulesID);
 
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -183,12 +183,12 @@ public class ManageRuleController {
 			UploadUtil.deleteFile(filedir);
 			manageRuleService.deleteSafeDuty(safeDutyID);
 
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 

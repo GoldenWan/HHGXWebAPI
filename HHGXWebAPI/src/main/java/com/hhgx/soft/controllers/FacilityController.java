@@ -102,11 +102,11 @@ public class FacilityController {
 			facilityService.addFireDevice(fireDevice);
 
 			statusCode = ConstValues.OK;
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -127,11 +127,11 @@ public class FacilityController {
 			facilityService.delFireDeviceChangeRecord(deviceNo);
 			facilityService.deleteFireDeviceList(deviceNo);
 			statusCode = ConstValues.OK;
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -206,7 +206,6 @@ public class FacilityController {
 
 		Page page = null;
 		List<Map<String, Object>> list = null;
-		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
 
 		if (conditionName.equals("vSysdesc")) {
@@ -222,27 +221,14 @@ public class FacilityController {
 					page = new Page(pageCount, 1);
 					list = facilityService.getFireDeviceListBySys(orgid, conditionValue, page.getStartPos(),
 							page.getPageSize());
-				}
-				for (Map<String, Object> m : list) {
-					if (!StringUtils.isEmpty(m.get("productDate")))
-
-						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
-					if (!StringUtils.isEmpty(m.get("validate")))
-
-						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
-					if (!StringUtils.isEmpty(m.get("SetupDate")))
-
-						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
-					lists.add(m);
-
-				}
+				}		
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
 
-			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
+			return ResponseJson.responseFindPageJsonArray(list, statusCode, pageCount);
 
 		} else if (conditionName.equals("deviceNo")) {
 			int pageCount = facilityService.getFireDeviceByDeviceCount(orgid, conditionValue);
@@ -259,21 +245,13 @@ public class FacilityController {
 							page.getPageSize());
 				}
 
-				for (Map<String, Object> m : list) {
-					if (!StringUtils.isEmpty(m.get("productDate")))
-						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
-					if (!StringUtils.isEmpty(m.get("validate")))
-						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
-					if (!StringUtils.isEmpty(m.get("SetupDate")))
-						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
-					lists.add(m);
-				}
+				
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
-			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
+			return ResponseJson.responseFindPageJsonArray(list, statusCode, pageCount);
 
 		}
 		return null;
@@ -290,28 +268,18 @@ public class FacilityController {
 		String deviceNo = map.get("deviceNo");
 
 		List<Map<String, Object>> list = null;
-		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
 		try {
 			list = facilityService.getFireDeviceListByDeviceNo(deviceNo);
 
-			for (Map<String, Object> m : list) {
-				if (!StringUtils.isEmpty(m.get("productDate")))
-					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
-				if (!StringUtils.isEmpty(m.get("validate")))
-					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
-				if (!StringUtils.isEmpty(m.get("SetupDate")))
-					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
-				lists.add(m);
-
-			}
+			
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 
-		return ResponseJson.responseFindJsonArray(lists, statusCode);
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
 
 	/**
@@ -470,7 +438,7 @@ public class FacilityController {
 		try {
 			if (!StringUtils.isEmpty(trainingID)) {
 				facilityService.deleteTraining(trainingID);
-				dataBag = "刪除成功";
+				dataBag = ConstValues.SUCCESSDEL;
 				statusCode = ConstValues.OK;
 			} else {
 				dataBag = "刪除失败  trainingID为空";
@@ -478,7 +446,7 @@ public class FacilityController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);

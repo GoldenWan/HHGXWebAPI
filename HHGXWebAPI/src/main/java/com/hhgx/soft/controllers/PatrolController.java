@@ -325,11 +325,11 @@ public class PatrolController {
 			onlineFiresystem.setTiSysType(tiSysType);
 			patrolService.addorgSys(onlineFiresystem);
 			statusCode = ConstValues.OK;
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 		}
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 			
@@ -370,11 +370,11 @@ public class PatrolController {
 			
 			
 			statusCode = ConstValues.OK;
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 		}
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -433,10 +433,10 @@ public class PatrolController {
 		try {
 			patrolService.updateUserCheckList(userCheckId, userCheckTime);
 			statusCode = ConstValues.OK;
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -629,11 +629,11 @@ public class PatrolController {
 		String dataBag = null;
 		try {
 			patrolService.editFireSafetyCheck(fireSafetyCheck);
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 			statusCode = ConstValues.FAILED;
 		}
 
@@ -680,11 +680,11 @@ public class PatrolController {
 		String dataBag = null;
 		try {
 			patrolService.addFireSafetyCheck(fireSafetyCheck);
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 			statusCode = ConstValues.FAILED;
 		}
 
@@ -713,11 +713,11 @@ public class PatrolController {
 			} else {
 				patrolService.deleteFireSafetyCheckByOrgid(orgid);
 			}
-			dataBag = "删除成功";
+			dataBag =ConstValues.SUCCESSDEL;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "删除失败";
+			dataBag = ConstValues.FIALUREDEL;
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);

@@ -217,11 +217,11 @@ public class PlayWithRoleController {
 		try {
 			playWithRoleService.removeManagerSubs(managerOrgID);
 			ret=1;
-			dataTag="刪除成功";
+			dataTag=ConstValues.SUCCESSDEL;
 		} catch (Exception e) {
 			e.printStackTrace();
 			ret=0;
-			dataTag="刪除失败";
+			dataTag=ConstValues.FIALUREDEL;
 		}
 		
         Map<String,String> m =new HashMap<String,String>();		

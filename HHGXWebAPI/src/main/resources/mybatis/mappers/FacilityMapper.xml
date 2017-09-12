@@ -136,7 +136,7 @@
 	</select>
 	<select id="getFireDeviceListBySys" resultType="map">
 		SELECT
-		fd.SetupDate,
+		DATE_FORMAT(fd.SetupDate, '%Y/%m/%d') SetupDate,
 		fd.SetLocation,
 		s.siteid,
 		s.sitename,
@@ -144,8 +144,8 @@
 		fd.devicename,
 		fd.Manufacture,
 		fd.model,
-		fd.productDate,
-		fd.validate,
+		DATE_FORMAT(fd.productDate, '%Y/%m/%d') productDate,
+		DATE_FORMAT(fd.validate, '%Y/%m/%d') validate,
 		fd.memo,
 		t.iDeviceType,
 		t.DeviceTypeName,
@@ -168,7 +168,7 @@
 	</select>
 	<select id="getFireDeviceListByDeviceNo" resultType="map">
 		SELECT
-		fd.SetupDate,
+		DATE_FORMAT(fd.SetupDate, '%Y/%m/%d') SetupDate,
 		fd.SetLocation,
 		s.siteid,
 		s.sitename,
@@ -176,8 +176,8 @@
 		fd.devicename,
 		fd.Manufacture,
 		fd.model,
-		fd.productDate,
-		fd.validate,
+		DATE_FORMAT(fd.productDate, '%Y/%m/%d') productDate,
+		DATE_FORMAT(fd.validate, '%Y/%m/%d') validate,
 		fd.memo,
 		t.iDeviceType,
 		t.DeviceTypeName,

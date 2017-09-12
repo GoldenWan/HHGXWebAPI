@@ -120,10 +120,10 @@ public class UsersController {
 			statusCode = ConstValues.FAILED;
 		}
 		if (statusCode == ConstValues.OK) {
-			dataBag = "添加成功";
+			dataBag = ConstValues.SUCCESS;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
-			dataBag = "添加失败";
+			dataBag = ConstValues.FIALURE;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 	}
@@ -155,10 +155,10 @@ public class UsersController {
 			statusCode = ConstValues.FAILED;
 		}
 		if (statusCode == ConstValues.OK) {
-			dataBag = "修改成功";
+			dataBag = ConstValues.SUCCESS_;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
-			dataBag = "修改失败";
+			dataBag = ConstValues.FIALURE_;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 	}
@@ -182,10 +182,10 @@ public class UsersController {
 			statusCode = ConstValues.FAILED;
 		}
 		if (statusCode == ConstValues.OK) {
-			dataBag = "刪除成功";
+			dataBag = ConstValues.SUCCESSDEL;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		} else {
-			dataBag = "刪除失败";
+			dataBag = ConstValues.FIALUREDEL;
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 
