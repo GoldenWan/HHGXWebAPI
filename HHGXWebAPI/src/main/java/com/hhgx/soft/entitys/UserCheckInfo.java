@@ -1,5 +1,7 @@
 package com.hhgx.soft.entitys;
 
+import java.util.List;
+
 public class UserCheckInfo {
 	
 
@@ -10,7 +12,15 @@ public class UserCheckInfo {
  private String ynHanding;                //是否当场处理
  private String handingimmediately;       //现场处理情况
  
+ private List<UserCheckPic> userCheckPics ;
  
+ 
+public List<UserCheckPic> getUserCheckPics() {
+	return userCheckPics;
+}
+public void setUserCheckPics(List<UserCheckPic> userCheckPics) {
+	this.userCheckPics = userCheckPics;
+}
 @Override
 public String toString() {
 	return "UserCheckInfo [userCheckId=" + userCheckId + ", projectId=" + projectId + ", userCheckResult="

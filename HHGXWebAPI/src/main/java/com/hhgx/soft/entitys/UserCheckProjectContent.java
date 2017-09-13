@@ -1,11 +1,21 @@
 package com.hhgx.soft.entitys;
 
+import java.util.List;
+
 public class UserCheckProjectContent {
-	   private String  projectContent  ; 
-	   private String  projectId       ; 
-	   private int     orderNumber        ;
-	   private String  isMust          ;
-	   private String  tiSysType       ;
+	   private String  projectId; 
+	   private String  projectContent; 
+	   private int     orderNumber;
+	   private String  isMust;
+	   private String  tiSysType;
+	   List<UserCheckInfo> userCheckInfos;
+	   
+	public List<UserCheckInfo> getUserCheckInfos() {
+		return userCheckInfos;
+	}
+	public void setUserCheckInfos(List<UserCheckInfo> userCheckInfos) {
+		this.userCheckInfos = userCheckInfos;
+	}
 	public String getProjectContent() {
 		return projectContent;
 	}

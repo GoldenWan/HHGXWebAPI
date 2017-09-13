@@ -1,8 +1,6 @@
 package com.hhgx.soft.controllers;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -135,13 +133,14 @@ public class FormController {
 			onlineFiresystem.setRemarks(remarks);
 			onlineFiresystem.setSiteid(siteid);
 			onlineFiresystem.setTiSysType(tiSysType);
+			String sysFlatpic1 ="";
 			if (!StringUtils.isEmpty(sysFlatpic)) {
 				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
 				// String fName = sysFlatpic.getOriginalFilename();
-				String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
+				 sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
 						"SysFlatpic/" + UUIDGenerator.getUUID());
-				onlineFiresystem.setSysFlatpic(sysFlatpic1);
 			}
+			onlineFiresystem.setSysFlatpic(sysFlatpic1);
 
 			formService.addorgSys(onlineFiresystem);
 			statusCode = ConstValues.OK;
@@ -169,19 +168,17 @@ public class FormController {
 		try {
 			Flatpic flatpic = new Flatpic();
 			// String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-			String str = sdf.format(new Date());
-			flatpic.setcFlatPic(str);
+			flatpic.setcFlatPic(DateUtils.DatePathname());
 			flatpic.setSiteid(siteid);
 			flatpic.setFloornum(floornum);
-
+			String imFlatPic1="";
 			if (!StringUtils.isEmpty(imFlatPic)) {
 
 				String ext = UploadUtil.getExtention(imFlatPic.getOriginalFilename());
-				String imFlatPic1 = UploadUtil.uploadOneFile(request, imFlatPic, UUIDGenerator.getUUID() + "." + ext,
+				 imFlatPic1 = UploadUtil.uploadOneFile(request, imFlatPic, UUIDGenerator.getUUID() + "." + ext,
 						UUIDGenerator.getUUID() + "/Flatpic");
-				flatpic.setImFlatPic(imFlatPic1);
 			}
+			flatpic.setImFlatPic(imFlatPic1);
 			formService.addflatPic(flatpic);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
@@ -260,14 +257,14 @@ public class FormController {
 			appearancepic.setvPhotoname(vPhotoname);
 			appearancepic.setExteriorInfo(exteriorInfo);
 			appearancepic.setSiteid(siteid);
+			String picpath1="";
 			if (!StringUtils.isEmpty(picpath)) {
 
 				String ext = UploadUtil.getExtention(picpath.getOriginalFilename());
-				String picpath1 = UploadUtil.uploadOneFile(request, picpath, UUIDGenerator.getUUID() + "." + ext,
+				 picpath1 = UploadUtil.uploadOneFile(request, picpath, UUIDGenerator.getUUID() + "." + ext,
 						UUIDGenerator.getUUID() + "/AppearancePic");
-				appearancepic.setPicpath(picpath1);
-
 			}
+			appearancepic.setPicpath(picpath1);
 			formService.addAppearance(appearancepic);
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS;
@@ -432,27 +429,25 @@ public class FormController {
 			training.setTrainingContent(trainingContent);
 			training.setTrainingObject(trainingObject);
 			training.setTrainingType(trainingType);
+			String contentFile1="";
+			String examfile1="";
+			String signtable1="";
 
 			if (!StringUtils.isEmpty(contentFile)) {
 				String fName = contentFile.getOriginalFilename();
-
-				String contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
-				training.setContentFile(contentFile1);
-
+				 contentFile1 = UploadUtil.uploadOneFile(request, contentFile, fName, "Training/" + trainingID);
 			}
 			if (!StringUtils.isEmpty(examfile)) {
-
 				String fName1 = examfile.getOriginalFilename();
-				String examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
-				training.setExamfile(examfile1);
-
+				 examfile1 = UploadUtil.uploadOneFile(request, examfile, fName1, "Training/" + trainingID);
 			}
 			if (!StringUtils.isEmpty(signtable)) {
 				String fName2 = signtable.getOriginalFilename();
-				String signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
-				training.setSigntable(signtable1);
-
+				 signtable1 = UploadUtil.uploadOneFile(request, signtable, fName2, "Training/" + trainingID);
 			}
+			training.setContentFile(contentFile1);
+			training.setExamfile(examfile1);
+			training.setSigntable(signtable1);
 			formService.addTraining(training);
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS;
@@ -573,25 +568,28 @@ public class FormController {
 			manoeuvre.setOrgid(orgid);
 			manoeuvre.setSummary(summary);
 			manoeuvre.setSuggestion(suggestion);
+			String schemafile1          ="";
+			String attendpersonfile1    ="";
+			String implementationfile1  ="";
 			if (!StringUtils.isEmpty(schemafile)) {
 
-				String schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
+				 schemafile1 = UploadUtil.uploadOneFile(request, schemafile, schemafile.getOriginalFilename(),
 						"Manoeuvre/" + manoeuvreID);
-				manoeuvre.setSchemafile(schemafile1);
 			}
 			if (!StringUtils.isEmpty(attendpersonfile)) {
 
-				String attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
+				 attendpersonfile1 = UploadUtil.uploadOneFile(request, attendpersonfile,
 						attendpersonfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
-				manoeuvre.setAttendpersonfile(attendpersonfile1);
 			}
 			if (!StringUtils.isEmpty(implementationfile)) {
 
-				String implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
+				 implementationfile1 = UploadUtil.uploadOneFile(request, implementationfile,
 						implementationfile.getOriginalFilename(), "Manoeuvre/" + manoeuvreID);
-				manoeuvre.setImplementationfile(implementationfile1);
 			}
 
+			manoeuvre.setSchemafile(schemafile1);
+			manoeuvre.setAttendpersonfile(attendpersonfile1);
+			manoeuvre.setImplementationfile(implementationfile1);
 			formService.addManoeuvre(manoeuvre);
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS;
@@ -694,11 +692,12 @@ public class FormController {
 			safeManageRules.setUploadTime(DateUtils.timesstampToString());
 			safeManageRules.setSafeManageRulesType(safeManageRulesType);
 			safeManageRules.setOrgid(orgid);
+			String filepath ="";
 			if (!StringUtils.isEmpty(safeRuleFile)) {
-				String filepath = UploadUtil.uploadOneFile(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
+				 filepath = UploadUtil.uploadOneFile(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
 						"ManageRule/" + safeManageRulesID);
-				safeManageRules.setFilepath(filepath);
 			}
+			safeManageRules.setFilepath(filepath);
 			formService.addSafeManageRules(safeManageRules);
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS;
@@ -783,12 +782,12 @@ public class FormController {
 			safeDuty.setUploadtime(DateUtils.timesstampToString());
 			safeDuty.setOrgid(orgid);
 			safeDuty.setSafedutytype(safedutytype);
+			String filepath="";
 			if (!StringUtils.isEmpty(safeDutyFile)) {
-				String filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
+				 filepath = UploadUtil.uploadOneFile(request, safeDutyFile, safeDutyFile.getOriginalFilename(),
 						"SafeDuty/" + safeDutyID);
-				safeDuty.setFilepath(filepath);
-				
 			}
+			safeDuty.setFilepath(filepath);
 
 			formService.addSafeDuty(safeDuty);
 			statusCode = ConstValues.OK;
@@ -886,12 +885,13 @@ public class FormController {
 			businessLicence.setCompanyType(companyType);
 			businessLicence.setOrgid(orgid);
 			businessLicence.setRegistTime(DateUtils.StringToDate(registTime, "yyyy/MM/dd"));
+			String pictureUrl1="";
 			if (!StringUtils.isEmpty(pictureUrl)) {
 				String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
-				String pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
+				 pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
 						orgid + "/BusinessLicence");
-				businessLicence.setPictureUrl(pictureUrl1);
 			}
+			businessLicence.setPictureUrl(pictureUrl1);
 			if (formService.eixstLicenceCode(licenceCode)) {
 				formService.updateBusinessLicence(businessLicence);
 			} else {

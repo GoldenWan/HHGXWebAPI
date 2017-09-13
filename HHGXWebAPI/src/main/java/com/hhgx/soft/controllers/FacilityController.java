@@ -102,11 +102,11 @@ public class FacilityController {
 			facilityService.addFireDevice(fireDevice);
 
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS;
+			dataBag = "添加成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE;
+			dataBag = "添加失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -127,11 +127,11 @@ public class FacilityController {
 			facilityService.delFireDeviceChangeRecord(deviceNo);
 			facilityService.deleteFireDeviceList(deviceNo);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -206,13 +206,14 @@ public class FacilityController {
 
 		Page page = null;
 		List<Map<String, Object>> list = null;
+		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
 
 		if (conditionName.equals("vSysdesc")) {
 			int pageCount = facilityService.getFireDeviceBySysCount(orgid, conditionValue);
 			try {
 
-				if (pageIndex != null) {
+				if (!StringUtils.isEmpty(pageIndex)) {
 					page = new Page(pageCount, Integer.parseInt(pageIndex));
 					list = facilityService.getFireDeviceListBySys(orgid, conditionValue, page.getStartPos(),
 							page.getPageSize());
@@ -221,20 +222,33 @@ public class FacilityController {
 					page = new Page(pageCount, 1);
 					list = facilityService.getFireDeviceListBySys(orgid, conditionValue, page.getStartPos(),
 							page.getPageSize());
-				}		
+				}
+				for (Map<String, Object> m : list) {
+					if (!StringUtils.isEmpty(m.get("productDate")))
+
+						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					if (!StringUtils.isEmpty(m.get("validate")))
+
+						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					if (!StringUtils.isEmpty(m.get("SetupDate")))
+
+						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+					lists.add(m);
+
+				}
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
 
-			return ResponseJson.responseFindPageJsonArray(list, statusCode, pageCount);
+			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
 
 		} else if (conditionName.equals("deviceNo")) {
 			int pageCount = facilityService.getFireDeviceByDeviceCount(orgid, conditionValue);
 
 			try {
-				if (pageIndex != null) {
+				if (!StringUtils.isEmpty(pageIndex)) {
 					page = new Page(pageCount, Integer.parseInt(pageIndex));
 					list = facilityService.getFireDeviceListByDevice(orgid, conditionValue, page.getStartPos(),
 							page.getPageSize());
@@ -245,13 +259,21 @@ public class FacilityController {
 							page.getPageSize());
 				}
 
-				
+				for (Map<String, Object> m : list) {
+					if (!StringUtils.isEmpty(m.get("productDate")))
+						m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+					if (!StringUtils.isEmpty(m.get("validate")))
+						m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+					if (!StringUtils.isEmpty(m.get("SetupDate")))
+						m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+					lists.add(m);
+				}
 				statusCode = ConstValues.OK;
 			} catch (Exception e) {
 				e.printStackTrace();
 				statusCode = ConstValues.FAILED;
 			}
-			return ResponseJson.responseFindPageJsonArray(list, statusCode, pageCount);
+			return ResponseJson.responseFindPageJsonArray(lists, statusCode, pageCount);
 
 		}
 		return null;
@@ -268,18 +290,28 @@ public class FacilityController {
 		String deviceNo = map.get("deviceNo");
 
 		List<Map<String, Object>> list = null;
+		List<Map<String, Object>> lists = new ArrayList<>();
 		int statusCode = -1;
 		try {
 			list = facilityService.getFireDeviceListByDeviceNo(deviceNo);
 
-			
+			for (Map<String, Object> m : list) {
+				if (!StringUtils.isEmpty(m.get("productDate")))
+					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+				if (!StringUtils.isEmpty(m.get("validate")))
+					m.put("validate", DateUtils.formatToDateTime(m.get("validate").toString()));
+				if (!StringUtils.isEmpty(m.get("SetupDate")))
+					m.put("SetupDate", DateUtils.formatToDateTime(m.get("SetupDate").toString()));
+				lists.add(m);
+
+			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 
-		return ResponseJson.responseFindJsonArray(list, statusCode);
+		return ResponseJson.responseFindJsonArray(lists, statusCode);
 	}
 
 	/**
@@ -335,7 +367,7 @@ public class FacilityController {
 		int statusCode = -1;
 
 		try {
-			if (pageIndex != null) {
+			if (!StringUtils.isEmpty(pageIndex)) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				trainingList = facilityService.getTrainingList(orgid, startTime, endTime, page.getStartPos(),
 						page.getPageSize());
@@ -349,7 +381,7 @@ public class FacilityController {
 			for (Training training : trainingList) {
 				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("TrainingID", training.getTrainingID());
-				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime(), null));
+				map2.put("TrainingTime", DateUtils.formatDate(training.getTrainingTime()));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingContent", training.getTrainingContent());
 				map2.put("TrainingObject", training.getTrainingObject());
@@ -392,7 +424,7 @@ public class FacilityController {
 
 				map2.put("TrainingID", training.getTrainingID());
 				map2.put("TrainingTime",
-						DateUtils.formatToDate(DateUtils.formatDate(training.getTrainingTime(), null)));
+						DateUtils.formatToDate(DateUtils.formatDate(training.getTrainingTime())));
 				map2.put("TrainingAddress", training.getTrainingAddress());
 				map2.put("TrainingType", training.getTrainingType());
 				map2.put("HowmanyPeople", String.valueOf(training.getHowmanyPeople()));
@@ -438,7 +470,7 @@ public class FacilityController {
 		try {
 			if (!StringUtils.isEmpty(trainingID)) {
 				facilityService.deleteTraining(trainingID);
-				dataBag = ConstValues.SUCCESSDEL;
+				dataBag = "刪除成功";
 				statusCode = ConstValues.OK;
 			} else {
 				dataBag = "刪除失败  trainingID为空";
@@ -446,7 +478,7 @@ public class FacilityController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -490,7 +522,7 @@ public class FacilityController {
 		}
 
 		try {
-			if (pageIndex != null) {
+			if (!StringUtils.isEmpty(pageIndex)) {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				manoeuvreList = facilityService.getManoeuvreByOrgid(orgid, startTime, endTime, page.getStartPos(),
 						page.getPageSize());

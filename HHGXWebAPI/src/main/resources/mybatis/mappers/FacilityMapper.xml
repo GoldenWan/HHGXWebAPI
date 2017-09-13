@@ -54,7 +54,8 @@
 		FROM
 		firedevicechangerecord
 		WHERE
-		deviceNo = #{deviceNo}
+		deviceNo =
+		#{deviceNo}
 	</delete>
 	<delete id="deleteFireDeviceList">
 		DELETE
@@ -111,11 +112,10 @@
 		INNER JOIN
 		firesystype ff ON t.tiSysType = ff.tiSysType
 		WHERE
-		s.orgid =
-		#{orgid}
+		s.orgid =#{orgid}
 		<if test="deviceNo !=null and deviceNo !=''">
 			and
-			d.deviceNo = #{deviceNo}
+			f.deviceNo LIKE CONCAT('%', #{deviceNo},'%')
 		</if>
 	</select>
 	<select id="getFireDeviceBySysCount" resultType="int">
@@ -136,26 +136,26 @@
 	</select>
 	<select id="getFireDeviceListBySys" resultType="map">
 		SELECT
-		DATE_FORMAT(fd.SetupDate, '%Y/%m/%d') SetupDate,
-		fd.SetLocation,
+		f.SetupDate,
+		f.SetLocation,
 		s.siteid,
 		s.sitename,
-		fd.deviceNo,
-		fd.devicename,
-		fd.Manufacture,
-		fd.model,
-		DATE_FORMAT(fd.productDate, '%Y/%m/%d') productDate,
-		DATE_FORMAT(fd.validate, '%Y/%m/%d') validate,
-		fd.memo,
+		f.deviceNo,
+		f.devicename,
+		f.Manufacture,
+		f.model,
+		f.productDate,
+		f.validate,
+		f.memo,
 		t.iDeviceType,
 		t.DeviceTypeName,
 		ff.vSysdesc
 		FROM
 		site s
 		INNER JOIN
-		firedevice fd ON s.siteid = fd.siteid
+		firedevice f ON s.siteid = f.siteid
 		INNER JOIN devicetype t ON
-		t.iDeviceType = fd.iDeviceType
+		t.iDeviceType = f.iDeviceType
 		INNER JOIN firesystype ff ON t.tiSysType
 		= ff.tiSysType
 		WHERE
@@ -168,62 +168,61 @@
 	</select>
 	<select id="getFireDeviceListByDeviceNo" resultType="map">
 		SELECT
-		DATE_FORMAT(fd.SetupDate, '%Y/%m/%d') SetupDate,
-		fd.SetLocation,
+		f.SetupDate,
+		f.SetLocation,
 		s.siteid,
 		s.sitename,
-		fd.deviceNo,
-		fd.devicename,
-		fd.Manufacture,
-		fd.model,
-		DATE_FORMAT(fd.productDate, '%Y/%m/%d') productDate,
-		DATE_FORMAT(fd.validate, '%Y/%m/%d') validate,
-		fd.memo,
+		f.deviceNo,
+		f.devicename,
+		f.Manufacture,
+		f.model,
+		f.productDate,
+		f.validate,
+		f.memo,
 		t.iDeviceType,
 		t.DeviceTypeName,
 		ff.vSysdesc
 		FROM
 		site s
 		INNER JOIN
-		firedevice fd ON s.siteid = fd.siteid
+		firedevice f ON s.siteid = f.siteid
 		INNER JOIN devicetype t ON
-		t.iDeviceType = fd.iDeviceType
+		t.iDeviceType = f.iDeviceType
 		INNER JOIN firesystype ff ON t.tiSysType
 		= ff.tiSysType
 		WHERE
-		fd.deviceNo =#{deviceNo}
-
+		f.deviceNo = #{deviceNo}
 	</select>
 
 	<select id="getFireDeviceListByDevice" resultType="map">
 		SELECT
-		fd.SetupDate,
-		fd.SetLocation,
+		f.SetupDate,
+		f.SetLocation,
 		s.siteid,
 		s.sitename,
-		fd.deviceNo,
-		fd.devicename,
-		fd.Manufacture,
-		fd.model,
-		fd.productDate,
-		fd.validate,
-		fd.memo,
+		f.deviceNo,
+		f.devicename,
+		f.Manufacture,
+		f.model,
+		f.productDate,
+		f.validate,
+		f.memo,
 		t.iDeviceType,
 		t.DeviceTypeName,
 		ff.vSysdesc
 		FROM
 		site s
 		INNER JOIN
-		firedevice fd ON s.siteid = fd.siteid
+		firedevice f ON s.siteid = f.siteid
 		INNER JOIN devicetype t ON
-		t.iDeviceType = fd.iDeviceType
+		t.iDeviceType = f.iDeviceType
 		INNER JOIN firesystype ff ON t.tiSysType
 		= ff.tiSysType
 		WHERE
 		s.orgid =#{orgid}
 		<if test="deviceNo !=null and deviceNo !=''">
-			and
-			fd.deviceNo = #{deviceNo}
+		and
+		f.deviceNo LIKE CONCAT('%', #{deviceNo},'%')
 		</if>
 		LIMIT #{startPos},#{pageSize}
 	</select>

@@ -25,13 +25,13 @@
 		uerchecklist ul
 		INNER JOIN usercheckinfo ui ON
 		ul.userCheckId = ui.userCheckId
+		WHERE
+		ul.orgid = #{orgID}
 		<if test="startDate !=null and startDate !='' and endTime!=null and endTime!=''">
 		and
 		ul.SubmitTime BETWEEN #{startDate}
 		and #{endTime}
 		</if>
-		WHERE
-		ul.orgid = #{orgID}
 		) n
 
 	</select>
@@ -356,35 +356,7 @@
 		<collection property="sites" column="orgid"
 			select="com.hhgx.soft.mappers.OrginfoMapper.getSiteName" />
 	</resultMap>
-	<select id="getCheckRecord" resultType="map">
-	SELECT
-		s.siteid,
-		s.sitename,
-		f.tiSysType,
-		f.vSysdesc,
-		ui.ProjectId,
-		u.ProjectContent,
-		ui.UserCheckResult,
-		ui.FaultShow,
-		ui.YnHanding,
-		ui.Handingimmediately,
-		up.PicID,
-		up.PicPath
-	FROM
-		site s
-	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
-	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
-	INNER JOIN uerchecklist ul ON s.orgid = ul.orgid
-	LEFT JOIN usercheckinfo ui ON ul.UserCheckId = ui.UserCheckId
-	LEFT JOIN usercheckprojectcontent u ON ui.ProjectId = u.ProjectId
-	LEFT JOIN usercheckpic up ON ui.ProjectId = up.ProjectId
-	AND ui.UserCheckId = up.UserCheckId
-	WHERE
-		ul.UserCheckId = '341c87a85533499a88413a95f0268524'
-	<if test="siteid !='all'.toString() and siteid!=null and siteid !=''">
-	AND s.siteid =#{siteid}
-	</if>
-	</select>
+	
 	<select id="getPatrolProject" resultMap="patrolProjectMap">
 		SELECT
 		f.tiSysType,
@@ -397,8 +369,6 @@
 		WHERE
 		orgid = #{orgid}
 		</if>
-		
-		
 	</select>
 	<resultMap type="patrolProject" id="patrolProjectMap">
 		<id column="tiSysType" property="tiSysType" />
@@ -433,4 +403,71 @@
 			#{remarks}
 		)	
 	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="getCheckRecord" resultMap="getCheckRecordMap">
+	SELECT
+		s.siteid,
+		s.sitename,
+		f.tiSysType,
+		f.vSysdesc,
+		u.ProjectId,
+		u.ProjectContent,
+		ui.UserCheckResult,
+		ui.FaultShow,
+		ui.YnHanding,
+		ui.Handingimmediately,
+		up.PicID,
+		up.PicPath
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+	INNER JOIN usercheckprojectcontent u ON f.tiSysType = u.tiSysType
+	inner JOIN usercheckinfo ui ON u.ProjectId = ui.ProjectId	
+    LEFT JOIN usercheckpic up ON ui.ProjectId = up.ProjectId AND ui.UserCheckId = up.UserCheckId
+	WHERE
+		ui.UserCheckId = #{userCheckId}
+	<if test="siteid !='all'.toString() and siteid!=null and siteid !=''">
+		AND s.siteid =#{siteid}
+	</if>
+	</select>
+	 <resultMap id="getCheckRecordMap" type="site">  
+        <id property="siteid" column="siteid" />  
+        <result property="sitename" column="sitename" />  
+        <collection property="firesystypes" ofType="firesystype" resultMap="firesystypeMap"/>  
+    </resultMap> 
+    <resultMap id="firesystypeMap" type="firesystype">  
+        <id property="tiSysType" column="tiSysType" />  
+        <result property="vSysdesc" column="vSysdesc" />  
+         <collection property="userCheckProjectContents" ofType="userCheckProjectContent" resultMap="userCheckProjectContentMap"/>    
+    </resultMap>   
+    <resultMap id="userCheckProjectContentMap" type="userCheckProjectContent">  
+        <id property="projectId" column="ProjectId" />  
+        <result property="projectContent" column="ProjectContent" />  
+         <collection property="userCheckInfos" ofType="userCheckInfo" resultMap="userCheckInfoMap"/>    
+    </resultMap>  
+    <resultMap id="userCheckInfoMap" type="userCheckInfo">  
+        <result property="userCheckResult" column="UserCheckResult" />  
+        <result property="faultShow" column="FaultShow" />  
+        <result property="ynHanding" column="YnHanding" />  
+        <result property="handingimmediately" column="Handingimmediately" />  
+         <collection property="userCheckPics" ofType="userCheckPic" resultMap="userCheckPicMap"/>    
+    </resultMap> 
+      
+    <resultMap id="userCheckPicMap" type="userCheckPic">  
+        <id property="picID" column="picID" />  
+        <result property="picPath" column="PicPath" />  
+    </resultMap>   
+	
 </mapper>

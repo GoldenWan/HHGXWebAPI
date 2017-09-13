@@ -31,7 +31,6 @@ import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Site;
 import com.hhgx.soft.services.OrginfoService;
-import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
@@ -107,6 +106,7 @@ public class OrginfoController {
 	 * @throws IOException
 	 */
 
+	
 	@ResponseBody
 	@RequestMapping(value = "/BriefsiteList", method = RequestMethod.POST)
 	public String briefsiteList(HttpServletRequest request) throws IOException {
@@ -156,11 +156,11 @@ public class OrginfoController {
 			orginfoService.deleteGatewaySysInfo(tiSysType);
 			orginfoService.deleteorgSys(siteid, tiSysType);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
@@ -169,7 +169,6 @@ public class OrginfoController {
 
 	/**
 	 * 21.添加传输设备
-	 * 
 	 * @throws IOException
 	 */
 
@@ -237,11 +236,11 @@ public class OrginfoController {
 				}
 			}
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE;
+			dataBag = "插入失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -322,11 +321,11 @@ public class OrginfoController {
 				}
 			}
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS_;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE_;
+			dataBag = "修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -425,11 +424,11 @@ public class OrginfoController {
 			orginfoService.deleteGatewaySysInfo(gatewayaddress);
 			orginfoService.deleteGateway(gatewayaddress);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -616,9 +615,6 @@ public class OrginfoController {
 		String iDeviceType = map.get("iDeviceType");
 		String deviceNo = map.get("DeviceNo");
 
-		if (!CommonMethod.isNumeric(deviceNo)||!CommonMethod.isNumeric(sysaddress)) {
-			return ResponseJson.responseAddJson("回路和系统地址都必须是整数", -256);
-		}
 		if (StringUtils.isEmpty(road) || StringUtils.isEmpty(address)) {
 			return ResponseJson.responseAddJson("回路和地址不能为空", -256);
 		}
@@ -654,11 +650,11 @@ public class OrginfoController {
 				orginfoService.addDevices(devices);
 			}
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS_;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE_;
+			dataBag = "修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -690,11 +686,11 @@ public class OrginfoController {
 			orginfoService.deleteAnlogAlarmSettings(deviceaddress, sysaddress, gatewayaddress);
 			orginfoService.deleteDevices(deviceaddress, sysaddress, gatewayaddress);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -758,16 +754,33 @@ public class OrginfoController {
 		String deviceaddress = ret.get("deviceaddress");
 
 		int statusCode = -1;
-		List<Map<String, String>> devices = null;
+		List<Map<String, String>> list = new ArrayList<>();
 		try {
-			 devices = orginfoService.selectDeviceDetail(gatewayaddress, sysaddress,
-					deviceaddress);	
+
+			List<Map<String, String>> devices = orginfoService.selectDeviceDetail(gatewayaddress, sysaddress,
+					deviceaddress);
+			for (Map<String, String> m : devices) {
+				if (!StringUtils.isEmpty(m.get("expdate")))
+					m.put("expdate", DateUtils.formatToDateTime(m.get("expdate").toString()));
+				if (!StringUtils.isEmpty(m.get("dRecorddate")))
+					m.put("dRecorddate", DateUtils.formatToDateTime(m.get("dRecorddate").toString()));
+				if (!StringUtils.isEmpty(m.get("stateTime")))
+					m.put("stateTime", DateUtils.formatToDateTime(m.get("stateTime").toString()));
+				if (!StringUtils.isEmpty(m.get("productDate")))
+
+					m.put("productDate", DateUtils.formatToDateTime(m.get("productDate").toString()));
+				if (!StringUtils.isEmpty(m.get("addTime")))
+
+					m.put("addTime", DateUtils.formatToDateTime(m.get("addTime").toString()));
+				list.add(m);
+
+			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJsonArray(devices, statusCode);
+		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
 	/**
@@ -788,11 +801,11 @@ public class OrginfoController {
 		try {
 			orginfoService.deleteAppearance(iphotoID);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -905,11 +918,11 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			orginfoService.updateOnlineOrg(onlineOrg);
-			dataBag = ConstValues.SUCCESS_;
+			dataBag = "修改成功";
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = ConstValues.FIALURE_;
+			dataBag = "修改失败";
 			statusCode = ConstValues.FAILED;
 		}
 
@@ -932,11 +945,11 @@ public class OrginfoController {
 
 			orginfoService.deleteSite(siteid);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESSDEL;
+			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALUREDEL;
+			dataBag = "刪除失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -999,12 +1012,12 @@ public class OrginfoController {
 				map2.put("fLatitude", onlineOrg.getfLatitude());
 
 				map2.put("bFlatpic", onlineOrg.getbFlatpic());
-				map2.put("dRecordDate", DateUtils.formatDate(onlineOrg.getdRecordDate(), null));
+				map2.put("dRecordDate", DateUtils.formatDate(onlineOrg.getdRecordDate()));
 				map2.put("managegrade", onlineOrg.getManagegrade());
 				map2.put("NetworkStatus", onlineOrg.getNetworkStatus());
-				map2.put("NetworkTime", DateUtils.formatDate(onlineOrg.getNetworkTime(), "yyyy-MM-dd"));
+				map2.put("NetworkTime", DateUtils.formatDate(onlineOrg.getNetworkTime()));
 				map2.put("ApproveState", onlineOrg.getApproveState());
-				map2.put("ApproveTime", DateUtils.formatDate(onlineOrg.getApproveTime(), null));
+				map2.put("ApproveTime", DateUtils.formatDate(onlineOrg.getApproveTime()));
 				map2.put("ApproveMan", onlineOrg.getApproveMan());
 				map2.put("AreaId", onlineOrg.getAreaId());
 				map2.put("ManagerOrgID", onlineOrg.getManagerOrgID());
@@ -1012,6 +1025,7 @@ public class OrginfoController {
 			}
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindJsonArray(map2, statusCode);
@@ -1345,11 +1359,11 @@ public class OrginfoController {
 
 			orginfoService.updateSite(site);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS_;
+			dataBag = "修改成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE_;
+			dataBag = "修改失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -1403,7 +1417,7 @@ public class OrginfoController {
 			if (StringUtils.isEmpty(newSiteid)) {
 				siteid = orgid + "00000001";
 			} else {
-				StringBuilder sBuilder = new StringBuilder(String.valueOf(Integer.parseInt(newSiteid) + 1));
+				StringBuilder sBuilder = new StringBuilder(Integer.parseInt(newSiteid) + 1);
 				for (int len = sBuilder.length(); len < 8; len++) {
 					sBuilder.insert(0, "0");
 				}
@@ -1445,11 +1459,11 @@ public class OrginfoController {
 			site.setOrgid(orgid);
 			orginfoService.addSite(site);
 			statusCode = ConstValues.OK;
-			dataBag = ConstValues.SUCCESS;
+			dataBag = "插入成功";
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE;
+			dataBag = "插入失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -1465,12 +1479,12 @@ public class OrginfoController {
 
 		String siteid = map.get("siteid");
 		List<Map<String, String>> list = new ArrayList<>();
+		Map<String, String> map2 = new HashMap<String, String>();
 		int statusCode = -1;
 		try {
 			List<Appearancepic> appearancepics = orginfoService.getAppearancepic(siteid);
 			// 有可能是get(0)
 			for (Appearancepic appearancepic : appearancepics) {
-				Map<String, String> map2 = new HashMap<String, String>();
 				map2.put("iphotoID", appearancepic.getIphotoID());
 				map2.put("vPhotoname", appearancepic.getvPhotoname());
 				map2.put("dRecordDate", DateUtils.formatToDate(appearancepic.getdRecordDate()));
@@ -1906,6 +1920,7 @@ public class OrginfoController {
 		int statusCode = -1;
 		Page page = null;
 		List<Map<String, Object>> lmList = null;
+		List<Map<String, Object>> list = new ArrayList<>();
 
 		int totalCount = orginfoService.dataMonitorCount(siteid, tiSysType);
 
@@ -1918,6 +1933,12 @@ public class OrginfoController {
 				page = new Page(totalCount, 1);
 				lmList = orginfoService.dataMonitor(siteid, tiSysType, page.getStartPos(), page.getPageSize());
 			}
+			for (Map<String, Object> m : lmList) {
+				if (!StringUtils.isEmpty(m.get("dRecorddate")))
+					m.put("dRecorddate", DateUtils.formatToDateTime(m.get("dRecorddate").toString()));
+				list.add(m);
+
+			}
 
 			statusCode = ConstValues.OK;
 
@@ -1925,7 +1946,7 @@ public class OrginfoController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		return ResponseJson.responseFindPageJsonArray(list, statusCode, totalCount);
 
 	}
 

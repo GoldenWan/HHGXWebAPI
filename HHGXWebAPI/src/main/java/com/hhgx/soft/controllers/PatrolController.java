@@ -25,6 +25,7 @@ import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
+import com.hhgx.soft.entitys.Site;
 import com.hhgx.soft.entitys.UserCheckList;
 import com.hhgx.soft.entitys.UserCheckPic;
 import com.hhgx.soft.entitys.UserCheckProjectContent;
@@ -768,64 +769,18 @@ public class PatrolController {
 		//"siteid":"all" 查所有建筑物巡查记录列表
 		String siteid = map.get("siteid");
 		
-		List<Map<String, Object>> lmList =null;
+		List<Site> lmList =null;
 		int statusCode = -1;
 		try{
 		
 			
 		lmList = patrolService.getCheckRecord(userCheckId, siteid);
-			
-		/*	
-			for(UserCheckList userCheckList : userCheckLists){
-				Map<String, Object> map2 = new HashMap<String, Object>();
-				map2.put("UserCheckTime",userCheckList.getUserCheckTime() );
-				map2.put("OrgUserId" ,userCheckList.getOrgUserId() );
-				map2.put("OrgManagerId", userCheckList.getOrgManagerId());
-				map2.put("UserCheckId", userCheckList.getUserCheckId());
-				map2.put("siteList", userCheckList.getSites());
-				
-				lmList.add(map2);
-			}
-			
-			{
-    "StateMessage": 1000,
-    "DataBag": [
-        {
-            "tiSysType": 1,
-            "sitename": "建筑物名称",
-            "PicPath": "1",
-            "vSysdesc": "火灾探测报警系统",
-            "YnHanding": "1",
-            "Handingimmediately": "1",
-            "siteid": "11010100000100000003",
-            "ProjectContent": "消防电源工作状态",
-            "PicID": "1",
-            "UserCheckResult": "未提交",
-            "ProjectId": "1001",
-            "FaultShow": "1"
-        },
-        {
-            "tiSysType": 1,
-            "sitename": "建筑物名称",
-            "PicPath": "2",
-            "vSysdesc": "火灾探测报警系统",
-            "YnHanding": "w",
-            "Handingimmediately": "w",
-            "siteid": "11010100000100000003",
-            "ProjectContent": "消防配电房、发电机房环境",
-            "PicID": "2",
-            "UserCheckResult": "w",
-            "ProjectId": "1003",
-            "FaultShow": "w"
-        }
-    ]
-}
-			*/
-			statusCode = ConstValues.OK;
+		statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}
-		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+		return ResponseJson.responseFindFireCheckArray(lmList, statusCode);
 		
 	}
 	

@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hhgx.soft.entitys.Dictionary;
+import com.hhgx.soft.entitys.Page;
+import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.services.CommonService;
 import com.hhgx.soft.utils.ConstValues;
+import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
@@ -26,6 +30,7 @@ import com.hhgx.soft.utils.ResponseJson;
 public class CommonController {
 @Autowired
 private CommonService  commonService;
+
 	@RequestMapping(value="/GetDictionary", method = RequestMethod.POST)
 	@ResponseBody
 	public String  getDictionary(HttpServletRequest request) throws IOException{
@@ -50,8 +55,7 @@ private CommonService  commonService;
 		}
 		
 		return ResponseJson.responseFindJsonArray(list, statusCode);
-
-		
 	}
+	
 	
 }

@@ -15,6 +15,7 @@ import com.hhgx.soft.entitys.PatrolDetail;
 import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.PatrolRecord;
 import com.hhgx.soft.entitys.PatrolTotal;
+import com.hhgx.soft.entitys.Site;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckList;
 import com.hhgx.soft.entitys.UserCheckPic;
@@ -164,7 +165,7 @@ public class PatrolService {
 		return patrolMapper.getCheckRecordBase(userCheckId);
 	}
 
-	public List<Map<String, Object>> getCheckRecord(String userCheckId, String siteid) {
+	public List<Site> getCheckRecord(String userCheckId, String siteid) {
 		return patrolMapper.getCheckRecord(userCheckId, siteid);
 	}
 

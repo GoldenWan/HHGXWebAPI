@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.util.StringUtils;
+
 /**
  * 
  * Function:  日期工具类
@@ -58,7 +60,13 @@ public class DateUtils {
 	}
 	
 	public static String formatDateTime(Date date) {
-		return (formatDate(date, "yyyy-MM-dd HH:mm:ss"));
+		if (StringUtils.isEmpty(date ))
+			return "";
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.format(date);
+		
+		
 	}
 	/**
 	 * 按照指定的格式返回日期字符串. 默认 "yyyy-MM-dd"
@@ -66,13 +74,16 @@ public class DateUtils {
 	 * @param Date
 	 * @param String
 	 */
-	public static String formatDate(Date date, String pattern) {
-		if (date == null)
+	
+	public static String formatDate(Date date) {
+		
+		if (StringUtils.isEmpty(date ))
 			return "";
-		if (pattern == null)
-			pattern = "yyyy-MM-dd";
+		String pattern = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-		return (sdf.format(date));
+		String d  =sdf.format(date);
+		d=d.substring(0,10).replaceAll("-", "/");
+		return d;
 	}
 	
 	/**
@@ -81,12 +92,11 @@ public class DateUtils {
 	 * @param Date
 	 * @param String
 	 */
-	public static String formatToDate(String date) 
-	{  String formatDATE ="";
-		if (date == null)
+	public static String formatToDate(String date) {
+		if (StringUtils.isEmpty(date))
 			return "";
 		String d = date.substring(0,10);
-		formatDATE=d.replaceAll("-", "/");
+		String formatDATE=d.replaceAll("-", "/");
 		return formatDATE;
 	}
 /**按照指定的格式返回日期字符串. 默认 "yyyy/MM/dd HH:mm:ss"
@@ -129,13 +139,13 @@ public class DateUtils {
 	}
 	
 
-	public static String timesstampToString(String s) {
+	public static String DatePathname() {
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		String tsStr = "";
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		try {
 			// 方法一
-			tsStr = sdf.format(s);
-		    tsStr = tsStr.substring(0,10).replaceAll("-", "/");
+			tsStr = sdf.format(ts);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -162,9 +172,12 @@ public class DateUtils {
 	 * @return
 	 */
 	public static Date StringToDate(String dateStr, String dateformat) {
+		if (null==dateformat || "".equals(dateformat) )
+			dateformat="yyyy/MM/dd";
 		SimpleDateFormat dd = new SimpleDateFormat(dateformat);
 		Date date = null;
 		try {
+			//dateStr=dateStr.replaceAll("/", "-");
 			date = dd.parse(dateStr);
 		} catch (ParseException e) {
 			e.printStackTrace();

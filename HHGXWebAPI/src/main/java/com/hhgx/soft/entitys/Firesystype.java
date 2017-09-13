@@ -1,12 +1,22 @@
 package com.hhgx.soft.entitys;
 
+import java.util.List;
+
 public class Firesystype {
 	private String  tiSysType;
+	private String sysaddress;
     private String  vSysdesc ;
     private String orderNO  ;
     
-    private String sysaddress;
+    List<UserCheckProjectContent> userCheckProjectContents;  
     
+	public List<UserCheckProjectContent> getUserCheckProjectContents() {
+		return userCheckProjectContents;
+	}
+	public void setUserCheckProjectContents(List<UserCheckProjectContent> userCheckProjectContents) {
+		this.userCheckProjectContents = userCheckProjectContents;
+	}
+	
 	public String getSysaddress() {
 		return sysaddress;
 	}
