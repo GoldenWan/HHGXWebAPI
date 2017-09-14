@@ -24,7 +24,7 @@ public interface OrginfoMapper {
 
 	void updateOnlineOrg(OnlineOrg onlineOrg);
 
-	OnlineOrg getOnlineOrg(@Param("orgID")String orgID);
+	Map<String, String> getOnlineOrg(@Param("orgID")String orgID);
 
 	List<BusinessLicence> getBusinessLicence(@Param("orgid")String orgid);
 
@@ -99,7 +99,7 @@ public interface OrginfoMapper {
 
 	void updateSite(Site site);
 
-	List<Appearancepic> getAppearancepic(String siteid);
+	List<Map<String, String>> getAppearancepic(String siteid);
 
 	void deleteAppearance(String iphotoID);
 

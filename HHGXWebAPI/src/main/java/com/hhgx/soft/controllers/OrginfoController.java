@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
@@ -236,11 +235,11 @@ public class OrginfoController {
 				}
 			}
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -825,9 +824,7 @@ public class OrginfoController {
 				"howmanypeople", "realtymoney", "ipersonnum", "fAreanum", "fBuildingarea", "GasType", "howmanyexit",
 				"howmanystair", "howmanylane", "howmanyelevator", "lanelocation", "vfireroomtel", "escapefloor",
 				"escapebuildingarea", "AutoFireFacility", "ManagerOrgID", "neareast", "nearsouth", "nearwest",
-				"nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "howmanyfireman");
-
-		/// managegrade 和GasType
+				"nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "howmanyfireman","vNamelegalperson");
 
 		String orgID = ret.get("OrgID");
 		String orgcode = ret.get("orgcode");
@@ -837,7 +834,6 @@ public class OrginfoController {
 		String otherthings = ret.get("otherthings");
 		String ynImportant = ret.get("YnImportant");
 		String superiorOrg = ret.get("SuperiorOrg");
-
 		String cZip = ret.get("cZip");
 		String vTel = ret.get("vTel");
 		String fax = ret.get("fax");
@@ -868,6 +864,7 @@ public class OrginfoController {
 		String vfireroomtel = ret.get("vfireroomtel");
 		String escapefloor = ret.get("escapefloor");
 		String escapebuildingarea = ret.get("escapebuildingarea");
+		String vNamelegalperson = ret.get("vNamelegalperson");
 
 		// String setupDate = ret.get("SetupDate");
 
@@ -875,6 +872,7 @@ public class OrginfoController {
 		onlineOrg.setNeareast(neareast);
 		onlineOrg.setNearwest(nearwest);
 		onlineOrg.setNearsouth(nearsouth);
+		onlineOrg.setvNamelegalperson(vNamelegalperson);
 		onlineOrg.setNearnorth(nearnorth);
 		onlineOrg.setManagegrade(managegrade);
 		onlineOrg.setNetworkStatus(networkStatus);
@@ -903,8 +901,6 @@ public class OrginfoController {
 		onlineOrg.setLanelocation(lanelocation);
 		onlineOrg.setHowmanypeople(howmanypeople);
 		onlineOrg.seteMail(eMail);
-		// onlineOrg.setdRecordDate(DateUtils.StringToDate(dRecordDate,
-		// "yyyy/MM/dd"));
 		onlineOrg.setEscapefloor(escapefloor);
 		onlineOrg.setfAreanum(fAreanum);
 		onlineOrg.setfBuildingarea(fBuildingarea);
@@ -918,11 +914,11 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			orginfoService.updateOnlineOrg(onlineOrg);
-			dataBag = "修改成功";
+			dataBag = "操作完成！";
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
-			dataBag = "修改失败";
+			dataBag = "操作失败";
 			statusCode = ConstValues.FAILED;
 		}
 
@@ -967,62 +963,10 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID");
 		String orgID = ret.get("OrgID");
-		Map<String, String> map2 = new HashMap<String, String>();
+		Map<String, String> map2 = null;
 		int statusCode = -1;
 		try {
-			OnlineOrg onlineOrg = orginfoService.getOnlineOrg(orgID);
-
-			if (!StringUtils.isEmpty(onlineOrg)) {
-				map2.put("orgcode", onlineOrg.getOrgcode());
-				map2.put("orgname", onlineOrg.getOrgname());
-				map2.put("vAddress", onlineOrg.getvAddress());
-				map2.put("OrganType", onlineOrg.getOrganType());
-				map2.put("vNamelegalperson", onlineOrg.getvNamelegalperson());
-				map2.put("otherthings", onlineOrg.getOtherthings());
-				map2.put("YnImportant", onlineOrg.getYnImportant());
-				map2.put("SuperiorOrg", onlineOrg.getSuperiorOrg());
-				map2.put("cZip", onlineOrg.getcZip());
-				map2.put("vTel", onlineOrg.getvTel());
-				map2.put("fax", onlineOrg.getFax());
-				map2.put("E_Mail", onlineOrg.geteMail());
-				map2.put("howmanypeople", onlineOrg.getHowmanypeople());
-				map2.put("souyouzhi", onlineOrg.getSouyouzhi());
-				map2.put("SetupDate", DateUtils.formatToDate(DateUtils.formatDateTime(onlineOrg.getSetupDate())));
-				map2.put("realtymoney", onlineOrg.getRealtymoney());
-				map2.put("ipersonnum", onlineOrg.getIpersonnum());
-				map2.put("fAreanum", onlineOrg.getfAreanum());
-				map2.put("fBuildingarea", onlineOrg.getfBuildingarea());
-				map2.put("GasType", onlineOrg.getGasType());
-				map2.put("howmanyfireman", onlineOrg.getHowmanyfireman());
-				map2.put("howmanyexit", onlineOrg.getHowmanyexit());
-				map2.put("howmanystair", onlineOrg.getHowmanystair());
-				map2.put("howmanylane", onlineOrg.getHowmanylane());
-				map2.put("howmanyelevator", onlineOrg.getHowmanyelevator());
-				map2.put("lanelocation", onlineOrg.getLanelocation());
-				map2.put("vfireroomtel", onlineOrg.getVfireroomtel());
-				map2.put("escapefloor", onlineOrg.getEscapefloor());
-				map2.put("escapebuildingarea", onlineOrg.getEscapebuildingarea());
-				map2.put("escapelocation", onlineOrg.getEscapelocation());
-				map2.put("neareast", onlineOrg.getNeareast());
-				map2.put("nearsouth", onlineOrg.getNearsouth());
-				map2.put("nearwest", onlineOrg.getNearwest());
-				map2.put("nearnorth", onlineOrg.getNearnorth());
-				map2.put("AutoFireFacility", onlineOrg.getAutoFireFacility());
-				map2.put("fLongitude", onlineOrg.getfLongitude());
-				map2.put("fLatitude", onlineOrg.getfLatitude());
-
-				map2.put("bFlatpic", onlineOrg.getbFlatpic());
-				map2.put("dRecordDate", DateUtils.formatDate(onlineOrg.getdRecordDate()));
-				map2.put("managegrade", onlineOrg.getManagegrade());
-				map2.put("NetworkStatus", onlineOrg.getNetworkStatus());
-				map2.put("NetworkTime", DateUtils.formatDate(onlineOrg.getNetworkTime()));
-				map2.put("ApproveState", onlineOrg.getApproveState());
-				map2.put("ApproveTime", DateUtils.formatDate(onlineOrg.getApproveTime()));
-				map2.put("ApproveMan", onlineOrg.getApproveMan());
-				map2.put("AreaId", onlineOrg.getAreaId());
-				map2.put("ManagerOrgID", onlineOrg.getManagerOrgID());
-				map2.put("orgid", orgID);
-			}
+			map2 = orginfoService.getOnlineOrg(orgID);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1412,12 +1356,11 @@ public class OrginfoController {
 			Site site = new Site();
 			String siteid = null;
 			// siteid orgid+ 00000001
-			String newSiteid = null;
-			newSiteid = orginfoService.findMaxBack8(orgid);
+			String newSiteid = orginfoService.findMaxBack8(orgid);
 			if (StringUtils.isEmpty(newSiteid)) {
 				siteid = orgid + "00000001";
 			} else {
-				StringBuilder sBuilder = new StringBuilder(Integer.parseInt(newSiteid) + 1);
+				StringBuilder sBuilder = new StringBuilder(String.valueOf(Integer.parseInt(newSiteid) + 1));
 				for (int len = sBuilder.length(); len < 8; len++) {
 					sBuilder.insert(0, "0");
 				}
@@ -1459,11 +1402,11 @@ public class OrginfoController {
 			site.setOrgid(orgid);
 			orginfoService.addSite(site);
 			statusCode = ConstValues.OK;
-			dataBag = "插入成功";
+			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "插入失败";
+			dataBag = ConstValues.FIALURE;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -1478,21 +1421,10 @@ public class OrginfoController {
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "siteid");
 
 		String siteid = map.get("siteid");
-		List<Map<String, String>> list = new ArrayList<>();
-		Map<String, String> map2 = new HashMap<String, String>();
+		List<Map<String, String>> list =null;
 		int statusCode = -1;
 		try {
-			List<Appearancepic> appearancepics = orginfoService.getAppearancepic(siteid);
-			// 有可能是get(0)
-			for (Appearancepic appearancepic : appearancepics) {
-				map2.put("iphotoID", appearancepic.getIphotoID());
-				map2.put("vPhotoname", appearancepic.getvPhotoname());
-				map2.put("dRecordDate", DateUtils.formatToDate(appearancepic.getdRecordDate()));
-				map2.put("Picpath", appearancepic.getPicpath());
-				map2.put("ExteriorInfo", appearancepic.getExteriorInfo());
-				map2.put("siteid", appearancepic.getSiteid());
-				list.add(map2);
-			}
+			list = orginfoService.getAppearancepic(siteid);
 			statusCode = ConstValues.OK;
 
 		} catch (Exception e) {

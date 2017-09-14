@@ -242,10 +242,11 @@ public class FormController {
 	@RequestMapping(value = "/AddAppearance", method = { RequestMethod.POST })
 	public String addAppearance(HttpServletRequest request,
 			@RequestParam(value = "Picpath", required = false) MultipartFile picpath) {
+
 		String siteid = request.getParameter("siteid");
 		// String iphotoID = request.getParameter("iphotoID");
 		String vPhotoname = request.getParameter("vPhotoname");
-		String exteriorInfo = request.getParameter("ExteriorInfo");
+		String exteriorInfo = "";
 
 		String dataBag = null;
 		int statusCode = -1;

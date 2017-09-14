@@ -236,9 +236,10 @@ public class UserManagerController {
 		}
 
 		else if (StringUtils.isEmpty(code) || !code.equalsIgnoreCase(sessionCode)) {
-			statusCode = ConstValues.NOAUTHORIZED;
-			dataBag = "您输入的验证码不正确！";
-			return ResponseJson.responseAddJson(dataBag, statusCode);
+			statusCode = ConstValues.ERROR;
+			int code_ =2;
+			String message="您输入的验证码不正确!";
+			return ResponseJson.responseLoginJson(code_,message, statusCode);
 		}
 
 		else {
@@ -255,8 +256,9 @@ public class UserManagerController {
 				return ResponseJson.responseFindJson(map, statusCode);
 			} else {
 				statusCode = ConstValues.ERROR;
-				dataBag = "密码错误";
-				return ResponseJson.responseAddJson(dataBag, statusCode);
+				int code_ =3;
+				String message="密码错误 找回密码?";
+				return ResponseJson.responseLoginJson(code_, message, statusCode);
 			}
 
 			/**

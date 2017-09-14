@@ -29,7 +29,7 @@ public class OrginfoService {
 		orginfoMapper.updateOnlineOrg(onlineOrg);
 	}
 
-	public OnlineOrg getOnlineOrg(String orgID) {
+	public Map<String, String> getOnlineOrg(String orgID) {
 		return orginfoMapper.getOnlineOrg(orgID);
 	}
 
@@ -217,7 +217,7 @@ public void updateSite(Site site) {
 	 orginfoMapper.updateSite(site);
 }
 
-public List<Appearancepic> getAppearancepic(String siteid) {
+public List<Map<String, String>> getAppearancepic(String siteid) {
 	return  orginfoMapper.getAppearancepic(siteid);
 }
 

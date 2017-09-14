@@ -58,60 +58,59 @@
 		WHERE c.cFlatPic = #{cFlatPic}
 		AND c.DeviceNo = #{deviceNo}
 	</select>
-	
-	
 
-	<select id="getOnlineOrg" resultType="onlineOrg">
+	<select id="getOnlineOrg" resultType="map">
 		SELECT
-		orgcode,
-		orgname,
-		vAddress,
-		OrganType,
-		vNamelegalperson,
-		otherthings,
-		YnImportant,
-		SuperiorOrg,
-		cZip,
-		vTel,
-		fax,
-		`E-Mail` eMail,
-		howmanypeople,
-		souyouzhi,
-		SetupDate,
-		realtymoney,
-		ipersonnum,
-		fAreanum,
-		fBuildingarea,
-		GasType,
-		howmanyfireman,
-		howmanyexit,
-		howmanystair,
-		howmanylane,
-		howmanyelevator,
-		lanelocation,
-		vfireroomtel,
-		escapefloor,
-		escapebuildingarea,
-		escapelocation,
-		neareast,
-		nearsouth,
-		nearwest,
-		nearnorth,
-		AutoFireFacility,
-		fLongitude,
-		fLatitude,
-		bFlatpic,
-		dRecordDate,
-		managegrade,
-		NetworkStatus,
-		NetworkTime,
-		ApproveState,
-		ApproveTime,
-		ApproveMan,
-		AreaId,
-		ManagerOrgID
+			orgid,
+			orgcode,
+			orgname,
+			vAddress,
+			OrganType,
+			vNamelegalperson,
+			otherthings,
+			YnImportant,
+			SuperiorOrg,
+			cZip,
+			vTel,
+			fax,
+			`E-Mail` E_Mail,
+			howmanypeople,
+			souyouzhi,
+			SetupDate,
+			realtymoney,
+			ipersonnum,
+			fAreanum,
+			fBuildingarea,
+			GasType,
+			howmanyfireman,
+			howmanyexit,
+			howmanystair,
+			howmanylane,
+			howmanyelevator,
+			lanelocation,
+			vfireroomtel,
+			escapefloor,
+			escapebuildingarea,
+			escapelocation,
+			neareast,
+			nearsouth,
+			nearwest,
+			nearnorth,
+			AutoFireFacility,
+			fLongitude,
+			fLatitude,
+			managegrade,
+			NetworkStatus,
+			dRecordDate,
+			NetworkTime,
+			ApproveState,
+			ApproveMan,
+			AreaId,
+			ManagerOrgID,
+			bFlatpic,
+			ApproveTime
 		FROM
-		onlineorg
+			onlineorg
 		WHERE
 		OrgID = #{orgID}
 	</select>
@@ -835,8 +834,9 @@
 		WHERE
 		Gatewayaddress = #{gatewayaddress}
 	</select>
-	<select id="getAppearancepic" resultType="appearancepic">
+	<select id="getAppearancepic" resultType="map">
 		SELECT
+
 		iphotoID,
 		vPhotoname,
 		dRecordDate,

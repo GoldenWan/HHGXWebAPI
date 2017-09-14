@@ -27,6 +27,16 @@ public class ResponseJson {
 		jsonObject.put(ConstValues.RESPDATA, jsonObject1);
 		return jsonObject.toString();
 	}
+	public static String responseLoginJson(int code, String message, int statusCode){
+		JSONObject jO = new JSONObject();
+		jO.put("code", code);
+		jO.put("message", message);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put(ConstValues.RESPDATA, jO);
+		jsonObject.put(ConstValues.RESPCODE, statusCode);
+		return jsonObject.toString();
+	}
+	
 	public static String responseAddJson(String dataBag, int statusCode){
 		
 		JSONObject jsonObject = new JSONObject();
