@@ -963,10 +963,11 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID");
 		String orgID = ret.get("OrgID");
-		Map<String, String> map2 = null;
+		List<Map<String, String>> map2 = null;
 		int statusCode = -1;
 		try {
 			map2 = orginfoService.getOnlineOrg(orgID);
+			System.out.println(map2);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();

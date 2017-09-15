@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
+import com.hhgx.soft.entitys.EventInfo;
 import com.hhgx.soft.entitys.FireDealInfo;
 
 
@@ -24,7 +25,11 @@ public interface AlarmDataMapper {
 	List<Map<String, String>> getAlarmDataList(@Param("orgid")String orgid, @Param("cAlarmtype")String cAlarmtype, @Param("startTime")Timestamp startTime, @Param("endTime")Timestamp endTime,
 			 @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 	List<FireDealInfo> fireDealInfo(@Param("firealarmid")String firealarmid);
+	List<String> findPicPathById(String siteid);
 	List<FireDealInfo> fireUnDealInfo(@Param("firealarmid")String firealarmid, @Param("cAlarmtype")String cAlarmtype);
+	void deleteAlarmDataById(String firealarmid);
+	void addAlarmDataByID(@Param(value="firealarmid")String firealarmid, @Param(value="username")String username, @Param("checkdesc")String checkdesc, @Param("checkresult")String checkresult, @Param("eventInfo")EventInfo eventInfo, @Param("ynRequest")String ynRequest);
+	EventInfo findAlarmById(String firealarmid);
 
 	
 	

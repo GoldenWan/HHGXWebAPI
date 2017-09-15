@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
@@ -29,7 +28,7 @@ public class OrginfoService {
 		orginfoMapper.updateOnlineOrg(onlineOrg);
 	}
 
-	public Map<String, String> getOnlineOrg(String orgID) {
+	public List<Map<String, String>> getOnlineOrg(String orgID) {
 		return orginfoMapper.getOnlineOrg(orgID);
 	}
 

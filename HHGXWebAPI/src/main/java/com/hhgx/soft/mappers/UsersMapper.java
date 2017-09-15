@@ -1,13 +1,13 @@
 package com.hhgx.soft.mappers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
 import com.hhgx.soft.entitys.User;
-import com.hhgx.soft.entitys.UserType;
 import com.hhgx.soft.entitys.Users;
 
 @Component
@@ -22,12 +22,12 @@ public interface UsersMapper {
 
 	void updateUser(Users users);
 
-	List<UserType> getUserTypeList(String userBelongTo);
-
 	User getUser(String userid);
 
 	void addUser(User users);
 
 	void deleteUser(String userid);
+
+	List<Map<String, String>> getUserType(String userBelongTo);
 
 }

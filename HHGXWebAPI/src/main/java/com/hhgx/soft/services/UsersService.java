@@ -1,13 +1,13 @@
 package com.hhgx.soft.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hhgx.soft.entitys.User;
-import com.hhgx.soft.entitys.UserType;
 import com.hhgx.soft.entitys.Users;
 import com.hhgx.soft.mappers.UsersMapper;
 
@@ -34,13 +34,6 @@ public class UsersService {
 	}
 
 
-	public List<UserType> getUserTypeList(String userBelongTo) {
-		return usersMapper.getUserTypeList(userBelongTo);
-	}
-
-
-
-
 	public User getUser(String userid) {
 		return usersMapper.getUser(userid);
 	}
@@ -53,6 +46,11 @@ public class UsersService {
 
 	public void deleteUser(String userid) {
 		usersMapper.deleteUser(userid);
+	}
+
+
+	public List<Map<String, String>> getUserType(String userBelongTo) {
+		return usersMapper.getUserType(userBelongTo);
 	}
 	
 

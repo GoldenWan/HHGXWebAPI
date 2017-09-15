@@ -3,7 +3,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.AlarmDataMapper">
+	<select id="findAlarmById" resultType="eventInfo">
+		select * from eventinfos
+		where Firealarmid=#{firealarmid}
+	</select>
+	<delete id="deleteAlarmDataById">
+		delete from eventinfos where
+		Firealarmid=#{firealarmid}
+	</delete>
+	<insert id="addAlarmDataByID">
+		INSERT INTO alarmdata (
+		Firealarmid,
+		cAlarmtype,
+		Gatewayaddress,
+		sysaddress,
+		systypeID,
+		deviceaddress,
+		idevicetype,
+		dFirstAlarmtime,
+		faultdesc,
+		StateValue,
+		dRecentAlarmtime,
+		dReceivetime,
+		AlarmNum,
+		vAlarmsource,
+		checkresult,
+		checkdesc,
+		chulidate,
+		chuliren,
+		YnRequest
+		)
+		VALUES
+		(
+		#{firealarmid},#{eventInfo.cAlarmtype},#{eventInfo.gatewayaddress},#{eventInfo.sysaddress},#{eventInfo.systypeID},#{eventInfo.deviceaddress},#{eventInfo.idevicetype},#{eventInfo.dFirstAlarmtime},#{eventInfo.faultdesc},#{eventInfo.stateValue},
+		#{eventInfo.dRecentAlarmtime},#{eventInfo.dReceivetime},#{eventInfo.alarmNum},#{eventInfo.vAlarmsource},#{checkresult},#{checkdesc},NOW(),#{username},#{ynRequest}
+		)
 
+	</insert>
 	<select id="getfireAlarmCount" resultType="int">
 		SELECT
 		COUNT(*)
@@ -11,200 +47,298 @@
 		eventinfos e,
 		v_FireAlarm v
 		WHERE
-		e.deviceaddress = v.deviceaddress
+		e.deviceaddress =
+		v.deviceaddress
 		AND e.sysaddress = v.Sysaddress
-		AND e.Gatewayaddress = v.Gatewayaddress 
+		AND e.Gatewayaddress =
+		v.Gatewayaddress
 		and e.cAlarmtype = #{cAlarmtype}
 		AND v.orgid = #{orgid}
 		<if test="siteid !=null and siteid !='' ">
-		and
-		v.siteid = #{siteid}
+			and
+			v.siteid = #{siteid}
 		</if>
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		e.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			e.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
 		</if>
 	</select>
-	
+
 	<select id="getAlarmDataListCount" resultType="int">
-	SELECT
+		SELECT
 		COUNT(*)
 		FROM
 		alarmdata a,
 		v_FireAlarm v
-	WHERE
-		a.deviceaddress = v.deviceaddress
-	AND a.sysaddress = v.Sysaddress
-	AND a.Gatewayaddress = v.Gatewayaddress
-	and a.cAlarmtype = #{cAlarmtype}
-	AND v.orgid = #{orgid}
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		a.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
+		WHERE
+		a.deviceaddress =
+		v.deviceaddress
+		AND a.sysaddress = v.Sysaddress
+		AND a.Gatewayaddress =
+		v.Gatewayaddress
+		and a.cAlarmtype = #{cAlarmtype}
+		AND v.orgid = #{orgid}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			a.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
 		</if>
 	</select>
-	
+
 	<select id="getAlarmDataList" resultType="map">
-	SELECT
+		SELECT
 		DATE_FORMAT(
-				a.chulidate,
-				'%Y/%m/%d %H:%i:%s'
-			) chulidate,
+		a.chulidate,
+		'%Y/%m/%d %H:%i:%s'
+		) chulidate,
 		a.checkresult,
 		a.Firealarmid,
 		v.DeviceTypeName,
 		v.sitename,
 		v.location
-	FROM
+		FROM
 		alarmdata a,
 		v_FireAlarm v
-	WHERE
+		WHERE
 		a.deviceaddress = v.deviceaddress
-	AND a.sysaddress = v.Sysaddress
-	AND a.Gatewayaddress = v.Gatewayaddress
-	and a.cAlarmtype = #{cAlarmtype}
-	AND v.orgid = #{orgid}
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		a.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
+		AND a.sysaddress = v.Sysaddress
+		AND a.Gatewayaddress = v.Gatewayaddress
+		and a.cAlarmtype = #{cAlarmtype}
+		AND v.orgid = #{orgid}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			a.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
 		</if>
 		limit
 		#{startPos},#{pageSize}
 	</select>
-	<select id="fireDealInfo" resultType="fireDealInfo">
-	  orgname
-      DeviceTypeName
-      sitename
-      Gatewayaddress
-      deviceaddress
-      idevicetype
-      StateValue
-      location
-      fPositionX
-      fPositionY
-      DeviceNo
-      dFirstAlarmtime
-      AlarmNum
-      dRecentAlarmtime
-      vSysdesc
-      systypeID
-      sysaddress
-      dReceivetime
-      vAlarmsource
-      floornum
-      vfireroomtel
-      "Picpath": [
-        "/Uploading/510108000001/Appearancepic/4a2c470e-f43c-4ffe-917f-b6be6b81e837.jpg",
-        "/Uploading/510108000001/Appearancepic/a24eac0f-b06c-4f1a-9526-7d58607c04c0.png",
-        "/Uploading/510108000001/Appearancepic/c0453857-aeba-4cd0-8923-ca5e53a87dba.jpg"
-      ],
-      imFlatPic
-      bFlatpic
-      fLongitude
-      fLatitude
-      checkresult
-      YnRequest
-      chulidate
-      chuliren
-      checkdesc
-	
+	<select id="fireUnDealInfo" resultMap="fireUnDealInfoMap">
+		SELECT
+		o.orgname,
+		t.DeviceTypeName,
+		s.siteid,
+		s.sitename,
+		i.Gatewayaddress,
+		i.deviceaddress,
+		t.idevicetype,
+		d.StateValue,
+		d.location,
+		d.fPositionX,
+		d.fPositionY,
+		d.DeviceNo,
+		i.dFirstAlarmtime,
+		i.AlarmNum,
+		i.dRecentAlarmtime,
+		e.vSysdesc,
+		i.systypeID,
+		i.sysaddress,
+		i.dReceivetime,
+		i.vAlarmsource,
+		p.floornum,
+		o.vfireroomtel,
+		p.imFlatPic,
+		o.bFlatpic,
+		s.fLongitude,
+		s.fLatitude
+		FROM
+		eventinfos i
+		INNER JOIN devices d ON i.deviceaddress = d.deviceaddress
+		AND i.sysaddress = d.Sysaddress
+		AND i.Gatewayaddress = d.Gatewayaddress
+		INNER JOIN devicetype t ON t.iDeviceType = d.iDeviceType
+		INNER JOIN firesystype e ON t.tiSysType = e.tiSysType
+		INNER JOIN flatpic p ON p.cFlatPic = d.cFlatPic
+		INNER JOIN site s ON p.siteid = s.siteid
+		INNER JOIN onlineorg o ON s.orgid = o.orgid
+		where
+		i.Firealarmid = #{firealarmid}
+		AND
+		i.cAlarmtype = #{cAlarmtype}
 	</select>
-	<select id="fireUnDealInfo" resultType="fireDealInfo">
-	  orgname
-      DeviceTypeName
-      sitename
-      Gatewayaddress
-      deviceaddress
-      idevicetype
-      StateValue
-      location
-      fPositionX
-      fPositionY
-      DeviceNo
-      dFirstAlarmtime
-      AlarmNum
-      dRecentAlarmtime
-      vSysdesc
-      systypeID
-      sysaddress
-      dReceivetime
-      vAlarmsource
-      floornum
-      vfireroomtel
-      "Picpath": [
-        "/Uploading/510108000001/Appearancepic/4a2c470e-f43c-4ffe-917f-b6be6b81e837.jpg",
-        "/Uploading/510108000001/Appearancepic/a24eac0f-b06c-4f1a-9526-7d58607c04c0.png",
-        "/Uploading/510108000001/Appearancepic/c0453857-aeba-4cd0-8923-ca5e53a87dba.jpg"
-      ],
-      imFlatPic
-      bFlatpic
-      fLongitude
-      fLatitude
-      checkresult
-      YnRequest
-      chulidate
-      chuliren
-      checkdesc
-	
+
+	<resultMap type="fireDealInfo" id="fireUnDealInfoMap">
+		<result column="orgname" property="orgname" />
+		<result column="DeviceTypeName" property="deviceTypeName" />
+		<result column="sitename" property="sitename" />
+		<result column="Gatewayaddress" property="gatewayaddress" />
+		<result column="deviceaddress" property="deviceaddress" />
+		<result column="idevicetype" property="idevicetype" />
+		<result column="StateValue" property="stateValue" />
+		<result column="location" property="location" />
+		<result column="fPositionX" property="fPositionX" />
+		<result column="fPositionY" property="fPositionY" />
+		<result column="DeviceNo" property="deviceNo" />
+		<result column="dFirstAlarmtime" property="dFirstAlarmtime" />
+		<result column="AlarmNum" property="alarmNum" />
+		<result column="dRecentAlarmtime" property="dRecentAlarmtime" />
+		<result column="vSysdesc" property="vSysdesc" />
+		<result column="systypeID" property="systypeID" />
+		<result column="sysaddress" property="sysaddress" />
+		<result column="dReceivetime" property="dReceivetime" />
+		<result column="vAlarmsource" property="vAlarmsource" />
+		<result column="floornum" property="floornum" />
+		<result column="vfireroomtel" property="vfireroomtel" />
+		<result column="imFlatPic" property="imFlatPic" />
+		<result column="bFlatpic" property="bFlatpic" />
+		<result column="fLongitude" property="fLongitude" />
+		<result column="fLatitude" property="fLatitude"/>     
+		
+		<collection property="picpaths" column="siteid" select="findPicPathById" />
+	</resultMap>
+	<select id="findPicPathById" resultType="string">
+		SELECT
+		Picpath picpath
+		FROM
+		appearancepic
+		WHERE
+		siteid = #{siteid}
 	</select>
-	
+
+	<select id="fireDealInfo" resultMap="fireDealInfoMap">
+		SELECT
+		o.orgname,
+		t.DeviceTypeName,
+		s.sitename,
+		i.Gatewayaddress,
+		i.deviceaddress,
+		t.idevicetype,
+		d.StateValue,
+		d.location,
+		d.fPositionX,
+		d.fPositionY,
+		d.DeviceNo,
+		i.dFirstAlarmtime,
+		i.AlarmNum,
+		i.dRecentAlarmtime,
+		e.vSysdesc,
+		i.systypeID,
+		i.sysaddress,
+		i.dReceivetime,
+		i.vAlarmsource,
+		p.floornum,
+		o.vfireroomtel,
+		p.imFlatPic,
+		o.bFlatpic,
+		s.fLongitude,
+		s.fLatitude,
+		i.checkresult,
+		i.YnRequest,
+		i.chulidate,
+		i.chuliren,
+		i.checkdesc
+		FROM
+		alarmdata i
+		INNER JOIN devices d ON i.deviceaddress = d.deviceaddress
+		AND i.sysaddress = d.Sysaddress
+		AND i.Gatewayaddress = d.Gatewayaddress
+		INNER JOIN devicetype t ON t.iDeviceType = d.iDeviceType
+		INNER JOIN firesystype e ON t.tiSysType = e.tiSysType
+		INNER JOIN flatpic p ON p.cFlatPic = d.cFlatPic
+		INNER JOIN site s ON p.siteid = s.siteid
+		INNER JOIN onlineorg o ON s.orgid = o.orgid
+		where
+		i.Firealarmid = #{firealarmid}
+		
+	</select>
+     <resultMap type="fireDealInfo" id="fireDealInfoMap">
+		<result column="orgname" property="orgname" />
+		<result column="DeviceTypeName" property="deviceTypeName" />
+		<result column="sitename" property="sitename" />
+		<result column="Gatewayaddress" property="gatewayaddress" />
+		<result column="deviceaddress" property="deviceaddress" />
+		<result column="idevicetype" property="idevicetype" />
+		<result column="StateValue" property="stateValue" />
+		<result column="location" property="location" />
+		<result column="fPositionX" property="fPositionX" />
+		<result column="fPositionY" property="fPositionY" />
+		<result column="DeviceNo" property="deviceNo" />
+		<result column="dFirstAlarmtime" property="dFirstAlarmtime" />
+		<result column="AlarmNum" property="alarmNum" />
+		<result column="dRecentAlarmtime" property="dRecentAlarmtime" />
+		<result column="vSysdesc" property="vSysdesc" />
+		<result column="systypeID" property="systypeID" />
+		<result column="sysaddress" property="sysaddress" />
+		<result column="dReceivetime" property="dReceivetime" />
+		<result column="vAlarmsource" property="vAlarmsource" />
+		<result column="floornum" property="floornum" />
+		<result column="vfireroomtel" property="vfireroomtel" />
+		<result column="imFlatPic" property="imFlatPic" />
+		<result column="bFlatpic" property="bFlatpic" />
+		<result column="fLongitude" property="fLongitude" />
+		<result column="fLatitude" property="fLatitude"/>      
+		<result column="checkresult" property="checkresult"/>      
+		<result column="YnRequest" property="ynRequest"/>      
+		<result column="chulidate" property="chulidate"/>      
+		<result column="chuliren" property="chuliren"/>      
+		<result column="checkdesc" property="checkdesc"/>      
+		<collection property="picpaths" column="siteid" select="findPicPathById" />
+	</resultMap>
+
+
 	<select id="findFireAlarm" resultType="map">
 		SELECT
-			e.Firealarmid,
-			DATE_FORMAT(
-				e.dRecentAlarmtime,
-				'%Y/%m/%d %H:%i:%s'
-			) dRecentAlarmtime,
-			e.GateWayAddress Gatewayaddress,
-			e.sysaddress,
-			v.fPositionX,
-			v.fPositionY,
-			v.iDeviceType,
-			v.DeviceTypeName,
-			v.imFlatPic,
-			v.siteid,
-			e.faultdesc,
-			v.DeviceNo,
-			e.deviceaddress,
-			e.cAlarmtype,
-			v.orgname,
-			v.vSysdesc,
-			v.sitename,
-			v.floornum,
-			v.location,
-			e.faultdesc,
-			DATE_FORMAT(
-				e.dFirstAlarmtime,
-				'%Y/%m/%d %H:%i:%s'
-			) dFirstAlarmtime,
-			e.AlarmNum
-	    FROM
+		e.Firealarmid,
+		DATE_FORMAT(
+		e.dRecentAlarmtime,
+		'%Y/%m/%d %H:%i:%s'
+		) dRecentAlarmtime,
+		e.GateWayAddress Gatewayaddress,
+		e.sysaddress,
+		v.fPositionX,
+		v.fPositionY,
+		v.iDeviceType,
+		v.DeviceTypeName,
+		v.imFlatPic,
+		v.siteid,
+		e.faultdesc,
+		v.DeviceNo,
+		e.deviceaddress,
+		e.cAlarmtype,
+		v.orgname,
+		v.vSysdesc,
+		v.sitename,
+		v.floornum,
+		v.location,
+		DATE_FORMAT(
+		e.dFirstAlarmtime,
+		'%Y/%m/%d %H:%i:%s'
+		) dFirstAlarmtime,
+		e.AlarmNum
+		FROM
 		eventinfos e,
 		v_FireAlarm v
 		WHERE
 		e.deviceaddress = v.deviceaddress
-		AND e.sysaddress = v.Sysaddress
-		AND e.Gatewayaddress = v.Gatewayaddress 
-		and e.cAlarmtype = #{cAlarmtype}
-		AND v.orgid = #{orgid}
+		AND
+		e.sysaddress = v.Sysaddress
+		AND e.Gatewayaddress
+		= v.Gatewayaddress
+		and
+		e.cAlarmtype = #{cAlarmtype}
+		AND v.orgid =
+		#{orgid}
 		<if test="siteid !=null and siteid !='' ">
-		and
-		v.siteid = #{siteid}
+			and
+			v.siteid = #{siteid}
 		</if>
-		<if test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
-		and
-		e.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
+		<if
+			test="startTime !=null and startTime !='' and endTime!=null and endTime!=''">
+			and
+			e.dFirstAlarmtime BETWEEN #{startTime} and #{endTime}
 		</if>
 		limit
 		#{startPos},#{pageSize}
 	</select>
-   <select id="findRecentAlarmInfo" resultType="map">
-	 SELECT
+	<select id="findRecentAlarmInfo" resultType="map">
+		SELECT
 		e.Firealarmid,
 		DATE_FORMAT(
-			e.dRecentAlarmtime,
-			'%Y/%m/%d %H:%i:%s'
-		) dRecentAlarmtime,
+		e.dRecentAlarmtime,
+		'%Y/%m/%d %H:%i:%s'
+		)
+		dRecentAlarmtime,
 		e.GateWayAddress Gatewayaddress,
 		e.sysaddress,
 		v.fPositionX,
@@ -222,28 +356,32 @@
 		v.location,
 		e.faultdesc,
 		DATE_FORMAT(
-			e.dFirstAlarmtime,
-			'%Y/%m/%d %H:%i:%s'
+		e.dFirstAlarmtime,
+		'%Y/%m/%d %H:%i:%s'
 		) dFirstAlarmtime,
 		e.AlarmNum
-	FROM
+		FROM
 		eventinfos e,
 		v_FireAlarm v,
 		(
-			SELECT
-				cAlarmtype,
-				max(dFirstAlarmtime) max_day
-			FROM
-				eventinfos
-			GROUP BY
-				cAlarmtype
+		SELECT
+		cAlarmtype,
+		max(dFirstAlarmtime)
+		max_day
+		FROM
+		eventinfos
+		GROUP BY
+		cAlarmtype
 		) B
-	WHERE
-	e.deviceaddress = v.deviceaddress
-	AND e.sysaddress = v.Sysaddress
-	AND e.Gatewayaddress = v.Gatewayaddress
-	AND B.max_day = e.dFirstAlarmtime
-	and e.cAlarmtype = #{cAlarmtype}
+		WHERE
+		e.deviceaddress =
+		v.deviceaddress
+		AND e.sysaddress = v.Sysaddress
+		AND e.Gatewayaddress =
+		v.Gatewayaddress
+		AND B.max_day = e.dFirstAlarmtime
+		and e.cAlarmtype =
+		#{cAlarmtype}
 		AND v.orgid = #{orgid}
 
 	</select>

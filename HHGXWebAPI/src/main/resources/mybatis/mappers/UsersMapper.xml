@@ -30,16 +30,16 @@ INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
 WHERE
 	u.UserID = #{userid}
 	</select>
-	<select id="getUserTypeList" resultType="userType">
+
+	<select id="getUserType" resultType="map">
 	SELECT
 		u.UserTypeID,
-		ut.UserTypeName,
+		u.UserTypeName,
 		u.UserBelongTo
 	FROM
-		users u
-	INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
+		usertype u
 	WHERE
-		ut.UserBelongTo = #{userBelongTo}
+		u.UserBelongTo = #{userBelongTo}
 	</select>
 
 	<select id="getUserListCount" resultType="int">

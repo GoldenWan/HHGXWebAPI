@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
 
-import com.hhgx.soft.entitys.Appearancepic;
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.Devices;
 import com.hhgx.soft.entitys.FireSystem;
@@ -24,7 +23,7 @@ public interface OrginfoMapper {
 
 	void updateOnlineOrg(OnlineOrg onlineOrg);
 
-	Map<String, String> getOnlineOrg(@Param("orgID")String orgID);
+	List<Map<String, String>> getOnlineOrg(@Param("orgID")String orgID);
 
 	List<BusinessLicence> getBusinessLicence(@Param("orgid")String orgid);
 

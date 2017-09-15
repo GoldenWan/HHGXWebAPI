@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.User;
-import com.hhgx.soft.entitys.UserType;
 import com.hhgx.soft.entitys.Users;
 import com.hhgx.soft.services.UsersService;
 import com.hhgx.soft.utils.ConstValues;
@@ -190,40 +189,7 @@ public class UsersController {
 		}
 
 	}
-	/**
-	 * 56.获取用户类型列表
-	 * @throws IOException 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/GetUserTypeList", method = RequestMethod.POST)
-	public String getUserTypeList(HttpServletRequest request) throws IOException {
-		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-
-		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
-		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserBelongTo");
-		String userBelongTo = map.get("userBelongTo");
-		int statusCode = -1;
-		try {
-			
-			List<UserType> users = usersService.getUserTypeList(userBelongTo);
-			
-			for(UserType user : users){
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("UserTypeID", user.getUserTypeID());
-				map2.put("UserTypeName", user.getUserTypeName());
-				map2.put("UserBelongTo",user.getUserBelongTo());
-			
-				lmList.add(map2);
-			}
-			statusCode = ConstValues.OK;
-			
-		} catch (Exception e) {
-			statusCode = ConstValues.FAILED;
-		}
-		
-		return ResponseJson.responseFindJsonArray(lmList, statusCode);
- 
-	}
+	
 	/**
 	 *82.根据用户类别获取用户类型 
 	 */
@@ -231,7 +197,7 @@ public class UsersController {
 	@ResponseBody
 	@RequestMapping(value = "/GetUserType", method = RequestMethod.POST)
 	public String getUserType(HttpServletRequest request) throws IOException {
-		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> lmList =null;
 
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserBelongTo");
@@ -239,14 +205,8 @@ public class UsersController {
 		int statusCode = -1;
 		try {
 			
-			List<UserType> users = usersService.getUserTypeList(userBelongTo);
+			lmList = usersService.getUserType(userBelongTo);
 			
-			for(UserType user : users){
-				Map<String, String> map2 = new HashMap<String, String>();
-				map2.put("UserTypeID", user.getUserTypeID());
-				map2.put("UserTypeName", user.getUserTypeName());
-				lmList.add(map2);
-			}
 			statusCode = ConstValues.OK;
 			
 		} catch (Exception e) {
