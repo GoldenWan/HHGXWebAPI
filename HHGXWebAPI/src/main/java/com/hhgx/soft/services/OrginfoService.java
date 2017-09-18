@@ -28,7 +28,7 @@ public class OrginfoService {
 		orginfoMapper.updateOnlineOrg(onlineOrg);
 	}
 
-	public List<Map<String, String>> getOnlineOrg(String orgID) {
+	public List<Map<String, Object>> getOnlineOrg(String orgID) {
 		return orginfoMapper.getOnlineOrg(orgID);
 	}
 
@@ -312,6 +312,11 @@ public String findDevicesTypeByName(String name) {
 
 public List<Map<String, Object>> getLabelledDevice(String cFlatPic) {
 	return  orginfoMapper.getLabelledDevice(cFlatPic);
+}
+
+public void deleteflatPicBySiteId(String siteid) {
+	 orginfoMapper.deleteflatPicBySiteId(siteid);
+	
 }
 
 	

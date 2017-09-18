@@ -167,6 +167,7 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			Flatpic flatpic = new Flatpic();
+			flatpic.setdRecordSet(DateUtils.timesstampToString());
 			// String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
 			flatpic.setcFlatPic(DateUtils.DatePathname());
 			flatpic.setSiteid(siteid);

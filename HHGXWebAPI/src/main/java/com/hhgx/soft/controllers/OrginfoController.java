@@ -824,7 +824,7 @@ public class OrginfoController {
 				"howmanypeople", "realtymoney", "ipersonnum", "fAreanum", "fBuildingarea", "GasType", "howmanyexit",
 				"howmanystair", "howmanylane", "howmanyelevator", "lanelocation", "vfireroomtel", "escapefloor",
 				"escapebuildingarea", "AutoFireFacility", "ManagerOrgID", "neareast", "nearsouth", "nearwest",
-				"nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "howmanyfireman","vNamelegalperson");
+				"nearnorth", "managegrade", "NetworkStatus", "NetworkTime", "howmanyfireman","vNamelegalperson", "vAddress");
 
 		String orgID = ret.get("OrgID");
 		String orgcode = ret.get("orgcode");
@@ -907,6 +907,7 @@ public class OrginfoController {
 		onlineOrg.setGasType(gasType);
 		onlineOrg.setHowmanyelevator(howmanyelevator);
 		onlineOrg.setHowmanyexit(howmanyexit);
+		onlineOrg.setvAddress(ret.get("vAddress"));
 		if (!StringUtils.isEmpty(managerOrgID) && managerOrgID != "null") {
 			onlineOrg.setManagerOrgID(managerOrgID);
 		}
@@ -940,6 +941,7 @@ public class OrginfoController {
 		try {
 
 			orginfoService.deleteSite(siteid);
+			orginfoService.deleteflatPicBySiteId(siteid);
 			statusCode = ConstValues.OK;
 			dataBag = "刪除成功";
 		} catch (Exception e) {
@@ -963,7 +965,7 @@ public class OrginfoController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		Map<String, String> ret = RequestJson.reqOriginJson(reqBody, "OrgID");
 		String orgID = ret.get("OrgID");
-		List<Map<String, String>> map2 = null;
+		List<Map<String, Object>> map2 = null;
 		int statusCode = -1;
 		try {
 			map2 = orginfoService.getOnlineOrg(orgID);
@@ -1234,7 +1236,12 @@ public class OrginfoController {
 				"DSCS", "JZGD", "DSJZMJ", "NHDJ", "JGLX", "DXCS", "DXJZMJ", "SDQK", "ZYCCW", "RLRS", "QLJZ", "east",
 				"west", "south", "north", "sitetypename", "holdthings", "holdthingsnum", "fLongitude", "fLatitude",
 				"orgid", "annalTime", "siteid");
+		
+		
+		
+		
 		String annalTime = map.get("annalTime");
+		
 		String siteid = map.get("siteid");
 		String sitename = map.get("sitename");
 		String buildingaddress = map.get("buildingaddress");
@@ -1294,10 +1301,8 @@ public class OrginfoController {
 			site.setHoldthings(holdthings);
 			site.setSitetypename(sitetypename);
 			site.setHoldthingsnum(holdthingsnum);
-
+			if(!StringUtils.isEmpty(annalTime))
 			site.setAnnalTime(annalTime);
-			site.setAnnalTime(DateUtils.timesstampToString());
-
 			site.setfLongitude(fLongitude);
 			site.setfLatitude(fLatitude);
 			site.setOrgid(orgid);
@@ -1348,6 +1353,7 @@ public class OrginfoController {
 		String holdthings = map.get("holdthings");
 		String holdthingsnum = map.get("holdthingsnum");
 		// String annalTime= map.get("annalTime");
+		String annalTime =DateUtils.timesstampToString();
 		String fLongitude = map.get("fLongitude");
 		String fLatitude = map.get("fLatitude");
 		String orgid = map.get("orgid");
@@ -1358,6 +1364,7 @@ public class OrginfoController {
 			String siteid = null;
 			// siteid orgid+ 00000001
 			String newSiteid = orginfoService.findMaxBack8(orgid);
+			System.out.println(newSiteid);
 			if (StringUtils.isEmpty(newSiteid)) {
 				siteid = orgid + "00000001";
 			} else {
@@ -1367,6 +1374,7 @@ public class OrginfoController {
 				}
 				siteid = orgid + sBuilder.toString();
 			}
+			System.out.println(siteid);
 			site.setSiteid(siteid);
 			site.setSitename(sitename);
 			site.setBuildingaddress(buildingaddress);
@@ -1395,11 +1403,11 @@ public class OrginfoController {
 			site.setSitetypename(sitetypename);
 			site.setHoldthingsnum(holdthingsnum);
 
-			// site.setAnnalTime(annalTime);
-			site.setAnnalTime(DateUtils.timesstampToString());
-
-			site.setfLongitude(fLongitude);
-			site.setfLatitude(fLatitude);
+			 site.setAnnalTime(annalTime);
+			if(!StringUtils.isEmpty(fLongitude))
+				site.setfLongitude(fLongitude);
+			if(!StringUtils.isEmpty(fLatitude))
+			    site.setfLatitude(fLatitude);
 			site.setOrgid(orgid);
 			orginfoService.addSite(site);
 			statusCode = ConstValues.OK;
@@ -1411,7 +1419,6 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
-
 	/**
 	 * 64.获取外观图列表信息（P）
 	 */
@@ -1524,11 +1531,14 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			List<OnlineOrg> orgs = orginfoService.getMapPoint(orgid);
+			if(!StringUtils.isEmpty(orgs)){
 			// 有可能是get(0)
 			for (OnlineOrg org : orgs) {
+					
 				map2.put("fLongitude", org.getfLongitude());
 				map2.put("fLatitude", org.getfLatitude());
 				list.add(map2);
+			}
 			}
 			statusCode = ConstValues.OK;
 

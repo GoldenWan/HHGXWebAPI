@@ -73,10 +73,11 @@
 		cFlatPic,
 		siteid,
 		floornum,
-		imFlatPic
+		imFlatPic,
+		dRecordSet
 		)
 		VALUES
-		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic})
+		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic},#{dRecordSet})
 	</insert>
 	<update id="updateflatPic">
 		update flatpic

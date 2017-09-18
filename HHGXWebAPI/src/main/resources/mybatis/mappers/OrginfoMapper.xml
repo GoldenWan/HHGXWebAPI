@@ -60,58 +60,67 @@
 	</select>
 
 	<select id="getOnlineOrg" resultType="map">
-		SELECT
-			orgid,
-			orgcode,
-			orgname,
-			vAddress,
-			OrganType,
-			vNamelegalperson,
-			otherthings,
-			YnImportant,
-			SuperiorOrg,
-			cZip,
-			vTel,
-			fax,
-			`E-Mail` E_Mail,
-			howmanypeople,
-			souyouzhi,
-			DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
-			realtymoney,
-			ipersonnum,
-			fAreanum,
-			fBuildingarea,
-			GasType,
-			howmanyfireman,
-			howmanyexit,
-			howmanystair,
-			howmanylane,
-			howmanyelevator,
-			lanelocation,
-			vfireroomtel,
-			escapefloor,
-			escapebuildingarea,
-			escapelocation,
-			neareast,
-			nearsouth,
-			nearwest,
-			nearnorth,
-			AutoFireFacility,
-			fLongitude,
-			fLatitude,
-			managegrade,
-			NetworkStatus,
-			DATE_FORMAT(dRecordDate, '%Y/%m/%d %h:%m:%s') dRecordDate,
-			DATE_FORMAT(NetworkTime, '%Y/%m/%d %h:%m:%s') NetworkTime,
-			ApproveState,
-			ApproveMan,
-			AreaId,
-			ManagerOrgID,
-			bFlatpic,
-			DATE_FORMAT(ApproveTime, '%Y/%m/%d %h:%m:%s') ApproveTime
-		FROM
-			onlineorg
-		WHERE
+	SELECT
+		orgid,
+		orgcode,
+		orgname,
+		vAddress,
+		OrganType,
+		vNamelegalperson,
+		otherthings,
+		YnImportant,
+		SuperiorOrg,
+		cZip,
+		vTel,
+		fax,
+		`E-Mail` E_Mail,
+		howmanypeople,
+		souyouzhi,
+		DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
+		CAST(realtymoney AS CHAR) realtymoney,
+		CAST(ipersonnum AS CHAR) ipersonnum,
+		CAST(fAreanum AS CHAR) fAreanum,
+		CAST(fBuildingarea AS CHAR) fBuildingarea,
+		GasType,
+		CAST(howmanyfireman AS CHAR) howmanyfireman,
+		CAST(howmanyexit AS CHAR) howmanyexit,
+		CAST(howmanystair AS CHAR) howmanystair,
+		CAST(howmanylane AS CHAR) howmanylane,
+		CAST(howmanyelevator AS CHAR) howmanyelevator,
+		lanelocation,
+		vfireroomtel,
+		CAST(escapefloor AS CHAR) escapefloor,
+		CAST(escapebuildingarea AS CHAR) escapebuildingarea,
+		escapelocation,
+		neareast,
+		nearsouth,
+		nearwest,
+		nearnorth,
+		AutoFireFacility,
+		CAST(fLongitude AS CHAR) fLongitude,
+		CAST(fLatitude AS CHAR) fLatitude,
+		managegrade,
+		NetworkStatus,
+		DATE_FORMAT(
+			dRecordDate,
+			'%Y/%m/%d %h:%m:%s'
+		) dRecordDate,
+		DATE_FORMAT(
+			NetworkTime,
+			'%Y/%m/%d %h:%m:%s'
+		) NetworkTime,
+		ApproveState,
+		ApproveMan,
+		AreaId,
+		ManagerOrgID,
+		bFlatpic,
+		DATE_FORMAT(
+			ApproveTime,
+			'%Y/%m/%d %h:%m:%s'
+		) ApproveTime
+	FROM
+	onlineorg
+	WHERE
 		OrgID = #{orgID}
 	</select>
 
@@ -156,7 +165,8 @@
 			<if test="networkStatus !=null and networkStatus !=''">NetworkStatus =#{networkStatus}, </if>
 			<if test="networkTime!=null and networkTime!=''">NetworkTime = #{networkTime}, </if>
 			<if test="approveState!=null and approveState!=''"> ApproveState =#{approveState}, </if>
-			<if test="managerOrgID!=null and managerOrgID!=''">ManagerOrgID = #{managerOrgID}, </if>
+			<if test="managerOrgID!=null and managerOrgID!='' and managerOrgID!='undefined'">ManagerOrgID = #{managerOrgID}, </if>
+			<if test="vAddress!=null and vAddress!='' and vAddress!='undefined'">vAddress = #{vAddress}, </if>
 		</trim>
 		WHERE
 		OrgID = #{orgID}
@@ -703,7 +713,7 @@
 		orgid
 		)
 		VALUES
-		( #{siteid},
+		(#{siteid},
 		#{sitename},
 		#{buildingaddress},
 		#{useproperty},
@@ -889,15 +899,13 @@
 
 	<select id="getflatpicListPage" resultType="flatpic">
 		SELECT
-		s.siteid siteid,
-		sitename sitename,
-		cFlatPic cFlatPic,
-		floornum
+		s.siteid,
+		sitename,
+		cFlatPic,
 		floornum,
-		dRecordSet
 		dRecordSet,
-		imFlatPic imFlatPic
-		FROM
+		imFlatPic
+	FROM
 		site s,
 		flatpic f
 		WHERE
@@ -917,6 +925,13 @@
 		flatpic
 		WHERE
 		cFlatPic = #{cFlatPic}
+	</delete>
+	<delete id="deleteflatPicBySiteId">
+		DELETE
+		FROM
+		flatpic
+		WHERE
+		siteid = #{siteid}
 	</delete>
 	<delete id="deleteDevices">
 		DELETE

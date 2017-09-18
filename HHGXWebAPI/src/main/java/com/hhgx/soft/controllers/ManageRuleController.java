@@ -148,7 +148,13 @@ public class ManageRuleController {
 				map2.put("orgid", safeManageRules.getOrgid());
 				map2.put("SafeManageRulesName", safeManageRules.getSafeManageRulesName());
 				map2.put("SafeManageRulesType", safeManageRules.getSafeManageRulesType());
-				map2.put("fileName", safeManageRules.getFilepath());
+				if(!StringUtils.isEmpty(safeManageRules.getFilepath()))
+					map2.put("fileName", UploadUtil.getFileName(safeManageRules.getFilepath()));
+				else{
+					map2.put("fileName","");
+				}
+					
+					
 				statusCode = ConstValues.OK;
 			} else {
 				statusCode = ConstValues.OK;
@@ -261,10 +267,14 @@ public class ManageRuleController {
 			SafeDuty safeDuty = manageRuleService.safeDutyInfo(safeDutyID);
 			if (!StringUtils.isEmpty(safeDuty)) {
 				map2.put("dutyname", safeDuty.getDutyname());
-				map2.put("SafeDutyID", safeDuty.getSafeDutyID());
+				//map2.put("SafeDutyID", safeDuty.getSafeDutyID());
 				map2.put("safedutytype", safeDuty.getSafedutytype());
-				map2.put("filepath", safeDuty.getFilepath());
-				map2.put("uploadtime", safeDuty.getUploadtime());
+				if(!StringUtils.isEmpty(safeDuty.getFilepath()))
+					map2.put("fileName", UploadUtil.getFileName(safeDuty.getFilepath()));
+				else{
+					map2.put("fileName","");
+				}
+				//map2.put("uploadtime", safeDuty.getUploadtime());
 				map2.put("orgid", safeDuty.getOrgid());
 				statusCode = ConstValues.OK;
 			} else {

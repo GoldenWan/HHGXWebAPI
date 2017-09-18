@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.OrgandpeopleMapper">
+	<select id="getEquipmentListCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+	equipment e
+	where
+	e.orgid=#{orgid}
+	</select>
+	<select id="getEquipmentList" resultType="java.util.Map">
+	SELECT
+		EquipmentID,
+		equipmentName,
+		equipmentmodel,
+		equipmentNum,
+		equipmenttype,
+		isGood,
+		DATE_FORMAT(BuyDate, '%Y/%m/%d') BuyDate,
+		e.memo,
+		e.firecompayid
+	FROM
+	equipment e
+	where
+	e.orgid=#{orgid}
+	limit
+	#{startPos},#{pageSize}
+	
+	</select>
+	<select id="getEquipmentType" resultType="java.lang.String">
+	SELECT
+		equipmenttype
+	FROM
+		equipmenttype
+	</select>
+	
+	<select id="getequipmentdetail" resultType="java.util.Map">
+	SELECT
+		EquipmentID,
+		equipmentName,
+		equipmentmodel,
+		equipmentNum,
+		equipmenttype,
+		isGood,
+		DATE_FORMAT(BuyDate, '%Y/%m/%d') BuyDate,
+		e.memo,
+		e.firecompayid
+	FROM
+	equipment e
+	where 
+	e.EquipmentID=#{equipmentID}
+	</select>
+<insert id="addEquipment" >
+	INSERT INTO `equipment` (
+		`EquipmentID`,
+		`equipmentName`,
+		`equipmenttype`,
+		`equipmentmodel`,
+		`equipmentNum`,
+		`isGood`,
+		`BuyDate`,
+		 orgid
+		)
+		VALUES
+		(
+		#{equipmentID},
+		#{equipmentName},
+		#{equipmenttype},
+		#{equipmentmodel},
+		#{equipmentNum},
+		#{isGood},
+		#{BuyDate},
+		#{orgid}
+		)
+	</insert>	
+	<delete id="deleteEquipment" >
+	DELETE
+	FROM
+		equipment
+	WHERE
+		EquipmentID =#{equipmentID}
+	</delete>
+	<update id="updateequipment">
+	 UPDATE 
+	 equipment 
+		<trim prefix="set" suffixOverrides=",">
+		<if test="equipmentName!=null and equipmentName!=''">
+	    equipmentName = #{equipmentName},</if>
+	    <if test="equipmenttype!=null and equipmenttype!=''">
+		equipmenttype = #{equipmenttype}, </if>
+	    <if test="equipmentmodel!=null and equipmentmodel!=''">
+		equipmentmodel = #{equipmentmodel}, </if>
+	    <if test="equipmentNum!=null and equipmentNum!=''">
+		equipmentNum = #{equipmentNum}, </if>
+	    <if test="isGood!=null and isGood!=''">
+		isGood = #{isGood}, </if>
+	    <if test="BuyDate!=null and BuyDate!=''">
+		BuyDate = #{BuyDate}, </if>
+	    <if test="orgid!=null and orgid!=''">
+		orgid = #{orgid}, </if>
+		</trim> 
+	WHERE 
+		EquipmentID =#{EquipmentID}
+		
+	</update>
+	
+</mapper>

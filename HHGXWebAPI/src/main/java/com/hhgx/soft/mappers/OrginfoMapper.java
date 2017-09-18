@@ -23,7 +23,7 @@ public interface OrginfoMapper {
 
 	void updateOnlineOrg(OnlineOrg onlineOrg);
 
-	List<Map<String, String>> getOnlineOrg(@Param("orgID")String orgID);
+	List<Map<String, Object>> getOnlineOrg(@Param("orgID")String orgID);
 
 	List<BusinessLicence> getBusinessLicence(@Param("orgid")String orgid);
 
@@ -159,5 +159,7 @@ public interface OrginfoMapper {
 	List<Map<String, Object>> getLabelledDevice(String cFlatPic);
 
 	Object[] getDeviceNosByFlatpic(String getcFlatPic);
+
+	void deleteflatPicBySiteId(String siteid);
 
 }
