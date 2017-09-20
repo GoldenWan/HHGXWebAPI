@@ -94,11 +94,14 @@ public class FacilityController {
 			fireDevice.setManufacture(manufacture);
 			fireDevice.setMemo(memo);
 			fireDevice.setModel(model);
-			fireDevice.setProductDate(productDate);
-			fireDevice.setSetLocation(setLocation);
-			fireDevice.setSetupDate(setupDate);
+			if(null != productDate && !StringUtils.isEmpty(productDate) )
+			fireDevice.setProductDate(DateUtils.formatToDate(productDate));
+			if(null != setupDate && !StringUtils.isEmpty(setupDate) )
+			fireDevice.setSetupDate(DateUtils.formatToDate(setupDate));
+			if(null != validate && !StringUtils.isEmpty(validate) )
+			fireDevice.setValidate(DateUtils.formatToDate(validate));
 			fireDevice.setSiteid(siteid);
-			fireDevice.setValidate(validate);
+			fireDevice.setSetLocation(setLocation);
 			facilityService.addFireDevice(fireDevice);
 
 			statusCode = ConstValues.OK;
@@ -169,12 +172,16 @@ public class FacilityController {
 			fireDevice.setManufacture(manufacture);
 			fireDevice.setMemo(memo);
 			fireDevice.setModel(model);
-			fireDevice.setProductDate(productDate);
+			if(null != productDate && !StringUtils.isEmpty(productDate) )
+			fireDevice.setProductDate(DateUtils.formatToDate(productDate));
+			if(null != setupDate && !StringUtils.isEmpty(setupDate) )
+			fireDevice.setSetupDate(DateUtils.formatToDate(setupDate));
+			if(null != validate && !StringUtils.isEmpty(validate) )
+			fireDevice.setValidate(DateUtils.formatToDate(validate));
 			fireDevice.setSetLocation(setLocation);
-			fireDevice.setSetupDate(setupDate);
 			fireDevice.setSiteid(siteid);
-			fireDevice.setValidate(validate);
-
+			//先删除FireDeviceChangeRecord
+			facilityService.deleteFireDeviceCheckRecord(deviceNo);
 			facilityService.updateFireDevice(fireDevice);
 
 			statusCode = ConstValues.OK;

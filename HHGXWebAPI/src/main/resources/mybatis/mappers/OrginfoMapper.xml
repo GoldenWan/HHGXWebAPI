@@ -330,7 +330,7 @@
 	</select>
 	<select id="getSiteNeedAddress" resultMap="siteTypeMap">
 		SELECT
-		Gatewayaddress
+			DISTINCT  Gatewayaddress
 		FROM
 		gatewaysysteminfo
 		WHERE
@@ -397,17 +397,7 @@
 			o.tiSysType=#{tiSysType}
 		</if>
 	</select>
-	<select id="getflatpicCount" resultType="int">
-		SELECT
-		count(*)
-		FROM
-		flatpic, site s
-		WHERE
-		s.orgid = #{orgid}
-		<if test="siteid!='0'.toString() and siteid!=null">
-			and s.siteid=#{siteid}
-		</if>
-	</select>
+	
 	<delete id="deleteSite">
 		DELETE
 		FROM
@@ -525,6 +515,86 @@
 		WHERE
 		s.orgid = #{orgid}
 	</select>
+	<select id="getManagerOrgList" resultType="map">
+	SELECT
+		ManagerOrgID,
+		ManagerOrgName
+	FROM
+		managerorg
+	</select>
+	<select id="getOrgListByOrgNameCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		onlineorg o INNER JOIN area a on o.AreaId = a.AreaId
+	    <if test="orgname !=null and orgname !=''">
+		WHERE
+		orgname = #{orgname}
+		</if>
+	</select>
+	<select id="getOrgListByOrgName" resultType="map">
+	SELECT
+	orgid,
+	orgcode,
+	orgname,
+	vAddress,
+	OrganType,
+	vNamelegalperson,
+	otherthings,
+	YnImportant,
+	SuperiorOrg,
+	cZip,
+	vTel,
+	fax,
+	`E-mail` email,
+	howmanypeople,
+	souyouzhi,
+	DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
+	realtymoney,
+	ipersonnum,
+	fAreanum,
+	fBuildingarea,
+	GasType,
+	howmanyfireman,
+	howmanyexit,
+	howmanystair,
+	howmanylane,
+	howmanyelevator,
+	lanelocation,
+	vfireroomtel,
+	escapefloor,
+	escapebuildingarea,
+	escapelocation,
+	neareast,
+	nearsouth,
+	nearwest,
+	nearnorth,
+	AutoFireFacility,
+	fLongitude,
+	fLatitude,
+	DATE_FORMAT(dRecordDate, '%Y/%m/%d') dRecordDate,
+	managegrade,
+	NetworkStatus,
+	NetworkTime,
+	ApproveState,
+	DATE_FORMAT(
+		ApproveTime,
+		'%Y/%m/%d %h:%s:%m'
+	) ApproveTime,
+	o.AreaId,
+	AreaName,
+	ManagerOrgID,
+	bFlatpic,
+	ApproveIdea
+FROM
+	onlineorg o
+INNER JOIN area a ON o.AreaId = a.AreaId
+	<if test="orgname !=null and orgname !=''">
+		WHERE
+	orgname = #{orgname}
+	</if>
+	</select>
+	
 	<select id="getMapPoint" resultType="onlineOrg">
 		SELECT
 		fLongitude,
@@ -588,21 +658,25 @@
 		devices
 		WHERE
 		Gatewayaddress
-		=
-		#{gatewayaddress}
+		=#{gatewayaddress}
 		and
 		Sysaddress =
 		#{sysaddress}
 	</select>
 	<select id="gePatrolRecordByOrgCount" resultType="int">
+	SELECT
+	count(*)
+FROM
+	(
 		SELECT
-		count(*)
+			*
 		FROM
-		gateway g
-		INNER JOIN v_Gateway v on g.Gatewayaddress =
-		v.Gatewayaddress
+			v_Gateway
 		WHERE
-		v.orgid = #{orgid}
+			orgid = #{orgid}
+		GROUP BY
+			Gatewayaddress
+	) b
 	</select>
 	<select id="getTotalFlatPic" resultType="onlineOrg">
 		SELECT
@@ -614,12 +688,15 @@
 	</select>
 
 	<select id="selectGateway" resultMap="gatewayMap">
+		
 		SELECT
 		Gatewayaddress,
 		Manufacturer,
 		Model,
 		productdate,
 		setupdate,
+		<!-- DATE_FORMAT(productdate, '%Y/%m/%d') productdate,
+		DATE_FORMAT(setupdate, '%Y/%m/%d') setupdate, -->
 		ControlorManufacture,
 		ControlorMode,
 		memo,
@@ -789,6 +866,30 @@
 		#{siteid}
 		)
 	</insert>
+	<!-- <insert id="updateGateway">
+		INSERT INTO gateway (
+		Manufacturer,
+		Model,
+		Gatewayaddress,
+		productdate,
+		setupdate,
+		ControlorManufacture,
+		ControlorMode,
+		memo
+		)
+		VALUES
+		(
+		#{manufacturer} ,
+		#{model} ,
+		#{gatewayaddress},
+		#{productdate} ,
+		#{setupdate} ,
+		#{controlorManufacture} ,
+		#{controlorMode} ,
+		#{memo}
+		)
+	</insert> -->
+	
 	<insert id="addGateway">
 		INSERT INTO gateway (
 		Gatewayaddress,
@@ -812,29 +913,7 @@
 		#{memo}
 		)
 	</insert>
-	<insert id="updateGateway">
-		INSERT INTO gateway (
-		Manufacturer,
-		Model,
-		Gatewayaddress,
-		productdate,
-		setupdate,
-		ControlorManufacture,
-		ControlorMode,
-		memo
-		)
-		VALUES
-		(
-		#{manufacturer} ,
-		#{model} ,
-		#{gatewayaddress},
-		#{productdate} ,
-		#{setupdate} ,
-		#{controlorManufacture} ,
-		#{controlorMode} ,
-		#{memo}
-		)
-	</insert>
+	
 	<select id="findGatewayaddressExist" resultType="int">
 		SELECT
 		count(*)
@@ -885,9 +964,23 @@
 		WHERE
 		Gatewayaddress =#{gatewayaddress}
 	</update>
-
-
-
+	<update id="updateOrgSummary">
+		update  introduce
+		<trim prefix="set" suffixOverrides=",">
+			<if test="vIntroduceText !=null and vIntroduceText!=''">
+				vIntroduceText = #{vIntroduceText},
+			</if>
+		</trim>
+		WHERE
+		orgid =#{orgid}
+	</update>
+	<insert id="editOrgSummary">
+		insert into  
+		introduce
+		(orgid,vPicturePath)
+		values
+		(#{orgid},#{vIntroduceText} )
+	</insert>
 
 	<insert id="updateGatewaySysInfo">
 		INSERT INTO
@@ -896,18 +989,30 @@
 		values
 		(#{siteid},#{tiSysType},#{gatewayaddress}, #{sysaddress} )
 	</insert>
-
-	<select id="getflatpicListPage" resultType="flatpic">
+<select id="getflatpicCount" resultType="int">
 		SELECT
-		s.siteid,
-		sitename,
-		cFlatPic,
-		floornum,
-		dRecordSet,
-		imFlatPic
-	FROM
-		site s,
-		flatpic f
+		count(*)
+		FROM
+		site s
+		RIGHT JOIN flatpic f ON s.siteid = f.siteid
+		WHERE
+		s.orgid = #{orgid}
+		<if test="siteid!='0'.toString() and siteid!=null">
+			AND
+			s.siteid =#{siteid}
+		</if>
+	</select>
+	<select id="getflatpicListPage" resultType="flatpic">
+	SELECT
+	s.siteid,
+	sitename,
+	cFlatPic,
+	floornum,
+	dRecordSet,
+	imFlatPic
+FROM
+	site s
+RIGHT JOIN flatpic f ON s.siteid = f.siteid
 		WHERE
 		s.orgid = #{orgid}
 		<if test="siteid!='0'.toString() and siteid!=null">
@@ -916,6 +1021,17 @@
 		</if>
 		limit
 		#{startPos},#{pageSize}
+
+	</select>
+	<select id="getOrgSummary" resultType="map">
+	SELECT
+		vIntroduceText vIntroduceText,
+		vPicturePath vPicturePath
+	FROM
+		introduce
+	WHERE
+	orgid = #{orgid}
+		
 
 	</select>
 
@@ -984,6 +1100,68 @@
 		FROM
 		devicetype
 	</select>
+<!-- 	<select id="onlineAllInfo" resultMap="onlineAllInfoMap">
+	
+	SELECT
+	orgid,
+	orgcode,
+	orgname,
+	vAddress,
+	OrganType,
+	vNamelegalperson,
+	otherthings,
+	YnImportant,
+	SuperiorOrg,
+	cZip,
+	vTel,
+	fax,
+	`E-mail` E_Mail,
+	howmanypeople,
+	souyouzhi,
+	DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
+	realtymoney,
+	ipersonnum,
+	fAreanum,
+	fBuildingarea,
+	GasType,
+	howmanyfireman,
+	howmanyexit,
+	howmanystair,
+	howmanylane,
+	howmanyelevator,
+	lanelocation,
+	vfireroomtel,
+	escapefloor,
+	escapebuildingarea,
+	escapelocation,
+	neareast,
+	nearsouth,
+	nearwest,
+	nearnorth,
+	AutoFireFacility,
+	fLongitude,
+	fLatitude,
+	DATE_FORMAT(dRecordDate, '%Y/%m/%d') dRecordDate,
+	managegrade,
+	NetworkStatus,
+	NetworkTime,
+	ApproveState,
+	ApproveMan,
+	DATE_FORMAT(
+		ApproveTime,
+		'%Y/%m/%d %h:%s:%m'
+	) ApproveTime,
+	o.AreaId,
+	AreaName,
+	ManagerOrgID,
+	bFlatpic
+FROM
+	onlineorg o
+INNER JOIN area a ON o.AreaId = a.AreaId
+	where orgid=#{orgid}		
+	</select>
+	<resultMap type="map" id="onlineAllInfoMap"></resultMap> -->
+	
 	<select id="getLabelledDevice" resultType="map">
 	SELECT
 		d.DeviceNo,
@@ -1105,36 +1283,26 @@
 		cFlatPic = #{cFlatPic}
 	</delete>
 	<select id="siteDevicesCount" resultType="int">
+	SELECT
+		count(*)
+	FROM
+		site s
+	INNER JOIN flatpic f ON s.siteid = f.siteid
+	WHERE
+		orgid= #{orgid}
+		<if test="siteid!=''and siteid!=null">
+			and s.siteid=#{siteid}
+		</if>
+
+	</select>
+	<select id="existOrgSummary" resultType="int">
 		SELECT
 		count(*)
 		FROM
-		(
-		SELECT
-		s.orgid,
-		s.siteid,
-		s.sitename,
-		f.floornum,
-		f.cFlatPic,
-		f.imFlatPic
-		FROM
-		site s
-		INNER JOIN flatpic f ON s.siteid =
-		f.siteid
-		) a
-		INNER JOIN (
-		SELECT
-		count(*) deviceCount
-		FROM
-		flatpic f
-		INNER
-		JOIN devices d ON f.cFlatPic = d.cFlatPic
-		) b
+		introduce
 		WHERE
 		orgid= #{orgid}
-		<if test="siteid!=''and siteid!=null">
-			and siteid=#{siteid}
-		</if>
-
+		
 	</select>
 	<select id="findDevicesByKey" resultType="int">
 		SELECT
@@ -1150,34 +1318,26 @@
 
 	</select>
 	<select id="siteDevices" resultType="map">
-		SELECT
-		*
-		FROM
-		(
-		SELECT
+	SELECT
 		s.orgid,
 		s.siteid,
 		s.sitename,
 		f.floornum,
 		f.cFlatPic,
-		f.imFlatPic
-		FROM
+		f.imFlatPic,
+		count(DeviceNo) deviceCount
+	FROM
 		site s
-		INNER JOIN flatpic f ON s.siteid = f.siteid
-		) a
-		INNER JOIN (
-		SELECT
-		count(*) deviceCount
-		FROM
-		flatpic f
-		INNER JOIN devices
-		d ON f.cFlatPic = d.cFlatPic
-		) b
-		where
+	INNER JOIN flatpic f ON s.siteid = f.siteid
+	LEFT JOIN devices d ON f.cFlatPic = d.cFlatPic
+	where
 		orgid= #{orgid}
 		<if test="siteid!=''and siteid!=null">
-			and siteid=#{siteid}
+			and s.siteid=#{siteid}
 		</if>
+	GROUP BY
+		s.siteid
+
 	</select>
 	<select id="selectDevicesListCount" resultType="int">
 		SELECT

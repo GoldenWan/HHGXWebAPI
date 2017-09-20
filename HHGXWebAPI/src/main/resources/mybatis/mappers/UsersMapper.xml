@@ -42,15 +42,25 @@ WHERE
 		u.UserBelongTo = #{userBelongTo}
 	</select>
 
+	<select id="existUserName" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			users 
+		where account = #{userName}
+	</select>
+	
 	<select id="getUserListCount" resultType="int">
 		SELECT
 			count(*)
 		FROM
-			users
+			users u
+		INNER JOIN usertype ut ON ut.UserTypeID = u.UserTypeID
 		WHERE
-		orgid = #{orgid} 
-		and UserBelongTo = #{userBelongTo}
-		<if test="userName != null and userName != ''">
+		u.UserBelongTo = #{userBelongTo}	
+		<if test="orgid!='null'.toString() and orgid != null and orgid != ''">
+		AND u.orgid = #{orgid}</if>
+		<if test="userName!='null'.toString() and  userName != null and userName != ''">
 		and RealName LIKE CONCAT('%',#{userName}, '%')
 		</if>
 	</select>
@@ -68,9 +78,10 @@ WHERE
 			users u
 		INNER JOIN usertype ut ON ut.UserTypeID = u.UserTypeID
 		WHERE
-			u.orgid = #{orgid}
-		AND u.UserBelongTo = #{userBelongTo}
-		<if test="userName != null and userName != ''">
+		u.UserBelongTo = #{userBelongTo}	
+		<if test="orgid!='null'.toString() and orgid != null and orgid != ''">
+		AND u.orgid = #{orgid}</if>
+		<if test="userName!='null'.toString() and  userName != null and userName != ''">
 		and RealName LIKE CONCAT('%',#{userName}, '%')
 		</if>
 		LIMIT #{startPos},#{pageSize}

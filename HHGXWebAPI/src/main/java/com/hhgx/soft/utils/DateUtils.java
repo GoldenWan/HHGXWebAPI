@@ -184,6 +184,19 @@ public class DateUtils {
 		}
 		return date;
 	}
+	public static Date StringToDate(String dateStr) {
+		
+		SimpleDateFormat dd = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = null;
+		try {
+			//dateStr=dateStr.replaceAll("/", "-");
+			String ext=" 00:00:00";
+			date = dd.parse(dateStr.concat(ext));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
 
 
 

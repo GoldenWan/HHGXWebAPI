@@ -1,5 +1,6 @@
 package com.hhgx.soft.entitys;
 
+import java.util.Date;
 import java.util.List;
 
 public class Gateway {
@@ -9,8 +10,8 @@ public class Gateway {
 	private String onlinetime;
 	private String manufacturer;
 	private String model;
-	private String productdate;
-	private String setupdate;
+	private Date productdate;
+	private Date setupdate;
 	private String controlorManufacture;
 	private String controlorMode;
 	private String connectControlerState;
@@ -65,19 +66,19 @@ public class Gateway {
 		this.model = model;
 	}
 
-	public String getProductdate() {
+	public Date getProductdate() {
 		return productdate;
 	}
 
-	public void setProductdate(String productdate) {
+	public void setProductdate(Date productdate) {
 		this.productdate = productdate;
 	}
 
-	public String getSetupdate() {
+	public Date getSetupdate() {
 		return setupdate;
 	}
 
-	public void setSetupdate(String setupdate) {
+	public void setSetupdate(Date setupdate) {
 		this.setupdate = setupdate;
 	}
 

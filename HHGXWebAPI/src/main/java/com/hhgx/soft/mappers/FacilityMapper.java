@@ -59,4 +59,6 @@ public interface FacilityMapper {
 
 	void delFireDeviceChangeRecord(String deviceNo);
 
+	void deleteFireDeviceCheckRecord(String deviceNo);
+
 }

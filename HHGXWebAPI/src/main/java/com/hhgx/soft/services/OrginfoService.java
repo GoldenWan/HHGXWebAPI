@@ -53,6 +53,21 @@ public class OrginfoService {
 	}
 
 	public void deleteorgSys(String siteid, String tiSysType) {
+		List<Map<String, Object>> keys = orginfoMapper.findGatewaySysInfoByType(tiSysType);
+		for (Map<String, Object> m : keys) {
+			List<Map<String, Object>> keys1 = orginfoMapper.findDevicesByGateway(m.get("Sysaddress"),
+					m.get("Gatewayaddress"));
+
+			for (Map<String, Object> m1 : keys1) {
+
+				orginfoMapper.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
+						m1.get("Gatewayaddress"));
+			}
+			orginfoMapper.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
+		}
+		orginfoMapper.deleteGatewaySysInfo(tiSysType);
+		
+		
 		orginfoMapper.deleteorgSys(siteid, tiSysType);		
 	}
 
@@ -61,6 +76,21 @@ public class OrginfoService {
 	}
 
 	public void deleteGateway(String gatewayaddress) {
+		
+
+		
+		List<Map<String, Object>> keys = orginfoMapper.findGatewaySysInfoByAddr(gatewayaddress);
+		for (Map<String, Object> m : keys) {
+			List<Map<String, Object>> keys1 = orginfoMapper.findDevicesByGateway(m.get("Sysaddress"),
+					m.get("Gatewayaddress"));
+			for (Map<String, Object> m1 : keys1) {
+				orginfoMapper.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
+						m1.get("Gatewayaddress"));
+			}
+			orginfoMapper.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
+		}
+		
+		orginfoMapper.deleteGatewaySysInfo(gatewayaddress);
 		orginfoMapper.deleteGateway(gatewayaddress);
 	}
 
@@ -319,5 +349,38 @@ public void deleteflatPicBySiteId(String siteid) {
 	
 }
 
+public void updateOrgSummary(String vIntroduceText,String orgid) {
+	orginfoMapper.updateOrgSummary(vIntroduceText,  orgid);
+}
+public void editOrgSummary(String vIntroduceText,String orgid) {
+	 orginfoMapper.editOrgSummary(vIntroduceText,  orgid);
+}
+
+public Map<String, String> getOrgSummary(String orgid) {
+	return  orginfoMapper.getOrgSummary(orgid);
+}
+
+public boolean existOrgSummary(String orgid) {
+	return  orginfoMapper.existOrgSummary(orgid) >0? true:false;
+}
+
+public List<Map<String, String>> getManagerOrgList() {
+	return  orginfoMapper.getManagerOrgList();
+}
+
+public int getOrgListByOrgNameCount(String orgname) {
+	return orginfoMapper.getOrgListByOrgNameCount(orgname);
+}
+
+public List<Map<String, String>> getOrgListByOrgName(String orgname, int startPos, int pageSize) {
+	// TODO Auto-generated method stub
+	return orginfoMapper.getOrgListByOrgName(orgname,startPos,pageSize);
+}
+
+public List<Map<String, String>> onlineAllInfo(String orgid) {
+	// TODO Auto-generated method stub
+	//return orginfoMapper.onlineAllInfo(orgid);
+	return null;
+}
 	
 }

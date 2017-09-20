@@ -122,8 +122,15 @@ public class FormService {
 	}
 
 	public boolean existOrgSys(String siteid, String tiSysType) {
-		// TODO Auto-generated method stub
 		return formMapper.existOrgSys(siteid, tiSysType) > 0?true:false;
 	}
-	
+
+	public void uploadOrgSummaryPic(String vPicturePath, String orgid) {
+		formMapper.uploadOrgSummaryPic(vPicturePath, orgid);
+	}
+
+	public String findIntroducePath(String orgid) {
+		return formMapper.findIntroducePath(orgid);
+	}
+
 }

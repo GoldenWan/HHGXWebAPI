@@ -49,16 +49,22 @@ public class UsersController {
 		String pageIndex = map.get("pageIndex");
 		String userBelongTo = map.get("userBelongTo");
 		String userName = map.get("userName");
-		if(StringUtils.isEmpty(orgid)){
-			return ResponseJson.responseAddJson("orgid为空", -256);
-		}
+		
+		/*if(StringUtils.isEmpty(orgid)){
+			return ResponseJson.responseAddJson("orgid为空", -2);
+		}*/
+		
 		Page page = null;
 		List<Users> userList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
 		int totalCount = usersService.getUserListCount(orgid, userBelongTo,userName);
 		int statusCode = -1;
-
+		
+		
+	
 		try {
+			
+			
 			if (pageIndex != null) {
 			page = new Page(totalCount, Integer.parseInt(pageIndex));
 			userList = usersService.getUserList(orgid, userBelongTo,userName, page.getStartPos(), page.getPageSize());
@@ -96,9 +102,13 @@ public class UsersController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "account","password", "RealName", "mobilephone", "tel", "Email","Status","Remark","UserTypeID","UserBelongTo","orgid");
+	
+		String userName =map.get("account");
+		String userBelongTo =map.get("userBelongTo");
+		String orgid = map.get("orgid");
 		User users = new User();
 		users.setUserID(UUIDGenerator.getUUID());
-		users.setAccount(map.get("account"));
+		users.setAccount(userName);
 		users.setPassword(map.get("password"));
 		users.setMobilephone(map.get("mobilephone"));
 		users.setRealName(map.get("realName"));
@@ -107,12 +117,22 @@ public class UsersController {
 		users.setStatus(map.get("status"));
 		users.setRemark(map.get("remark"));
 		users.setUserTypeID(map.get("userTypeID"));
-		users.setUserBelongTo(map.get("userBelongTo"));
-		users.setOrgid(map.get("orgid"));
+		users.setUserBelongTo(userBelongTo);
+		if(!orgid.equals('4')){
+			users.setOrgid(orgid);
+		}
 		
 		String dataBag = null;
 		int statusCode = -1;
+		
+		
 		try {
+		
+			
+			if(usersService.existUserName(userName)){
+				return ResponseJson.responseAddJson("账号已存在,请重新输入", -2);
+			}
+			
 			usersService.addUser(users);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {

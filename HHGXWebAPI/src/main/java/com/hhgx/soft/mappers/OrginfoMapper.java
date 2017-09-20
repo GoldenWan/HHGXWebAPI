@@ -162,4 +162,20 @@ public interface OrginfoMapper {
 
 	void deleteflatPicBySiteId(String siteid);
 
+	void updateOrgSummary(@Param("vIntroduceText")String vIntroduceText, @Param("orgid") String orgid);
+	void editOrgSummary(@Param("vIntroduceText")String vIntroduceText, @Param("orgid") String orgid);
+
+	Map<String, String> getOrgSummary(String orgid);
+
+	int existOrgSummary(String orgid);
+
+	List<Map<String, String>> getManagerOrgList();
+
+	int getOrgListByOrgNameCount(@Param("orgname")String orgname);
+
+	List<Map<String, String>> getOrgListByOrgName(@Param("orgname")String orgname,@Param("startPos")int startPos, @Param("pageSize")int pageSize);
+
+
+	//List<Map<String, String>> onlineAllInfo(String orgid);
+
 }

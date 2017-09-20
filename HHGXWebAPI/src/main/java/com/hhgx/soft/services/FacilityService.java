@@ -98,6 +98,10 @@ public void deleteFireDeviceList(String deviceNo) {
 public void delFireDeviceChangeRecord(String deviceNo) {
 	facilityMapper.delFireDeviceChangeRecord(deviceNo);
 	
+}
+
+public void deleteFireDeviceCheckRecord(String deviceNo) {
+	facilityMapper.deleteFireDeviceCheckRecord(deviceNo);
 } 
 	
 }

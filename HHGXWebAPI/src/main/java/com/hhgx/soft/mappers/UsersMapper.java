@@ -30,4 +30,6 @@ public interface UsersMapper {
 
 	List<Map<String, String>> getUserType(String userBelongTo);
 
+	int existUserName(String userName);
+
 }

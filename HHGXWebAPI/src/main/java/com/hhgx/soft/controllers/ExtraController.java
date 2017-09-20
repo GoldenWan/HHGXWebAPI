@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.services.ExtraService;
+import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
@@ -30,6 +31,8 @@ public class ExtraController {
 	private ExtraService extraService;
 	@Autowired
 	private AlarmDataService alarmDataService ;
+	@Autowired
+	private OrginfoService orginfoService ;
 	/**
 	 * 174.删除灭火应急演练预案【**】
 	 * @throws IOException 
@@ -108,6 +111,53 @@ public class ExtraController {
 		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 		
 	}
-	
-	
+
+	@ResponseBody
+	@RequestMapping(value = "/OrgInfo/GetOrgSummary", method = RequestMethod.POST)
+	public String getOrgSummary(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		Map<String, String> map2 = null;
+		int statusCode = -1;
+		try {
+			map2= orginfoService.getOrgSummary(orgid);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(map2, statusCode);
+	}
+
+	/**
+	 * 编辑单位简介
+	 * orgid":"510108000001","vIntroduceText":"
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/OrgInfo/EditOrgSummary", method = RequestMethod.POST)
+	public String editOrgSummary(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "vIntroduceText","orgid");
+		String vIntroduceText = map.get("vIntroduceText");
+		String orgid = map.get("orgid");
+		int statusCode=-1;
+		String dataBag =null;
+		try {
+			if(orginfoService.existOrgSummary(orgid)){
+				
+				orginfoService.updateOrgSummary(vIntroduceText, orgid);
+			}else {
+				orginfoService.editOrgSummary(vIntroduceText, orgid);
+				
+			}
+			statusCode = ConstValues.OK;
+			dataBag = ConstValues.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = ConstValues.FIALURE;
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
 }

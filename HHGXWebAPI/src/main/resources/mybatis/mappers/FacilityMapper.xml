@@ -64,6 +64,13 @@
 		WHERE
 		deviceNo = #{deviceNo}
 	</delete>
+	<delete id="deleteFireDeviceCheckRecord">
+		DELETE
+		FROM
+		firedevicechangerecord
+		WHERE
+		deviceNo = #{deviceNo}
+	</delete>
 	<insert id="addflatPic">
 		INSERT INTO flatpic (
 		cFlatPic,

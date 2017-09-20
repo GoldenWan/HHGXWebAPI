@@ -70,6 +70,10 @@ public interface FormMapper {
 
 	int existOrgSys(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType);
 
+	void uploadOrgSummaryPic(@Param("vPicturePath") String vPicturePath, @Param("orgid")String orgid);
+
+	String findIntroducePath(String orgid);
+
 	
 	
 }

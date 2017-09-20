@@ -57,6 +57,8 @@ public class FormController {
 	public String updateFireSystemList(HttpServletRequest request,
 			@RequestParam(value = "SysFlatpic", required = false) MultipartFile sysFlatpic) {
 
+	
+		
 		String siteid = request.getParameter("siteid");
 		String tisystype = request.getParameter("tisystype");
 		String newTisystype = request.getParameter("newTisystype");
@@ -77,27 +79,89 @@ public class FormController {
 			updateFireSystem.setTisystype(tisystype);
 			updateFireSystem.setYnOnline(ynOnline);
 			if (!StringUtils.isEmpty(sysFlatpic)) {
-				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
-
-				// String fName = sysFlatpic.getOriginalFilename();
-				String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
-						"SysFlatpic/" + UUIDGenerator.getUUID());
+				String fName = sysFlatpic.getOriginalFilename();
+				String sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic,fName, "SysFlatpic/" + UUIDGenerator.getUUID());
 				updateFireSystem.setSysFlatpic(sysFlatpic1);
 			}
+			//修改前先删掉
+			
 			formService.updateFireSystemList(updateFireSystem);
 			// 遗留小问题，如果数据插入失败，上传的照片没有删掉
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS_;
 		} catch (Exception e) {
 			e.printStackTrace();
-			statusCode = ConstValues.FAILED;
-			dataBag = ConstValues.FIALURE_;
+			statusCode = -2;
+			dataBag ="该系统已经使用，不能被删除！!";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+
 		}
 
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
 	}
 
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 
 	 * 19.添加防火单位的系统
@@ -135,9 +199,9 @@ public class FormController {
 			onlineFiresystem.setTiSysType(tiSysType);
 			String sysFlatpic1 ="";
 			if (!StringUtils.isEmpty(sysFlatpic)) {
-				String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
-				// String fName = sysFlatpic.getOriginalFilename();
-				 sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, UUIDGenerator.getUUID() + "." + ext,
+				//String ext = UploadUtil.getExtention(sysFlatpic.getOriginalFilename());
+				 String fName = sysFlatpic.getOriginalFilename();
+				 sysFlatpic1 = UploadUtil.uploadOneFile(request, sysFlatpic, fName,
 						"SysFlatpic/" + UUIDGenerator.getUUID());
 			}
 			onlineFiresystem.setSysFlatpic(sysFlatpic1);
@@ -163,12 +227,14 @@ public class FormController {
 			@RequestParam(value = "imFlatPic", required = false) MultipartFile imFlatPic) {
 		String siteid = request.getParameter("siteid");
 		String floornum = request.getParameter("floornum");
+		//String orgid = request.getParameter("orgid");
 		String dataBag = null;
 		int statusCode = -1;
 		try {
 			Flatpic flatpic = new Flatpic();
 			flatpic.setdRecordSet(DateUtils.timesstampToString());
 			// String cFlatPic = String.valueOf(new Random().nextInt(99)+10);
+			
 			flatpic.setcFlatPic(DateUtils.DatePathname());
 			flatpic.setSiteid(siteid);
 			flatpic.setFloornum(floornum);
@@ -231,6 +297,37 @@ public class FormController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 			dataBag = "数据修改失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/UploadOrgSummaryPic", method = { RequestMethod.POST })
+	public String uploadOrgSummaryPic(HttpServletRequest request,
+			@RequestParam(value = "vPicturePath", required = false) MultipartFile vPicturePath) throws IOException {		
+		String orgid = request.getParameter("orgid");
+		int statusCode=-1;
+		String dataBag =null;
+		String vPicturePath1 ="";
+		try {
+			if (!StringUtils.isEmpty(vPicturePath)) {
+
+				// 删除文件
+				String filepathBefore = formService.findIntroducePath(orgid);
+				String filedir = request.getSession().getServletContext().getRealPath("/") + filepathBefore;
+				// 先删除文件
+				UploadUtil.deleteFile(filedir);
+				String ext = UploadUtil.getExtention(vPicturePath.getOriginalFilename());
+			    vPicturePath1 = UploadUtil.uploadOneFile(request, vPicturePath, UUIDGenerator.getUUID() + "." + ext,
+						UUIDGenerator.getUUID() + "/Introduce");
+			}
+			
+			formService.uploadOrgSummaryPic(vPicturePath1, orgid);
+			statusCode = ConstValues.OK;
+			dataBag = "上传成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "上传失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -727,6 +824,8 @@ public class FormController {
 		String orgid = request.getParameter("orgid");
 		String safeManageRulesName = request.getParameter("SafeManageRulesName");
 		String safeManageRulesType = request.getParameter("SafeManageRulesType");
+		
+		
 		String dataBag = null;
 		int statusCode = -1;
 		try {
@@ -745,6 +844,7 @@ public class FormController {
 
 				String filepath = UploadUtil.uploadOneFile(request, safeRuleFile, safeRuleFile.getOriginalFilename(),
 						"ManageRule/" + safeManageRulesID);
+				System.out.println(filepath);
 				safeManageRules.setFilepath(filepath);
 			}
 			formService.updateSafeManageRules(safeManageRules);
@@ -753,7 +853,7 @@ public class FormController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
-			dataBag = "修改数据失败";
+			dataBag = ConstValues.FIALURE_;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}

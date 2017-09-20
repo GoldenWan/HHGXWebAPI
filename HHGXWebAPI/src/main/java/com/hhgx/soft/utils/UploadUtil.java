@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -366,8 +367,15 @@ public class UploadUtil {
 			File file = new File(downLoadPath, realName);
 			if (file.exists()) {
 				response.setContentType(contentType);// response.setContentType("application/force-download");//
+				if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {  
+					realName = URLEncoder.encode(realName, "UTF-8");  
+				} else {  
+					realName = new String(realName.getBytes("UTF-8"), "ISO8859-1");  
+				}  
+				
 				response.setHeader("Content-disposition",
-						"attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO-8859-1"));
+						"attachment; filename=" +realName);;
+						//"attachment; filename=" + new String(realName.getBytes("utf-8"), "ISO-8859-1"));
 				response.setHeader("Content-Length", String.valueOf(file.length()));
 
 				bis = new BufferedInputStream(new FileInputStream(downLoadPath + realName));

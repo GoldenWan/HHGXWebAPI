@@ -79,6 +79,18 @@
 		VALUES
 		(#{cFlatPic},#{siteid},#{floornum},#{imFlatPic},#{dRecordSet})
 	</insert>
+	<update id="uploadOrgSummaryPic">
+		UPDATE introduce
+		<trim prefix="set" suffixOverrides=",">
+			<if test="vPicturePath!=null and vPicturePath!=''">
+				vPicturePath = #{vPicturePath},
+			</if>
+		</trim>
+		WHERE
+		orgid =#{orgid}
+	</update>
+	
+	
 	<update id="updateflatPic">
 		update flatpic
 		<trim prefix="set" suffixOverrides=",">
@@ -265,6 +277,14 @@
 		safemanagerules
 		WHERE
 		SafeManageRulesID = #{safeManageRulesID}
+	</select>
+	<select id="findIntroducePath" resultType="string">
+		SELECT
+		vPicturePath
+		FROM
+		introduce
+		WHERE
+		orgid = #{orgid}
 	</select>
 	<insert id="addSafeDuty">
 		INSERT INTO safeduty (

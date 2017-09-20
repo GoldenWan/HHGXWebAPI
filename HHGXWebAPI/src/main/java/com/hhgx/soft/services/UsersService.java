@@ -52,6 +52,11 @@ public class UsersService {
 	public List<Map<String, String>> getUserType(String userBelongTo) {
 		return usersMapper.getUserType(userBelongTo);
 	}
+
+
+	public boolean existUserName(String userName) {
+		return usersMapper.existUserName(userName)>0 ? true : false;
+	}
 	
 
 

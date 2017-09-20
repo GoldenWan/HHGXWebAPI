@@ -1,6 +1,7 @@
 package com.hhgx.soft.controllers;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,6 +99,34 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 	}
+	
+	
+	
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/FireSystemList", method = RequestMethod.POST)
+	public String fireSystemList(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);	
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		
+		int statusCode = -1;
+		List<FireSystem> list = null;
+		
+		if (!StringUtils.isEmpty(orgid)) {
+			try {
+				list = orginfoService.getFireSystemList(orgid);
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}			
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	
+	}
 
 	/**
 	 * 18.根据防火单位获取建物简要列表
@@ -140,19 +169,7 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			List<Map<String, Object>> keys = orginfoService.findGatewaySysInfoByType(tiSysType);
-			for (Map<String, Object> m : keys) {
-				List<Map<String, Object>> keys1 = orginfoService.findDevicesByGateway(m.get("Sysaddress"),
-						m.get("Gatewayaddress"));
-
-				for (Map<String, Object> m1 : keys1) {
-
-					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
-							m1.get("Gatewayaddress"));
-				}
-				orginfoService.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
-			}
-			orginfoService.deleteGatewaySysInfo(tiSysType);
+		
 			orginfoService.deleteorgSys(siteid, tiSysType);
 			statusCode = ConstValues.OK;
 			dataBag = "刪除成功";
@@ -188,8 +205,19 @@ public class OrginfoController {
 		String memo = map.get("memo");
 		String dataBag = null;
 		int statusCode = -1;
-
+		if (StringUtils.isEmpty(gatewayaddress)) {
+			statusCode = -2;
+			dataBag = "传输设备地址不能为空";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
 		if (orginfoService.findGatewayaddressExist(gatewayaddress)) {
+			statusCode = -2;
+			dataBag = "对不起，已经存在传输设备地址为"+gatewayaddress+"的数据";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+		
+/*		if (orginfoService.findGatewayaddressExist(gatewayaddress)) {
+			
 			List<Map<String, Object>> keys = orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
 			for (Map<String, Object> m : keys) {
 				List<Map<String, Object>> keys1 = orginfoService.findDevicesByGateway(m.get("Sysaddress"),
@@ -209,14 +237,16 @@ public class OrginfoController {
 			// return
 			// ResponseJson.responseAddJson("传输设备地址:"+gatewayaddress+"已存在",
 			// statusCode);
-		}
+		}*/
 		try {
 			Gateway gateway = new Gateway();
 			gateway.setGatewayaddress(gatewayaddress);
 			gateway.setManufacturer(manufacturer);
 			gateway.setModel(model);
-			gateway.setProductdate(productdate);
-			gateway.setSetupdate(setupdate);
+			if(null!=productdate && !StringUtils.isEmpty(productdate))
+			gateway.setProductdate(DateUtils.StringToDate(productdate));
+			if(null!=setupdate && !StringUtils.isEmpty(setupdate))
+			gateway.setSetupdate(DateUtils.StringToDate(setupdate));
 			gateway.setControlorManufacture(controlorManufacture);
 			gateway.setControlorMode(controlorMode);
 			gateway.setMemo(memo);
@@ -259,8 +289,9 @@ public class OrginfoController {
 				"Manufacturer", "Model", "productdate", "setupdate", "ControlorManufacture", "ControlorMode", "memo",
 				"FireSysList");
 
+		
 		String gatewayaddress = map.get("Gatewayaddress");// 设备传输地址
-		String newGatewayaddress = map.get("newGatewayaddress");
+		String newGatewayaddress = map.get("newGatewayaddress");//新的传输设备
 		String manufacturer = map.get("Manufacturer");
 		String model = map.get("Model");
 		String productdate = map.get("productdate");
@@ -270,40 +301,54 @@ public class OrginfoController {
 		String memo = map.get("memo");
 		String dataBag = null;
 		int statusCode = -1;
-		if (StringUtils.isEmpty(gatewayaddress)) {
-			statusCode = -256;
-			dataBag = "修改失败，gatewayaddress为空";
+		
+		if (StringUtils.isEmpty(newGatewayaddress)) {
+			statusCode = -2;
+			dataBag = "传输设备地址不能为空";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
+		System.err.println(orginfoService.findGatewayaddressExist(newGatewayaddress)+"orginfoService.findGatewayaddressExist(newGatewayaddress)");
+	
+		if (orginfoService.findGatewayaddressExist(newGatewayaddress) && !newGatewayaddress.equals(gatewayaddress)) {
+			statusCode = -2;
+			dataBag = "对不起，已经存在传输设备地址为"+newGatewayaddress+"的数据";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
+		}
+		
 		try {
 			Gateway gateway = new Gateway();
 			gateway.setGatewayaddress(newGatewayaddress);
 			gateway.setManufacturer(manufacturer);
 			gateway.setModel(model);
-			gateway.setProductdate(productdate);
-			gateway.setSetupdate(setupdate);
+			if(null!=productdate && !StringUtils.isEmpty(productdate))
+			gateway.setProductdate(DateUtils.StringToDate(productdate));
+			
+			if(null!=setupdate &&!StringUtils.isEmpty(setupdate))
+			gateway.setSetupdate(DateUtils.StringToDate(setupdate));
+			
 			gateway.setControlorManufacture(controlorManufacture);
 			gateway.setControlorMode(controlorMode);
 			gateway.setMemo(memo);
-			List<Map<String, Object>> keys = orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
-			for (Map<String, Object> m : keys) {
-				List<Map<String, Object>> keys1 = orginfoService.findDevicesByGateway(m.get("Sysaddress"),
-						m.get("Gatewayaddress"));
-
-				for (Map<String, Object> m1 : keys1) {
-
-					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
-							m1.get("Gatewayaddress"));
+	
+System.out.println(orginfoService.findGatewayaddressExist(newGatewayaddress)+"222");
+			if (orginfoService.findGatewayaddressExist(newGatewayaddress) && newGatewayaddress.equals(gatewayaddress)) {
+				List<Map<String, Object>> keys = orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
+				for (Map<String, Object> m : keys) {
+					List<Map<String, Object>> keys1 = orginfoService.findDevicesByGateway(m.get("Sysaddress"),
+							m.get("Gatewayaddress"));
+					for (Map<String, Object> m1 : keys1) {
+						orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
+								m1.get("Gatewayaddress"));
+					}
+					orginfoService.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
 				}
-				orginfoService.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
-			}
-			orginfoService.deleteGatewaySysInfo(gatewayaddress);
-			orginfoService.deleteGateway(gatewayaddress);
-
-			if (orginfoService.findGatewayaddressExist(newGatewayaddress)) {
-				orginfoService.updateGatewayExist(gateway);
+				
+				orginfoService.deleteGatewaySysInfo(gatewayaddress);
+				orginfoService.updateGatewayExist(gateway);			
 			} else {
-				orginfoService.updateGateway(gateway);
+			//	orginfoService.deleteGateway(gatewayaddress);
+				orginfoService.addGateway(gateway);
+				//orginfoService.updateGateway(gateway);
 			}
 
 			JSONArray json = JSONArray.fromObject(map.get("FireSysList"));
@@ -366,8 +411,8 @@ public class OrginfoController {
 				map3.put("Gatewayaddress", gateway.getGatewayaddress());
 				map3.put("Manufacturer", gateway.getManufacturer());
 				map3.put("Model", gateway.getModel());
-				map3.put("productdate", DateUtils.formatToDateTime(gateway.getProductdate()));
-				map3.put("setupdate", DateUtils.formatToDateTime(gateway.getSetupdate()));
+				map3.put("productdate", DateUtils.formatDate(gateway.getProductdate()));
+				map3.put("setupdate", DateUtils.formatDate(gateway.getSetupdate()));
 				map3.put("ControlorManufacture", gateway.getControlorManufacture());
 				map3.put("ControlorMode", gateway.getControlorMode());
 				map3.put("memo", gateway.getMemo());
@@ -410,17 +455,7 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-			List<Map<String, Object>> keys = orginfoService.findGatewaySysInfoByAddr(gatewayaddress);
-			for (Map<String, Object> m : keys) {
-				List<Map<String, Object>> keys1 = orginfoService.findDevicesByGateway(m.get("Sysaddress"),
-						m.get("Gatewayaddress"));
-				for (Map<String, Object> m1 : keys1) {
-					orginfoService.deleteAnlogAlarmSettings(m1.get("deviceaddress"), m1.get("Sysaddress"),
-							m1.get("Gatewayaddress"));
-				}
-				orginfoService.deleteDevices1(m.get("Sysaddress"), m.get("Gatewayaddress"));
-			}
-			orginfoService.deleteGatewaySysInfo(gatewayaddress);
+		
 			orginfoService.deleteGateway(gatewayaddress);
 			statusCode = ConstValues.OK;
 			dataBag = "刪除成功";
@@ -681,7 +716,6 @@ public class OrginfoController {
 		String dataBag = null;
 		int statusCode = -1;
 		try {
-
 			orginfoService.deleteAnlogAlarmSettings(deviceaddress, sysaddress, gatewayaddress);
 			orginfoService.deleteDevices(deviceaddress, sysaddress, gatewayaddress);
 			statusCode = ConstValues.OK;
@@ -876,7 +910,10 @@ public class OrginfoController {
 		onlineOrg.setNearnorth(nearnorth);
 		onlineOrg.setManagegrade(managegrade);
 		onlineOrg.setNetworkStatus(networkStatus);
-		onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime, "yyyy-MM-dd"));
+		if(null !=networkTime && StringUtils.isEmpty(networkTime)){
+			
+			onlineOrg.setNetworkTime(DateUtils.StringToDate(networkTime, "yyyy-MM-dd"));
+		}
 		onlineOrg.setOrgID(orgID);
 		onlineOrg.setOrgcode(orgcode);
 		onlineOrg.setOrgname(orgname);
@@ -946,8 +983,9 @@ public class OrginfoController {
 			dataBag = "刪除成功";
 		} catch (Exception e) {
 			e.printStackTrace();
-			statusCode = ConstValues.FAILED;
-			dataBag = "刪除失败";
+			statusCode = -2;
+			dataBag ="该建筑物已经存在，不能被删除！!";
+			return ResponseJson.responseAddJson(dataBag, statusCode);
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 
@@ -1441,7 +1479,7 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
-
+	
 	/**
 	 * 85.查询营业执照【**】
 	 * 
@@ -1486,7 +1524,7 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 	}
-
+	
 	/**
 	 * 104.提交地理位置（Z）
 	 * {"orgid":"510108000001","fLongitude":"104.114623","fLatitude":
@@ -1531,14 +1569,15 @@ public class OrginfoController {
 		int statusCode = -1;
 		try {
 			List<OnlineOrg> orgs = orginfoService.getMapPoint(orgid);
-			if(!StringUtils.isEmpty(orgs)){
 			// 有可能是get(0)
 			for (OnlineOrg org : orgs) {
 					
+				if(!StringUtils.isEmpty(org.getfLongitude()))
 				map2.put("fLongitude", org.getfLongitude());
+				if(!StringUtils.isEmpty(org.getfLatitude()))
 				map2.put("fLatitude", org.getfLatitude());
+				
 				list.add(map2);
-			}
 			}
 			statusCode = ConstValues.OK;
 
@@ -1563,8 +1602,9 @@ public class OrginfoController {
 		try {
 			List<OnlineOrg> orgs = orginfoService.getTotalFlatPic(orgid);
 			// 有可能是get(0)
-			for (OnlineOrg onlineOrg : orgs) {
-				list.add(onlineOrg.getbFlatpic());
+				if(null!=orgs.get(0)&&!StringUtils.isEmpty(orgs.get(0))){
+					list.add(orgs.get(0).getbFlatpic());
+				
 			}
 			statusCode = ConstValues.OK;
 
@@ -1602,17 +1642,42 @@ public class OrginfoController {
 	/**
 	 * 
 	 * 122.文件下载
+	 * @throws UnsupportedEncodingException 
 	 */
 
+	/*@RequestMapping("/DownFile")
+	public void downloadFile(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
+		//request.setCharacterEncoding("utf-8");
+		String filepath = new String(request.getParameter("filepath").getBytes("gbk"), "ISO8859-1");
+		//+URLEncoder.encode(filepath,"UTF-8").replace("+","%20"); 
+		System.err.println(filepath+"-----------");
+		if (filepath != null) {
+			String realName = UploadUtil.getFileName(filepath);
+			String storeName = UploadUtil.getStoreName(filepath);
+			String contentType = "application/octet-stream;charset=UTF-8";
+			UploadUtil.download(request, response, storeName, contentType, realName);
+
+		}
+	}*/
 	@RequestMapping("/DownFile")
 	public void downloadFile(@RequestParam("filepath") String filepath, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws UnsupportedEncodingException {
+		//System.err.println( new String(filepath.getBytes("gbk"), "ISO8859-1"));
+		//System.err.println( new String(filepath.getBytes("utf-8"), "ISO8859-1"));
+		//System.err.println( new String(filepath.getBytes("gb2312"), "ISO8859-1"));
+		//System.err.println( new String(filepath.getBytes("ISO-8859-1"),"UTF-8"));
+		//System.err.println( new String(filepath.getBytes("ISO-8859-1"),"gbk"));
+		//System.err.println(filepath);
+		//System.err.println(URLDecoder.decode(filepath,"UTF-8").replace("+","%20")+"-----------");
+		
+		filepath =new String( new String(filepath.getBytes("ISO-8859-1"),"UTF-8"));
 		if (filepath != null) {
 			String realName = UploadUtil.getFileName(filepath);
 			String storeName = UploadUtil.getStoreName(filepath);
 			String contentType = "application/force-download";
 			UploadUtil.download(request, response, storeName, contentType, realName);
-
+			
 		}
 	}
 
@@ -1674,6 +1739,7 @@ public class OrginfoController {
 				page = new Page(totalCount, Integer.parseInt(pageIndex));
 				lmList = orginfoService.siteDevices(orgid, siteid, page.getStartPos(), page.getPageSize());
 
+				
 			} else {
 				page = new Page(totalCount, 1);
 				lmList = orginfoService.siteDevices(orgid, siteid, page.getStartPos(), page.getPageSize());
@@ -1703,12 +1769,11 @@ public class OrginfoController {
 			List<Gateway> gatewayList = orginfoService.gatewayInfo(orgid, gatewayaddress);
 			for (Gateway gateway : gatewayList) {
 				Map<String, Object> map3 = new HashMap<String, Object>();
-
 				map3.put("Gatewayaddress", gateway.getGatewayaddress());
 				map3.put("Manufacturer", gateway.getManufacturer());
 				map3.put("Model", gateway.getModel());
-				map3.put("productdate", DateUtils.formatToDateTime(gateway.getProductdate()));
-				map3.put("setupdate", DateUtils.formatToDateTime(gateway.getSetupdate()));
+				map3.put("productdate", DateUtils.formatDate(gateway.getProductdate()));
+				map3.put("setupdate", DateUtils.formatDate(gateway.getSetupdate()));
 				map3.put("ControlorManufacture", gateway.getControlorManufacture());
 				map3.put("ControlorMode", gateway.getControlorMode());
 				map3.put("memo", gateway.getMemo());
@@ -1893,4 +1958,82 @@ public class OrginfoController {
 
 	}
 
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/OnlineAllInfo", method = RequestMethod.POST)
+	public String onlineAllInfo(HttpServletRequest request) throws IOException {
+		
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		int statusCode = -1;
+		List<Map<String, String>> list = null;
+		try {
+				list = orginfoService.onlineAllInfo(orgid);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}			
+		
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetManagerOrgList", method = RequestMethod.POST)
+	public String getManagerOrgList(HttpServletRequest request) throws IOException {
+		
+		int statusCode = -1;
+		List<Map<String, String>> list = null;
+		
+			try {
+				list = orginfoService.getManagerOrgList();
+				statusCode = ConstValues.OK;
+			} catch (Exception e) {
+				e.printStackTrace();
+				statusCode = ConstValues.FAILED;
+			}			
+		
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/getOrgListByOrgName", method = RequestMethod.POST)
+	public String getOrgListByOrgName(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgname", "PageIndex");
+		String orgname = map.get("orgname");
+		String pageIndex = map.get("pageIndex");
+		
+		
+		
+		int statusCode = -1;
+		Page page = null;
+		List<Map<String, String>> lmList = null;
+		
+		int totalCount = orginfoService.getOrgListByOrgNameCount(orgname);
+		
+		try {
+			if (!StringUtils.isEmpty(pageIndex)) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				lmList = orginfoService.getOrgListByOrgName(orgname, page.getStartPos(), page.getPageSize());
+				
+			} else {
+				page = new Page(totalCount, 1);
+				lmList = orginfoService.getOrgListByOrgName(orgname, page.getStartPos(), page.getPageSize());
+			}
+			
+			
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+		
+	}
+	
+	
+	
 }
