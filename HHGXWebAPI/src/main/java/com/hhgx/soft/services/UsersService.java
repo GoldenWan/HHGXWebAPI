@@ -40,8 +40,16 @@ public class UsersService {
 
 
 	public void addUser(User users) {
-		 usersMapper.addUser(users);		
+	
+		//添加消防单位管理员
+		if(users.getUserBelongTo().equals("1")){
+			 usersMapper.addUser(users);	
+		}
+		else if(users.getUserBelongTo().equals("4")){
+			users.setOrgid(null);
+			usersMapper.addUser(users);
 	}
+}
 
 
 	public void deleteUser(String userid) {

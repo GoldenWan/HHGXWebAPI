@@ -3,61 +3,133 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhgx.soft.mappers.PlayWithRoleMapper">
 
-	<resultMap type="managerOrg" id="managerOrgMap">
-	    <id column="managerOrgID" property="managerOrgID" />
-		<result column="parentID" property="parentID" />
-		<result column="areaName" property="areaName" />
-	</resultMap> 
-	
-	<select id="getAllManagerOrg" resultMap="managerOrgMap">
-	SELECT
-		m.ManagerOrgID managerOrgID,
-		m.ParentID parentID,
-		a.AreaName areaName
-	FROM
-		managerorg m,
-		area a
-	WHERE
-		m.AreaId = a.AreaId
-	
+
+	<select id="getAllManagerOrg" resultType="map">
+		SELECT
+		ManagerOrgID id,
+		ParentID pId,
+		ManagerOrgName name
+		FROM
+		managerorg
+
 	</select>
-	
+
 	<select id="getManagersSubsCount" resultType="int">
 		SELECT
 		count(*)
 		FROM
 		managerorg f
-		INNER JOIN managerorg z ON f.ManagerOrgID = z.ParentID
-		INNER JOIN area a on a.AreaId = z.AreaId
-		and
-		z.ParentID = #{infoBagMID}
-		and 
-		z.managerorgname LIKE CONCAT('%',#{managerorgname}, '%')
+		INNER JOIN managerorg z ON
+		f.ManagerOrgID = z.ParentID
+		INNER JOIN area a ON a.AreaId = z.AreaId
+		<if test="infoBagMID!=null and infoBagMID!=''">
+			and z.ParentID = #{infoBagMID}
+		</if>
+		<if test="managerorgname !=null and managerorgname!=''">
+			and z.managerorgname
+			LIKE CONCAT('%',#{managerorgname},
+			'%')
+		</if>
 	</select>
-	<select id="getManagersSubs" resultType="managerOrg">
+
+	<select id="getManagerDetail" resultType="map">
+	SELECT
+		f.managerorgname ManagerOrgName,
+		f.YnSetMonitor,
+		f.tel,
+		f.`Status`,
+		f.ManageOrgGrade,
+		f.ManagerAddress,
+		concat(c.areaname, b.areaname, a.areaname) AreaName,
+		concat(
+			b.ParentId,
+			',',
+			b.AreaId,
+			',',
+			a.AreaId
+		) AreaId,
+		f.Address address,
+		f.PName,
+		f.ManagerJob,
+		f.ContactName,
+		f.ContactTel,
+		f.ParentID,
+		f.remark Remark
+	FROM
+		managerorg f
+	INNER JOIN area a ON a.AreaId = f.AreaId
+	INNER JOIN area b ON a.ParentId = b.AreaId
+	INNER JOIN area c ON b.ParentId = c.AreaId
+	WHERE
+		f.ManagerOrgID=#{managerOrgID}
+
+	</select>
+	
+	<select id="getManagerUsers" resultType="map">
+	SELECT
+		UserID,
+		account,
+		`password`,
+		RealName,
+		mobilephone,
+		Tel,
+		Email,
+		`Status`,
+		isFirstEnroll,
+		Remark,
+		UserBelongTo,
+		TokenID,
+		TokenPhoneID,
+		TokenExpireDate,
+		ManagerOrgID,
+		UserTypeID,
+		orgid
+	FROM
+		users
+	WHERE
+		ManagerOrgID =#{managerOrgID}
+
+	</select>
+	
+
+	<select id="getManagersSubs" resultType="map">
 		SELECT
 		z.managerorgid,
 		z.managerorgname,
 		z.YnSetMonitor,
 		z.tel,
 		z.`Status`,
-		a.areaname,
-		z.Address,
-		z.ManageOrgGrade,
-		z.PName,
+		z.ManageOrgGrade manageOrgGrade,
+		z.ManagerAddress managerAddress,
+		concat(
+			c.areaname,
+			',',
+			b.areaname,
+			',',
+			a.areaname
+		) areaname,
+		z.Address address,
+		z.PName pname,
 		z.ManagerJob,
 		z.ContactName,
-		z.ContactTel
+		z.ContactTel,
+		z.ParentID,
+		z.remark
 		FROM
 		managerorg f
-		INNER JOIN managerorg z ON f.ManagerOrgID
-		= z.ParentID
-		INNER JOIN area a on a.AreaId = z.AreaId
-		and
-		z.ParentID =#{infoBagMID} 
-		and 
-		z.managerorgname 
-		LIKE CONCAT('%','${managerorgname}', '%')
+		INNER
+		JOIN managerorg z ON f.ManagerOrgID = z.ParentID
+		INNER JOIN area a ON a.AreaId = z.AreaId
+		INNER JOIN area b ON a.ParentId = b.AreaId
+		INNER JOIN area c ON b.ParentId = c.AreaId
+		<if test="infoBagMID!=null and infoBagMID!=''">
+			and z.ParentID =#{infoBagMID}
+		</if>
+		<if test="managerorgname!=null and managerorgname!=''">
+			and z.managerorgname
+			LIKE CONCAT('%', #{managerorgname},
+			'%')
+		</if>
 		limit
 		#{startPos},#{pageSize}
 	</select>
@@ -67,33 +139,53 @@
 		(
 		ManagerOrgID,
 		ManagerOrgName,
-		YnSetMonitor,
-		tel,
-		`Status`,
-		ParentID,
-		AreaId,
-		Remark,
-		address,
-		ManageOrgGrade,
 		PName,
+		ManageOrgGrade,
 		ManagerJob,
 		ContactName,
-		ContactTel
+		ContactTel,
+		AreaId,
+		ManagerAddress,
+		Status,
+		Remark,
+		ParentID
 		)
 		VALUES
 		(
-		#{managerOrgID}, #{managerOrgName},
-		#{ynSetMonitor},
-		#{tel},
-		#{status}, #{parentID},
-		#{areaId}, #{remark},
-		#{managerAddress},
+		#{managerOrgID},
+		#{managerOrgName},
+		#{pName},
 		#{manageOrgGrade},
-		#{pName}, #{managerJob},
+		#{managerJob},
 		#{contactName},
-		#{contactTel}
+		#{contactTel},
+		#{areaId},
+		#{managerAddress},
+		#{status},
+		#{remark},
+		#{parentID}
 		)
 	</insert>
+
+	<update id="updateManagerSubs">
+		UPDATE
+		managerorg
+		<trim prefix="set" suffixOverrides=",">
+			<if test="managerOrgName !=null and managerOrgName !=''"> ManagerOrgName = #{managerOrgName}, </if>
+			<if test="pName !=null and pName  !=''"> PName = #{pName},</if>
+			<if test="manageOrgGrade !=null and manageOrgGrade !=''"> ManageOrgGrade = #{manageOrgGrade}, </if>
+			<if test="managerJob !=null and managerJob !=''"> ManagerJob = #{managerJob}, </if>
+			<if test="contactName !=null and contactName !=''"> ContactName = #{contactName}, </if>
+			<if test="contactTel !=null and contactTel !=''"> ContactTel = #{contactTel}, </if>
+			<if test="areaId  !=null and areaId !=''"> AreaId = #{areaId}, </if>
+			<if test="managerAddress !=null and managerAddress !=''"> ManagerAddress = #{managerAddress}, </if>
+			<if test="status  !=null and status !=''"> Status = #{status},  </if>
+			<if test="remark  !=null and remark !=''"> Remark = #{remark},  </if>
+		</trim>
+		WHERE
+		ManagerOrgID = #{managerOrgID}
+	</update>
+
 
 	<insert id="addManagerSubsUser" parameterType="user">
 		INSERT INTO users
@@ -106,8 +198,7 @@
 		ManagerOrgID
 		)
 		VALUES
-		(#{userID},#{account},
-		#{password},#{userBelongTo},#{userTypeID},#{managerOrgID})
+		(#{userID},#{account},#{password},#{userBelongTo},#{userTypeID},#{managerOrgID})
 	</insert>
 
 	<delete id="removeManagerSubs">
@@ -118,4 +209,16 @@
 		ManagerOrgID =
 		#{managerOrgID}
 	</delete>
+	<delete id="deleteManagerSubsUser">
+		DELETE
+		FROM
+		users
+		WHERE
+		ManagerOrgID =
+		#{managerOrgID}
+	</delete>
+
+
+
+
 </mapper>

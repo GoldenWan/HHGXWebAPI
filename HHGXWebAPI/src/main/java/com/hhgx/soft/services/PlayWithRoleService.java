@@ -2,6 +2,7 @@ package com.hhgx.soft.services;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,12 +35,29 @@ public class PlayWithRoleService {
 		return playWithRoleMapper.getManagersSubsCount(infoBagMID, managerorgname);
 	}
 
-	public List<ManagerOrg> getManagersSubs(String infoBagMID, String managerorgname, int startPos, int pageSize) {
+	public List<Map<String, String>> getManagersSubs(String infoBagMID, String managerorgname, int startPos, int pageSize) {
 		return playWithRoleMapper.getManagersSubs(infoBagMID, managerorgname, startPos, pageSize);
 	}
 
-	public List<ManagerOrg> getAllManagerOrg() {
+	public List<Map<String, String>> getAllManagerOrg() {
 		return playWithRoleMapper.getAllManagerOrg();
+	}
+
+	public List<Map<String, String>> getManagerDetail(String managerOrgID) {
+		return playWithRoleMapper.getManagerDetail(managerOrgID);
+	}
+
+	public List<Map<String, String>> getManagerUsers(String managerOrgID) {
+		return  playWithRoleMapper.getManagerUsers(managerOrgID);
+	}
+
+	public void updateManagerSubs(ManagerOrg managerOrg) {
+		playWithRoleMapper.updateManagerSubs(managerOrg);	
+	}
+
+	public void deleteManagerSubsUser(String managerOrgID) {
+		playWithRoleMapper.deleteManagerSubsUser(managerOrgID);
+		
 	}
 
 

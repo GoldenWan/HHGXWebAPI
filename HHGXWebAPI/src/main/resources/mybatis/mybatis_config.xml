@@ -4,11 +4,12 @@
 	<settings>
 		<setting name="lazyLoadingEnabled" value="false" />
 		<setting name="mapUnderscoreToCamelCase" value="true" />
+        <setting name="callSettersOnNulls" value="true"/>  
 	</settings>
 	
 	<!-- 所有model和与数据表映射对应关系配置 -->
 	 <typeAliases>
-		<typeAlias alias="xfCheckTimeRound" type="com.hhgx.soft.entitys.XfCheckTimeRound"/> 
+	<!-- 	<typeAlias alias="xfCheckTimeRound" type="com.hhgx.soft.entitys.XfCheckTimeRound"/> 
 		<typeAlias alias="childModule" type="com.hhgx.soft.entitys.ChildModule"/> 
 		<typeAlias alias="user" type="com.hhgx.soft.entitys.User"/> 
 	    <typeAlias alias="registerNew" type="com.hhgx.soft.entitys.RegisterNew"/> 
@@ -18,7 +19,7 @@
 	    <typeAlias alias="userCheckInfo" type="com.hhgx.soft.entitys.UserCheckInfo"/> 
 	    <typeAlias alias="ztree" type="com.hhgx.soft.entitys.Ztree"/> 
 	    <typeAlias alias="fireSafetyCheck" type="com.hhgx.soft.entitys.FireSafetyCheck"/> 
-	    <typeAlias alias="patrolProject" type="com.hhgx.soft.entitys.PatrolProject"/>
+	    <typeAlias alias="patrolProject" type="com.hhgx.soft.entitys.PatrolProject"/> -->
 		<package name="com.hhgx.soft.entitys"/>
 	</typeAliases> 
 

@@ -118,33 +118,23 @@ public class UsersController {
 		users.setRemark(map.get("remark"));
 		users.setUserTypeID(map.get("userTypeID"));
 		users.setUserBelongTo(userBelongTo);
-		if(!orgid.equals('4')){
-			users.setOrgid(orgid);
-		}
-		
+		users.setOrgid(orgid);
 		String dataBag = null;
 		int statusCode = -1;
-		
-		
 		try {
-		
-			
 			if(usersService.existUserName(userName)){
 				return ResponseJson.responseAddJson("账号已存在,请重新输入", -2);
 			}
-			
 			usersService.addUser(users);
+			dataBag = ConstValues.SUCCESS;
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
+			dataBag = ConstValues.FIALURE;
 			statusCode = ConstValues.FAILED;
 		}
-		if (statusCode == ConstValues.OK) {
-			dataBag = ConstValues.SUCCESS;
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		} else {
-			dataBag = ConstValues.FIALURE;
-			return ResponseJson.responseAddJson(dataBag, statusCode);
-		}
+		
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
 	}
 	/**
 	 * 54.修改用户信息【**】

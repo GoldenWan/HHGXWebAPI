@@ -19,6 +19,7 @@ import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.services.ExtraService;
 import com.hhgx.soft.services.OrginfoService;
+import com.hhgx.soft.services.PlayWithRoleService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
@@ -33,6 +34,8 @@ public class ExtraController {
 	private AlarmDataService alarmDataService ;
 	@Autowired
 	private OrginfoService orginfoService ;
+	@Autowired
+	private PlayWithRoleService playWithRoleService ;
 	/**
 	 * 174.删除灭火应急演练预案【**】
 	 * @throws IOException 
@@ -160,4 +163,48 @@ public class ExtraController {
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
+	
+	/**
+	 * 5. 查询某消防管理部门的下级管理部门【分页】
+	 * 
+	 * @param reqBody
+	 * @return
+	 * @throws IOException 
+	 */
+
+	@RequestMapping(value = "/playwithrole/GetManagersSubs", method = { RequestMethod.POST })
+	@ResponseBody
+	public String getManagersSubs(HttpServletRequest request) throws IOException {
+		
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "MID", "managerorgname", "PageIndex");
+		String mid = map.get("mID");
+		String managerorgname = map.get("managerorgname");// 模糊查询
+		String pageIndex = map.get("pageIndex");
+		Page page = null;
+		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		int totalCount = playWithRoleService.getManagersSubsCount(mid,managerorgname);
+		int statusCode = -1;
+		try {
+			if (pageIndex != null) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				//模糊查询
+				lmList  = playWithRoleService.getManagersSubs(mid,managerorgname, page.getStartPos(),
+						page.getPageSize());
+
+			} else {
+				page = new Page(totalCount, 1);
+				lmList = playWithRoleService.getManagersSubs(mid,managerorgname, page.getStartPos(),
+						page.getPageSize());
+			}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray(lmList,statusCode, totalCount);
+
+		}
+	
+	
 }

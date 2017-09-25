@@ -127,7 +127,7 @@ public class ResponseJson {
 		return jsonO.toString();
 		
 	}
-	
+
 	public static String respPalyWithRoleFindPageJsonArray(Object dataBag, String mangerorgname, int statusCode, int pageCount){
 		JSONObject jsonObject = new JSONObject();
 		

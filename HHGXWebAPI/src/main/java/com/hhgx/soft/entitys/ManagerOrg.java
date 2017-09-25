@@ -17,6 +17,16 @@ public class ManagerOrg {
 	private String remark;           //
 	private String areaId;           //
 	private String areaName;         // // 区域名称   ,  注意不是区域编号(显示市县)
+	private String managerAddress;       
+	
+
+	
+	public String getManagerAddress() {
+		return managerAddress;
+	}
+	public void setManagerAddress(String managerAddress) {
+		this.managerAddress = managerAddress;
+	}
 	public String getManagerOrgID() {
 		return managerOrgID;
 	}
