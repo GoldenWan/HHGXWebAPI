@@ -14,8 +14,11 @@ import com.hhgx.soft.entitys.Firesystype;
 import com.hhgx.soft.entitys.Flatpic;
 import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
+import com.hhgx.soft.entitys.OnlineFiresystem;
 import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Site;
+import com.hhgx.soft.entitys.model.OnlineAllInfo;
+import com.hhgx.soft.entitys.model.SystemType;
 
 @Component
 @MapperScan("/orginfoMapper")
@@ -28,6 +31,7 @@ public interface OrginfoMapper {
 	List<BusinessLicence> getBusinessLicence(@Param("orgid")String orgid);
 
 	List<FireSystem> getFireSystemList(@Param("orgid")String orgid);
+	List<OnlineFiresystem> getOnlineFiresystemList(@Param("orgid")String orgid);
 
 	int getFireSystemListCount(@Param("orgid")String orgid);
 
@@ -39,8 +43,6 @@ public interface OrginfoMapper {
 
 	void deleteGateway(String gatewayaddress);
 	void selectVgateway(String gatewayaddress);
-
-
 	int gePatrolRecordByOrgCount(String orgid);
 
 	List<Gateway> selectGateway(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
@@ -50,8 +52,6 @@ public interface OrginfoMapper {
 	void addGatewaySysInfo(GatewaySystemInfo gatewaySystemInfo);
 
 	void addGateway(Gateway gateway);
-
-	
 	void updateGateway(Gateway gateway);
 
 	void updateGatewaySysInfo(GatewaySystemInfo gatewaySystemInfo);
@@ -131,13 +131,9 @@ public interface OrginfoMapper {
 
 	List<Map<String, Object>> findGatewaySysInfoByType(@Param("tiSysType")String tiSysType);
 	List<Map<String, Object>> findGatewaySysInfoByAddr(@Param("gatewayaddress")String gatewayaddress);
-
 	List<Map<String, Object>> findDevicesByGateway(@Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
-
 	void deleteAnlogAlarmSettings(@Param("deviceaddress")Object deviceaddress, @Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
-
 	void deleteDevices1(@Param("sysaddress")Object sysaddress, @Param("gatewayaddress")Object gatewayaddress);
-
 	List<GatewaySystemInfo> getSiteNeedAddress(String siteid);
 
 	int findDevicesByKey(@Param("deviceAddr")String deviceAddr, @Param("sysaddress")String sysaddress, @Param("gatewayaddress")String gatewayaddress);
@@ -175,7 +171,17 @@ public interface OrginfoMapper {
 
 	List<Map<String, String>> getOrgListByOrgName(@Param("orgname")String orgname,@Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
+	List<Map<String, Object>> getUnRegisterOrg(@Param("managerOrgID")String managerOrgID,@Param("orgName") String orgName, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
-	//List<Map<String, String>> onlineAllInfo(String orgid);
+	int getUnRegisterOrgCount(@Param("managerOrgID")String managerOrgID, @Param("orgName") String orgName);
+
+
+	List<OnlineAllInfo> onlineAllInfo(String orgid);
+	List<SystemType> getCheckList(String orgid);
+	List<SystemType> getRecordList(String orgid);
+	
+	
+	
+	
 
 }

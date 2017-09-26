@@ -48,7 +48,10 @@ public class UsersService {
 		else if(users.getUserBelongTo().equals("4")){
 			users.setOrgid(null);
 			usersMapper.addUser(users);
-	}
+		}else if(users.getUserBelongTo().equals("3")){
+			usersMapper.addUser(users);
+		}
+		
 }
 
 

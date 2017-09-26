@@ -15,6 +15,7 @@ import com.hhgx.soft.entitys.Gateway;
 import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Site;
+import com.hhgx.soft.entitys.model.OnlineAllInfo;
 import com.hhgx.soft.mappers.OrginfoMapper;
 
 @Service
@@ -373,14 +374,20 @@ public int getOrgListByOrgNameCount(String orgname) {
 }
 
 public List<Map<String, String>> getOrgListByOrgName(String orgname, int startPos, int pageSize) {
-	// TODO Auto-generated method stub
 	return orginfoMapper.getOrgListByOrgName(orgname,startPos,pageSize);
 }
 
-public List<Map<String, String>> onlineAllInfo(String orgid) {
-	// TODO Auto-generated method stub
-	//return orginfoMapper.onlineAllInfo(orgid);
-	return null;
+public List<OnlineAllInfo> onlineAllInfo(String orgid) {
+	return orginfoMapper.onlineAllInfo(orgid);
+}
+
+public List<Map<String, Object>> getUnRegisterOrg(String managerOrgID, String orgName, int startPos, int pageSize) {
+	return orginfoMapper.getUnRegisterOrg(managerOrgID, orgName,startPos,pageSize);
+}
+
+public int getUnRegisterOrgCount(String managerOrgID, String orgName) {
+	return orginfoMapper.getUnRegisterOrgCount(managerOrgID, orgName);
+
 }
 	
 }

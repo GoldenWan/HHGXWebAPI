@@ -1,366 +1,126 @@
-
-{
-  "DataBag": {
-    "pageCount": 2,
-    "PageDatas": [
-      {
-        "manoeuvreID": "fb7d76fc-7dd7-44d8-b7bd-e83385c02c12",
-        "manoeuvretime": "2017/8/2",
-        "address": "2未全",
-        "Department": "请问",
-        "manager": "切勿",
-        "content": "去请问",
-        "orgid": "510108000001"
-      }
-    ]
-  },
-  "StateMessage": 1000
-}
-
-{
-    "DataBag": {
-        "pageCount": 1,
-        "PageDatas": [
-            {
-                "content": "恒华光迅",
-                "manoeuvreID": "b1bbe7b092f342eebff8d58ab1f98cad",
-                "manager": "恒华光迅",
-                "address": "恒华光迅",
-                "manoeuvretime": "2017/08/01",
-                "Department": "恒华光迅"
-            }
-        ],
-        "StateMessage": 1000
-    }
-}
-
-
-
-
-     HH.post("/Facility/GetManoeuvreList", info, function (data) {
-            var myJson = {data: data.DataBag.PageDatas};
-
-            render("#in_view", "#in_page", myJson);
-
-            allNum = data.DataBag.pageCount;
-
-            createPaging("#in_paging", nowNum, allNum);
-
-        });
-
-
-
-
-
-
-SELECT
-	m1.ModuleID,
-	m1.ModuleName,
-	m1.URL,
-	m1.OrderNum,
-	m1.ParentID,
-	m1.levelnum,
-	m1.pic
-
-FROM
-	users u
-INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
-INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
-INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
-WHERE
-	account = '1';
-	
-	
-	SELECT
-	m2.ModuleID,
-	m2.ModuleName,
-	m2.URL,
-	m2.OrderNum,
-	m2.ParentID,
-	m2.levelnum,
-	m2.pic
-
-FROM
-	users u
-INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
-INNER JOIN module_usertype mt ON ut.UserTypeID = mt.UserTypeID
-INNER JOIN modulelist m1 ON mt.ModuleID = m1.ModuleID
-INNER JOIN modulelist m2 on m1.ModuleID =m2.ParentID
-WHERE
-	account = '1';
-
-4.
-	SELECT
-		ut.UserBelongTo userBelongTo,
-		ut.UserTypeName userTypeName,
-		ut.UserTypeName usertype,
-		u.account account,
-		u.RealName realName,
-		o.orgid  orgid,
-		o.orgname companyName
-		FROM
-		users u
-		INNER JOIN usertype ut ON u.UserTypeID = ut.UserTypeID
-    INNER JOIN onlineorg o on u.orgid=o.orgid;
-	
-		WHERE
-		account = '1';
-
-
-
-5.	
-SELECT
-	m.ManagerOrgID,
-	m.ManagerOrgName,
-	m.YnSetMonitor,
-	m.tel,
-	m.`STATUS`,
-	a.AreaName,
-	m.address,
-	m.ManageOrgGrade,
-	m.PName,
-	m.ManagerJob,
-	m.ContactName,
-	m.ContactTel
-FROM
-	managerorg m
-INNER JOIN area a ON m.AreaId = a.AreaId
-
-INNER JOIN managerorg on m.ParentID = m.ManagerOrgID
-
-WHERE 
- m.ParentID = m.ManagerOrgID and
-	 m.ParentID = '1'
-AND m.ManagerOrgName = '1'
-
-
-
-按防火单位获取巡查记录
-{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
- "infoBag":{
-   "OrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
-   "StartDate":"2017/08/05",
-	"endTime":"2017/08/06"
- }
-}
-{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
- "infoBag":{
-   "OrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
-   "StartDate":"2017/08/05",
-	"EndDate":"2017/08/06",
-    "PageIndex":"2"
- }
-}
-
-返回json
-{
-    "StatusCode": "value",
-    "DataBag": {
-        "pageCount": "200",
-        "PageDatas": {
-            "OrgID": "2672714c-77c9-47f4-9735-1c5fccead5c1",
-            "StartDate": "2017/08/05",
-            "endTime": "2017/08/06"
-        }
-    }
-}
+orgid                                                        
+orgcode                                                      
+orgname                                                      
+vAddress                                                     
+OrganType                                                    
+vNamelegalperson                                             
+otherthings                                                  
+YnImportant                                                  
+SuperiorOrg                                                  
+cZip                                                         
+vTel                                                         
+fax                                                          
+`E-mail`                                           
+howmanypeople                                                
+souyouzhi                                                    
+SetupDate                 
+realtymoney                                                  
+ipersonnum                                                   
+fAreanum                                                     
+fBuildingarea                                                
+GasType                                                      
+howmanyfireman                                               
+howmanyexit                                                  
+howmanystair                                                 
+howmanylane                                                  
+howmanyelevator                                              
+lanelocation                                                 
+vfireroomtel                                                 
+escapefloor                                                  
+escapebuildingarea                                           
+escapelocation                                               
+neareast                                                     
+nearsouth                                                    
+nearwest                                                     
+nearnorth                                                    
+AutoFireFacility                                             
+fLongitude                                                   
+fLatitude                                                    
+dRecordDate             
+managegrade                                                  
+NetworkStatus                                                
+NetworkTime                                                  
+ApproveState                                                 
+ApproveMan                                                   
+ApproveTime                                                
+o.AreaId                                                     
+AreaName                                                     
+ManagerOrgID                                                 
+bFlatpic             
 
 
 
 
 
-}}
-
-
-添加json
-{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
- "infoBag":{
-   "ManagerOrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
-	"endTime":"2017/08/06"
- }
-}
 
 
 
-请求：
-
-{"tokenUUID":"",
- "infoBag":{
- "orgid":"201706151406",
- "TrainingTime":"2017/02/09",
- "TrainingAddress":"123",
- 
-}
-}
-
-
-{"tokenUUID":"9eeee82e-e2c0-4565-bfae-6969390dd5b9",
- "infoBag":{
-   "ManagerOrgID":"2672714c-77c9-47f4-9735-1c5fccead5c1",
-	"endTime":"2017/08/06"
- }
-}
-第一个接口
-http://localhost:8888/HHGXWebAPI/UserManager/RegisterNew
-
-{ "tokenUUID":"hhh",
-  "infoBag":{
-  "username":"201706151406",
-  "password":"2017/02/09",
-  "orgname":"123",
-  "AreaID":"201706151406",
-  "verifycode":"2017/02/09",
-  "UserBelongTo":"123"
- 
-}
-}
-
-
-{"tokenUUID":"",
- "infoBag":{
- "username":"1"
-
- 
-}
-}
 
 
 
-{"tokenUUID":"24040825-3a1d-4e1c-b815-5674f64571d9","infoBag":{"username":"11"}}
 
-
-{
-  "DataBag": {
-    "userInfo": {
-      "UserBelongName": "管理机构",
-      "UserBelongTo": "3",
-      "account": "13333333333",
-      "RealName": "0@0匿名用户",
-      "userType": "消防主管部门管理员",
-      "OrgID": "48646bb8-591a-426a-9827-c356a8fd434a",
-      "CompanyName": "四川省总队"
-    },
-    "ztree": [
-      {
-        "DKZTree": [
-          {
-            "ModuleID": "M014000008",
-            "ModuleName": "火警处理结果统计",
-            "URL": "./Competent/ResultStatistics.html",
-            "OrderNum": null,
-            "ParentID": "M014000000",
-            "levelnum": 2,
-            "pic": null,
-            "Module_UserType": []
-          },
-          {
-            "ModuleID": "M014000001",
-            "ModuleName": "防火单位巡查情况",
-            "URL": "./Competent/PatrolSituation.html",
-            "OrderNum": 57,
-            "ParentID": "M014000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          },
-          {
-            "ModuleID": "M014000002",
-            "ModuleName": "值班情况",
-            "URL": "./Competent/OnDuty.html",
-            "OrderNum": 58,
-            "ParentID": "M014000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          },
-          {
-            "ModuleID": "M014000003",
-            "ModuleName": "报警信息处理情况",
-            "URL": "./Competent/AlarmInformation.html",
-            "OrderNum": 59,
-            "ParentID": "M014000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          },
-          {
-            "ModuleID": "M014000005",
-            "ModuleName": "单项检测情况",
-            "URL": "./Competent/EquipmentTest.html",
-            "OrderNum": 61,
-            "ParentID": "M014000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          }
-        ],
-        "TreeType": null,
-        "ModuleID": "M014000000",
-        "ModuleName": "消防管理情况",
-        "URL": "",
-        "OrderNum": 14,
-        "ParentID": "          ",
-        "levelnum": 1,
-        "pic": "ManagementSituation ",
-        "Module_UserType": []
-      },
-      {
-        "DKZTree": [
-          {
-            "ModuleID": "M015000001",
-            "ModuleName": "注册单位审核",
-            "URL": "./Competent/RegistrationAudit.html",
-            "OrderNum": 63,
-            "ParentID": "M015000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          },
-          {
-            "ModuleID": "M015000002",
-            "ModuleName": "注册单位查询",
-            "URL": "./Competent/UnitInquiry.html",
-            "OrderNum": 64,
-            "ParentID": "M015000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          }
-        ],
-        "TreeType": null,
-        "ModuleID": "M015000000",
-        "ModuleName": "注册单位管理",
-        "URL": "",
-        "OrderNum": 15,
-        "ParentID": "          ",
-        "levelnum": 1,
-        "pic": "UnitManagement",
-        "Module_UserType": []
-      },
-      {
-        "DKZTree": [
-          {
-            "ModuleID": "M016000001",
-            "ModuleName": "帐户管理",
-            "URL": "./Competent/AccountManagement.html",
-            "OrderNum": 65,
-            "ParentID": "M016000000",
-            "levelnum": 2,
-            "pic": "",
-            "Module_UserType": []
-          }
-        ],
-        "TreeType": null,
-        "ModuleID": "M016000000",
-        "ModuleName": "帐户管理",
-        "URL": "",
-        "OrderNum": 16,
-        "ParentID": "          ",
-        "levelnum": 1,
-        "pic": "AccountManagement ",
-        "Module_UserType": []
-      }
-    ]
-  },
-  "StateMessage": 1000
-}
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />   
+" column="" />                                            

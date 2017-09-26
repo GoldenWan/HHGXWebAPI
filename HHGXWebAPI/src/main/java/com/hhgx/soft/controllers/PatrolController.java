@@ -116,8 +116,6 @@ public class PatrolController {
 	 * 12.按防火单位获取巡查记录【**】 
 	 
 	 * @param reqBody
-	 *            ?*
-	 * @return:TODO ?
 	 * @throws IOException 
 	 */
 	@ResponseBody
@@ -751,6 +749,28 @@ public class PatrolController {
 	} catch (Exception e) {
 		statusCode = ConstValues.FAILED;
 	}
+		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+		
+	}
+	
+	@RequestMapping(value="/GetUserCheckProject", method = RequestMethod.POST)
+	@ResponseBody
+	public String getUserCheckProject(HttpServletRequest request) throws IOException{
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		List<Map<String, Object>> lmList = new ArrayList<Map<String, Object>>();
+		
+		String orgid = map.get("orgid");
+		int statusCode = -1;
+		try{
+		//	List<UserCheckList>  userCheckLists= patrolService.getUserCheckProject(orgid);
+		
+		
+			
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
 		return ResponseJson.responseFindJsonArray(lmList, statusCode);
 		
 	}

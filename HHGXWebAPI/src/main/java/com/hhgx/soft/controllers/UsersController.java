@@ -21,6 +21,7 @@ import com.hhgx.soft.entitys.Users;
 import com.hhgx.soft.services.UsersService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
+import com.hhgx.soft.utils.Md5Util;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -109,7 +110,7 @@ public class UsersController {
 		User users = new User();
 		users.setUserID(UUIDGenerator.getUUID());
 		users.setAccount(userName);
-		users.setPassword(map.get("password"));
+		users.setPassword(Md5Util.getMD5(map.get("password")));
 		users.setMobilephone(map.get("mobilephone"));
 		users.setRealName(map.get("realName"));
 		users.setTel(map.get("tel"));

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhgx.soft.mappers.ManageOrgInfoMapper">
+
+	<select id="managerRecurOrgListCount" resultType="int">
+	SELECT
+	count(*)
+	FROM
+	onlineorg o  
+	WHERE
+	ManagerOrgID=#{managerOrgID}
+	<if test="orgName!='' and orgName!=null">
+	and OrgName like concat('%',#{orgName},'%')
+	</if>
+	</select>
+	<select id="managerRecurOrgList" resultType="map"> 
+	SELECT
+		orgid,
+		orgname,
+		OrganType,
+		YnImportant,
+		souyouzhi,
+		ApproveState,
+		SuperiorOrg,
+		ApproveIdea,
+		CONCAT(c.AreaName,b.AreaName,a.AreaName) AreaName
+	FROM
+	onlineorg o  
+	INNER JOIN area a on o.AreaId =a.AreaId
+	INNER JOIN area b on a.AreaId=b.AreaId
+	INNER JOIN area c on b.AreaId = c.AreaId
+	WHERE
+	ManagerOrgID=#{managerOrgID}
+	<if test="orgName!='' and orgName!=null">
+	and OrgName like concat('%',#{orgName},'%')
+	</if>
+	</select>
+<select id="getManagerOrgAll" resultMap="managerOrgResultMap">
+	SELECT
+		m.ManagerOrgID id,
+		m.ManagerOrgName name,
+		m.ParentID pid
+	FROM
+		managerorg m
+	</select>
+	<resultMap type="managerOrg" id="managerOrgResultMap">
+		<id column="id" property="id" />
+		<result column="pid" property="pid" />
+		<result column="name" property="name" />
+	</resultMap>
+
+	
+	</mapper>

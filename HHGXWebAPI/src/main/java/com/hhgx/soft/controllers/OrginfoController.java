@@ -30,6 +30,7 @@ import com.hhgx.soft.entitys.GatewaySystemInfo;
 import com.hhgx.soft.entitys.OnlineOrg;
 import com.hhgx.soft.entitys.Page;
 import com.hhgx.soft.entitys.Site;
+import com.hhgx.soft.entitys.model.OnlineAllInfo;
 import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
@@ -55,6 +56,7 @@ public class OrginfoController {
 	 * @throws IOException
 	 */
 
+	
 	@ResponseBody
 	@RequestMapping(value = "/GetFireSystemList", method = RequestMethod.POST)
 	public String getFireSystemList(HttpServletRequest request) throws IOException {
@@ -100,6 +102,36 @@ public class OrginfoController {
 		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/GetUnRegisterOrg", method = RequestMethod.POST)
+	public String getUnRegisterOrg(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "ManagerOrgID", "OrgName", "PageIndex");
+		String orgName = map.get("orgName");
+		String managerOrgID = map.get("managerOrgID");
+		String pageIndex = map.get("pageIndex");
+		int statusCode = -1;
+		Page page = null;
+		List<Map<String, Object>> lmList = null;
+		int totalCount = orginfoService.getUnRegisterOrgCount(managerOrgID, orgName);
+		try {
+			if (!StringUtils.isEmpty(pageIndex)) {
+				page = new Page(totalCount, Integer.parseInt(pageIndex));
+				lmList = orginfoService.getUnRegisterOrg(managerOrgID,orgName, page.getStartPos(), page.getPageSize());
+				
+			} else {
+				page = new Page(totalCount, 1);
+				lmList = orginfoService.getUnRegisterOrg(managerOrgID,orgName, page.getStartPos(), page.getPageSize());
+			}
+			
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
+	}
 	
 	
 	
@@ -1968,9 +2000,10 @@ System.out.println(orginfoService.findGatewayaddressExist(newGatewayaddress)+"22
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
 		String orgid = map.get("orgid");
 		int statusCode = -1;
-		List<Map<String, String>> list = null;
+		List<OnlineAllInfo> list = null;
 		try {
-				list = orginfoService.onlineAllInfo(orgid);
+			
+		    list = orginfoService.onlineAllInfo(orgid);
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();

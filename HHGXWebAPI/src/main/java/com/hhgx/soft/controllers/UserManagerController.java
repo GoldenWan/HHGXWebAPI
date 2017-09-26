@@ -368,6 +368,7 @@ public class UserManagerController {
 		int statusCode = -1;
 		try {
 			if (!tokenUUID.equals(null)) {
+					Map<String, Object> validUserMap = new HashMap<String, Object>();
 
 				UserInfo validUser = userManagerService.getUserInfoByName(tokenUUID);
 				if (!StringUtils.isEmpty(validUser)) {
@@ -377,29 +378,32 @@ public class UserManagerController {
 					case 1:
 						validUser.setUserBelongName("防火单位");
 						validUser.setCompanyName(userManagerService.getOnlineorgById(validUser.getOrgID()));
+						validUserMap.put("OrgID", validUser.getOrgID());
 						break;
 					case 2:
 						validUser.setUserBelongName("维保单位");
 						validUser.setCompanyName(userManagerService.getMaintenanceById(validUser.getMaintenanceId()));
+						validUserMap.put("OrgID",validUser.getMaintenanceId());
 						break;
 					case 3:
 						validUser.setUserBelongName("管理机构");
 						validUser.setCompanyName(userManagerService.getManagerOrgById(validUser.getManagerOrgID()));
+						validUserMap.put("OrgID", validUser.getManagerOrgID());
 						break;
 					case 4:
 						validUser.setUserBelongName("系统管理员");
+						validUserMap.put("OrgID", "");
 						break;
 					default:
+						validUserMap.put("OrgID", validUser.getOrgID());
 						break;
 					}
-
-					Map<String, Object> validUserMap = new HashMap<String, Object>();
+			
 					validUserMap.put("UserBelongTo", validUser.getUserBelongTo());
-					validUserMap.put("userBelongName", validUser.getUserBelongName());
+					validUserMap.put("UserBelongName", validUser.getUserBelongName());
 					validUserMap.put("usertype", validUser.getUsertype());
 					validUserMap.put("account", validUser.getAccount());
 					validUserMap.put("RealName", validUser.getRealName());
-					validUserMap.put("OrgID", validUser.getOrgID());
 					validUserMap.put("CompanyName", validUser.getCompanyName());
 					System.out.println(JSONObject.fromBean(validUserMap).toString());
 					List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);

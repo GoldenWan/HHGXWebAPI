@@ -345,7 +345,7 @@
 		v.fPositionY,
 		v.iDeviceType,
 		v.DeviceTypeName,
-		v.imFlatPic,
+		v.imFlatPic imFlatPic,
 		v.DeviceNo,
 		e.deviceaddress,
 		e.cAlarmtype,

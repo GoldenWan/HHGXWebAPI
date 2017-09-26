@@ -19,6 +19,7 @@ import com.hhgx.soft.services.PlayWithRoleService;
 import com.hhgx.soft.utils.CommonMethod;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
+import com.hhgx.soft.utils.Md5Util;
 import com.hhgx.soft.utils.RequestJson;
 import com.hhgx.soft.utils.ResponseJson;
 import com.hhgx.soft.utils.UUIDGenerator;
@@ -105,7 +106,8 @@ public class PlayWithRoleController {
 		User user = new User();
 		user.setUserID(UUIDGenerator.getUUID());
 		user.setAccount(String.valueOf(CommonMethod.getRandNum(100000, 999999)));
-		user.setPassword("123456");
+		
+		user.setPassword((Md5Util.getMD5("123456")));
 		user.setUserBelongTo("3");
 		user.setUserTypeID("119manager");
 		user.setManagerOrgID(managerOrgID);

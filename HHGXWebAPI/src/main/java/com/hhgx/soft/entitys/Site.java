@@ -32,9 +32,15 @@ public class Site {
 	private String fLongitude; // 经度
 	private String fLatitude; // 纬度
 	private String orgid; // 防火单位编号
-	List<Firesystype> firesystypes ;
+	private List<Firesystype> firesystypes ;
+	private List<String> appearancepics;
 	
-	
+	public List<String> getAppearancepics() {
+		return appearancepics;
+	}
+	public void setAppearancepics(List<String> appearancepics) {
+		this.appearancepics = appearancepics;
+	}
 	public List<Firesystype> getFiresystypes() {
 		return firesystypes;
 	}

@@ -5,8 +5,28 @@ public class FireSystem {
 	private String vSysdesc ;    //系统名称
 	private String sitename ;    //建筑物名称
 	private String siteid   ;    //建筑物编号
-	
+    private String states     ;
+    private String ynOnline   ;
+    private String remarks    ;
 
+	public String getStates() {
+		return states;
+	}
+	public void setStates(String states) {
+		this.states = states;
+	}
+	public String getYnOnline() {
+		return ynOnline;
+	}
+	public void setYnOnline(String ynOnline) {
+		this.ynOnline = ynOnline;
+	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 	public String getTiSysType() {
 		return tiSysType;
 	}

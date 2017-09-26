@@ -442,7 +442,7 @@
 		AND s.siteid =#{siteid}
 	</if>
 	</select>
-	 <resultMap id="getCheckRecordMap" type="site">  
+	<resultMap id="getCheckRecordMap" type="site">  
         <id property="siteid" column="siteid" />  
         <result property="sitename" column="sitename" />  
         <collection property="firesystypes" ofType="firesystype" resultMap="firesystypeMap"/>  

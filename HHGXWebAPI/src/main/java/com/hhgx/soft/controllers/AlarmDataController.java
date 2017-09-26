@@ -275,6 +275,10 @@ public class AlarmDataController {
 			return ResponseJson.responseAddJson("orgid为空", statusCode);
 		}
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
+		
+		if(lmList.size()<1){
+			return ResponseJson.responseAddJson("无最新火警情况", 1000);
+		}
 		try {
 
 			lmList = alarmDataService.findRecentAlarmInfo(orgid, cAlarmtype);

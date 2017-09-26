@@ -19,6 +19,38 @@
 		AND 
 		Gatewayaddress = #{gatewayaddress}
 	</update>
+	<select id="getUnRegisterOrgCount" resultType="int"> 
+    SELECT
+		count(*)
+	FROM
+		onlineorg
+	WHERE
+		ApproveState LIKE '待审批'
+		and 
+		ManagerOrgID=#{managerOrgID}
+		<if test="orgName!='' and orgName!=null">
+		and OrgName like concat('%',#{orgName},'%')
+		</if>
+	</select>
+	<select id="getUnRegisterOrg" resultType="map"> 
+	SELECT
+		OrgId,
+		OrgName,
+		OrganType OrgType,
+		YnImportant,
+		SouYouZhi,
+		IPersonNum
+	FROM
+		onlineorg
+	WHERE
+		ApproveState LIKE '待审批'
+		and 
+		ManagerOrgID=#{managerOrgID}
+		<if test="orgName!='' and orgName!=null">
+		and OrgName like concat('%',#{orgName},'%')
+		</if>
+	</select>
+	
 	<select id="getDeviceNosByFlatpic" resultType="int"> 
 	SELECT
 		DeviceNo
@@ -253,6 +285,22 @@
 		o ON s.siteid = o.siteid
 		INNER JOIN firesystype f ON o.tiSysType =
 		f.tiSysType
+		WHERE
+		s.orgid = #{orgid}
+	</select>
+		<select id="getOnlineFiresystemList" resultType="onlineFiresystem">
+	SELECT
+		s.siteid,
+		s.sitename,
+		o.tiSysType,
+		f.vSysdesc,
+		o.states,
+		o.YnOnline ynOnline,
+		o.Remarks remarks
+	FROM
+		site s
+	INNER JOIN onlinefiresystem o ON s.siteid = o.siteid
+	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
 		s.orgid = #{orgid}
 	</select>
@@ -529,7 +577,7 @@
 		onlineorg o INNER JOIN area a on o.AreaId = a.AreaId
 	    <if test="orgname !=null and orgname !=''">
 		WHERE
-		orgname = #{orgname}
+		orgname like concat('%',#{orgname},'%')
 		</if>
 	</select>
 	<select id="getOrgListByOrgName" resultType="map">
@@ -591,7 +639,8 @@ FROM
 INNER JOIN area a ON o.AreaId = a.AreaId
 	<if test="orgname !=null and orgname !=''">
 		WHERE
-	orgname = #{orgname}
+	orgname like concat('%',#{orgname},'%')
+	
 	</if>
 	</select>
 	
@@ -1100,67 +1149,168 @@ RIGHT JOIN flatpic f ON s.siteid = f.siteid
 		FROM
 		devicetype
 	</select>
-<!-- 	<select id="onlineAllInfo" resultMap="onlineAllInfoMap">
-	
-	SELECT
-	orgid,
-	orgcode,
-	orgname,
-	vAddress,
-	OrganType,
-	vNamelegalperson,
-	otherthings,
-	YnImportant,
-	SuperiorOrg,
-	cZip,
-	vTel,
-	fax,
-	`E-mail` E_Mail,
-	howmanypeople,
-	souyouzhi,
-	DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
-	realtymoney,
-	ipersonnum,
-	fAreanum,
-	fBuildingarea,
-	GasType,
-	howmanyfireman,
-	howmanyexit,
-	howmanystair,
-	howmanylane,
-	howmanyelevator,
-	lanelocation,
-	vfireroomtel,
-	escapefloor,
-	escapebuildingarea,
-	escapelocation,
-	neareast,
-	nearsouth,
-	nearwest,
-	nearnorth,
-	AutoFireFacility,
-	fLongitude,
-	fLatitude,
-	DATE_FORMAT(dRecordDate, '%Y/%m/%d') dRecordDate,
-	managegrade,
-	NetworkStatus,
-	NetworkTime,
-	ApproveState,
-	ApproveMan,
-	DATE_FORMAT(
-		ApproveTime,
-		'%Y/%m/%d %h:%s:%m'
-	) ApproveTime,
-	o.AreaId,
-	AreaName,
-	ManagerOrgID,
-	bFlatpic
-FROM
-	onlineorg o
-INNER JOIN area a ON o.AreaId = a.AreaId
+ 	<select id="onlineAllInfo" resultMap="onlineAllInfoMap">
+		SELECT
+			orgid,
+			orgcode,
+			orgname,
+			vAddress,
+			OrganType,
+			vNamelegalperson,
+			otherthings,
+			YnImportant,
+			SuperiorOrg,
+			cZip,
+			vTel,
+			fax,
+			`E-mail` E_Mail,
+			howmanypeople,
+			souyouzhi,
+			DATE_FORMAT(SetupDate, '%Y/%m/%d') SetupDate,
+			realtymoney,
+			ipersonnum,
+			fAreanum,
+			fBuildingarea,
+			GasType,
+			howmanyfireman,
+			howmanyexit,
+			howmanystair,
+			howmanylane,
+			howmanyelevator,
+			lanelocation,
+			vfireroomtel,
+			escapefloor,
+			escapebuildingarea,
+			escapelocation,
+			neareast,
+			nearsouth,
+			nearwest,
+			nearnorth,
+			AutoFireFacility,
+			fLongitude,
+			fLatitude,
+			DATE_FORMAT(dRecordDate, '%Y/%m/%d') dRecordDate,
+			managegrade,
+			NetworkStatus,
+			NetworkTime,
+			ApproveState,
+			ApproveMan,
+			DATE_FORMAT(
+				ApproveTime,
+				'%Y/%m/%d %h:%s:%m'
+			) ApproveTime,
+			o.AreaId,
+			concat(c.AreaName,b.AreaName,a.AreaName) AreaName,
+			ManagerOrgID,
+			bFlatpic
+	FROM
+		onlineorg o
+	INNER JOIN area a ON o.AreaId = a.AreaId
+	inner join area b on a.ParentId = b.AreaId
+	inner join area c on b.ParentId = c.AreaId
 	where orgid=#{orgid}		
 	</select>
-	<resultMap type="map" id="onlineAllInfoMap"></resultMap> -->
+	<resultMap type="OnlineAllInfo" id="onlineAllInfoMap">
+	<result property="orgid" column="orgid"/>
+	<result property="orgcode" column="orgcode"/>
+	<result property="orgname" column="orgname"/>
+	<result property="vAddress" column="vAddress"/>
+	<result property="OrganType" column="OrganType"/>
+	<result property="vNamelegalperson" column="vNamelegalperson"/>
+	<result property="otherthings" column="otherthings"/>
+	<result property="YnImportant" column="YnImportant"/>
+	<result property="SuperiorOrg" column="SuperiorOrg"/>
+	<result property="cZip" column="cZip"/>
+	<result property="vTel" column="vTel"/>
+	<result property="fax" column="fax"/>
+	<result property="`E-mail`" column="`E-mail`"/>
+	<result property="howmanypeople" column="howmanypeople"/>
+	<result property="souyouzhi" column="souyouzhi"/>
+	<result property="SetupDate" column="SetupDate"/>
+	<result property="realtymoney" column="realtymoney"/>
+	<result property="ipersonnum" column="ipersonnum"/>
+	<result property="fAreanum" column="fAreanum"/>
+	<result property="fBuildingarea" column="fBuildingarea"/>
+	<result property="GasType" column="GasType"/>
+	<result property="howmanyfireman" column="howmanyfireman"/>
+	<result property="howmanyexit" column="howmanyexit"/>
+	<result property="howmanystair" column="howmanystair"/>
+	<result property="howmanylane" column="howmanylane"/>
+	<result property="howmanyelevator" column="howmanyelevator"/>
+	<result property="lanelocation" column="lanelocation"/>
+	<result property="vfireroomtel" column="vfireroomtel"/>
+	<result property="escapefloor" column="escapefloor"/>
+	<result property="escapebuildingarea" column="escapebuildingarea"/>
+	<result property="escapelocation" column="escapelocation"/>
+	<result property="neareast" column="neareast"/>
+	<result property="nearsouth" column="nearsouth"/>
+	<result property="nearwest" column="nearwest"/>
+	<result property="nearnorth" column="nearnorth"/>
+	<result property="AutoFireFacility" column="AutoFireFacility"/>
+	<result property="fLongitude" column="fLongitude"/>
+	<result property="fLatitude" column="fLatitude"/>
+	<result property="dRecordDate" column="dRecordDate"/>
+	<result property="managegrade" column="managegrade"/>
+	<result property="NetworkStatus" column="NetworkStatus"/>
+	<result property="NetworkTime" column="NetworkTime"/>
+	<result property="ApproveState" column="ApproveState"/>
+	<result property="ApproveMan" column="ApproveMan"/>
+	<result property="ApproveTime" column="ApproveTime"/>
+	<result property="o.AreaId" column="o.AreaId"/>
+	<result property="AreaName" column="AreaName"/>
+	<result property="ManagerOrgID" column="ManagerOrgID"/>
+	<result property="bFlatpic" column="bFlatpic"/>
+	<collection property="busiLicences" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getBusinessLicence" />
+	<collection property="siteListInfo" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.orgSiteSys" />
+	<collection property="sysInfos" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getOnlineFiresystemList" />
+    <collection property="recordProjects" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getCheckList" />
+	<collection property="checkProjects" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getRecordList" />
+ 
+	</resultMap>
+	
+	
+	<select id="getCheckList" resultMap="systemTypeMap">
+	SELECT
+		f.tiSysType,
+		f.vSysdesc,
+		p.ProjectId,
+		p.ProjectContent
+	FROM
+		onlineorg o
+	INNER JOIN uerchecklist u ON o.orgid = u.orgid
+	INNER JOIN usercheckinfo i ON u.UserCheckId = i.UserCheckId
+	INNER JOIN usercheckprojectcontent p ON i.ProjectId = p.ProjectId
+	INNER JOIN firesystype f ON p.tiSysType = f.tiSysType
+	WHERE
+		o.orgid = #{orgid}
+	</select>
+	<resultMap id="systemTypeMap" type="systemType">  
+        <id property="tiSysType" column="tiSysType" />  
+        <result property="vSysdesc" column="vSysdesc" />  
+        <collection property="contents" ofType="systemType" resultMap="systemType_Map"/>  
+    </resultMap> 
+	<resultMap type="project" id="systemType_Map">
+	 <result property="projectId" column="projectId" /> 
+	  <result property="projectContent" column="projectContent" /> 
+	</resultMap>
+	
+	
+	<select id="getRecordList" resultMap="systemTypeMap">
+	SELECT
+		f.tiSysType,
+		f.vSysdesc,
+		l.ProjectId,
+		l.ProjectContent
+	FROM
+		onlineorg o
+	INNER JOIN uerchecklist u ON o.orgid = u.orgid
+	INNER JOIN usercheckproject p ON u.UserCheckId = u.UserCheckId
+	INNER JOIN usercheckprojecklist l ON p.ProjectId = l.ProjectId
+	INNER JOIN firesystype f ON l.tiSysType = f.tiSysType
+	WHERE
+		o.orgid = #{orgid}
+	
+	</select>
 	
 	<select id="getLabelledDevice" resultType="map">
 	SELECT

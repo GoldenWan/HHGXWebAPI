@@ -88,34 +88,34 @@ WHERE
 	</select>
 	<insert id="addUser">
 	INSERT INTO users (
-	UserID,
-	account,
-	PASSWORD,
-	RealName,
-	mobilephone,
-	tel,
-	Email,
-	STATUS,
-	Remark,
-	UserTypeID,
-	UserBelongTo,
-	orgid
-)
-VALUES
-	(
-	#{userID},
-	#{account},
-	#{password},
-	#{realName},
-	#{mobilephone},
-	#{tel},
-	#{email},
-	#{status},
-	#{remark},
-	#{userTypeID},
-	#{userBelongTo},
-	#{orgid}
-)
+		UserID,
+		account,
+		PASSWORD,
+		RealName,
+		mobilephone,
+		tel,
+		Email,
+		STATUS,
+		Remark,
+		UserTypeID,
+		UserBelongTo,
+		orgid
+	)
+	VALUES
+		(
+		#{userID},
+		#{account},
+		#{password},
+		#{realName},
+		#{mobilephone},
+		#{tel},
+		#{email},
+		#{status},
+		#{remark},
+		#{userTypeID},
+		#{userBelongTo},
+		#{orgid}
+	)
 	</insert>
 	<update id="updateUser">
 	
