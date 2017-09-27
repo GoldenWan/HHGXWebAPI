@@ -9,6 +9,23 @@ public class OnlineFiresystem {
 	private String remarks;      //备注
 	private String maintenanceId;
 	private String sysFlatpic;
+	
+	private String vSysdesc;
+	private String sitename;
+	
+	
+	public String getvSysdesc() {
+		return vSysdesc;
+	}
+	public void setvSysdesc(String vSysdesc) {
+		this.vSysdesc = vSysdesc;
+	}
+	public String getSitename() {
+		return sitename;
+	}
+	public void setSitename(String sitename) {
+		this.sitename = sitename;
+	}
 	public String getSysFlatpic() {
 		return sysFlatpic;
 	}

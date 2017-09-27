@@ -255,6 +255,8 @@
 		INNER JOIN onlinefiresystem o ON s.siteid =o.siteid
 		WHERE
 		orgid = #{orgid}
+		GROUP BY s.siteid
+		
 	</select>
 	<resultMap type="site" id="siteSysMap">
 		<id column="siteid" property="siteid" />
@@ -288,7 +290,7 @@
 		WHERE
 		s.orgid = #{orgid}
 	</select>
-		<select id="getOnlineFiresystemList" resultType="onlineFiresystem">
+	<select id="getOnlineFiresystemList" resultType="onlineFiresystem">
 	SELECT
 		s.siteid,
 		s.sitename,
@@ -303,9 +305,10 @@
 	INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
 		WHERE
 		s.orgid = #{orgid}
+		GROUP BY tiSysType
 	</select>
-	<select id="getSiteList" resultType="site">
-		SELECT
+	<select id="getSiteListByorgid"  resultMap="siteMap">
+	SELECT
 		siteid,
 		sitename,
 		buildingaddress,
@@ -334,14 +337,88 @@
 		fLongitude,
 		fLatitude,
 		orgid
-		FROM
+	FROM
 		site
-		s
-		WHERE
-		s.orgid = #{orgid}
-		limit
-		#{startPos},#{pageSize}
+	WHERE
+		orgid = #{orgid}
+	GROUP BY
+		siteid
+		</select>
+		<select id="getSiteList" resultType="site">
+		SELECT
+			siteid,
+			sitename,
+			buildingaddress,
+			useproperty,
+			DSCS,
+			JZGD,
+			DSJZMJ,
+			NHDJ,
+			JGLX,
+			DXCS,
+			DXJZMJ,
+			SDQK,
+			ZYCCW,
+			RLRS,
+			QLJZ,
+			east,
+			west,
+			south,
+			north,
+			xx,
+			yy,
+			sitetypename,
+			holdthings,
+			holdthingsnum,
+			annalTime,
+			fLongitude,
+			fLatitude,
+			orgid
+			FROM
+			site
+			WHERE
+			orgid = #{orgid}
+			limit
+			#{startPos},#{pageSize}
+			GROUP BY siteid
+		
 	</select>
+	<resultMap type="site" id="siteMap">
+	<id column="siteid" property="siteid" />
+	<result column="sitename" property="sitename"/>
+	<result column="buildingaddress" property="buildingaddress"/>
+	<result column="useproperty" property="useproperty"/>
+	<result column="DSCS" property="dSCS"/>
+	<result column="JZGD" property="jZGD"/>
+	<result column="DSJZMJ" property="dSJZMJ"/>
+	<result column="NHDJ" property="nHDJ"/>
+	<result column="JGLX" property="jGLX"/>
+	<result column="DXCS" property="dXCS"/>
+	<result column="DXJZMJ" property="dXJZMJ"/>
+	<result column="SDQK" property="sDQK"/>
+	<result column="ZYCCW" property="zYCCW"/>
+	<result column="RLRS" property="rLRS"/>
+	<result column="QLJZ" property="qLJZ"/>
+	<result column="east" property="east"/>
+	<result column="west" property="west"/>
+	<result column="south" property="south"/>
+	<result column="north" property="north"/>
+	<result column="xx" property="xx"/>
+	<result column="yy" property="yy"/>
+	<result column="sitetypename" property="sitetypename"/>
+	<result column="holdthings" property="holdthings"/>
+	<result column="holdthingsnum" property="holdthingsnum"/>
+	<result column="annalTime" property="annalTime"/>
+	<result column="fLongitude" property="fLongitude"/>
+	<result column="fLatitude" property="fLatitude"/>
+	<result column="orgid" property="orgid"/>
+	<collection property="appearancepics" column="siteid" select="getAppearancepicBySiteid" />
+	
+	</resultMap>
+	
+	
+	
+	
 	<select id="getSite" resultType="site">
 		SELECT
 		sitename,
@@ -971,6 +1048,14 @@ FROM
 		WHERE
 		Gatewayaddress = #{gatewayaddress}
 	</select>
+	<select id="getAppearancepicBySiteid" resultType="java.lang.String">
+		SELECT
+		Picpath
+		FROM
+		appearancepic
+		WHERE
+		siteid = #{siteid}
+	</select>
 	<select id="getAppearancepic" resultType="map">
 		SELECT
 
@@ -1013,6 +1098,19 @@ FROM
 		WHERE
 		Gatewayaddress =#{gatewayaddress}
 	</update>
+	
+	<update id="approveResult">
+		UPDATE onlineorg
+		<trim prefix="set" suffixOverrides=",">
+				ApproveState = #{approveState},
+				<if test="approveIdea !=null and approveIdea!=''">
+				ApproveIdea = #{approveIdea},</if>
+		</trim>
+		WHERE
+		orgid =#{orgid}
+	</update>
+	
+	
 	<update id="updateOrgSummary">
 		update  introduce
 		<trim prefix="set" suffixOverrides=",">
@@ -1261,7 +1359,7 @@ RIGHT JOIN flatpic f ON s.siteid = f.siteid
 	<result property="ManagerOrgID" column="ManagerOrgID"/>
 	<result property="bFlatpic" column="bFlatpic"/>
 	<collection property="busiLicences" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getBusinessLicence" />
-	<collection property="siteListInfo" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.orgSiteSys" />
+	<collection property="siteListInfo" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getSiteListByorgid" />
 	<collection property="sysInfos" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getOnlineFiresystemList" />
     <collection property="recordProjects" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getCheckList" />
 	<collection property="checkProjects" column="orgid" select="com.hhgx.soft.mappers.OrginfoMapper.getRecordList" />
@@ -1295,11 +1393,12 @@ RIGHT JOIN flatpic f ON s.siteid = f.siteid
 	</resultMap>
 	
 	
-	<select id="getRecordList" resultMap="systemTypeMap">
+	<select id="getRecordList" resultMap="systemType1Map">
 	SELECT
 		f.tiSysType,
 		f.vSysdesc,
 		l.ProjectId,
+		l.ProjectName,
 		l.ProjectContent
 	FROM
 		onlineorg o
@@ -1311,7 +1410,16 @@ RIGHT JOIN flatpic f ON s.siteid = f.siteid
 		o.orgid = #{orgid}
 	
 	</select>
-	
+	<resultMap id="systemType1Map" type="systemType">  
+        <id property="tiSysType" column="tiSysType" />  
+        <result property="vSysdesc" column="vSysdesc" />  
+        <collection property="contents" ofType="systemType" resultMap="systemType1_Map"/>  
+    </resultMap> 
+	<resultMap type="project" id="systemType1_Map">
+	 <result property="projectId" column="projectId" /> 
+	 <result property="ProjectName" column="ProjectName" /> 
+	  <result property="projectContent" column="projectContent" /> 
+	</resultMap>
 	<select id="getLabelledDevice" resultType="map">
 	SELECT
 		d.DeviceNo,

@@ -1,5 +1,6 @@
 package com.hhgx.soft.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,22 @@ public class ManageOrgInfoService {
 	public List<Map<String, Object>> managerRecurOrgList(String managerOrgID, String orgName, int startPos,
 			int pageSize) {
 		return manageOrgInfoMapper.managerRecurOrgList(managerOrgID, orgName,startPos, pageSize);
+	}
+
+	public List<Map<String, Object>> alarmCencus(String managerOrgID, Timestamp startTime, Timestamp endTime) {
+		return manageOrgInfoMapper.alarmCencus(managerOrgID,  startTime, endTime);
+	}
+
+	public int ManageTestStateCount(String managerOrgID, Timestamp startTime, Timestamp endTime) {
+		//return manageOrgInfoMapper.ManageTestStateCount(managerOrgID,startTime,  endTime);
+	return 0;
+	}
+
+	public List<Map<String, Object>> ManageTestStateList(String managerOrgID, Timestamp startTime, Timestamp endTime,
+			
+			int startPos, int pageSize) {
+		//return  manageOrgInfoMapper.ManageTestStateList(managerOrgID,startTime,  endTime, startPos, pageSize);
+		return null;
 	}
 
 }

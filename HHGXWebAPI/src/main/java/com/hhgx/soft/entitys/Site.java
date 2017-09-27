@@ -74,6 +74,18 @@ public class Site {
 	public String getdSCS() {
 		return dSCS;
 	}
+	
+	@Override
+	public String toString() {
+		return "Site [siteid=" + siteid + ", sitename=" + sitename + ", buildingaddress=" + buildingaddress
+				+ ", useproperty=" + useproperty + ", dSCS=" + dSCS + ", jZGD=" + jZGD + ", dSJZMJ=" + dSJZMJ
+				+ ", nHDJ=" + nHDJ + ", jGLX=" + jGLX + ", dXCS=" + dXCS + ", dXJZMJ=" + dXJZMJ + ", sDQK=" + sDQK
+				+ ", zYCCW=" + zYCCW + ", rLRS=" + rLRS + ", qLJZ=" + qLJZ + ", east=" + east + ", west=" + west
+				+ ", south=" + south + ", north=" + north + ", xx=" + xx + ", yy=" + yy + ", sitetypename="
+				+ sitetypename + ", holdthings=" + holdthings + ", holdthingsnum=" + holdthingsnum + ", annalTime="
+				+ annalTime + ", fLongitude=" + fLongitude + ", fLatitude=" + fLatitude + ", orgid=" + orgid
+				+ ", firesystypes=" + firesystypes + ", appearancepics=" + appearancepics + "]";
+	}
 	public void setdSCS(String dSCS) {
 		this.dSCS = dSCS;
 	}

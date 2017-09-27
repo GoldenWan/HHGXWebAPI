@@ -67,6 +67,7 @@ public interface OrginfoMapper {
 	void deleteDevices(@Param("deviceaddress")String deviceaddress, @Param("sysaddress")String sysaddress, @Param("gatewayaddress")String gatewayaddress);
 
 	String findMaxDeviceNo(String cFlatPic);
+	List<String> getAppearancepicBySiteid(String siteid);
 
 	void updateGatewaySame(Gateway gateway);
 
@@ -82,6 +83,7 @@ public interface OrginfoMapper {
 	List<Site> getSiteName(String orgid);
 
 
+	List<Site> getSiteListByorgid(@Param("orgid")String orgid);
 	List<Site> getSiteList(@Param("orgid")String orgid, @Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
 	void addSite(Site site);
@@ -179,6 +181,8 @@ public interface OrginfoMapper {
 	List<OnlineAllInfo> onlineAllInfo(String orgid);
 	List<SystemType> getCheckList(String orgid);
 	List<SystemType> getRecordList(String orgid);
+
+	void approveResult(@Param("orgid")String orgid, @Param("approveState")String approveState, @Param("approveIdea")String approveIdea);
 	
 	
 	

@@ -1,5 +1,6 @@
 package com.hhgx.soft.mappers;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -16,5 +17,12 @@ public interface ManageOrgInfoMapper {
 	List<Map<String, Object>> managerRecurOrgList(@Param("managerOrgID")String managerOrgID, @Param("orgName")String orgName, 
 			@Param("startPos")int startPos, @Param("pageSize")int pageSize);
 
-	
+	List<Map<String, Object>> alarmCencus(@Param("managerOrgID")String managerOrgID, @Param("startTime")Timestamp startTime, @Param("endTime")Timestamp endTime);
+
+/*	int ManageTestStateCount(String managerOrgID, Timestamp startTime, Timestamp endTime);
+
+	List<Map<String, Object>> ManageTestStateList(@Param("managerOrgID")String managerOrgID, @Param("startTime")Timestamp startTime, @Param("endTime")Timestamp endTime,
+			@Param("startPos")int startPos, @Param("pageSize")int pageSize);
+
+	*/
 }

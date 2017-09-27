@@ -191,6 +191,31 @@ public class OrginfoController {
 	 */
 
 	@ResponseBody
+	@RequestMapping(value = "/ApproveResult", method = RequestMethod.POST)
+	public String approveResult(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "ApproveState","ApproveIdea");
+		String orgid = map.get("orgid");
+		String approveState = map.get("approveState");
+		String approveIdea = map.get("approveIdea");
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			
+			orginfoService.approveResult(orgid, approveState, approveIdea);
+			statusCode = ConstValues.OK;
+			dataBag = "修改状态成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "修改状态失败";
+		}
+		
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
+	}
+	@ResponseBody
 	@RequestMapping(value = "/DeleteorgSys", method = RequestMethod.POST)
 	public String deleteorgSys(HttpServletRequest request) throws IOException {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
@@ -2004,14 +2029,21 @@ System.out.println(orginfoService.findGatewayaddressExist(newGatewayaddress)+"22
 		try {
 			
 		    list = orginfoService.onlineAllInfo(orgid);
+		    System.out.println(list.toString());
 			statusCode = ConstValues.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 		}			
 		
-		return ResponseJson.responseFindJsonArray(list, statusCode);
+		return ResponseJson.responseFindOnlineAllInfo(list, statusCode);
 	}
+	
+
+	
+	
+	
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/GetManagerOrgList", method = RequestMethod.POST)

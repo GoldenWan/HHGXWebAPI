@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hhgx.soft.entitys.BusinessLicence;
 import com.hhgx.soft.entitys.OnlineFiresystem;
-import com.hhgx.soft.entitys.PatrolProject;
 import com.hhgx.soft.entitys.Site;
 
 public class OnlineAllInfo {
@@ -495,6 +494,28 @@ public class OnlineAllInfo {
 
 	public void setAreaName(String areaName) {
 		AreaName = areaName;
+	}
+
+	@Override
+	public String toString() {
+		return "OnlineAllInfo [orgid=" + orgid + ", orgcode=" + orgcode + ", orgname=" + orgname + ", vAddress="
+				+ vAddress + ", OrganType=" + OrganType + ", vNamelegalperson=" + vNamelegalperson + ", otherthings="
+				+ otherthings + ", YnImportant=" + YnImportant + ", SuperiorOrg=" + SuperiorOrg + ", cZip=" + cZip
+				+ ", vTel=" + vTel + ", fax=" + fax + ", E_Mail=" + E_Mail + ", howmanypeople=" + howmanypeople
+				+ ", souyouzhi=" + souyouzhi + ", SetupDate=" + SetupDate + ", realtymoney=" + realtymoney
+				+ ", ipersonnum=" + ipersonnum + ", fAreanum=" + fAreanum + ", fBuildingarea=" + fBuildingarea
+				+ ", GasType=" + GasType + ", howmanyfireman=" + howmanyfireman + ", howmanyexit=" + howmanyexit
+				+ ", howmanystair=" + howmanystair + ", howmanylane=" + howmanylane + ", howmanyelevator="
+				+ howmanyelevator + ", lanelocation=" + lanelocation + ", vfireroomtel=" + vfireroomtel
+				+ ", escapefloor=" + escapefloor + ", escapebuildingarea=" + escapebuildingarea + ", escapelocation="
+				+ escapelocation + ", neareast=" + neareast + ", nearsouth=" + nearsouth + ", nearwest=" + nearwest
+				+ ", nearnorth=" + nearnorth + ", AutoFireFacility=" + AutoFireFacility + ", fLongitude=" + fLongitude
+				+ ", fLatitude=" + fLatitude + ", managegrade=" + managegrade + ", NetworkStatus=" + NetworkStatus
+				+ ", dRecordDate=" + dRecordDate + ", NetworkTime=" + NetworkTime + ", ApproveState=" + ApproveState
+				+ ", ApproveMan=" + ApproveMan + ", AreaId=" + AreaId + ", AreaName=" + AreaName + ", ManagerOrgID="
+				+ ManagerOrgID + ", bFlatpic=" + bFlatpic + ", ApproveTime=" + ApproveTime + ", busiLicences="
+				+ busiLicences + ", siteListInfo=" + siteListInfo + ", sysInfos=" + sysInfos + ", recordProjects="
+				+ recordProjects + ", checkProjects=" + checkProjects + "]";
 	}
 
 }

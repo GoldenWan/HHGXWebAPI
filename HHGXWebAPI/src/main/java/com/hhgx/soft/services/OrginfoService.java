@@ -389,5 +389,9 @@ public int getUnRegisterOrgCount(String managerOrgID, String orgName) {
 	return orginfoMapper.getUnRegisterOrgCount(managerOrgID, orgName);
 
 }
+
+public void approveResult(String orgid, String approveState,String approveIdea) {
+	orginfoMapper.approveResult(orgid, approveState, approveIdea);
+}
 	
 }
