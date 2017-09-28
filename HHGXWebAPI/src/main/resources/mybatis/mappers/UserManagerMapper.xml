@@ -85,6 +85,7 @@
 		u.UserTypeID usertype,
 		u.account account,
 		u.RealName realName,
+		u.HeaderPic headerPic,
 		u.orgid orgid,
 		u.MaintenanceId maintenanceId,
 		u.ManagerOrgID managerOrgID

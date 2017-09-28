@@ -1,5 +1,7 @@
 package com.hhgx.soft.mappers;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Component;
@@ -73,6 +75,12 @@ public interface FormMapper {
 	void uploadOrgSummaryPic(@Param("vPicturePath") String vPicturePath, @Param("orgid")String orgid);
 
 	String findIntroducePath(String orgid);
+
+	void deleteLicenceCode(String orgid);
+
+	List<String> findLicencePathUrl(String orgid);
+
+	void updateUserPic(@Param("userPic")String userPic1, @Param("userID")String userID);
 
 	
 	

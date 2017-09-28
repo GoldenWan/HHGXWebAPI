@@ -405,6 +405,7 @@ public class UserManagerController {
 					validUserMap.put("account", validUser.getAccount());
 					validUserMap.put("RealName", validUser.getRealName());
 					validUserMap.put("CompanyName", validUser.getCompanyName());
+					validUserMap.put("HeaderPic", validUser.getHeaderPic());
 					System.out.println(JSONObject.fromBean(validUserMap).toString());
 					List<Ztree> ztrees = userManagerService.retrieveZtreeNodes(tokenUUID);
 					List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

@@ -183,6 +183,8 @@ public interface OrginfoMapper {
 	List<SystemType> getRecordList(String orgid);
 
 	void approveResult(@Param("orgid")String orgid, @Param("approveState")String approveState, @Param("approveIdea")String approveIdea);
+
+	List<Map<String, String>> getOrgApproveState(String orgid);
 	
 	
 	

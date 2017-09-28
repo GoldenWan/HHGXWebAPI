@@ -29,6 +29,7 @@ import com.hhgx.soft.entitys.SafeManageRules;
 import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
+import com.hhgx.soft.entitys.model.People;
 import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.services.FormService;
 import com.hhgx.soft.services.OrginfoService;
@@ -69,9 +70,7 @@ public class FormController {
 		int statusCode = -1;
 		try {
 			UpdateFireSystem updateFireSystem = new UpdateFireSystem();
-			if (newTisystype.equals("all")) {
-				newTisystype = "0";
-			}
+		
 			updateFireSystem.setNewTisystype(newTisystype);
 			updateFireSystem.setRemarks(remarks);
 			updateFireSystem.setSiteid(siteid);
@@ -92,7 +91,7 @@ public class FormController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			statusCode = -2;
-			dataBag ="该系统已经使用，不能被删除！!";
+			dataBag ="该系统已经使用，不能被修改！!";
 			return ResponseJson.responseAddJson(dataBag, statusCode);
 
 		}
@@ -102,64 +101,69 @@ public class FormController {
 	}
 
 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+	//
+	@ResponseBody
+	@RequestMapping(value = "/AddPeople", method = { RequestMethod.POST })
+	public String AddPeople(HttpServletRequest request,
+			@RequestParam(value = "PeoplePicPath", required = false) MultipartFile peoplePicPath) throws IOException {
+		
+		String orgid = request.getParameter("orgid");
+		String peopleTypeName = request.getParameter("PeopleTypeName");
+		String peopleName = request.getParameter("PeopleName");
+		String sex = request.getParameter("sex");
+		String identification = request.getParameter("identification");
+		String job = request.getParameter("job");
+		String birthday = request.getParameter("birthday");
+		String certificateID = request.getParameter("certificateID");
+		String tel = request.getParameter("tel");
+		String department = request.getParameter("department");
+		String ynTraining = request.getParameter("YnTraining");
+		String issuedate = request.getParameter("issuedate");
 	
+		
+		
+		
+		int statusCode = -1;
+		String dataBag = null;
+		
 	
-	
-	
-	
-	
-	
-	
-	
-	
+		try {
+			People people = new People();
+			people.setOrgid(orgid);
+			people.setPeopleTypeName(peopleTypeName);
+			people.setPeopleName(peopleName);
+			people.setSex(sex);
+			people.setIdentification(identification);
+			people.setJob(job);
+			people.setBirthday(birthday);
+			people.setCertificateID(certificateID);
+			people.setTel(tel);
+			people.setDepartment(department);
+			people.setYnTraining(ynTraining);
+			people.setIssuedate(issuedate);
+			
+			
+			
+			String peoplePicPath1 ="";
+			if (!StringUtils.isEmpty(peoplePicPath)) {
+				String fName = peoplePicPath.getOriginalFilename();
+				peoplePicPath1 = UploadUtil.uploadOneFile(request, peoplePicPath, fName,
+						"PeoplePicPath/" + UUIDGenerator.getUUID());
+			}
+			people.setPeoplePicPath(peoplePicPath1);
+			
+			formService.AddPeople(people);
+			statusCode = ConstValues.OK;
+			dataBag = ConstValues.SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = ConstValues.FIALURE;
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+		
+	}
+
 	
 	
 	/**
@@ -254,6 +258,32 @@ public class FormController {
 			e.printStackTrace();
 			statusCode = ConstValues.FAILED;
 			dataBag = "添加平面图失败";
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/UpdateUserPic", method = { RequestMethod.POST })
+	public String updateUserPic(HttpServletRequest request,
+			@RequestParam(value = "UserPic", required = false) MultipartFile userPic) {
+		String userID = request.getParameter("UserID");
+		
+		String dataBag = null;
+		int statusCode = -1;
+		try {
+			
+			String userPic1="";
+			if (!StringUtils.isEmpty(userPic)) {
+				String ext = UploadUtil.getExtention(userPic.getOriginalFilename());
+				userPic1 = UploadUtil.uploadOneFile(request, userPic, UUIDGenerator.getUUID() + "." + ext,
+						UUIDGenerator.getUUID() + "/HeadPic");
+			}
+			formService.updateUserPic(userPic1, userID);
+			statusCode = ConstValues.OK;
+			dataBag = "添加成功";
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+			dataBag = "添加失败";
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
 	}
@@ -989,16 +1019,34 @@ public class FormController {
 			businessLicence.setRegistTime(DateUtils.StringToDate(registTime, "yyyy/MM/dd"));
 			String pictureUrl1="";
 			if (!StringUtils.isEmpty(pictureUrl)) {
+			
+				
 				String ext = UploadUtil.getExtention(pictureUrl.getOriginalFilename());
 				 pictureUrl1 = UploadUtil.uploadOneFile(request, pictureUrl, UUIDGenerator.getUUID() + "." + ext,
 						orgid + "/BusinessLicence");
+				 businessLicence.setPictureUrl(pictureUrl1);
+				 if (formService.eixstLicenceCode(orgid)) {
+					 formService.deleteLicenceCode(orgid);
+				 }
+				 formService.addBusinessLicence(businessLicence);
+			}else{
+				if(formService.findLicencePathUrl(orgid).size()>0){
+					pictureUrl1=formService.findLicencePathUrl(orgid).get(0);
+				}
+				 businessLicence.setPictureUrl(pictureUrl1);
+
+				 if (formService.eixstLicenceCode(orgid)) {
+					 formService.deleteLicenceCode(orgid);
+				 }
+				 formService.addBusinessLicence(businessLicence);
 			}
-			businessLicence.setPictureUrl(pictureUrl1);
-			if (formService.eixstLicenceCode(licenceCode)) {
+			
+			
+			/*if (formService.eixstLicenceCode(licenceCode)) {
 				formService.updateBusinessLicence(businessLicence);
 			} else {
 				formService.addBusinessLicence(businessLicence);
-			}
+			}*/
 			statusCode = ConstValues.OK;
 			dataBag = ConstValues.SUCCESS;
 		} catch (Exception e) {

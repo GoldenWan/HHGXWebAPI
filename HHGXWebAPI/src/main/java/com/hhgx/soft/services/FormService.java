@@ -1,5 +1,7 @@
 package com.hhgx.soft.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import com.hhgx.soft.entitys.Training;
 import com.hhgx.soft.entitys.UpdateFireSystem;
 import com.hhgx.soft.entitys.UserCheckInfo;
 import com.hhgx.soft.entitys.UserCheckPic;
+import com.hhgx.soft.entitys.model.People;
 import com.hhgx.soft.mappers.FormMapper;
 
 @Service
@@ -131,6 +134,23 @@ public class FormService {
 
 	public String findIntroducePath(String orgid) {
 		return formMapper.findIntroducePath(orgid);
+	}
+
+	public void deleteLicenceCode(String orgid) {
+		formMapper.deleteLicenceCode(orgid);
+	}
+
+	public List<String> findLicencePathUrl(String orgid) {
+		return formMapper.findLicencePathUrl(orgid);
+	}
+
+	public void updateUserPic(String userPic1, String userID) {
+		formMapper.updateUserPic(userPic1, userID);
+	}
+
+	public void AddPeople(People people) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

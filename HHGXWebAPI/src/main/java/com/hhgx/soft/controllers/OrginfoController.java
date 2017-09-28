@@ -183,6 +183,23 @@ public class OrginfoController {
 		}
 		return ResponseJson.responseFindJsonArray(siteList, statusCode);
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetOrgApproveState", method = RequestMethod.POST)
+	public String getOrgApproveState(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid");
+		String orgid = map.get("orgid");
+		List<Map<String, String>> list = null;
+		int statusCode = -1;
+		try {
+			list= orginfoService.getOrgApproveState(orgid);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
 
 	/**
 	 * 20.删除防火单位的系统

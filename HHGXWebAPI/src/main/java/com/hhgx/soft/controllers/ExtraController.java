@@ -20,6 +20,7 @@ import com.hhgx.soft.services.AlarmDataService;
 import com.hhgx.soft.services.ExtraService;
 import com.hhgx.soft.services.OrginfoService;
 import com.hhgx.soft.services.PlayWithRoleService;
+import com.hhgx.soft.services.UsersService;
 import com.hhgx.soft.utils.ConstValues;
 import com.hhgx.soft.utils.DateUtils;
 import com.hhgx.soft.utils.GetRequestJsonUtils;
@@ -36,6 +37,8 @@ public class ExtraController {
 	private OrginfoService orginfoService;
 	@Autowired
 	private PlayWithRoleService playWithRoleService;
+	@Autowired
+	private UsersService usersService;
 
 	/**
 	 * 174.删除灭火应急演练预案【**】
@@ -61,6 +64,75 @@ public class ExtraController {
 			dataBag = ConstValues.FIALUREDEL;
 		}
 		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/PersonInfo/GetPeopleType", method = RequestMethod.POST)
+	public String getPeopleType() throws IOException {
+		
+		List<Map<String, String>> list=null;
+		int statusCode = -1;
+		try {
+			list = usersService.getPeopleType();
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/PersonInfo/PeopleDetail", method = RequestMethod.POST)
+	public String peopleDetail(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "PeopleNo");
+		String peopleNo = map.get("peopleNo");
+		List<Map<String, String>> list=null;
+		int statusCode = -1;
+		try {
+			list = usersService.peopleDetail(peopleNo);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/PersonInfo/SelectPeople", method = RequestMethod.POST)
+	public String selectPeople(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "orgid", "peopleType","peopleName","PageIndex");
+		String orgid = map.get("orgid");
+		String peopleType = map.get("peopleType");
+		String peopleName = map.get("peopleName");
+		String pageIndex = map.get("pageIndex");
+		
+		List<Map<String, String>> list=null;
+		Page page = null;
+		int statusCode = -1;
+			
+			int totalCount = usersService.selectPeopleCount(orgid, peopleType, peopleName);
+			try {
+				if (StringUtils.isEmpty(orgid) || orgid.equals("null")) {
+					statusCode = ConstValues.FAILED;
+					return ResponseJson.responseAddJson("orgid为空", statusCode);
+				}
+				if (StringUtils.isEmpty(pageIndex) || pageIndex.equals("null")) {
+					page = new Page(totalCount, 1);
+					list = usersService.selectPeople(orgid, peopleType, peopleName, page.getStartPos(),
+							page.getPageSize());
+					
+				} else {
+					page = new Page(totalCount, Integer.parseInt(pageIndex));
+					list = usersService.selectPeople(orgid, peopleType, peopleName, page.getStartPos(),
+							page.getPageSize());
+				}
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindPageJsonArray(list, statusCode, totalCount);
 	}
 
 	/**
@@ -213,5 +285,37 @@ public class ExtraController {
 		return ResponseJson.responseFindPageJsonArray(lmList, statusCode, totalCount);
 
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value = "/PersonInfo/UpdatePassword", method = RequestMethod.POST)
+	public String updatePassword(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "newPassword","password","UserID");
+		
+		
+		String newPassword = map.get("newPassword");
+		String password = map.get("password");
+		String userid = map.get("userID");
+		
+		int statusCode = -1;
+		String dataBag=null;
+		try {
+			if(!usersService.isCorrectPwd(userid,password)){
+		
+				dataBag="原密码不正确，请重新输入";
+				statusCode=-2;
+				return ResponseJson.responseAddJson(dataBag, statusCode);
+			}
+		    dataBag="修改成功";
+		    usersService.updatePassword(userid,newPassword);
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
 }

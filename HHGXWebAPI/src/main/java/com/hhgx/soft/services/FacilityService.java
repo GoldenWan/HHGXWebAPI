@@ -102,6 +102,10 @@ public void delFireDeviceChangeRecord(String deviceNo) {
 
 public void deleteFireDeviceCheckRecord(String deviceNo) {
 	facilityMapper.deleteFireDeviceCheckRecord(deviceNo);
+}
+
+public List<Map<String, String>> getSiteExceptSys(String siteid, String tiSysType) {
+	return facilityMapper.getSiteExceptSys( siteid, tiSysType);
 } 
 	
 }

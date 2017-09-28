@@ -9,7 +9,14 @@ public class UserInfo {
 	private String realName;              //用户真实名字
 	private String orgID;                 //防火单位编号
 	private String companyName;           //公司名字
+	private String headerPic;           //公司名字
 	
+	public String getHeaderPic() {
+		return headerPic;
+	}
+	public void setHeaderPic(String headerPic) {
+		this.headerPic = headerPic;
+	}
 	private String maintenanceId; 
 	
 	private String managerOrgID; 

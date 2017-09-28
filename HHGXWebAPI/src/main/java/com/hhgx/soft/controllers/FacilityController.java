@@ -61,6 +61,30 @@ public class FacilityController {
 		return ResponseJson.responseFindJsonArray(list, statusCode);
 
 	}
+	@ResponseBody
+	@RequestMapping(value = "/GetSiteExceptSys", method = RequestMethod.POST)
+	public String getSiteExceptSys(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqOriginJson(reqBody, "siteid", "tiSysType");
+
+		String siteid = map.get("siteid");
+		String tiSysType = map.get("tiSysType");
+		System.err.println(tiSysType);
+		if(tiSysType.equals("null")){
+			tiSysType=null;
+		}
+		List<Map<String, String>> list = null;
+		int statusCode = -1;
+		try {
+			list = facilityService.getSiteExceptSys(siteid, tiSysType);
+			statusCode = ConstValues.OK;
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJsonArray(list, statusCode);
+		
+	}
 
 	/**
 	 *    

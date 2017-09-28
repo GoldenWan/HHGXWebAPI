@@ -51,6 +51,18 @@
 		</if>
 	</select>
 	
+	<select id="getOrgApproveState" resultType="map"> 
+	SELECT
+		orgid,
+		orgname,
+		ApproveState,
+		ManagerOrgName
+	FROM
+		onlineorg o
+	INNER JOIN managerorg m ON o.ManagerOrgID = m.ManagerOrgID
+	where 
+	o.orgid=#{orgid}
+	</select>
 	<select id="getDeviceNosByFlatpic" resultType="int"> 
 	SELECT
 		DeviceNo
@@ -380,7 +392,6 @@
 			orgid = #{orgid}
 			limit
 			#{startPos},#{pageSize}
-			GROUP BY siteid
 		
 	</select>
 	<resultMap type="site" id="siteMap">

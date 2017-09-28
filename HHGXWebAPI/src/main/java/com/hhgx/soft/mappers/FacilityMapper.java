@@ -61,4 +61,6 @@ public interface FacilityMapper {
 
 	void deleteFireDeviceCheckRecord(String deviceNo);
 
+	List<Map<String, String>> getSiteExceptSys(@Param("siteid")String siteid, @Param("tiSysType")String tiSysType);
+
 }

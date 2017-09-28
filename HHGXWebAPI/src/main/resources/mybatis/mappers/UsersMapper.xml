@@ -31,6 +31,13 @@ WHERE
 	u.UserID = #{userid}
 	</select>
 
+	<select id="getPeopleType" resultType="map">
+	SELECT
+		PeopleTypeName,
+		OrderNo
+	FROM
+		peopletype
+	</select>
 	<select id="getUserType" resultType="map">
 	SELECT
 		u.UserTypeID,
@@ -42,6 +49,141 @@ WHERE
 		u.UserBelongTo = #{userBelongTo}
 	</select>
 
+	<select id="isBindPhone" resultType="map">
+	SELECT
+		mobilephone
+	FROM
+		users
+	WHERE
+		UserID= #{userid}
+	</select>
+	<select id="getUserPic" resultType="string">
+		SELECT
+			HeaderPic
+		FROM
+			users
+		WHERE
+		UserID= #{userid}
+	</select>
+
+
+
+
+	<select id="selectPeopleCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			people 
+		where
+		 orgid= #{orgid} 
+		<if test="peopleType!='all'.toString() and peopleType != null and peopleType != ''">
+		and  PeopleTypeName =#{peopleType}	
+		</if>
+		<if test="peopleName!='null'.toString() and peopleName != null and peopleName != ''">
+		and PeopleName = #{peopleName}	 
+		</if>
+		
+	</select>
+
+	<select id="selectPeople" resultType="map">
+	SELECT
+		PeopleNo,
+		PeopleName,
+		sex,
+		job,
+		department,
+		YnTraining,
+		certificateID,
+		PeopleTypeName
+	FROM
+		people
+		where
+		 orgid= #{orgid} 
+		<if test="peopleType!='all'.toString() and peopleType != null and peopleType != ''">
+		and  PeopleTypeName =#{peopleType}	
+		</if>
+		<if test="peopleName!='null'.toString() and peopleName != null and peopleName != ''">
+		and PeopleName = #{peopleName}	 
+		</if>
+			LIMIT #{startPos},#{pageSize}
+		
+	</select>
+	<select id="peopleDetail" resultType="map">
+	SELECT
+	PeopleNo,
+	identification,
+	PeopleName,
+	sex,
+	job,
+	DATE_FORMAT(birthday, '%Y/%m/%d') birthday,
+	education,
+	tel,
+	department,
+	DATE_FORMAT(WorkBeginDate, '%Y/%m/%d') WorkBeginDate,
+	YnTraining,
+	DATE_FORMAT(trainingTime, '%Y/%m/%d %h:%m:%s') trainingTime,
+	trainingTime,
+	certificateID,
+	TypeandGrade,
+	TheoryExamScore,
+	TechExamScore,
+	totalscore,
+	issueorg,
+	DATE_FORMAT(issuedate, '%Y/%m/%d') issuedate,
+	issuedate,
+	DATE_FORMAT(GetDate, '%Y/%m/%d') GetDate,
+	YnEscapeLeader,
+	OnDutyArea,
+	OrderNum,
+	PeoplePicPath,
+	CertificatePicPath,
+	orgid,
+	PeopleTypeName,
+	JobTypeName
+FROM
+	people
+	where
+		PeopleNo= #{peopleNo} 
+		
+	</select>
+	
+	
+	
+	<select id="isCorrectPwd" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			users 
+		where UserID= #{userid} and password =#{pwd}
+	</select>
+	<select id="isRightPhone" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			users 
+		where UserID= #{userid} and mobilephone =#{phone}
+	</select>
+	<update id="unBindPhone">
+	UPDATE users
+	SET mobilephone = ''
+	WHERE
+		Userid =#{userid}
+	</update>
+	<update id="updatePassword">
+		UPDATE users
+		SET 
+	    password=#{pwd}
+		WHERE
+		Userid= #{userid}
+	</update>
+	
+	<select id="existUserId" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			users 
+		where UserID= #{userid} and mobilephone =#{phone}
+	</select>
 	<select id="existUserName" resultType="int">
 		SELECT
 			count(*)
@@ -60,6 +202,8 @@ WHERE
 		u.UserBelongTo = #{userBelongTo}	
 		<if test="orgid!='null'.toString() and orgid != null and orgid != ''">
 		AND u.orgid = #{orgid}</if>
+		<if test="maintenanceId!='null'.toString() and maintenanceId != null and maintenanceId != ''">
+		AND u.MaintenanceId = #{maintenanceId}</if>
 		<if test="userName!='null'.toString() and  userName != null and userName != ''">
 		and RealName LIKE CONCAT('%',#{userName}, '%')
 		</if>
@@ -81,6 +225,8 @@ WHERE
 		u.UserBelongTo = #{userBelongTo}	
 		<if test="orgid!='null'.toString() and orgid != null and orgid != ''">
 		AND u.orgid = #{orgid}</if>
+		<if test="maintenanceId!='null'.toString() and maintenanceId != null and maintenanceId != ''">
+		AND u.MaintenanceId = #{maintenanceId}</if>
 		<if test="userName!='null'.toString() and  userName != null and userName != ''">
 		and RealName LIKE CONCAT('%',#{userName}, '%')
 		</if>
@@ -99,7 +245,8 @@ WHERE
 		Remark,
 		UserTypeID,
 		UserBelongTo,
-		orgid
+		orgid,
+		MaintenanceId
 	)
 	VALUES
 		(
@@ -114,11 +261,11 @@ WHERE
 		#{remark},
 		#{userTypeID},
 		#{userBelongTo},
-		#{orgid}
+		#{orgid},
+		#{maintenanceId}
 	)
 	</insert>
 	<update id="updateUser">
-	
 		UPDATE users
 		SET 
 	    RealName=#{realName},

@@ -89,6 +89,26 @@
 		FROM
 		firesystype
 	</select>
+	<select id="getSiteExceptSys" resultType="map">
+		SELECT
+		f.tiSysType,
+		f.vSysdesc
+		FROM
+		 firesystype f
+			<!-- onlinefiresystem o
+		INNER JOIN firesystype f ON o.tiSysType = f.tiSysType
+				
+				where 
+				
+				o.siteid = #{siteid}
+				<if
+					test="tiSysType !=null and tiSysType !=''">
+					and
+					o.tiSysType = #{tiSysType}
+				</if> -->
+		   GROUP BY tiSysType
+		
+	</select>
 	<select id="getDeviceType" resultType="map">
 		SELECT
 		iDeviceType,

@@ -49,6 +49,23 @@
 		WHERE
 		iphotoID = #{iphotoID}
 	</delete>
+	<delete id="deleteLicenceCode">
+		DELETE
+		FROM
+		businesslicence
+		WHERE
+		orgid = #{orgid}
+	</delete>
+	<select id="findLicencePathUrl" resultType="java.lang.String">
+	SELECT
+		PictureUrl
+		FROM
+		businesslicence
+		WHERE
+		orgid = #{orgid}
+	
+	</select>
+	
 	<insert id="addorgSys">
 		INSERT INTO `onlinefiresystem` (
 		`tiSysType`,
@@ -364,7 +381,7 @@
 		FROM
 		businesslicence
 		WHERE
-		LicenceCode = #{licenceCode}
+		orgid = #{orgid}
 	</select>
 	<select id="existOrgSys" resultType="int">
 		SELECT
@@ -443,5 +460,13 @@
 		#{auditingDepartment},#{registTime},#{pictureUrl},#{orgid}
 		)
 	</insert>
-
+	
+<update id="updateUserPic">
+		UPDATE users
+		SET 
+	    HeaderPic=#{userPic}
+		WHERE
+		Userid= #{userID}
+	</update>
+	
 </mapper>

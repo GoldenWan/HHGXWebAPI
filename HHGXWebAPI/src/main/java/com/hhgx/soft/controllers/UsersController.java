@@ -54,11 +54,16 @@ public class UsersController {
 		/*if(StringUtils.isEmpty(orgid)){
 			return ResponseJson.responseAddJson("orgid为空", -2);
 		}*/
-		
+		 String maintenanceId =null;
+		if(userBelongTo.equals("2")){
+			  maintenanceId =orgid;
+			 orgid=null;
+		}
+				
 		Page page = null;
 		List<Users> userList = null;
 		List<Map<String, String>> lmList = new ArrayList<Map<String, String>>();
-		int totalCount = usersService.getUserListCount(orgid, userBelongTo,userName);
+		int totalCount = usersService.getUserListCount(orgid,maintenanceId, userBelongTo,userName);
 		int statusCode = -1;
 		
 		
@@ -68,12 +73,14 @@ public class UsersController {
 			
 			if (pageIndex != null) {
 			page = new Page(totalCount, Integer.parseInt(pageIndex));
-			userList = usersService.getUserList(orgid, userBelongTo,userName, page.getStartPos(), page.getPageSize());
+			userList = usersService.getUserList(orgid, maintenanceId, userBelongTo,userName, page.getStartPos(), page.getPageSize());
 
 			} else {
 			page = new Page(totalCount, 1);
-			userList  = usersService.getUserList(orgid, userBelongTo,userName, page.getStartPos(), page.getPageSize());
+			userList  = usersService.getUserList(orgid, maintenanceId, userBelongTo,userName, page.getStartPos(), page.getPageSize());
 			}
+			
+			
 			for (Users users : userList ) {
 		     
 				Map<String, String> map2 = new HashMap<String, String>();
@@ -103,7 +110,8 @@ public class UsersController {
 		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
 		
 		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "account","password", "RealName", "mobilephone", "tel", "Email","Status","Remark","UserTypeID","UserBelongTo","orgid");
-	
+
+		
 		String userName =map.get("account");
 		String userBelongTo =map.get("userBelongTo");
 		String orgid = map.get("orgid");
@@ -260,6 +268,129 @@ public class UsersController {
 			statusCode = ConstValues.FAILED;
 		}
 		return ResponseJson.responseFindJsonArray(lmList, statusCode);
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/IsBindPhone", method = RequestMethod.POST)
+	public String isBindPhone(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserID");
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		String userid = map.get("userID");
+		
+		int statusCode = -1;
+		try {
+			map2 = usersService.isBindPhone(userid);
+			if(!StringUtils.isEmpty(map2) && !map2.get("mobilephone").equals("")){
+				map2.put("isBind", true);
+			}else {
+				map2.put("isBind", false);
+				
+			}
+			
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseFindJson(map2, statusCode);
+	}
+	
+	/**
+
+	 * @param request
+	 * @return
+	 * @throws IOException:TODO
+	 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/BindPhone", method = RequestMethod.POST)
+	public String BindPhone(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserID","Phone","verifycode");
+		String userid = map.get("userID");
+		String phone = map.get("phone");
+		String verifycode = map.get("verifycode");
+		String number = (String) request.getSession().getAttribute("number");
+		int statusCode = -1;
+		String dataBag=null;
+		try {
+			if(!verifycode.equals(number)){
+				dataBag="验证码错误";
+				statusCode=-2;
+				return ResponseJson.responseAddJson(dataBag, statusCode);
+			}
+			if(usersService.existUserId(userid,phone)){
+				dataBag="已有绑定手机，若想重新绑定手机，请先将原手机号解除绑定!";
+						statusCode=-2;
+				return ResponseJson.responseAddJson(dataBag, statusCode);
+			}
+			dataBag="绑定成功";
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	@ResponseBody
+	@RequestMapping(value = "/UnBindPhone", method = RequestMethod.POST)
+	public String unBindPhone(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserID","Phone","verifycode");
+		String userid = map.get("userID");
+		String phone = map.get("phone");
+		String verifycode = map.get("verifycode");
+		String number = (String) request.getSession().getAttribute("number");
+		int statusCode = -1;
+		String dataBag=null;
+		try {
+			if(!verifycode.equals(number)){
+				dataBag="验证码错误";
+				statusCode=-2;
+				return ResponseJson.responseAddJson(dataBag, statusCode);
+			}
+			if(usersService.isRightPhone(phone,userid)){
+				usersService.unBindPhone(userid);
+				dataBag="解绑成功";
+				statusCode = ConstValues.OK;
+			}else{
+				dataBag="解绑失败,账号错误";
+				statusCode = ConstValues.FAILED;
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			dataBag="解绑失败";
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseAddJson(dataBag, statusCode);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/GetUserPic", method = RequestMethod.POST)
+	public String getUserPic(HttpServletRequest request) throws IOException {
+		String reqBody = GetRequestJsonUtils.getRequestPostStr(request);
+		
+		Map<String, String> map = RequestJson.reqFirstLowerJson(reqBody, "UserID");
+		String userid = map.get("userID");
+		String headpic =null;
+		int statusCode = -1;
+		try {
+			headpic = usersService.getUserPic(userid);
+			
+			statusCode = ConstValues.OK;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			statusCode = ConstValues.FAILED;
+		}
+		return ResponseJson.responseAddJson(headpic, statusCode);
 	}
 	
 
